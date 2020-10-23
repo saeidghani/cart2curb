@@ -9,15 +9,29 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
+    "@fullhuman/postcss-purgecss": "^3.0.0",
+    "@reduxjs/toolkit": "^1.4.0",
+    "@zeit/next-css": "^1.0.1",
+    "@zeit/next-less": "^1.0.1",
+    "@zeit/next-sass": "^1.0.1",
     "antd": "^4.7.2",
+    "autoprefixer": "^9.8.6",
     "axios": "^0.20.0",
+    "google-maps-react": "^2.0.6",
+    "less": "^3.12.2",
+    "less-loader": "^7.0.2",
     "next": "9.5.5",
+    "node-sass": "^4.14.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-redux": "^7.2.1",
+    "react-slick": "^0.27.12",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "tailwindcss": "^1.9.5"
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^5.2.0",
+    "tailwindcss": "^1.9.5",
+    "video-react": "^0.14.1"
   }
 }
