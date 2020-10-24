@@ -39,5 +39,7 @@ export default {
             new: '/profile/payment-info/new'
         },
         orders: '/profile/orders'
-    }
+    },
+    about: '/about',
+    contact: '/contact',
 }
