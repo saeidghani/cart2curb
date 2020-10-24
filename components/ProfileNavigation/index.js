@@ -7,7 +7,7 @@ import routes from "../../constants/routes";
 const ProfileNavigation = props => {
 
     return (
-        <div className="bg-card rounded py-4 px-8">
+        <div className="bg-card rounded py-4 px-8 flex-grow">
             <NavigationItem icon={ProfileIcon} title={'Account'} href={routes.profile.index}/>
             <NavigationItem icon={LocationIcon} title={'Addresses'} href={routes.profile.addresses.index}/>
             <NavigationItem icon={ShoppingCartBagIcon} title={'Orders'} href={routes.profile.orders}/>
