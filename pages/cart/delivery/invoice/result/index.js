@@ -61,7 +61,7 @@ const Invoices = props => {
                 <Col xs={24}>
                     <div className="flex flex-row text-center items-center justify-center pt-20">
                         <Link href={routes.homepage}>
-                            <a className="pl-2 text-info font-medium cursor-pointer text-base underline">Go Back to Home</a>
+                            <a className="text-info font-medium cursor-pointer text-base underline">Go Back to Home</a>
                         </Link>
                     </div>
                 </Col>

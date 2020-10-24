@@ -9,8 +9,8 @@ export default {
         },
         resetPassword: '/login/reset-password'
     },
-    vendors: {
-        index: "/vendors"
+    stores: {
+        index: "/stores"
     },
     homepage: '/',
     cart: {
@@ -42,4 +42,11 @@ export default {
     },
     about: '/about',
     contact: '/contact',
+    vendors: {
+        auth: {
+            login: '/vendors/login',
+            forgetPassword: '/vendors/login/forget-password',
+            resetPassword: '/vendors/login/reset-password'
+        },
+    }
 }

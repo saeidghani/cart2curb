@@ -1,12 +1,10 @@
 import React from 'react';
-import { Badge, Layout } from 'antd';
+import { Badge } from 'antd';
 import Link from 'next/link'
 
 import {HeaderLogoIcon, HeaderNotificationIcon} from '../icons';
 import routes from "../../constants/routes";
 import './styles.scss';
-
-const { Header: AntHeader } = Layout;
 
 // @todo: add authentication logics to state and here
 const Header = props => {
@@ -18,7 +16,7 @@ const Header = props => {
                     <Link href={routes.homepage} className={'header__link text-purple'}>
                         <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Home</a>
                     </Link>
-                    <Link href={routes.vendors.index} className={'header__link'}>
+                    <Link href={routes.stores.index} className={'header__link'}>
                         <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Stores</a>
                     </Link>
                 </div>
