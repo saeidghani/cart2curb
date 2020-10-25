@@ -27,7 +27,8 @@ module.exports = {
         paragraph: '#696E79',
         header: '#C1C4C8',
         button: '#FF6560',
-        cell: '#595959'
+        cell: '#595959',
+        muted: '#727A8B',
       },
       spacing: {
         1.5: '0.313rem',

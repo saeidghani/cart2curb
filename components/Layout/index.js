@@ -6,10 +6,14 @@ import Header from '../Header';
 import Footer from '../Footer';
 
 const Layout = props => {
+    const classes = ["flex-grow flex flex-col justify-start"]
+    if(!props.forceLayout) {
+        classes.push('layout__section')
+    }
     return (
         <div className={'layout'}>
             <Header/>
-            <div className="flex-grow layout__section flex flex-col justify-start">
+            <div className={classes.join(" ")}>
                 {props.children}
             </div>
             <Footer/>
