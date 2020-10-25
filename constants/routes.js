@@ -10,7 +10,10 @@ export default {
         resetPassword: '/login/reset-password'
     },
     stores: {
-        index: "/stores"
+        index: "/stores",
+        single(vendor = '') {
+            return `/stores/${vendor}`
+        }
     },
     homepage: '/',
     cart: {
@@ -46,7 +49,38 @@ export default {
         auth: {
             login: '/vendors/login',
             forgetPassword: '/vendors/login/forget-password',
-            resetPassword: '/vendors/login/reset-password'
+            resetPassword: '/vendors/login/reset-password',
+            register: {
+                index: '/vendors/signup',
+                submitted: '/vendors/signup'
+            }
         },
+        products: {
+            index: '/vendors/dashboard',
+            edit(number = '[number]') {
+                return `/vendors/products/edit/${number}`
+            },
+            view(number = '[number]') {
+                return `/vendors/products/${number}`
+            },
+            add: '/vendors/products/new'
+        },
+        categories: {
+            index: '/vendors/dashboard',
+            edit(number = '[number]') {
+                return `/vendors/categories/edit/${number}`
+            },
+            view(number = '[number]') {
+                return `/vendors/categories/${number}`
+            },
+            add: '/vendors/categories/new'
+        },
+        orders: '/vendors/orders',
+        account: {
+            index: '/vendors/account',
+            changePassword: '/vendors/account/change-password',
+            edit: '/vendors/account/edit'
+        },
+        index: '/vendors/dashboard'
     }
 }
