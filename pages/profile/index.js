@@ -1,41 +1,23 @@
-import React, { useState } from 'react';
-import { Space, Button, Row, Col, Grid, Modal } from 'antd';
+import React from 'react';
+import { Space, Button, Row, Col, Grid } from 'antd';
 import Link from "next/link";
 
 import ProfileLayout from "../../components/Layout/Profile";
 import DetailItem from "../../components/UI/DetailItem";
 import routes from "../../constants/routes";
 import Avatar from "../../components/UI/Avatar";
+import LogoutModal from "../../components/Modals/Logout";
 
 
 const { useBreakpoint } = Grid;
 
 
 const profile = props => {
-    const [modal, contextHolder] = Modal.useModal();
     const screens = useBreakpoint();
-
-
-    const config = {
-        title: 'Log Out',
-        content: (
-            <span className="text-paragraph">Are you sure to log out from your account?</span>
-        ),
-        onOk: () => {
-            console.log('You logged out');
-        },
-        okText: 'Yes, Log Out',
-        cancelText: 'Cancel',
-        cancelButtonProps: {
-            danger: true
-        },
-        centered: true,
-        width: 600
-    };
 
     const actions = (
         <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
-            <Button type={'text'} danger onClick={() => modal.confirm(config)}>Logout</Button>
+            <Button type={'text'} danger onClick={LogoutModal.bind(this, () => console.log('you logged out'))}>Logout</Button>
             <Link href={routes.profile.changePassword}>
                 <Button type={'text'} className={'text-type text-base font-medium'}>Change Password</Button>
             </Link>
@@ -83,7 +65,6 @@ const profile = props => {
                     <a href="#" className="text-btn underline">Card2curb/barry/wood/come</a>
                 </Col>
             </Row>
-            {contextHolder}
         </ProfileLayout>
     )
 }
