@@ -38,7 +38,8 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
             title: 'Total Price',
             dataIndex: 'total',
             key: 'total',
-            width: 210
+            width: 210,
+            fixed: 'right'
         },
     ];
 
@@ -77,7 +78,7 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
                         />
                 </Col>
                 <Col xs={24}>
-                    <Table dataSource={data} columns={columns} pagination={false} className={'pt-4'}/>
+                    <Table dataSource={data} columns={columns} pagination={false} className={'pt-4'} scroll={{ x: 870 }}/>
                 </Col>
                 <Col xs={24}>
                     <div className={'flex flex-row-reverse items-start'}>
