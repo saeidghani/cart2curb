@@ -9,12 +9,13 @@ import {
     Divider
 } from 'antd';
 
-import Page from '../../../../components/Page';
+import Page from '../../../components/Page';
 
 const { Item } = Form;
 
 const GuestCheckout = props => {
     const [form] = Form.useForm();
+
 
     const breadcrumb = [
         {
