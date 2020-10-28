@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Input,
@@ -11,6 +11,11 @@ import {
 
 import Page from '../../../components/Page';
 import routes from "../../../constants/routes";
+import cookie from "cookie";
+import {getStore} from "../../../states";
+import {useDispatch, useSelector} from "react-redux";
+import moment from "moment";
+import Link from "next/link";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -35,10 +40,28 @@ function beforeUpload(file) {
 
 
 const AccountEdit = props => {
-    const [loading, setLoading] = useState(false);
+    const loading = useSelector(state => state.loading.effects.profile.updateProfile);
     const [imageUrl, setImageUrl] = useState('')
+    const [stream, setStream] = useState("Facebook")
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
 
+    const { profile } = props;
+
+    useEffect(() => {
+        form.setFieldsValue({
+            firstName: profile.firstName || '',
+            lastName: profile.lastName || '',
+            email: profile.email || '',
+            phone: profile.phone || '',
+            birthdate: moment(profile.birthdate || ''),
+            notifyMethod: profile.notifyMethod || '',
+            streamPreference: profile.socialMedias ? profile.socialMedias.find(item => item.streamOn).provider : '',
+            streamId:  profile.socialMedias ? profile.socialMedias.find(item => item.streamOn).username : '',
+            instagram: profile.socialMedias ? profile.socialMedias.find(item => item.provider === 'instagram').username : '',
+            facebook: profile.socialMedias ? profile.socialMedias.find(item => item.provider === 'facebook').username : '',
+        })
+    }, [])
     const breadcrumb = [
         {
             title: "User Profile",
@@ -63,6 +86,45 @@ const AccountEdit = props => {
         }
     };
 
+
+    const submitHandler = (values) => {
+        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
+        const body = {
+            notifyMethod,
+            birthdate: moment(birthdate).format('YYYY-MM-DD'),
+            image: "http://some.url/pic/name", // @todo: change to server
+            firstName,
+            lastName,
+            phone
+        }
+        const socialMedias = [
+            {
+                "username": streamPreference === 'instagram' ? streamId : instagram,
+                "provider": "instagram",
+                "streamOn": streamPreference === 'instagram'
+            },
+            {
+                "username": streamPreference === 'facebook' ? streamId : facebook,
+                "provider": "facebook",
+                "streamOn": streamPreference === 'facebook'
+            }
+        ];
+        if(!['facebook', 'instagram'].includes(streamPreference)) {
+            socialMedias.push({
+                "username": streamId,
+                "provider": streamPreference,
+                "streamOn": true
+            })
+        }
+        body.socialMedias = socialMedias;
+
+        dispatch.profile.updateProfile(body)
+    }
+
+    const checkValidation = (errorInfo) => {
+        message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
+
     return (
         <Page title={'Account Edit'} breadcrumb={breadcrumb}>
             <Row>
@@ -71,25 +133,68 @@ const AccountEdit = props => {
                         form={form}
                         layout="vertical"
                         className="flex flex-col"
+                        onFinishFailed={checkValidation}
+                        onFinish={submitHandler}
                     >
                         <Row gutter={24}>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'firstname'} label={'First Name'}>
+                                <Item name={'firstName'} label={'First Name'}
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: "Please enter you first name"
+                                          },
+                                          {
+                                              min: 3,
+                                              message: "First name should be more than 3 characters."
+                                          }
+                                      ]}>
                                     <Input placeholder="First Name" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'lastname'} label={'Last Name'}>
+                                <Item name={'lastName'} label={'Last Name'}
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: "Please enter you last name"
+                                          },
+                                          {
+                                              min: 3,
+                                              message: "Last name should be more than 3 characters."
+                                          }
+                                      ]}>
                                     <Input placeholder="Last Name" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'email'} label={'Email Address'}>
+                                <Item name={'email'} label={'Email Address'}
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: "Email Field is required"
+                                          },
+                                          {
+                                              pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+                                              message: "Please enter valid Email Address"
+                                          }
+                                      ]}
+                                >
                                     <Input type='email' placeholder="Email Address" disabled={true} />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'phone'} label={'Phone Number'}>
+                                <Item name={'phone'} label={'Phone Number'}
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: "Phone Number field is required"
+                                          },
+                                          {
+                                              pattern: /^[1-9][0-9]*$/,
+                                              message: "Your Entered Phone number is not valid"
+                                          }
+                                      ]}>
                                     <Input placeholder="Phone Number" />
                                 </Item>
                             </Col>
@@ -125,36 +230,57 @@ const AccountEdit = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'notification'} label={'Order Status Notification Method'}>
+                                <Item name={'notifyMethod'} label={'Order Status Notification Method'}>
                                     <Select
                                         placeholder={'Select'}
+                                            rules={[{
+                                                required: true,
+                                                message: 'This Field is required'
+                                            }]}
                                     >
                                         <Option value={'sms'}>Text Message to Phone Number</Option>
-                                        <Option value={'mail'}>Send a mail to Email Address</Option>
+                                        <Option value={'email'}>Send a mail to Email Address</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthday'} label={'Birthday'}>
+                                <Item name={'birthdate'} label={'Birthdate'}
+                                    rules={[{
+                                        required: true,
+                                        message: 'This Field is required'
+                                    }]}>
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'stream-preference'} label={'Stream Preference'}>
+                                <Item
+                                    name={'streamPreference'}
+                                    label={'Stream Preference'}
+                                    onChange={setStream}
+                                    rules={[{
+                                        required: true,
+                                        message: 'This Field is required'
+                                    }]}>
                                     <Select
                                         placeholder={'Select'}
                                     >
+                                        <Option value={'facebook'}>Facebook</Option>
+                                        <Option value={'instagram'}>Instagram</Option>
+                                        <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'skype'}>Skype</Option>
                                         <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'telegram'}>Telegram</Option>
-                                        <Option value={'twitter'}>Twitter</Option>
+                                        <Option value={'slack'}>Slack</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'id'} label={'Skype ID'}>
-                                    <Input placeholder="Skype ID" />
+                                <Item name={'streamId'} label={`${stream} ID`}
+                                    rules={[{
+                                        required: true,
+                                        message: 'This Field is required'
+                                    }]}>
+                                    <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
 
@@ -166,26 +292,37 @@ const AccountEdit = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook-ID'} label={'Facebook'}>
+                                <Item name={'facebook'} label={'Facebook'}
+                                    rules={[{
+                                        required: true,
+                                        message: 'This Field is required'
+                                    }]}>
                                     <Input placeholder="Facebook Username" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram-ID'} label={'Instagram'}>
+                                <Item name={'instagram'} label={'Instagram'}
+                                    rules={[{
+                                        required: true,
+                                        message: 'This Field is required'
+                                    }]}>
                                     <Input placeholder="Instagram Username" />
                                 </Item>
                             </Col>
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'}>
+                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'}>
                                         Save
                                     </Button>
                                 </Item>
                                 <Item>
-                                    <Button danger className={'w-32'}>
-                                        Cancel
-                                    </Button>
+                                    <Link href={routes.profile.index}>
+                                        <Button danger className={'w-32'}>
+                                            Cancel
+                                        </Button>
+                                    </Link>
+
                                 </Item>
                             </Col>
                         </Row>
@@ -195,6 +332,38 @@ const AccountEdit = props => {
             </Row>
         </Page>
     )
+}
+
+
+export async function getServerSideProps({ req, res }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+
+    let profile = {};
+    if (!token) {
+        res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                profile
+            }
+        };
+    }
+    const store = getStore();
+    const response = await store.dispatch.profile.getProfile({
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    if(response) {
+        profile = response;
+    }
+    return {
+        props: {
+            profile
+        }
+    }
 }
 
 export default AccountEdit;
