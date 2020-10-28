@@ -11,9 +11,12 @@ import {
     Upload,
     message
 } from 'antd';
+import moment from 'moment';
 
 import Page from '../../../components/Page';
 import routes from "../../../constants/routes";
+import Link from "next/link";
+import {useDispatch, useSelector} from "react-redux";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -39,9 +42,11 @@ function beforeUpload(file) {
 
 
 const AccountInfo = props => {
-    const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState('')
+    const [stream, setStream] = useState("Facebook")
     const [form] = Form.useForm();
+    const loading = useSelector(state => state.loading.effects.profile.updateProfile);
+    const dispatch = useDispatch()
 
     const breadcrumb = [
         {
@@ -54,18 +59,57 @@ const AccountInfo = props => {
     ]
 
     const handleChange = info => {
+        form.setFieldsValue({
+            avatar: info.file,
+        })
+
         if (info.file.status === 'uploading') {
-            setLoading(true);
             return;
         }
         if (info.file.status === 'done') {
             // Get this url from response in real world.
             getBase64(info.file.originFileObj, imageUrl => {
-                setLoading(true);
                 setImageUrl(imageUrl);
             });
         }
     };
+
+
+    const submitHandler = (values) => {
+            const { notifyMethod, avatar, birthdate, streamPreference, streamId, facebook, instagram } = values;
+            const body = {
+                notifyMethod,
+                birthdate: moment(birthdate).format('YYYY-MM-DD'),
+                image: "http://some.url/pic/name", // @todo: change to server
+            }
+            const socialMedias = [
+                {
+                    "username": streamPreference === 'instagram' ? streamId : instagram,
+                    "provider": "instagram",
+                    "streamOn": streamPreference === 'instagram'
+                },
+                {
+                    "username": streamPreference === 'facebook' ? streamId : facebook,
+                    "provider": "facebook",
+                    "streamOn": streamPreference === 'facebook'
+                }
+            ];
+            if(!['facebook', 'instagram'].includes(streamPreference)) {
+                socialMedias.push({
+                    "username": streamId,
+                    "provider": streamPreference,
+                    "streamOn": true
+                })
+            }
+            body.socialMedias = socialMedias;
+
+            dispatch.profile.updateProfile(body)
+    }
+
+    const checkValidation = (errorInfo) => {
+        message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
+
 
     return (
         <Page title={'Account Info'} breadcrumb={breadcrumb}>
@@ -75,6 +119,8 @@ const AccountInfo = props => {
                         form={form}
                         layout="vertical"
                         className="flex flex-col"
+                        onFinish={submitHandler}
+                        onFinishFailed={checkValidation}
                     >
                         <Row gutter={24}>
                             <Col lg={8} md={12} xs={24}>
@@ -85,7 +131,6 @@ const AccountInfo = props => {
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
-                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                             beforeUpload={beforeUpload}
                                             onChange={handleChange}
                                         >
@@ -100,36 +145,55 @@ const AccountInfo = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'notification'} label={'Order Status Notification Method'}>
+                                <Item name={'notifyMethod'} label={'Order Status Notification Method'}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    }]}>
                                     <Select
                                         placeholder={'Select'}
                                     >
                                         <Option value={'sms'}>Text Message to Phone Number</Option>
-                                        <Option value={'mail'}>Send a mail to Email Address</Option>
+                                        <Option value={'email'}>Send a mail to Email Address</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthday'} label={'Birthday'}>
+                                <Item name={'birthdate'} label={'Birthdate'}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    }]}>
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'stream-preference'} label={'Stream Preference'}>
+                                <Item name={'streamPreference'} label={'Stream Preference'}>
                                     <Select
                                         placeholder={'Select'}
+                                        onChange={setStream}
+                                            rules={[{
+                                                required: true,
+                                                message: "This Field is required"
+                                            }]}
                                     >
+                                        <Option value={'facebook'}>Facebook</Option>
+                                        <Option value={'instagram'}>Instagram</Option>
+                                        <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'skype'}>Skype</Option>
                                         <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'telegram'}>Telegram</Option>
-                                        <Option value={'twitter'}>Twitter</Option>
+                                        <Option value={'slack'}>Slack</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'id'} label={'Skype ID'}>
-                                    <Input placeholder="Skype ID" />
+                                <Item name={'streamId'} label={`${stream} ID`}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    }]}>
+                                    <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
 
@@ -141,12 +205,20 @@ const AccountInfo = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook-ID'} label={'Facebook'}>
+                                <Item name={'facebook'} label={'Facebook'}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    }]}>
                                     <Input placeholder="Facebook Username" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram-ID'} label={'Instagram'}>
+                                <Item name={'instagram'} label={'Instagram'}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    }]}>
                                     <Input placeholder="Instagram Username" />
                                 </Item>
                             </Col>
@@ -155,11 +227,13 @@ const AccountInfo = props => {
                         <Row gutter={24}>
                             <Col xs={24} className={'flex items-center justify-end'}>
                                 <Item>
-                                    <Button danger className={'w-32'}>Cancel</Button>
+                                    <Link href={routes.profile.index}>
+                                        <Button danger className={'w-32'}>Cancel</Button>
+                                    </Link>
                                 </Item>
                                 <Item>
-                                    <Button type="primary" block className={'w-32 ml-5'}>
-                                        Register
+                                    <Button type="primary" htmlType={'submit'} block className={'w-32 ml-5'} loading={loading}>
+                                        Save
                                     </Button>
                                 </Item>
                             </Col>

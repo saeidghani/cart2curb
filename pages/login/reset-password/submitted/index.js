@@ -1,11 +1,43 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Link from "next/link";
 
-import Page from '../../../components/Page';
-import { GreenCheckmarkIcon } from "../../../components/icons";
-import routes from "../../../constants/routes";
+import Page from '../../../../components/Page';
+import { GreenCheckmarkIcon } from "../../../../components/icons";
+import routes from "../../../../constants/routes";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
+import {useRedirectAuthenticated} from "../../../../hooks/auth";
 
 const Index = props => {
+    const {
+        isReseted,
+        resetAttempt,
+        isLoggedIn
+    } = useSelector(state => state.auth);
+    const dispatch = useDispatch()
+    const router = useRouter();
+
+    const redirect = useRedirectAuthenticated();
+
+    useEffect(() => {
+        redirect();
+    }, [redirect])
+
+
+    useEffect(() => {
+        dispatch.auth.increaseAttempt();
+    }, []);
+
+    useEffect(() => {
+        if(resetAttempt !== 1 || !isReseted) {
+            dispatch.auth.destroyResetToken();
+            if(isLoggedIn) {
+                router.push(routes.profile.index);
+            } else {
+                router.push(routes.auth.login);
+            }
+        }
+    }, [resetAttempt, router, isReseted, isLoggedIn])
 
     return (
         <Page title={false} breadcrumb={[]}>
