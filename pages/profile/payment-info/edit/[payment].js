@@ -1,26 +1,47 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     Button,
     Input,
     Form,
     Row,
     Col,
-    DatePicker, message
+    message,
+    DatePicker
 } from 'antd';
 
 import Page from '../../../../components/Page';
 import routes from "../../../../constants/routes";
-import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import withAuth from "../../../../components/hoc/withAuth";
+import {useRouter} from "next/router";
+import cookie from "cookie";
+import {getStore} from "../../../../states";
+import moment from "moment";
 
 const { Item } = Form;
 
-const AddPaymentInfo = props => {
+const EditPaymentInfo = props => {
+
     const [form] = Form.useForm();
     const router = useRouter();
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.addPayment);
+
+    useEffect(() => {
+        if(props.status) {
+            const payment = props.payment;
+            const expirationDate = moment(payment.expirationDate || '');
+            form.setFieldsValue({
+                firstName: payment.firstName || '',
+                lastName: payment.lastName || '',
+                cvv: payment.cvv || '',
+                number: payment.number || "",
+                year: expirationDate,
+                month: expirationDate
+            })
+        } else {
+            router.push(routes.profile.payments.index);
+        }
+    }, [props.status, form])
 
     const breadcrumb = [
         {
@@ -32,7 +53,7 @@ const AddPaymentInfo = props => {
             href: routes.profile.payments.index
         },
         {
-            title: 'Add Credit Card Info'
+            title: `Edit **** ${props.payment.number.slice(-4)}`
         }
     ]
 
@@ -48,6 +69,7 @@ const AddPaymentInfo = props => {
             cvv,
             expirationDate
         }
+
 
         const result = await dispatch.profile.addPayment(body)
         if (result) {
@@ -175,5 +197,48 @@ const AddPaymentInfo = props => {
         </Page>
     )
 }
+export async function getServerSideProps({ req, params, res }) {
 
-export default withAuth(AddPaymentInfo);
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+
+    let status = false;
+    let payment = null;
+    if (!token) {
+        res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                status,
+                payment
+            }
+        };
+    }
+    const store = getStore();
+    const response = await store.dispatch.profile.getPayments({
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+
+    if(response) {
+        let index = response.findIndex(item => item._id === params.payment);
+        if(index > -1) {
+            payment = response[index];
+            status = true;
+        } else {
+            res.setHeader("location", routes.profile.payments.index);
+            res.statusCode = 302;
+            res.end();
+        }
+    }
+    return {
+        props: {
+            payment,
+            status
+        }
+    }
+}
+
+
+export default EditPaymentInfo;
