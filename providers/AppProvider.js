@@ -1,12 +1,18 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
+import StoreProvider from "./StoreProvider";
+import {AuthProvider} from "./AuthProvider";
 
-// @todo: add all providers here
-const AppProvider = ({ children }) => {
+
+const AppProvider = ({ children, authenticated }) => {
     return (
-        <ConfigProvider>
-            {children}
-        </ConfigProvider>
+        <AuthProvider authenticated={authenticated}>
+            <StoreProvider>
+                <ConfigProvider>
+                    {children}
+                </ConfigProvider>
+            </StoreProvider>
+        </AuthProvider>
     );
 }
 
