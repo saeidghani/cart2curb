@@ -6,6 +6,7 @@ import ProfileLayout from "../../../components/Layout/Profile";
 import ReportModal from "../../../components/Modals/Report";
 import deleteOrderModal from '../../../components/Modals/DeleteOrder';
 import OrderDetailsModal from "../../../components/Modals/OrderDetails";
+import withAuth from "../../../components/hoc/withAuth";
 
 const Orders = props => {
     const screens = Grid.useBreakpoint()
@@ -129,4 +130,4 @@ const Orders = props => {
     )
 }
 
-export default Orders;
+export default withAuth(Orders);
