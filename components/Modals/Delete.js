@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import React from "react";
 
-const deleteModal = ({ onOk, content, okText, title}) => {
+const deleteModal = ({ onOk, content, okText, title, loading}) => {
     Modal.confirm({
         title: title || 'Delete Permission',
         content: (
@@ -16,6 +16,7 @@ const deleteModal = ({ onOk, content, okText, title}) => {
         },
         okButtonProps: {
             className: 'w-32',
+            loading: loading || false
         },
         centered: true,
         width: 600
