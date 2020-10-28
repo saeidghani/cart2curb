@@ -4,10 +4,12 @@ export default {
         forgetPassword: '/login/forget-password',
         register: {
             index: '/signup',
-            submitted: '/signup/submitted',
             accountInfo: '/signup/info'
         },
-        resetPassword: '/login/reset-password'
+        resetPassword: {
+            index: '/login/reset-password',
+            submitted: '/login/reset-password/submitted',
+        }
     },
     stores: {
         index: "/stores",
@@ -39,7 +41,10 @@ export default {
         },
         payments: {
             index: '/profile/payment-info',
-            new: '/profile/payment-info/new'
+            new: '/profile/payment-info/new',
+            edit(number = '[payment]') {
+                return `/profile/payment-info/edit/${number}`
+            },
         },
         orders: '/profile/orders'
     },
