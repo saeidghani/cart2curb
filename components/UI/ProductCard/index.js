@@ -1,54 +1,24 @@
 import React from 'react';
 import Link from "next/link";
 import { EyeOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  width: 100%;
-  max-height: 280px;
-  position: relative;
-  overflow: hidden;
-  
-  &:hover div {
-    opacity: 1;
-    visibility: visible;
-  }
-`
+import routes from "../../../constants/routes";
 
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`
+import './styles.scss';
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255,75,69, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  cursor: pointer;
-  transition: all ease .3s;
-  will-change: opacity, visibility;
-`
 
 const ProductCard = props => {
+    console.log(props);
     return (
-        <Wrapper className={'border border-overline'}>
-            <Image src={'/images/temp/product1.jpg'} alt={'image title'}/>
-            <Link href={'/stores'}>
-                <Overlay>
+        <div className={'border border-overline product-card'}>
+            <img className={'product-card__image'} src={props.images} alt={props.name}/>
+            <Link href={routes.stores.product()} as={routes.stores.product(props.vendor, props._id)}>
+                <div className={'product-card__overlay'}>
                     <EyeOutlined className={'text-white text-3xl'}/>
-                </Overlay>
+                </div>
             </Link>
 
-        </Wrapper>
+        </div>
     )
 }
 

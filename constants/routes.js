@@ -15,6 +15,9 @@ export default {
         index: "/stores",
         single(vendor = '') {
             return `/stores/${vendor}`
+        },
+        product(vendor = '[vendor]', product = '[product]') {
+            return `/stores/${vendor}/products/${product}`
         }
     },
     homepage: '/',

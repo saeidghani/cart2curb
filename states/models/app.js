@@ -36,7 +36,6 @@ export const app = {
             try {
                 const res = await api.app.stores(query);
                 const data = res.data;
-                console.log(data);
                 if(data.success) {
                     dispatch.app.setStores({
                         data: data.data,
@@ -49,6 +48,66 @@ export const app = {
                 console.log(e);
                 message.error('An Error was occurred in data fetch from server')
             }
+        },
+        async getStore(storeId) {
+            try {
+                const res = await api.app.store(storeId);
+                const data = res.data;
+
+                if(data.success) {
+                    return data.data;
+                } else {
+                    return res.status
+                }
+            } catch(e) {
+                return e.response.status
+            }
+        },
+        async getCategories(body) {
+            try {
+                const res = await api.app.category({ storeId: body.storeId, pageNumber: body.page, pageSize: 30 });
+                const data = res.data;
+
+                if(data.success) {
+                    return data;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                    return res.status
+                }
+            } catch(e) {
+                message.error('An Error was occurred in data fetch from server')
+                return e.response.status
+            }
+        },
+        async getProducts(body) {
+            try {
+                const res = await api.app.products({ ...body, pageSize: 30 });
+                const data = res.data;
+
+                if(data.success) {
+                    return data;
+                } else {
+                    return res.status
+                }
+            } catch(e) {
+                return e.response.status
+            }
+        },
+        async getProduct(id) {
+
+            try {
+                const res = await api.app.product(id);
+                const data = res.data;
+
+                if(data.success) {
+                    return data.data;
+                } else {
+                    return res.status
+                }
+            } catch(e) {
+                return e.response.status
+            }
         }
+
     })
 }

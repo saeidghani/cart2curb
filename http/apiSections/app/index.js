@@ -30,14 +30,8 @@ export default class StoreApi extends ApiInstance {
         })
     }
 
-    products({ storeId, pageNumber, pageSize, category, sort }) {
-        return this.get(`product`, {
-            storeId,
-            page_number: pageNumber,
-            page_size: pageSize,
-            category,
-            sort,
-        })
+    products(query) {
+        return this.get(`product`, query)
     }
 
     product(productId) {
