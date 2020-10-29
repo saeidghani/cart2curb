@@ -12,11 +12,13 @@ import {
     message
 } from 'antd';
 import moment from 'moment';
+import axios from 'axios';
 
 import Page from '../../../components/Page';
 import routes from "../../../constants/routes";
 import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
+import withAuth from "../../../components/hoc/withAuth";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -46,6 +48,7 @@ const AccountInfo = props => {
     const [stream, setStream] = useState("Facebook")
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.profile.updateProfile);
+    const token = useSelector(state => state.auth.token);
     const dispatch = useDispatch()
 
     const breadcrumb = [
@@ -57,6 +60,22 @@ const AccountInfo = props => {
             title: "Account Info"
         }
     ]
+
+    const uploadProps = {
+        action: 'http://165.227.34.172:3003/api/v1/files/photos/',
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+
+        progress: {
+            strokeColor: {
+                '0%': '#ff4b45',
+                '100%': '#87d068',
+            },
+            strokeWidth: 2,
+            format: percent => `${parseFloat(percent.toFixed(2))}%`,
+        },
+    }
 
     const handleChange = info => {
         form.setFieldsValue({
@@ -76,11 +95,11 @@ const AccountInfo = props => {
 
 
     const submitHandler = (values) => {
-            const { notifyMethod, avatar, birthdate, streamPreference, streamId, facebook, instagram } = values;
+            const { notifyMethod, image, birthdate, streamPreference, streamId, facebook, instagram } = values;
             const body = {
                 notifyMethod,
                 birthdate: moment(birthdate).format('YYYY-MM-DD'),
-                image: "http://some.url/pic/name", // @todo: change to server
+                image,
             }
             const socialMedias = [
                 {
@@ -127,12 +146,13 @@ const AccountInfo = props => {
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
                                         <Upload
-                                            name="avatar"
+                                            name="image"
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
                                             beforeUpload={beforeUpload}
                                             onChange={handleChange}
+                                            {...uploadProps}
                                         >
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                                 <>
@@ -246,4 +266,4 @@ const AccountInfo = props => {
     )
 }
 
-export default AccountInfo;
+export default withAuth(AccountInfo);

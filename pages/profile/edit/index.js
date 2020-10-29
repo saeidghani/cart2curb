@@ -43,6 +43,7 @@ const AccountEdit = props => {
     const loading = useSelector(state => state.loading.effects.profile.updateProfile);
     const [imageUrl, setImageUrl] = useState('')
     const [stream, setStream] = useState("Facebook")
+    const token = useSelector(state => state.auth.token);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
@@ -74,13 +75,11 @@ const AccountEdit = props => {
 
     const handleChange = info => {
         if (info.file.status === 'uploading') {
-            setLoading(true);
             return;
         }
         if (info.file.status === 'done') {
             // Get this url from response in real world.
             getBase64(info.file.originFileObj, imageUrl => {
-                setLoading(true);
                 setImageUrl(imageUrl);
             });
         }
@@ -88,11 +87,11 @@ const AccountEdit = props => {
 
 
     const submitHandler = (values) => {
-        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
+        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone, image } = values;
         const body = {
             notifyMethod,
             birthdate: moment(birthdate).format('YYYY-MM-DD'),
-            image: "http://some.url/pic/name", // @todo: change to server
+            image,
             firstName,
             lastName,
             phone
@@ -124,6 +123,23 @@ const AccountEdit = props => {
     const checkValidation = (errorInfo) => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
+
+    const uploadProps = {
+        action: 'http://165.227.34.172:3003/api/v1/files/photos/',
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+
+        progress: {
+            strokeColor: {
+                '0%': '#ff4b45',
+                '100%': '#87d068',
+            },
+            strokeWidth: 2,
+            format: percent => `${parseFloat(percent.toFixed(2))}%`,
+        },
+    }
+
 
     return (
         <Page title={'Account Edit'} breadcrumb={breadcrumb}>
@@ -211,13 +227,14 @@ const AccountEdit = props => {
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
                                         <Upload
-                                            name="avatar"
+                                            name="image"
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
-                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                             beforeUpload={beforeUpload}
                                             onChange={handleChange}
+                                            {...uploadProps}
+
                                         >
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                                 <>
@@ -312,7 +329,7 @@ const AccountEdit = props => {
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'}>
+                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                                         Save
                                     </Button>
                                 </Item>

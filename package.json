@@ -21,6 +21,7 @@
     "antd": "^4.7.2",
     "autoprefixer": "^9.8.6",
     "axios": "^0.20.0",
+    "canada": "^0.1.0",
     "cookie": "^0.4.1",
     "google-maps-react": "^2.0.6",
     "less": "^3.12.2",
@@ -42,6 +43,7 @@
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.0",
+    "swr": "^0.3.6",
     "tailwindcss": "^1.9.5",
     "video-react": "^0.14.1"
   }

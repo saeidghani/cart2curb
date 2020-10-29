@@ -2212,6 +2212,11 @@ camelize@^1.0.0:
   resolved "https://registry.yarnpkg.com/camelize/-/camelize-1.0.0.tgz#164a5483e630fa4321e5af07020e531831b2609b"
   integrity sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=
 
+canada@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/canada/-/canada-0.1.0.tgz#84aceda3c3d00189e9867d97a6559323eedc771a"
+  integrity sha1-hKzto8PQAYnphn2XplWTI+7cdxo=
+
 caniuse-lite@^1.0.30001093, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001113, caniuse-lite@^1.0.30001135:
   version "1.0.30001150"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001150.tgz#6d0d829da654b0b233576de00335586bc2004df1"
@@ -2872,6 +2877,11 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=
+
+dequal@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.2.tgz#85ca22025e3a87e65ef75a7a437b35284a7e319d"
+  integrity sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==
 
 des.js@^1.0.0:
   version "1.0.1"
@@ -7088,6 +7098,13 @@ supports-color@^7.1.0:
   integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
   dependencies:
     has-flag "^4.0.0"
+
+swr@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.3.6.tgz#b1d59439e5114fdf95bb408e1c628ff48f967aac"
+  integrity sha512-LHbX9vVQSW8Kgyr86zz2fVVKmmT13qxB61uXuUAg6NT4cGu6afzAzT2SVCGEh8pJAD2o8NTZMgclIUxIAbvk7Q==
+  dependencies:
+    dequal "2.0.2"
 
 symbol-observable@^1.2.0:
   version "1.2.0"

@@ -14,7 +14,7 @@ export default function withAuth(WrappedComponent, location= routes.auth.login) 
             return !useIsAuthenticated();
         },
         serverCondition: function withAuthServerCondition(ctx) {
-            return !ctx.req?.cookies.session;
+            return !ctx.req?.cookies.token;
         }
     });
 }
