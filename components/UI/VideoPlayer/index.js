@@ -4,7 +4,7 @@ import { Player, BigPlayButton } from 'video-react';
 
 const VideoPlayer = props => {
     return (
-        <div className="px-3">
+        <div>
             <Player
                 playsInline
                 poster={props.poster}

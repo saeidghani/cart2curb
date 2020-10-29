@@ -17,11 +17,13 @@ const VideoSlider = ({videos, ...props}) => {
             <Slider {...settings}>
                 {videos.map((video, index) => {
                     return (
-                        <VideoPlayer
-                            key={`video-${index}`}
-                            src={video.src}
-                            poster={video.poster}
-                        />
+                        <div className="px-3">
+                            <VideoPlayer
+                                key={`video-${index}`}
+                                src={video.src}
+                                poster={video.poster}
+                            />
+                        </div>
                     )
                 })}
             </Slider>

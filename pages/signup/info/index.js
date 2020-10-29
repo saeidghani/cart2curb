@@ -12,13 +12,13 @@ import {
     message
 } from 'antd';
 import moment from 'moment';
-import axios from 'axios';
 
 import Page from '../../../components/Page';
 import routes from "../../../constants/routes";
 import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
-import withAuth from "../../../components/hoc/withAuth";
+import cookie from "cookie";
+import {getStore} from "../../../states";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -266,4 +266,40 @@ const AccountInfo = props => {
     )
 }
 
-export default withAuth(AccountInfo);
+export async function getServerSideProps({ req, res }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+
+    let profile = {};
+    if (!token) {
+        res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                profile
+            }
+        };
+    }
+    const store = getStore();
+    const response = await store.dispatch.profile.getProfile({
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    if(response) {
+        profile = response;
+        if(profile.socialMedias.length > 0 || profile.birthdate.length > 0 || profile.notifyMethod.length > 0) {
+
+            res.writeHead(307, { Location: routes.profile.edit });
+            res.end();
+        }
+    }
+    return {
+        props: {
+            profile
+        }
+    }
+}
+
+export default AccountInfo;

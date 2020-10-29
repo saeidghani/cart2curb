@@ -7,7 +7,7 @@ import storage from 'redux-persist/lib/storage'
 import * as models from './models';
 
 const persistConfig = {
-    key: 'root',
+    key: 'initial',
     storage,
 }
 
