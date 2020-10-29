@@ -50,6 +50,23 @@ const AccountEdit = props => {
     const { profile } = props;
 
     useEffect(() => {
+        let streamPreference = '',
+            streamId = '',
+            instagram = '',
+            facebook = '';
+        const streamOnIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.streamOn) : -1;
+        const instagramIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'instagram') : -1;
+        const facebookIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'facebook') : -1;
+        if(streamOnIndex > -1) {
+            streamPreference = profile.socialMedias[streamOnIndex].provider;
+            streamId = profile.socialMedias[streamOnIndex].username;
+        }
+        if(instagramIndex > -1) {
+            instagram = profile.socialMedias[instagramIndex].username;
+        }
+        if(facebookIndex > -1) {
+            facebook = profile.socialMedias[facebookIndex].username;
+        }
         form.setFieldsValue({
             firstName: profile.firstName || '',
             lastName: profile.lastName || '',
@@ -57,10 +74,10 @@ const AccountEdit = props => {
             phone: profile.phone || '',
             birthdate: moment(profile.birthdate || ''),
             notifyMethod: profile.notifyMethod || '',
-            streamPreference: profile.socialMedias ? profile.socialMedias.find(item => item.streamOn).provider : '',
-            streamId:  profile.socialMedias ? profile.socialMedias.find(item => item.streamOn).username : '',
-            instagram: profile.socialMedias ? profile.socialMedias.find(item => item.provider === 'instagram').username : '',
-            facebook: profile.socialMedias ? profile.socialMedias.find(item => item.provider === 'facebook').username : '',
+            streamPreference,
+            streamId,
+            instagram,
+            facebook,
         })
     }, [])
     const breadcrumb = [
