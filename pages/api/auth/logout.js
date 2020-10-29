@@ -1,6 +1,4 @@
 import {serialize} from 'cookie';
-import api from '../../../http/Api';
-import routes from "../../../constants/routes";
 
 export default async function handler(req, res) {
 
@@ -9,6 +7,11 @@ export default async function handler(req, res) {
             maxAge: -1,
             path: '/',
         }),
+        serialize('type', '', {
+            maxAge: -1,
+            path: '/',
+        }),
+
     ]);
     res.end();
 }
