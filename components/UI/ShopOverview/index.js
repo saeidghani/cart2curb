@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
+import routes from "../../../constants/routes";
+import Link from "next/link";
 
 const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
     return (
@@ -13,7 +15,10 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
                 </div>
                 <span className="text-sm text-overline font-medium mb-2">{service}</span>
                 <span className="text-xs text-overline font-medium mb-4">{subType}</span>
-                <Button danger icon={<EyeOutlined style={{ fontSize: 18}} />} className={'flex items-center font-bold justify-center h-14'}>Show</Button>
+                <Link href={routes.stores.single()} as={routes.stores.single(props._id)}>
+                    <Button danger icon={<EyeOutlined style={{ fontSize: 18}} />} className={'flex items-center font-bold justify-center h-14'}>Show</Button>
+
+                </Link>
             </div>
         </div>
     )

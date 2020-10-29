@@ -83,6 +83,7 @@ export default function Stores() {
                             return (
                                 <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
                                     <ShopOverview
+                                        _id={item._id}
                                         imageURL={item.image || '/images/temp/shop-item.png'}
                                         title={item.title || ''}
                                         name={item.name || ''}
