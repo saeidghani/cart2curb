@@ -13,6 +13,6 @@ export default async function handler(req, res) {
         );
         res.status(200).json(response.data);
     } catch(e) {
-        res.status(400).json({ message: 'something' })
+        res.status(e.response.status).json(e.response.data)
     }
 }

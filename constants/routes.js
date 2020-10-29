@@ -60,7 +60,7 @@ export default {
             resetPassword: '/vendors/login/reset-password',
             register: {
                 index: '/vendors/signup',
-                submitted: '/vendors/signup'
+                submitted: '/vendors/signup/submitted'
             }
         },
         products: {

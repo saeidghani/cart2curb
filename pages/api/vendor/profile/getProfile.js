@@ -1,14 +1,10 @@
-import cookie from 'cookie';
 import api from '../../../../http/Api';
 
 export default async function handler(req, res) {
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-    console.log('------ change password ---- ');
     try {
-        const response = await api.vendor.auth.changePassword(req.body, {
+        const response = await api.vendor.profile.profile({
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    ...req.headers
                 }
             }
         );

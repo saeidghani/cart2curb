@@ -41,7 +41,7 @@ export const vendorAuth = {
             try {
                 const res = await api.post('vendor/auth/login', body);
                 if(res.data.success) {
-                    dispatch.auth.authenticate({
+                    dispatch.vendorAuth.authenticate({
                         token: res.data.data.token
                     });
                     message.success('You Logged in successfully!');
@@ -57,21 +57,21 @@ export const vendorAuth = {
             }
         },
         async logout() {
-            dispatch.auth.logoutSync();
+            dispatch.vendorAuth.logoutSync();
             await api.post('vendor/auth/logout', {})
             return true;
         },
         async register(body) {
             try {
-                const res = await api.post('auth/register', body);
+                const res = await api.post('vendor/auth/register', body);
                 const data = res.data;
                 if(data.success) {
-                    dispatch.auth.authenticate({
+                    dispatch.vendorAuth.authenticate({
                         token: data.data.token
                     });
                     message.success('Your Registration was Complete');
                     emitter.emit('change-route', {
-                        path: routes.auth.register.accountInfo,
+                        path: routes.vendors.auth.register.submitted,
                     })
                     return true;
                 } else {
@@ -88,11 +88,11 @@ export const vendorAuth = {
         },
         async forgetPassword(body) {
             try {
-                const res = await api.post('auth/forgetPassword', body);
+                const res = await api.post('vendor/auth/forgetPassword', body);
                 if(res.data.success) {
                     message.success('Reset Link was sent to your email');
                 }
-                dispatch.auth.destroyResetToken()
+                dispatch.vendorAuth.destroyResetToken()
             } catch(e) {
                 console.log(e);
                 message.error('Something went wrong', 5);
@@ -100,12 +100,12 @@ export const vendorAuth = {
         },
         async resetPassword(body) {
             try {
-                const res = await api.put('auth/resetPassword', body);
+                const res = await api.put('vendor/auth/resetPassword', body);
                 if(res.data.success) {
-                    dispatch.auth.setResetToken({ token: body.token });
+                    dispatch.vendorAuth.setResetToken({ token: body.token });
                     message.success('Your Password was changed!');
                     emitter.emit('change-route', {
-                        path: routes.auth.resetPassword.submitted,
+                        path: routes.vendors.auth.resetPassword.submitted,
                     })
                 } else {
                     message.error('Your Token is not valid or expired', 5);
@@ -117,11 +117,11 @@ export const vendorAuth = {
         },
         async changePassword(body) {
             try {
-                const res = await api.post('auth/changePassword', body);
+                const res = await api.post('vendor/auth/changePassword', body);
                 if(res.data.success) {
                     message.success('Password changed successfully')
                     emitter.emit('change-route', {
-                        path: routes.profile.index,
+                        path: routes.vendors.account.index,
                     })
                     return true;
                 }

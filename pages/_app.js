@@ -33,7 +33,6 @@ MyApp.getInitialProps = async (appContext) => {
         request.cookies = cookie.parse(request.headers.cookie || '');
         authenticated = !!request.cookies.token;
         userType = request.cookies.type;
-        console.log('token', request.cookies.token);
     }
 
     // Call the page's `getInitialProps` and fill `appProps.pageProps`

@@ -4,7 +4,7 @@ import { GoogleApiWrapper, Map, Marker, Polygon } from "google-maps-react";
 import Loading from "./Loading";
 import {GOOGLE_MAP_API_KEY} from '../../constants';
 
-const GoogleMap = ({height, google, clickHandler, ...props}) => {
+const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
     const [polyPoints, setPolyPoints] = useState([])
 
     const style = {
@@ -49,14 +49,12 @@ const GoogleMap = ({height, google, clickHandler, ...props}) => {
              onClick={addCoordsHandler}
              {...props}
         >
-            {polyPoints.map((point, index) => {
+            {area.map((point, index) => {
                 return (
                     <Marker
                         key={`point-${index}`}
                         name={`point-${index}`}
                         position={point}
-                        draggable={true}
-                        onDragend={(...e) => dragHandler(index, ...e)}
                         icon={{
                             url: "/images/marker.svg",
                             anchor: new google.maps.Point(32,32),
@@ -66,7 +64,7 @@ const GoogleMap = ({height, google, clickHandler, ...props}) => {
                 )
             })}
             <Polygon
-                paths={polyPoints}
+                paths={area}
                 strokeColor="#FF4B45"
                 strokeOpacity={0.9}
                 strokeWidth={4}
