@@ -18,16 +18,20 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRedirectAuthenticated} from "../../hooks/auth";
 import {useAuth} from "../../providers/AuthProvider";
 import withoutAuth from "../../components/hoc/withoutAuth";
+import {useCities, useProvinces} from "../../hooks/region";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const SignUp = props => {
     const [marker, setMarker] = useState({ position: {}})
+    const [province, setProvince] = useState('');
     const loading = useSelector(state => state.loading.effects.auth.register);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { setAuthenticated } = useAuth();
+    const provinces = useProvinces();
+    const cities = useCities(province);
 
     const redirect = useRedirectAuthenticated();
 
@@ -58,8 +62,8 @@ const SignUp = props => {
             const body = {
                 firstName, lastName, email, phone, password,
                 address: {
-                    country: 'Canada', // @todo: change region form,
-                    province,
+                    country: 'Canada',
+                    province: provinces[province],
                     city,
                     addressLine1,
                     addressLine2,
@@ -240,30 +244,32 @@ const SignUp = props => {
                                 >
                                     <Select
                                         placeholder={'Select'}
+                                        onChange={setProvince}
                                     >
-                                        <Option value={'nyc'}>NYC</Option>
-                                        <Option value={'california'}>California</Option>
-                                        <Option value={'washington'}>Washington DC</Option>
+                                        {Object.keys(provinces).map(abbr => {
+                                            return (
+                                                <Option value={abbr}>{provinces[abbr]}</Option>
+                                            )
+                                        })}
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item
-                                    name={'city'}
-                                    label={'City'}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please Select City'
-                                        }
-                                    ]}
-                                >
+                                <Item name={'city'} label={'City'}
+                                      rules={[
+                                          {
+                                              required: true,
+                                              message: 'Please Select City'
+                                          }
+                                      ]}>
                                     <Select
-                                        placeholder={'Select'}
+                                        placeholder={province ? 'Select' : 'Select Province first'}
                                     >
-                                        <Option value={'nyc'}>NYC</Option>
-                                        <Option value={'california'}>California</Option>
-                                        <Option value={'washington'}>Washington DC</Option>
+                                        {cities.map(city => {
+                                            return (
+                                                <Option value={city[0]}>{city[0]}</Option>
+                                            )
+                                        })}
                                     </Select>
                                 </Item>
                             </Col>

@@ -19,16 +19,24 @@ import {useRouter} from "next/router";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
 import withAuth from "../../../../components/hoc/withAuth";
+import {useCities, useProvinces} from "../../../../hooks/region";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const AddAddress = props => {
     const [marker, setMarker] = useState({ position: {}})
+    const [center, setCenter] = useState({
+        lat: 40.781305,
+        lng: -73.9666857
+    })
+    const [province, setProvince] = useState('');
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.profile.addAddress)
     const dispatch = useDispatch();
     const router = useRouter();
+    const provinces = useProvinces();
+    const cities = useCities(province);
 
     const breadcrumb = [
         {
@@ -58,8 +66,8 @@ const AddAddress = props => {
         if(marker.position.hasOwnProperty('lat')) {
             const { province, city, addressLine1, addressLine2, postalCode} = values;
             const body = {
-                country: 'Canada', // @todo: change region form,
-                province,
+                country: 'Canada',
+                province: provinces[province],
                 city,
                 addressLine1,
                 addressLine2,
@@ -83,6 +91,29 @@ const AddAddress = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+    const findGeoLocationHandler = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                }
+                setMarker({
+                    position: pos
+                })
+                setCenter(pos);
+            }, (e) => {
+                if(e.code === 2) {
+                    message.error('Your device doesn\'t support this feature')
+                } else if(e.code === 1) {
+                    message.error('You not allowed this service to find your location')
+                }
+                console.log(e);
+            });
+        } else {
+            message.error('Your device doesn\'t support this feature or you not allowed')
+        }
+    }
 
     return (
         <Page title={'Add New Address'} breadcrumb={breadcrumb}>
@@ -104,10 +135,13 @@ const AddAddress = props => {
                                       }]}>
                                     <Select
                                         placeholder={'Select'}
+                                        onChange={setProvince}
                                     >
-                                        <Option value={'nyc'}>NYC</Option>
-                                        <Option value={'california'}>California</Option>
-                                        <Option value={'washington'}>Washington DC</Option>
+                                        {Object.keys(provinces).map(abbr => {
+                                            return (
+                                                <Option value={abbr}>{provinces[abbr]}</Option>
+                                            )
+                                        })}
                                     </Select>
                                 </Item>
                             </Col>
@@ -120,11 +154,13 @@ const AddAddress = props => {
                                           }
                                       ]}>
                                     <Select
-                                        placeholder={'Select'}
+                                        placeholder={province ? 'Select' : 'Select Province first'}
                                     >
-                                        <Option value={'nyc'}>NYC</Option>
-                                        <Option value={'california'}>California</Option>
-                                        <Option value={'washington'}>Washington DC</Option>
+                                        {cities.map(city => {
+                                            return (
+                                                <Option value={city[0]}>{city[0]}</Option>
+                                            )
+                                        })}
                                     </Select>
                                 </Item>
                             </Col>
@@ -170,6 +206,7 @@ const AddAddress = props => {
                                             <LocationIcon size={20} fill={'#40BFC1'}/>
                                         </div>
                                     )}
+                                    onClick={findGeoLocationHandler}
                                 >Find Me on Map</Button>
                                 <Divider className={'mt-1 mb-8'}/>
                             </Col>
@@ -178,10 +215,7 @@ const AddAddress = props => {
                                 <div className="mb-6">
                                     <GoogleMap
                                         height={670}
-                                        initialCenter={{
-                                            lat: 40.781305,
-                                            lng: -73.9666857
-                                        }}
+                                        center={center}
                                         marker={marker}
                                         clickHandler={changeMarkerPosition}
                                     />
