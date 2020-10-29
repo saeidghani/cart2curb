@@ -16,6 +16,14 @@ export const useIsAuthenticated = () => {
     }, [isAuthenticated])
 }
 
+export const useAuthenticatedUserType = () => {
+    const {userType} = useAuth();
+
+    return useMemo(() => {
+        return userType;
+    }, [userType])
+}
+
 export const useIsAuthRoute = () => {
     const route = useCurrentRoute();
 

@@ -1,16 +1,27 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Badge, Button } from 'antd';
 import Link from 'next/link'
 
 import {HeaderLogoIcon, HeaderNotificationIcon} from '../icons';
 import routes from "../../constants/routes";
 import './styles.scss';
-import {useIsAuthenticated, useIsAuthRoute} from "../../hooks/auth";
+import {useAuthenticatedUserType, useIsAuthenticated, useIsAuthRoute} from "../../hooks/auth";
+import {useRouter} from "next/router";
 
-// @todo: add authentication logics to state and here
 const Header = props => {
+    const [isVendorPage, setIsVendorPage] = useState(false);
     const isAuthenticated = useIsAuthenticated();
     const isAuthRoute = useIsAuthRoute();
+    const router = useRouter();
+    const userType = useAuthenticatedUserType()
+
+    useEffect(() => {
+        if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
+            setIsVendorPage(true)
+        } else {
+            setIsVendorPage(false);
+        }
+    }, [router, userType])
 
     return (
         <header className={'header layout__section'}>
@@ -30,13 +41,15 @@ const Header = props => {
 
                 </div>
                 <div className="flex flex-row items-center">
-                    <Link href={routes.cart.index}>
-                        <Badge count={5} className={'cursor-pointer'}>
-                            <HeaderNotificationIcon />
-                        </Badge>
-                    </Link>
+                    {!isVendorPage && (
+                        <Link href={routes.cart.index}>
+                            <Badge count={5} className={'cursor-pointer'}>
+                                <HeaderNotificationIcon />
+                            </Badge>
+                        </Link>
+                    )}
                     {isAuthenticated ? (
-                        <Link href={routes.profile.index}>
+                        <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
                             <img src="/images/profile.png" alt="profile" className="ml-14 rounded-full cursor-pointer" />
                         </Link>
                     ) : (

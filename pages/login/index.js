@@ -17,7 +17,7 @@ const Login = props => {
     const loading = useSelector(state => state.loading.effects.auth.login);
     const dispatch = useDispatch();
     const redirect = useRedirectAuthenticated();
-    const { setAuthenticated } = useAuth();
+    const { setAuthenticated, setUserType } = useAuth();
 
     useEffect(() => {
         redirect();
@@ -31,6 +31,7 @@ const Login = props => {
         const res = await dispatch.auth.login(body)
         if(res) {
             setAuthenticated(true);
+            setUserType('customer')
         }
     }
 

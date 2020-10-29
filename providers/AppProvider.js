@@ -4,9 +4,9 @@ import StoreProvider from "./StoreProvider";
 import {AuthProvider} from "./AuthProvider";
 
 
-const AppProvider = ({ children, authenticated }) => {
+const AppProvider = ({ children, authenticated, userType }) => {
     return (
-        <AuthProvider authenticated={authenticated}>
+        <AuthProvider authenticated={authenticated} type={userType}>
             <StoreProvider>
                 <ConfigProvider>
                     {children}

@@ -29,7 +29,7 @@ const SignUp = props => {
     const loading = useSelector(state => state.loading.effects.auth.register);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const { setAuthenticated } = useAuth();
+    const { setAuthenticated, setUserType } = useAuth();
     const provinces = useProvinces();
     const cities = useCities(province);
 
@@ -79,6 +79,7 @@ const SignUp = props => {
             const result = await dispatch.auth.register(body)
             if(result) {
                 setAuthenticated(true);
+                setUserType('customer')
             }
         } else {
             message.error('Please Select you Position on Map', 5)

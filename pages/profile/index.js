@@ -30,11 +30,12 @@ const profile = props => {
     const router = useRouter();
     const loading = useSelector(state => state.loading.effects.profile.getProfile);
     const { profile } = props;
-    const { setAuthenticated, isAuthenticated } = useAuth();
+    const { setAuthenticated, isAuthenticated, setUserType } = useAuth();
 
     const logoutHandler = async () => {
         await dispatch.auth.logout();
         setAuthenticated(false);
+        setUserType(null)
     }
 
     useEffect(() => {
