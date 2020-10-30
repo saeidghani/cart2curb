@@ -20,27 +20,27 @@ const AboutUs = props => {
             </Row>
             <Row gutter={[24, 24]} className={'pt-17'} align={'stretch'}>
                 <Col xs={24} className={'flex items-center justify-center'}>
-                    <h2 className="text-2xl text-type font-medium mt-0 mb-4">What do we do</h2>
+                    <h2 className="text-xl text-type font-medium mt-0 mb-4">What do we do</h2>
                 </Col>
                 <Col xs={24} md={8}>
                     <div className="rounded border border-overline px-6 lg:px-10 py-9 flex flex-col item-center h-full">
                         <h4 className="text-center text-paragraph font-medium text-base">Select</h4>
                         <ShoppingCartIcon  className="mt-5.5 self-center"/>
-                        <p className="text-header pt-9 font-normal text-base">Pick your favorite groceries online from anywhere at your comfort.</p>
+                        <p className="text-header pt-9 pb-4 font-normal text-base">Pick your favorite groceries online from anywhere at your comfort.</p>
                     </div>
                 </Col>
                 <Col xs={24} md={8}>
                     <div className="rounded border border-overline px-6 lg:px-10 py-9 flex flex-col item-center h-full">
                         <h4 className="text-center text-paragraph font-medium text-base">Pay</h4>
                         <CreditCartIcon  className="mt-5.5 self-center"/>
-                        <p className="text-header pt-9 font-normal text-base">No parking costs and no fuel costs. Cart2Curb also has awesome deals every day.</p>
+                        <p className="text-header pt-9 pb-4 font-normal text-base">No parking costs and no fuel costs. Cart2Curb also has awesome deals every day.</p>
                     </div>
                 </Col>
                 <Col xs={24} md={8}>
                     <div className="rounded border border-overline px-6 lg:px-10 py-9 flex flex-col item-center h-full">
                         <h4 className="text-center text-paragraph font-medium text-base">Relax</h4>
                         <SmilingIcon  className="mt-5.5 self-center"/>
-                        <p className="text-header pt-9 font-normal text-base">Let us do the grocery run for you, so you can enjoy your time with yourself or your family.</p>
+                        <p className="text-header pt-9 pb-4 font-normal text-base">Let us do the grocery run for you, so you can enjoy your time with yourself or your family.</p>
                     </div>
                 </Col>
             </Row>

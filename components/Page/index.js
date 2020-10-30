@@ -5,7 +5,7 @@ import Link from 'next/link';
 const Page = props => {
     return (
         <div className="page md:pb-15 pb-12">
-            <Breadcrumb separator=">" className={'pt-6 pb-8'}>
+            <Breadcrumb separator=">" className={'pt-8 pb-15 text-xs text-paragraph'}>
                 {props.hasHome && (
                     <Breadcrumb.Item>
                         <Link href={'/'}>
@@ -25,7 +25,7 @@ const Page = props => {
                     );
                 })}
             </Breadcrumb>
-            {props.title && (<h1 className="page__title text-3xl text-label mb-8 font-medium">{props.title}</h1>)}
+            {props.title && (<h1 className="page__title text-3xl text-label mb-8 font-medium mt-0">{props.title}</h1>)}
             <div className="page__content">
                 {props.children}
             </div>
