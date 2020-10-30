@@ -41,7 +41,7 @@ const Login = props => {
     return (
         <Page title={'login'} breadcrumb={[{ title: 'Login' }]}>
             <Row>
-                <Col lg={{ span: 6, offset: 9}} md={{ span: 12, offset: 6 }} sm={{ span: 16, offset: 4 }} xs={24}>
+                <Col xl={{ span: 8, offset: 8}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
                     <Form
                         form={form}
                         layout="vertical"
@@ -49,35 +49,45 @@ const Login = props => {
                         onFinish={submitHandler}
                         onFinishFailed={checkValidation}
                     >
-                        <Item name={'username'} label={'Email Address'} rules={[
-                            {
-                                required: true,
-                                message: "Please enter your Email Address"
-                            }, // @todo: add pattern
-                            // {
-                            //     pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
-                            //     message: "Please enter valid Email Address"
-                            // }
-                        ]}>
-                            <Input placeholder="Email Address" className={'mb-3'} />
-                        </Item>
-                        <Item name={'password'} label={'Password'} rules={[
-                            {
-                                required: true,
-                                message: "Password Field is required"
-                            }
-                        ]}>
-                            <Input type="password" placeholder="Password" className={'mb-3'} />
-                        </Item>
-                        <Item>
-                            <Button type="primary" block htmlType={'submit'} loading={loading}>
-                                Login
-                            </Button>
-                        </Item>
+                        <Row>
+                            <Col xs={24}>
+                                <Item name={'username'} label={'Email Address'} rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter your Email Address"
+                                    },
+                                ]}>
+                                    <Input placeholder="Email Address" className={'mb-3'} />
+                                </Item>
+
+                            </Col>
+
+                            <Col xs={24}>
+                                <Item name={'password'} label={'Password'} rules={[
+                                    {
+                                        required: true,
+                                        message: "Password Field is required"
+                                    }
+                                ]}>
+                                    <Input type="password" placeholder="Password" className={'mb-3'} />
+                                </Item>
+
+                            </Col>
+
+                            <Col xs={24}>
+                                <Item>
+                                    <Button type="primary" block htmlType={'submit'} loading={loading}>
+                                        Login
+                                    </Button>
+                                </Item>
+
+                            </Col>
+
+                        </Row>
                     </Form>
-                    <div className="pt-11 mb-24 text-center">
+                    <div className="pt-7.5 pb-16 md:pb-24 text-center">
                         <Link href={routes.vendors.auth.forgetPassword}>
-                            <span className="text-label font-medium text-xl cursor-pointer">
+                            <span className="text-label font-medium text-xl cursor-pointer text-type">
                                 Forget Password?
                             </span>
                         </Link>

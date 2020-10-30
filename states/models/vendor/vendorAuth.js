@@ -104,15 +104,15 @@ export const vendorAuth = {
                 if(res.data.success) {
                     dispatch.vendorAuth.setResetToken({ token: body.token });
                     message.success('Your Password was changed!');
-                    emitter.emit('change-route', {
-                        path: routes.vendors.auth.resetPassword.submitted,
-                    })
+                    return true;
                 } else {
                     message.error('Your Token is not valid or expired', 5);
+                    return false;
                 }
 
             } catch(e) {
                 message.error('Your Token is not valid or expired', 5);
+                return false;
             }
         },
         async changePassword(body) {
