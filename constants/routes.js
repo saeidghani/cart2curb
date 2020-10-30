@@ -4,7 +4,6 @@ export default {
         forgetPassword: '/login/forget-password',
         register: {
             index: '/signup',
-            accountInfo: '/signup/info'
         },
         resetPassword: {
             index: '/login/reset-password',

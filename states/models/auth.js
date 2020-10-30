@@ -71,10 +71,7 @@ export const auth = {
                         token: data.data.token
                     });
                     message.success('Your Registration was Complete');
-                    emitter.emit('change-route', {
-                        path: routes.auth.register.accountInfo,
-                    })
-                    return true;
+                    return data.data.token;
                 } else {
                     message.error('Something went wrong', 5);
                 }

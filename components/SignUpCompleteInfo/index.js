@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Input,
@@ -13,22 +13,13 @@ import {
 } from 'antd';
 import moment from 'moment';
 
-import Page from '../../../components/Page';
-import routes from "../../../constants/routes";
+import Page from '../Page';
+import routes from "../../constants/routes";
 import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
-import cookie from "cookie";
-import {getStore} from "../../../states";
 
 const { Item } = Form;
 const { Option } = Select;
-
-
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
 
 function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -86,20 +77,16 @@ const AccountInfo = props => {
             return;
         }
         if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl => {
-                setImageUrl(imageUrl);
-            });
+            setImageUrl(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
         }
     };
 
-
     const submitHandler = (values) => {
-            const { notifyMethod, image, birthdate, streamPreference, streamId, facebook, instagram } = values;
+            const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram } = values;
             const body = {
                 notifyMethod,
                 birthdate: moment(birthdate).format('YYYY-MM-DD'),
-                image,
+                image: imageUrl,
             }
             const socialMedias = [
                 {
@@ -129,7 +116,6 @@ const AccountInfo = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
-
     return (
         <Page title={'Account Info'} breadcrumb={breadcrumb}>
             <Row>
@@ -146,7 +132,7 @@ const AccountInfo = props => {
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
                                         <Upload
-                                            name="image"
+                                            name="photo"
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
@@ -218,7 +204,7 @@ const AccountInfo = props => {
                             </Col>
 
                             <Col xs={24}>
-                                <Divider />
+                                <Divider className={'mt-2 mb-8'}/>
                             </Col>
                             <Col xs={24}>
                                 <h3 className={'font-medium text-base pb-6'}>Social Integration</h3>
@@ -242,17 +228,14 @@ const AccountInfo = props => {
                                     <Input placeholder="Instagram Username" />
                                 </Item>
                             </Col>
-                        </Row>
-
-                        <Row gutter={24}>
-                            <Col xs={24} className={'flex items-center justify-end'}>
+                            <Col xs={24} className={'flex md:flex-row flex-col-reverse items-stretch md:items-center justify-center md:justify-end'}>
                                 <Item>
                                     <Link href={routes.profile.index}>
-                                        <Button danger className={'w-32'}>Cancel</Button>
+                                        <Button danger className={'w-full md:w-32'}>Cancel</Button>
                                     </Link>
                                 </Item>
                                 <Item>
-                                    <Button type="primary" htmlType={'submit'} block className={'w-32 ml-5'} loading={loading}>
+                                    <Button type="primary" htmlType={'submit'} block className={'w-full md:w-32 ml-0 md:ml-5'} loading={loading}>
                                         Save
                                     </Button>
                                 </Item>
@@ -264,42 +247,6 @@ const AccountInfo = props => {
             </Row>
         </Page>
     )
-}
-
-export async function getServerSideProps({ req, res }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-
-    let profile = {};
-    if (!token) {
-        res.writeHead(307, { Location: routes.auth.login });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
-    const store = getStore();
-    const response = await store.dispatch.profile.getProfile({
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    if(response) {
-        profile = response;
-        if(profile.socialMedias.length > 0 || profile.birthdate.length > 0 || profile.notifyMethod.length > 0) {
-
-            res.writeHead(307, { Location: routes.profile.edit });
-            res.end();
-        }
-    }
-    return {
-        props: {
-            profile
-        }
-    }
 }
 
 export default AccountInfo;

@@ -19,6 +19,9 @@ import {useRedirectAuthenticated} from "../../hooks/auth";
 import {useAuth} from "../../providers/AuthProvider";
 import withoutAuth from "../../components/hoc/withoutAuth";
 import {useCities, useProvinces} from "../../hooks/region";
+import AccountInfo from "../../components/SignUpCompleteInfo";
+import cookie from "cookie";
+import {getStore} from "../../states";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -26,19 +29,13 @@ const { Option } = Select;
 const SignUp = props => {
     const [marker, setMarker] = useState({ position: {}})
     const [province, setProvince] = useState('');
+    const [completeStep, setCompleteStep] = useState(false);
     const loading = useSelector(state => state.loading.effects.auth.register);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { setAuthenticated, setUserType } = useAuth();
     const provinces = useProvinces();
     const cities = useCities(province);
-
-    const redirect = useRedirectAuthenticated();
-
-    useEffect(() => {
-        redirect();
-    }, [redirect])
-
 
     const breadcrumb = [
         {
@@ -80,6 +77,7 @@ const SignUp = props => {
             if(result) {
                 setAuthenticated(true);
                 setUserType('customer')
+                setCompleteStep(true);
             }
         } else {
             message.error('Please Select you Position on Map', 5)
@@ -91,7 +89,9 @@ const SignUp = props => {
     }
 
 
-    return (
+    return completeStep ? (
+        <AccountInfo/>
+    ) : (
         <Page title={'Register'} breadcrumb={breadcrumb}>
             <Row>
                 <Col span={24}>
@@ -217,11 +217,11 @@ const SignUp = props => {
                             </Col>
 
                             <Col xs={24}>
-                                <Divider/>
+                                <Divider className={'my-2'}/>
                             </Col>
 
                             <Col span={24}>
-                                <div className="mb-6">
+                                <div className="mb-8 mt-6">
                                     <GoogleMap
                                         height={670}
                                         initialCenter={{
@@ -285,12 +285,12 @@ const SignUp = props => {
                                         }
                                     ]}
                                 >
-                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{minRows: 1, maxRows: 6}}/>
+                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{minRows: 1, maxRows: 6}} style={{ resize: 'none'}}/>
                                 </Item>
                             </Col>
                             <Col span={24}>
                                 <Item name={'addressLine2'} label={'Address Line 2'}>
-                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{minRows: 1, maxRows: 6}}/>
+                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{minRows: 1, maxRows: 6}} style={{ resize: 'none'}}/>
                                 </Item>
                             </Col>
 
@@ -309,12 +309,9 @@ const SignUp = props => {
                                     <Input placeholder={'Postal Code'}/>
                                 </Item>
                             </Col>
-                        </Row>
-
-                        <Row gutter={24}>
                             <Col xs={24} className={'flex items-center justify-end'}>
-                                <Item>
-                                    <Button type="primary" htmlType={'submit'} block className={'w-32'} loading={loading}>
+                                <Item className={'w-full md:w-32'}>
+                                    <Button type="primary" htmlType={'submit'} block className={'w-full md:w-32'} loading={loading}>
                                         Register
                                     </Button>
                                 </Item>
@@ -322,7 +319,7 @@ const SignUp = props => {
                         </Row>
 
                     </Form>
-                    <div className="flex flex-row text-center items-center justify-center pt-14">
+                    <div className="flex flex-row text-center items-center justify-center pt-8">
                         <h4 className="font-medium text-secondary text-base">Already a member?</h4>
                         <Link href={routes.auth.login}>
                             <a className="pl-2 text-info font-medium cursor-pointer text-base">Login</a>
@@ -334,4 +331,23 @@ const SignUp = props => {
     );
 }
 
-export default withoutAuth(SignUp);
+export async function getServerSideProps({ req, res }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+
+    if (token) {
+        res.writeHead(307, { Location: routes.profile.index });
+        res.end();
+        return {
+            props: {}
+        };
+    }
+
+    return {
+        props: {}
+    }
+}
+
+
+export default SignUp;
