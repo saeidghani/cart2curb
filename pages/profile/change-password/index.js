@@ -40,7 +40,7 @@ const ChangePassword = props => {
         <Page title={'Change Password'} breadcrumb={breadcrumb}>
 
             <Row>
-                <Col xl={{ span: 10, offset: 7}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
+                <Col xl={{ span: 8, offset: 8}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
                     <Form
                         form={form}
                         layout="vertical"
