@@ -244,7 +244,7 @@ const AccountEdit = props => {
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
                                         <Upload
-                                            name="image"
+                                            name="photo"
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
