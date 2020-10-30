@@ -131,30 +131,22 @@ export default class CustomerProfileApi extends ApiInstance {
 
     /**
      * Fetch Customer orders info with pagination
-     * @param search
-     * @param id
-     * @param pageNumber
-     * @param pageSize
-     * @param request
      * @returns {Promise<*>}
+     * @param body
+     * @param options
      */
-    orders({ search, id, pageNumber, pageSize}, ...request) {
-        return this.get(`customer/profile/orders/`, {
-                search,
-                _id: id,
-                page_number: pageNumber,
-                page_size: pageSize,
-            })
+    orders(body, options = {}) {
+        return this.get(`customer/profile/orders/`, body, options)
     }
 
     /**
      * Delete Order or cancel it
      * @param id
-     * @param request
+     * @param options
      * @returns {Promise<*>}
      */
-    deleteOrder(id, ...request) {
-        return this.delete(`customer/profile/orders/${id}`, ...request)
+    deleteOrder(id, options = {}) {
+        return this.delete(`customer/profile/orders/${id}`, options)
     }
 
 }

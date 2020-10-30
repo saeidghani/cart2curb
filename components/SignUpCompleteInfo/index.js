@@ -18,6 +18,7 @@ import routes from "../../constants/routes";
 import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
+import {UserOutlined} from "@ant-design/icons";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -148,11 +149,11 @@ const AccountInfo = props => {
                                         >
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                                 <>
-                                                    <div className={'full-rounded text-primary flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>+</div>
+                                                    <div className={'full-rounded text-type flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}><UserOutlined /></div>
                                                 </>
                                             )}
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-info ml-3">Upload</label>
+                                        <label htmlFor={'avatar'} className="text-info ml-3">Upload Image</label>
                                     </div>
                                 </Item>
                             </Col>

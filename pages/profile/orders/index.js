@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import {Table, Row, Col, Space, Grid, Button, Modal, Checkbox, InputNumber} from 'antd';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Table, Row, Col, Space, Grid, Button, Modal, Checkbox, InputNumber, Form, message} from 'antd';
 import { FileSearchOutlined } from '@ant-design/icons';
 
 import ProfileLayout from "../../../components/Layout/Profile";
@@ -7,11 +7,64 @@ import ReportModal from "../../../components/Modals/Report";
 import deleteOrderModal from '../../../components/Modals/DeleteOrder';
 import OrderDetailsModal from "../../../components/Modals/OrderDetails";
 import withAuth from "../../../components/hoc/withAuth";
+import {useDispatch, useSelector} from "react-redux";
+import Loader from "../../../components/UI/Loader";
 
 const Orders = props => {
     const screens = Grid.useBreakpoint()
     const [reportModalShow, setReportModalShow] = useState(false);
+    const [deleted, setDeleted] = useState([]);
     const [detailsModal, setDetailsModal] = useState(-1);
+    const loader = useRef(null);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const dispatch = useDispatch();
+    const loading = useSelector(state => state.loading.effects.profile.getOrders);
+    const orders = useSelector(state => state.profile.orders.data);
+
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 1.0
+        };
+
+        const observer = new IntersectionObserver(handleObserver, options);
+        if (loader.current) {
+            observer.observe(loader.current)
+        }
+
+    }, []);
+
+
+    const handleObserver = (entities) => {
+        const target = entities[0];
+        if (target.isIntersecting) {
+            fetchOrders();
+        }
+    }
+
+    const fetchOrders = async (query = {}, forceLoad = false) => {
+        if(hasMore || forceLoad) {
+
+            let body = {
+                page_number: page,
+            }
+
+            try {
+                const response = await dispatch.profile.getOrders(body)
+                setPage(page + 1);
+                if(response.data.length < 30) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                setHasMore(false);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+    }
+
 
     const columns = [
         {
@@ -21,10 +74,10 @@ const Orders = props => {
             render: number => <span className={`text-cell`}>{number}</span>
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-            render: date => <span className={`text-cell`}>{date}</span>
+            title: 'Total Price',
+            dataIndex: 'totalPrice',
+            key: 'totalPrice',
+            render: totalPrice => <span className={`text-cell`}>${totalPrice}</span>
         },
         {
             title: 'Status',
@@ -58,7 +111,7 @@ const Orders = props => {
                             visible={row.key === detailsModal}
                             onHide={setDetailsModal.bind(this, -1)}
                             orderNumber={row.number}
-                            date={row.date}
+                            date={'-'}
                             cxName={row.name}
                             status={row.status}
                             data={row.data}
@@ -70,56 +123,69 @@ const Orders = props => {
         },
     ];
 
-    const fakeData = useMemo(() => {
-        return [...Array(5)].map((item, index) => {
-            const random = Math.random();
-            const status = random > 0.6 ? 'In progress' : random > 0.4 ? 'Delivered' : 'Canceled';
+    const data = useMemo(() => {
+        return orders && orders.map((order, index) => {
+            if(deleted.includes(order._id)) {
+                return;
+            }
             return {
-                key: index + 1,
-                index: index + 1,
-                number: `ID${123456 + index}`,
-                date: '01.01.2020',
-                status: status,
+                key: order._id,
+                index: order._id,
+                number: order._id,
+                totalPrice: order.totalPrice,
+                status: order.status,
                 actions: {
-                    dangerText: random > 0.6 ? 'Delete' : 'Report',
-                    showMoreHandler: () => setDetailsModal(index + 1),
+                    dangerText: order.status.toLowerCase() === 'pending' ? 'Delete' : 'Report',
+                    showMoreHandler: () => setDetailsModal(order._id),
                     deleteHandler: () => {
-                        if(random <= 0.6) {
-                            setReportModalShow(true)
-                        } else {
-                            deleteOrderModal(() => {
-                                console.log(`ID${123456 + index}`)
+                        if(order.status.toLowerCase() === 'pending') {
+                            deleteOrderModal(async () => {
+                                const res = await dispatch.profile.deleteOrder(order._id);
+                                if(res) {
+                                    setDeleted(deleted.concat(order._id))
+                                }
                             });
+                        } else {
+                            setReportModalShow(true)
                         }
                     },
                 },
-                name: "Berry wood",
-                data: [...Array(3)].map((item, index) => {
+                name: "-",
+                data: order.products.map((item, index) => {
                     return {
-                        key: index + 1,
-                        index: index + 1,
-                        product: 'Choice Beef Brisket Chunk',
-                        substitutions: Math.random() > 0.5 ? 'Yes' : 'No',
-                        price: '$150.00',
-                        tax: '$20.50',
-                        store: 'Store name',
-                        quantity: 10,
-                        total: "$160.00"
+                        key: item._id,
+                        index: item._id,
+                        product: item.name,
+                        substitutions: item.subtitution ? 'Yes' : 'No',
+                        price: `$${item.price}`,
+                        tax: `$${item.tax}`,
+                        store: item.store,
+                        quantity: item.quantity,
+                        total: `$${item.totalPrice}`
                     }
                 }),
-                total: 240.30
+                total: order.totalPrice
             }
         })
-    }, [])
+    }, [orders, loading])
+
     return (
         <ProfileLayout title={'Orders'} breadcrumb={[{ title: "User Profile" }]} withoutDivider={true}>
             <Row>
                 <Col xs={24}>
 
                     <Table columns={columns}
-                           dataSource={fakeData}
+                           dataSource={data}
                            pagination={false}
+                           locale={{
+                               emptyText: 'You have no Order'
+                           }}
                     />
+                    <div ref={loader}>
+                        {hasMore && (
+                            <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                        )}
+                    </div>
                 </Col>
             </Row>
             <ReportModal

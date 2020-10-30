@@ -17,6 +17,7 @@ import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import {UserOutlined} from "@ant-design/icons";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -37,7 +38,7 @@ function beforeUpload(file) {
 
 const AccountEdit = props => {
     const loading = useSelector(state => state.loading.effects.profile.updateProfile);
-    const [imageUrl, setImageUrl] = useState('')
+    const [imageUrl, setImageUrl] = useState(props.profile.image || '')
     const [stream, setStream] = useState("Facebook")
     const token = useSelector(state => state.auth.token);
     const [form] = Form.useForm();
@@ -252,11 +253,13 @@ const AccountEdit = props => {
                                         >
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                                 <>
-                                                    <div className={'full-rounded text-primary flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>+</div>
+                                                    <div className={'full-rounded text-type flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                        <UserOutlined />
+                                                    </div>
                                                 </>
                                             )}
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-info ml-3">Upload</label>
+                                        <label htmlFor={'avatar'} className="text-info ml-3">Upload Image</label>
                                     </div>
                                 </Item>
                             </Col>

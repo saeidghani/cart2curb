@@ -1,4 +1,5 @@
 import  { api } from "../../lib/api";
+import Api from '../../http/Api';
 import {message} from "antd";
 import {emitter} from "../../helpers/emitter";
 
@@ -8,6 +9,10 @@ export const profile = {
         profile: {},
         addresses: [],
         payments: [],
+        orders: {
+            metaData: {},
+            data: []
+        },
     },
     reducers: {
         setProfile: (state, payload) => {
@@ -18,6 +23,15 @@ export const profile = {
         },
         setPayments: (state, payload) => {
             state.payments = payload.payments
+        },
+        setOrders: (state, payload) => {
+            if(payload.metaData.pagination.pageNumber === 1) {
+                state.orders.data = payload.data;
+            } else {
+                state.orders.data = [...state.orders.data, ...payload.data];
+
+            }
+            state.orders.metaData = payload.metaData;
         }
     },
     effects: dispatch => ({
@@ -169,6 +183,56 @@ export const profile = {
                     message.error('Something went wrong', 5);
                 }
             }
-        }
+        },
+        async getOrders(body, rootState) {
+            try {
+                const res = await Api.customer.profile.orders(body, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.auth.token}`
+                    }
+                });
+                const data = res.data;
+                if(data.success) {
+                    dispatch.profile.setOrders({
+                        data: data.data,
+                        metaData: data.metaData
+                    })
+                    return data;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                console.log(e)
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async deleteOrder(id, rootState) {
+            try {
+                const res = await Api.customer.profile.deleteOrder(id, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.auth.token}`
+                    }
+                });
+                if(res.data.success) {
+                    message.success('Deleted Successfully', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    const errors = e.response.data.errors;
+                    const errorCode = errors[0].errorCode;
+                    if(errorCode === 'HAS_CHILDREN') {
+                        message.error('You Can\'t Delete this Category because it has children')
+                    } else {
+
+                        message.error('An Error was occurred');
+                    }
+                }
+                return false;
+            }
+        },
     })
 }
