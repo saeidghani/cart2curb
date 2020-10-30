@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
     try {
-        const response = await api.customer.profile.updateProfile(req.body.id, {
+        const response = await api.customer.profile.updateProfile(req.body, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -16,15 +16,11 @@ import {getStore} from "../../../states";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import Link from "next/link";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 const { Option } = Select;
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
 
 function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -46,6 +42,7 @@ const AccountEdit = props => {
     const token = useSelector(state => state.auth.token);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const { profile } = props;
 
@@ -72,7 +69,7 @@ const AccountEdit = props => {
             lastName: profile.lastName || '',
             email: profile.email || '',
             phone: profile.phone || '',
-            birthdate: moment(profile.birthdate || ''),
+            birthdate: profile.birthdate ? moment(profile.birthdate || '') : '',
             notifyMethod: profile.notifyMethod || '',
             streamPreference,
             streamId,
@@ -95,20 +92,17 @@ const AccountEdit = props => {
             return;
         }
         if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl => {
-                setImageUrl(imageUrl);
-            });
+            setImageUrl(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
         }
     };
 
 
-    const submitHandler = (values) => {
-        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone, image } = values;
+    const submitHandler = async (values) => {
+        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
         const body = {
             notifyMethod,
             birthdate: moment(birthdate).format('YYYY-MM-DD'),
-            image,
+            image: imageUrl,
             firstName,
             lastName,
             phone
@@ -134,7 +128,10 @@ const AccountEdit = props => {
         }
         body.socialMedias = socialMedias;
 
-        dispatch.profile.updateProfile(body)
+        const res = await dispatch.profile.updateProfile(body)
+        if(res) {
+            router.push(routes.profile.index);
+        }
     }
 
     const checkValidation = (errorInfo) => {
@@ -233,11 +230,11 @@ const AccountEdit = props => {
                             </Col>
 
                             <Col xs={24}>
-                                <Divider />
+                                <Divider className={'my-2'}/>
                             </Col>
 
                             <Col xs={24}>
-                                <h3 className="text-type font-medium text-base mb-8">Details</h3>
+                                <h3 className="text-type font-medium text-base mb-6 mt-6">Details</h3>
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
@@ -319,10 +316,10 @@ const AccountEdit = props => {
                             </Col>
 
                             <Col xs={24}>
-                                <Divider />
+                                <Divider className={'my-2'}/>
                             </Col>
                             <Col xs={24}>
-                                <h3 className={'font-medium text-base pb-6'}>Social Integration</h3>
+                                <h3 className={'font-medium text-base mb-6 mt-6'}>Social Integration</h3>
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
@@ -344,7 +341,7 @@ const AccountEdit = props => {
                                 </Item>
                             </Col>
 
-                            <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
+                            <Col xs={24} className={'flex items-center flex-row-reverse pt-2'}>
                                 <Item>
                                     <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                                         Save

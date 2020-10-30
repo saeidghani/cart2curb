@@ -38,8 +38,8 @@ const ChangePassword = props => {
 
     return (
         <Page title={'Change Password'} breadcrumb={breadcrumb}>
-            <Row>
-                <Col xl={{ span: 6, offset: 9}} lg={{ span: 8, offset: 8}} md={{ span: 12, offset: 6 }} sm={{ span: 16, offset: 4 }} xs={24}>
+            <Row className={'flex flex-col items-center justify-center'}>
+                <Col xl={9} lg={14} md={14} sm={20} xs={24}>
                     <Form
                         form={form}
                         layout="vertical"
@@ -47,72 +47,84 @@ const ChangePassword = props => {
                         onFinish={submitHandler}
                         onFinishFailed={checkValidation}
                     >
-                        <Item
-                            name={'currentPassword'}
-                            label={'Current Password'}
+                        <Row>
+                            <Col xs={24}>
 
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your password!',
-                                },
-                                {
-                                    min: 6,
-                                    message: "Password should be at least 6 character"
-                                }
-                            ]}
-                            hasFeedback
-                        >
-                            <Input.Password placeholder='Current Password' />
-                        </Item>
-                        <Item
-                            name={'newPassword'}
-                            label={'New Password'}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your password!',
-                                },
-                                {
-                                    min: 6,
-                                    message: "Password should be at least 6 character"
-                                }
-                            ]}
-                            hasFeedback
-                        >
-                            <Input.Password placeholder='New Password' />
-                        </Item>
-                        <Item
-                            name={'newPasswordConfirm'}
-                            label={'New Password Confirm'}
-                            dependencies={['newPassword']}
-                            hasFeedback
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please confirm your password!',
-                                },
-                                ({getFieldValue}) => ({
-                                    validator(rule, value) {
-                                        if (!value || getFieldValue('newPassword') === value) {
-                                            return Promise.resolve();
+                                <Item
+                                    name={'currentPassword'}
+                                    label={'Current Password'}
+
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your password!',
+                                        },
+                                        {
+                                            min: 6,
+                                            message: "Password should be at least 6 character"
                                         }
-                                        return Promise.reject('The two passwords that you entered do not match!');
-                                    },
-                                }),
-                            ]}>
-                            <Input.Password placeholder='New Password Confirm' />
-                        </Item>
-                        <div>
-                            <Space size={20} className="flex justify-end items-center">
-                                <Button danger className={'w-32'}>
-                                    Cancel
-                                </Button>
-                                <Button type="primary" className={'w-32'} htmlType={'submit'} loading={loading}>
-                                    Save
-                                </Button>
-                            </Space>
-                        </div>
+                                    ]}
+                                    hasFeedback
+                                >
+                                    <Input.Password placeholder='Current Password' />
+                                </Item>
+                            </Col>
+
+                            <Col xs={24}>
+                                <Item
+                                    name={'newPassword'}
+                                    label={'New Password'}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your password!',
+                                        },
+                                        {
+                                            min: 6,
+                                            message: "Password should be at least 6 character"
+                                        }
+                                    ]}
+                                    hasFeedback
+                                >
+                                    <Input.Password placeholder='New Password' />
+                                </Item>
+                            </Col>
+
+                            <Col xs={24}>
+                                <Item
+                                    name={'newPasswordConfirm'}
+                                    label={'New Password Confirm'}
+                                    dependencies={['newPassword']}
+                                    hasFeedback
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please confirm your password!',
+                                        },
+                                        ({getFieldValue}) => ({
+                                            validator(rule, value) {
+                                                if (!value || getFieldValue('newPassword') === value) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject('The two passwords that you entered do not match!');
+                                            },
+                                        }),
+                                    ]}>
+                                    <Input.Password placeholder='New Password Confirm' />
+                                </Item>
+                            </Col>
+
+                            <Col xs={24}>
+                                <div className="flex flex-col md:flex-row-reverse">
+                                    <Button type="primary" className={'w-full md:w-32 md:ml-5 mb-4 md:mb-0'} htmlType={'submit'} loading={loading}>
+                                        Save
+                                    </Button>
+                                    <Button danger className={'w-full md:w-32 '}>
+                                        Cancel
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
                     </Form>
 
                 </Col>
