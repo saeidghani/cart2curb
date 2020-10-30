@@ -66,13 +66,7 @@ export const vendorAuth = {
                 const res = await api.post('vendor/auth/register', body);
                 const data = res.data;
                 if(data.success) {
-                    dispatch.vendorAuth.authenticate({
-                        token: data.data.token
-                    });
-                    message.success('Your Registration was Complete');
-                    emitter.emit('change-route', {
-                        path: routes.vendors.auth.register.submitted,
-                    })
+                    message.success('Your Request was Sent!');
                     return true;
                 } else {
                     message.error('Something went wrong', 5);

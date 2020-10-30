@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Row, Col, Steps, Form, Input, Select, TimePicker, Upload, Checkbox, Divider, Grid, Button, message} from "antd";
+import { PictureOutlined, UserOutlined } from '@ant-design/icons';
 
 import Page from "../../../components/Page";
 import routes from "../../../constants/routes";
@@ -10,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useCities, useProvinces} from "../../../hooks/region";
 import {useRouter} from "next/router";
 import withoutAuth from "../../../components/hoc/withoutAuth";
+import Submitted from "../../../components/Submitted";
 
 
 const { Step } = Steps;
@@ -34,7 +36,6 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 
-// @todo: internal server error should be correct
 const Register = props => {
     const [form] = Form.useForm();
     const [fields, setFields] = useState([])
@@ -50,6 +51,7 @@ const Register = props => {
     const cities = useCities(province);
     const dispatch = useDispatch();
     const router = useRouter();
+    const [submitted, setSubmitted] = useState(false);
     const loading = useSelector(state => state.loading.effects.vendorAuth.register);
 
     const breadcrumb = [
@@ -73,10 +75,7 @@ const Register = props => {
             return;
         }
         if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl => {
-                handler(imageUrl);
-            });
+            handler(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
         }
     };
 
@@ -115,7 +114,7 @@ const Register = props => {
             postalCode: form2.postalCode,
             location: {
                 type: 'Point',
-                coordinates: [marker.position.lat, marker.position.lng]
+                coordinates: [marker.position.lng, marker.position.lat]
             }
         }
         const store = {
@@ -126,9 +125,9 @@ const Register = props => {
             name: form1.name,
             area: {
                 type: 'Polygon',
-                coordinates: [area.map(point => [point.lat, point.lng])],
+                coordinates: [area.map(point => [point.lng, point.lat])],
             },
-            image: "https://some.url/pic/name", // @todo: change to server mode
+            image: imageUrl,
             needDriversToGather: form2.needDriversToGather.includes('true'),
             storeType: form1.storeType,
             subType: form1.subType,
@@ -138,7 +137,7 @@ const Register = props => {
             email: form1.email,
             phone: form1.phone,
             contactName: form1.contactName,
-            image: "http://some.url/pic/name", // @todo: change to server mode
+            image: avatarUrl,
             password: form1.password
         }
 
@@ -150,13 +149,16 @@ const Register = props => {
         const result = await dispatch.vendorAuth.register(body);
 
         if(result) {
-            router.push(routes.vendors.auth.register.submitted);
+            setSubmitted(true)
         }
 
     }
 
     return (
-        <Page title={'Register'} breadcrumb={breadcrumb}>
+        <Page title={submitted ? false : 'Register'} breadcrumb={submitted ? [] : breadcrumb}>
+            {submitted ? (
+                <Submitted href={routes.vendors.auth.login} content={'Thanks for submitting, we will review your application and get in touch in 48 hours!'}/>
+            ) : (
             <Row>
                 <Col xs={24} xl={{ span: 14, offset: 5}} lg={{ span: 18, offset: 3}}>
                     <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'}>
@@ -268,7 +270,7 @@ const Register = props => {
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
-                                    <Divider className={'py-2'}/>
+                                    <Divider className={'mt-0 mb-6'}/>
                                 </Col>
                                 <Col lg={8} md={12} xs={24}>
                                     <Item name={'openingHour'} label={'Store Open Time'}
@@ -337,9 +339,9 @@ const Register = props => {
                                 <Col lg={8} md={12} xs={24}>
                                     <div className={'flex items-center justify-start pt-4'}>
                                         <Upload
-                                            name="storeImage"
+                                            name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader-square"
+                                            className="avatar-uploader-square border-0"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -350,7 +352,9 @@ const Register = props => {
                                         >
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
                                                 <>
-                                                    <div className={'full-rounded text-primary flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>+</div>
+                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
+                                                        <PictureOutlined className={'text-xl'} />
+                                                    </div>
                                                 </>
                                             )}
                                         </Upload>
@@ -361,9 +365,9 @@ const Register = props => {
                                 <Col lg={8} md={12} xs={24}>
                                     <div className={'flex items-center justify-start pt-6'}>
                                         <Upload
-                                            name="avatar"
+                                            name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader"
+                                            className="avatar-uploader border-0"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -372,9 +376,11 @@ const Register = props => {
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setAvatarUrl)}
                                         >
-                                            {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
+                                            {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                                 <>
-                                                    <div className={'full-rounded text-primary flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>+</div>
+                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                        <UserOutlined className={'text-lg'}/>
+                                                    </div>
                                                 </>
                                             )}
                                         </Upload>
@@ -541,6 +547,7 @@ const Register = props => {
                     )}
                 </Col>
             </Row>
+            )}
         </Page>
     )
 }

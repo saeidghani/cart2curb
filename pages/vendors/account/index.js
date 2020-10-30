@@ -47,7 +47,7 @@ const Account = props => {
                         <h1 className="page__title text-2xl text-label font-medium my-0">Account</h1>
                         <div className="actions flex items-center">
                             <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
-                                <Button type={'text'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Logout</Button>
+                                <Button type={'text'} className={'text-xs'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Logout</Button>
                                 <Link href={routes.vendors.account.changePassword}>
                                     <Button type={'text'} className={'text-type text-base font-medium'}>Change Password</Button>
                                 </Link>
