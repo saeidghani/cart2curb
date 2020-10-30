@@ -15,13 +15,13 @@ const Page = props => {
                 )}
                 {props.breadcrumb && props.breadcrumb.map(item => {
                     return item.href ? (
-                        <Breadcrumb.Item key={item.title + '-breadcrumb'}>
+                        <Breadcrumb.Item key={item.title + '-breadcrumb'} className={'text-paragraph'}>
                             <Link href={item.href}>
                                 {item.title}
                             </Link>
                         </Breadcrumb.Item>
                     ) : (
-                        <Breadcrumb.Item key={item.title + '-breadcrumb'}>{item.title}</Breadcrumb.Item>
+                        <Breadcrumb.Item key={item.title + '-breadcrumb'} className={'text-paragraph'}>{item.title}</Breadcrumb.Item>
                     );
                 })}
             </Breadcrumb>
