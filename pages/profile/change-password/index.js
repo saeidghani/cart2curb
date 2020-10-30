@@ -38,8 +38,9 @@ const ChangePassword = props => {
 
     return (
         <Page title={'Change Password'} breadcrumb={breadcrumb}>
-            <Row className={'flex flex-col items-center justify-center'}>
-                <Col xl={9} lg={14} md={14} sm={20} xs={24}>
+
+            <Row>
+                <Col xl={{ span: 10, offset: 7}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
                     <Form
                         form={form}
                         layout="vertical"

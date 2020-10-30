@@ -47,8 +47,8 @@ const ForgetPassword = props => {
 
     return (
         <Page title={'Forgot Password'} breadcrumb={breadcrumb}>
-            <Row className={'flex flex-col items-center justify-center'}>
-                <Col xl={9} lg={14} md={14} sm={20} xs={24}>
+            <Row>
+                <Col xl={{ span: 10, offset: 7}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
                     <p className="text-paragraph text-base mb-6 mt-2">Please enter your email associated with your account.</p>
                     <Form
                         onFinish={submitHandler}
