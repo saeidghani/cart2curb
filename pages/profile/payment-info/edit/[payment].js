@@ -16,6 +16,7 @@ import {useRouter} from "next/router";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
 import moment from "moment";
+import Link from "next/link";
 
 const { Item } = Form;
 
@@ -177,18 +178,22 @@ const EditPaymentInfo = props => {
                                 </Item>
                             </Col>
 
-                            <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
+                            <Col xs={24} className={'flex items-center flex-row-reverse pt-2'}>
                                 <Item className={'mb-0'}>
                                     <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                                         Save
                                     </Button>
                                 </Item>
                                 <Item className={'mb-0'}>
-                                    <Button danger className={'w-32'}>
-                                        Cancel
-                                    </Button>
+                                    <Link href={routes.profile.payments.index}>
+
+                                        <Button danger className={'w-32'}>
+                                            Cancel
+                                        </Button>
+                                    </Link>
                                 </Item>
                             </Col>
+
                         </Row>
 
                     </Form>

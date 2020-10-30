@@ -60,6 +60,9 @@ const PaymentInfo = props => {
                         </Link>
                     </Col>
                 ) : payments.map((item, index) => {
+                    if(deleted.includes(item._id)) {
+                        return null;
+                    }
                     return (
                         <Col xs={24} key={`card-${index}`}>
                             <PaymentInfoCard
@@ -96,6 +99,17 @@ export async function getServerSideProps({ req, res }) {
             }
         };
     }
+
+    if(cookies.type !== 'customer') {
+        res.writeHead(307, { Location: routes.vendors.index });
+        res.end();
+        return {
+            props: {
+                payments
+            }
+        };
+    }
+
     const store = getStore();
     const response = await store.dispatch.profile.getPayments({
         headers: {

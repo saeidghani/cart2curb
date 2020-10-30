@@ -11,11 +11,15 @@ const PaymentInfoCard = ({card, expireInfo, deleteHandler, editHandler, ...props
                     <span className="text-type text-base font-medium">Expires: {expireInfo}</span>
                 </Space>
                 <Space size={lg ? 60 : md ? 40 : sm ? 20 : 16}>
-                    <Button type={'link'} onClick={editHandler} className={'underline text-paragraph px-0 '}>
+                    <Button type={'link'} onClick={editHandler} className={'px-0'}>
+                        <span className="text-paragraph underline">
                         Edit
+                        </span>
                     </Button>
-                    <Button type={'link'} onClick={deleteHandler} className={'underline text-paragraph px-0 '}>
+                    <Button type={'link'} onClick={deleteHandler} className={'px-0'}>
+                        <span className="text-paragraph underline">
                         Delete
+                        </span>
                     </Button>
                 </Space>
             </div>

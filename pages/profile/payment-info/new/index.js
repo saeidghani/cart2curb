@@ -13,6 +13,7 @@ import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import withAuth from "../../../../components/hoc/withAuth";
+import Link from "next/link";
 
 const { Item } = Form;
 
@@ -82,7 +83,7 @@ const AddPaymentInfo = props => {
                                         message: 'Please enter Valid Card Number',
                                     }
                                 ]}>
-                                    <Input placeholder="Card Number" />
+                                    <Input placeholder="---- ---- ---- ----" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -100,20 +101,6 @@ const AddPaymentInfo = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'cvv'} label={'Cvv'} rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter Card CVV"
-                                    },
-                                    {
-                                        pattern: /^[0-9]+$/g,
-                                        message: 'Please enter Valid CVV',
-                                    }
-                                ]}>
-                                    <Input placeholder="Cvv" />
-                                </Item>
-                            </Col>
-                            <Col lg={8} md={12} xs={24}>
                                 <Item name={'lastName'} label={'Last Name'} rules={[
                                     {
                                         required: true,
@@ -128,6 +115,20 @@ const AddPaymentInfo = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
+                                <Item name={'cvv'} label={'CVV'} rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter Card CVV"
+                                    },
+                                    {
+                                        pattern: /^[0-9]+$/g,
+                                        message: 'Please enter Valid CVV',
+                                    }
+                                ]}>
+                                    <Input placeholder="CVV" />
+                                </Item>
+                            </Col>
+                            <Col lg={8} md={12} xs={24}>
                                 <Item label={'Expiration Date'} className={'mb-0'}>
                                     <Row gutter={24}>
 
@@ -138,7 +139,7 @@ const AddPaymentInfo = props => {
                                                     message: "Required"
                                                 },
                                             ]}>
-                                                <DatePicker className={'w-full'} picker={'year'}/>
+                                                <DatePicker placeholder={'Year'} className={'w-full'} picker={'year'}/>
                                             </Item>
                                         </Col>
                                         <Col xs={12}>
@@ -148,23 +149,26 @@ const AddPaymentInfo = props => {
                                                     message: "Required"
                                                 },
                                             ]}>
-                                                <DatePicker className={'w-full'} picker={'month'} format={'MMMM'}/>
+                                                <DatePicker placeholder={'Month'} className={'w-full'} picker={'month'} format={'MMMM'}/>
                                             </Item>
                                         </Col>
                                     </Row>
                                 </Item>
                             </Col>
 
-                            <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
+                            <Col xs={24} className={'flex items-center flex-row-reverse pt-2'}>
                                 <Item className={'mb-0'}>
                                     <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                                         Save
                                     </Button>
                                 </Item>
                                 <Item className={'mb-0'}>
-                                    <Button danger className={'w-32'}>
-                                        Cancel
-                                    </Button>
+                                    <Link href={routes.profile.payments.index}>
+
+                                        <Button danger className={'w-32'}>
+                                            Cancel
+                                        </Button>
+                                    </Link>
                                 </Item>
                             </Col>
                         </Row>
