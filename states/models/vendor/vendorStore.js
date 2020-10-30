@@ -59,6 +59,67 @@ export const vendorStore = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
+        async getServerSideCategory({ query, options}, rootState) {
+            try {
+                const res = await api.vendor.store.categories(query, options);
+                console.log(res);
+                const data = res.data;
+                if(data.success) {
+                    return data.data;
+                } else {
+                    return []
+                }
+            } catch(e) {
+                console.log(e)
+                return []
+            }
+        },
+        async addCategory(body, rootState) {
+            try {
+                const res = await api.vendor.store.addCategory(body, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.vendorAuth.token}`
+                    }
+                })
+
+                if(res.data.success) {
+                    message.success('New Category added successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async editCategory(data, rootState) {
+            try {
+                const res = await api.vendor.store.editCategory(data.id, data.body, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.vendorAuth.token}`
+                    }
+                })
+
+                if(res.data.success) {
+                    message.success('Category info updated successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
         async deleteCategory(id, rootState) {
             try {
                 const res = await api.vendor.store.deleteCategory(id, {

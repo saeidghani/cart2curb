@@ -21,7 +21,7 @@ export default class VendorStoreApi extends ApiInstance {
     }
 
     editCategory(id, body, options = {}) {
-        return this.post(`vendor/store/categories/${id}`, body, {}, options);
+        return this.put(`vendor/store/categories/${id}`, body, {}, options);
     }
 
     deleteCategory(id, options = {}) {

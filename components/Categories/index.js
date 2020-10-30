@@ -162,7 +162,7 @@ const Categories = props => {
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>
-                                <Item className={'pt-7.5'}>
+                                <Item className={'pt-7'}>
                                     <Button type={'primary'} size={'lg'} className={'w-32'} loading={categoryLoading} htmlType={'submit'}>Search</Button>
                                 </Item>
                             </Col>

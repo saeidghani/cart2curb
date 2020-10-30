@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Row, Col, Input, Select, Upload, Radio, Button } from 'antd';
+import {Form, Row, Col, Input, Select, Upload, Radio, Button, message} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import Page from "../../../../components/Page";
 import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
+import cookie from "cookie";
+import {getStore} from "../../../../states";
+import {useDispatch, useSelector} from "react-redux";
+import Link from "next/link";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const EditCategory = props => {
-    const router = useRouter();
-    const [name, setName] = useState('');
     const [form] = Form.useForm();
-
+    const [parentCategories, setParentCategories] = useState([])
+    const dispatch = useDispatch();
+    const loading = useSelector(state => state.loading.effects.vendorStore.addCategory);
+    const parentLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
+    const router = useRouter();
 
     useEffect(() => {
-        if(router) {
-            setName(router.query.number)
-        }
-    }, [router])
+        dispatch.vendorStore.getCategories({})
+            .then(response => {
+                setParentCategories(response.data);
+
+                form.setFieldsValue({
+                    name: props.category.name,
+                    parent: props.category.parent
+                })
+            })
+    }, [])
+
     const breadcrumb = [
         {
             title: 'Store',
@@ -29,12 +42,31 @@ const EditCategory = props => {
             title: `Edit Category`,
         },
         {
-            title: name
+            title: props.category.name
         }
     ]
+    const submitHandler = async (values) => {
+
+        const {name, parent} = values;
+        const body = {
+            name, parent
+        }
+
+        const res = await dispatch.vendorStore.editCategory({
+            id: props.category._id,
+            body
+        });
+        if(res) {
+            router.push(routes.vendors.index)
+        }
+    }
+
+    const checkValidation = (errorInfo) => {
+        message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
     return (
-        <Page title={`Edit Category ${name}`} breadcrumb={breadcrumb}>
-            <Form form={form} layout={'vertical'}>
+        <Page title={`Edit Category ${props.category.name}`} breadcrumb={breadcrumb}>
+            <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
                 <Row gutter={24}>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'name'} label={'Name'}>
@@ -42,11 +74,11 @@ const EditCategory = props => {
                         </Item>
                     </Col>
                     <Col xs={24} md={12} lg={8}>
-                        <Item name={'parentCategory'} label={'Parent Category'}>
-                            <Select placeholder={'Select Weight Unit'}>
-                                {[...Array(12)].map((item, index) => {
+                        <Item name={'parent'} label={'Parent Category'}>
+                            <Select placeholder={'Select Weight Unit'} loading={parentLoading}>
+                                {parentCategories && parentCategories.map((item, index) => {
                                     return (
-                                        <Option value={`C${index + 1}`} key={`cat-${index + 1}`}>C#{index + 1}</Option>
+                                        <Option value={item._id} key={item._id}>{item.name}</Option>
                                     )
                                 })}
                             </Select>
@@ -54,18 +86,93 @@ const EditCategory = props => {
                     </Col>
                     <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
                         <Item>
-                            <Button type="primary" block className={'w-32 ml-5'}>
+                            <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'} loading={loading && parentLoading}>
                                 Save
                             </Button>
                         </Item>
                         <Item>
-                            <Button danger className={'w-32'}>Cancel</Button>
+                            <Link href={routes.vendors.index}>
+                                <Button danger className={'w-32'}>Cancel</Button>
+                            </Link>
                         </Item>
                     </Col>
                 </Row>
             </Form>
         </Page>
     )
+}
+
+export async function getServerSideProps({ req, res, params}) {
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+    let userType = cookies.type;
+
+
+    let category = {};
+
+    if (!token) {
+        res.writeHead(307, { Location: routes.vendors.auth.login });
+        res.end();
+        return {
+            props: {
+                category
+            }
+        };
+    }
+
+    if(userType !== 'vendor') {
+        res.writeHead(307, { Location: routes.profile.index });
+        res.end();
+        return {
+            props: {
+                category
+            }
+        };
+    }
+
+    try {
+        const store = getStore();
+        const response = await store.dispatch.vendorStore.getServerSideCategory({
+            query: {
+                search: params.number,
+            },
+            options: {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        })
+
+        console.log(response);
+        if(response.length > 0) {
+            category = response[0];
+        } else {
+
+            res.writeHead(307, { Location: routes.vendors.index });
+            res.end();
+            return {
+                props: {
+                    category
+                }
+            };
+        }
+    } catch(e) {
+        res.writeHead(307, { Location: routes.vendors.index });
+        res.end();
+        return {
+            props: {
+                category
+            }
+        };
+    }
+
+    return {
+        props: {
+            category
+        }
+    }
+
+
 }
 
 export default EditCategory;
