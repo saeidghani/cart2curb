@@ -69,15 +69,16 @@ const addresses = props => {
                             )
                         })}
 
-                        <Col xs={24}>
+                        <Col xs={24} className={'flex'}>
                             <Link href={routes.profile.addresses.add}>
-                                <Button
-                                    type={'link'}
-                                    icon={<PlusOutlined className={'text-info mr-3'} style={{ fontSize: 12 }}/>}
-                                    className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
+                                <a
+                                    className={'flex items-center justify-center text-info p-0'}
                                 >
-                                    Add New Address
-                                </Button>
+                                    <PlusOutlined className={'text-info mr-3'} style={{ fontSize: 12 }}/>
+                                    <span className=" hover:text-teal-500 text-base">
+                                        Add New Address
+                                    </span>
+                                </a>
                             </Link>
 
                         </Col>
@@ -98,6 +99,16 @@ export async function getServerSideProps({ req, res }) {
     let addresses = [];
     if (!token) {
         res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                addresses
+            }
+        };
+    }
+
+    if(cookies.type !== 'customer') {
+        res.writeHead(307, { Location: routes.vendors.index });
         res.end();
         return {
             props: {

@@ -74,7 +74,7 @@ const AddAddress = props => {
                 postalCode,
                 location: {
                     type: 'Point',
-                    coordinates: [marker.position.lat, marker.position.lng]
+                    coordinates: [marker.position.lng, marker.position.lat]
                 }
             }
 
@@ -197,10 +197,10 @@ const AddAddress = props => {
                                 </Item>
                             </Col>
 
-                            <Col span={24} className={'md:pt-14 pt-4'}>
+                            <Col span={24} className={'md:pt-8 pt-4'}>
                                 <Button
-                                    className={'text-info hover:text-teal-500 font-medium flex items-center'}
-                                    type={'text'}
+                                    className={'text-info hover:text-teal-500 font-medium flex items-center px-0'}
+                                    type={'link'}
                                     icon={(
                                         <div className="inline-flex mr-2">
                                             <LocationIcon size={20} fill={'#40BFC1'}/>
@@ -222,15 +222,15 @@ const AddAddress = props => {
                                 </div>
                             </Col>
 
-                            <Col xs={24} className={'flex items-center flex-row-reverse md:pt-16 pt-8'}>
+                            <Col xs={24} className={'flex md:items-center flex-col md:flex-row-reverse md:pt-16 pt-8'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
+                                    <Button type="primary" className={'w-full md:w-32 md:ml-5 ml-0'} htmlType={'submit'} loading={loading}>
                                         Save
                                     </Button>
                                 </Item>
                                 <Item>
                                     <Link href={routes.profile.addresses.index}>
-                                        <Button danger className={'w-32'}>
+                                        <Button danger className={'w-full md:w-32'}>
                                             Cancel
                                         </Button>
                                     </Link>
