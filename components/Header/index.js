@@ -27,7 +27,7 @@ const Header = props => {
         <header className={'header layout__section'}>
             <div className="header__content">
                 <div className="flex flex-row items-center">
-                    <HeaderLogoIcon/>
+                    <img src={'/images/Logo.png'} alt={'Cart2Curb'} style={{ height: 48}} />
                     {!isAuthRoute.value && (
                         <>
                             <Link href={routes.homepage} className={'header__link text-purple'}>
