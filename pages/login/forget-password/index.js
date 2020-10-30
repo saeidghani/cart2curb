@@ -47,7 +47,7 @@ const ForgetPassword = props => {
 
     return (
         <Page title={'Forgot Password'} breadcrumb={breadcrumb}>
-            <Row className={'flex flex-col items-stretch sm:items-center justify-center'}>
+            <Row className={'flex flex-col items-center justify-center'}>
                 <Col xl={9} lg={14} md={14} sm={20} xs={24}>
                     <p className="text-paragraph text-base mb-6 mt-2">Please enter your email associated with your account.</p>
                     <Form
@@ -74,7 +74,7 @@ const ForgetPassword = props => {
 
                             <Col xs={24}>
                                 <Item>
-                                    <Button type="primary" htmlType={'submit'} block loading={loading}>
+                                    <Button type="primary" htmlType={'submit'} block loading={loading} className={'text-base'}>
                                         Submit
                                     </Button>
                                 </Item>

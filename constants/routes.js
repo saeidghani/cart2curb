@@ -8,7 +8,6 @@ export default {
         },
         resetPassword: {
             index: '/login/reset-password',
-            submitted: '/login/reset-password/submitted',
         }
     },
     stores: {

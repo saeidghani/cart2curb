@@ -108,12 +108,15 @@ export const auth = {
                     emitter.emit('change-route', {
                         path: routes.auth.resetPassword.submitted,
                     })
+                    return true;
                 } else {
                     message.error('Your Token is not valid or expired', 5);
+                    return false;
                 }
 
             } catch(e) {
                 message.error('Your Token is not valid or expired', 5);
+                return false;
             }
         },
         async changePassword(body) {
