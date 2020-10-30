@@ -67,7 +67,7 @@ const SignUp = props => {
                     postalCode,
                     location: {
                         type: 'Point',
-                        coordinates: [marker.position.lat, marker.position.lng]
+                        coordinates: [marker.position.lng, marker.position.lat]
                     }
                 }
 

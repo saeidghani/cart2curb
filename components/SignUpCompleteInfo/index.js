@@ -17,6 +17,7 @@ import Page from '../Page';
 import routes from "../../constants/routes";
 import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -41,6 +42,8 @@ const AccountInfo = props => {
     const loading = useSelector(state => state.loading.effects.profile.updateProfile);
     const token = useSelector(state => state.auth.token);
     const dispatch = useDispatch()
+    const router = useRouter()
+
 
     const breadcrumb = [
         {
@@ -81,7 +84,7 @@ const AccountInfo = props => {
         }
     };
 
-    const submitHandler = (values) => {
+    const submitHandler = async (values) => {
             const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram } = values;
             const body = {
                 notifyMethod,
@@ -109,7 +112,10 @@ const AccountInfo = props => {
             }
             body.socialMedias = socialMedias;
 
-            dispatch.profile.updateProfile(body)
+            const res = await dispatch.profile.updateProfile(body)
+            if(res) {
+                router.push(routes.profile.index);
+            }
     }
 
     const checkValidation = (errorInfo) => {

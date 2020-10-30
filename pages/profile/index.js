@@ -37,6 +37,7 @@ const profile = props => {
         setAuthenticated(false);
         setUserType(null)
     }
+    console.log(profile);
 
     useEffect(() => {
         if(!isAuthenticated) {
@@ -46,7 +47,7 @@ const profile = props => {
 
     const actions = (
         <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
-            <Button type={'text'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Logout</Button>
+            <Button type={'text'} className={'text-xs'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Logout</Button>
             <Link href={routes.profile.changePassword}>
                 <Button type={'text'} className={'text-type text-base font-medium'}>Change Password</Button>
             </Link>
@@ -68,7 +69,7 @@ const profile = props => {
             ) : (
                 <Row gutter={[24, 32]} className={'flex flex-row flex-wrap items-center'}>
                     <Col xs={24} sm={12} lg={6}>
-                        <Avatar title={'Your Score: 4200'}/>
+                        <Avatar src={profile.image} title={'Your Score: 4200'}/>
                     </Col>
                     <Col xs={24} sm={12} lg={6}>
                         <DetailItem title={'First Name'} value={getProperty(profile, 'firstName', '-')}/>
@@ -140,6 +141,16 @@ export async function getServerSideProps({ req, res }) {
     let profile = {};
     if (!token) {
         res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                profile
+            }
+        };
+    }
+
+    if(cookies.type !== 'customer') {
+        res.writeHead(307, { Location: routes.vendors.index });
         res.end();
         return {
             props: {

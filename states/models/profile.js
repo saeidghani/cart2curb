@@ -45,8 +45,10 @@ export const profile = {
                     dispatch.profile.setProfile({
                         addresses: resData.data
                     });
+                    message.success('Your Profile Information was updated!');
+                    return true;
                 }
-                message.success('Your Profile Information was updated!');
+                return false;
             } catch(e) {
                 const errorData = e.response.data;
                 if(errorData.hasOwnProperty('errors')) {
@@ -56,6 +58,7 @@ export const profile = {
                 } else {
                     message.error('Something went wrong', 5);
                 }
+                return false;
             }
 
         },
