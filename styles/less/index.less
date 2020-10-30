@@ -98,7 +98,8 @@
   align-items: center;
 }
 
-.ant-input:focus, .ant-input-focused {
+.ant-input:focus, .ant-input-focused,
+.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   border-color: #d9d9d9;
   outline: none;
   box-shadow: none;
@@ -115,4 +116,8 @@
 
 .ant-btn {
   font-size: 1rem;
+}
+
+.ant-select-dropdown {
+  box-shadow: 0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05);
 }

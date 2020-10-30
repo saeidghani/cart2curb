@@ -3,10 +3,8 @@ import {Button, Select, Row, Col, message} from 'antd';
 
 import Page from '../../components/Page';
 import ShopOverview from '../../components/UI/ShopOverview';
-import VideoSlider from '../../components/UI/VideoSlider';
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../components/UI/Loader";
-import VideoPlayer from "../../components/UI/VideoPlayer";
 import {InfoCircleOutlined} from "@ant-design/icons";
 
 const { Option } = Select;
@@ -54,7 +52,7 @@ export default function Stores() {
             <div className="flex flex-col">
 
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
-                    <h2 className={'text-xl font-medium m-0 mb-2'}>Most Popular Stores</h2>
+                    <h2 className={'text-xl font-medium m-0 mb-2 text-type'}>Most Popular Stores</h2>
                     <Select
                         placeholder={'Sort by name'}
                         style={{ minWidth: 370 }}
@@ -84,7 +82,7 @@ export default function Stores() {
                                 <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
                                     <ShopOverview
                                         _id={item._id}
-                                        imageURL={item.image || '/images/temp/shop-item.png'}
+                                        imageURL={item.image}
                                         title={item.title || ''}
                                         name={item.name || ''}
                                         service={item.storeType || ''}

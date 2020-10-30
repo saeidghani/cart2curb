@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import { Row, Col, Form, Button, Input, Select } from 'antd';
-import Page from "../../../components/Page";
-import routes from "../../../constants/routes";
-import {getStore} from "../../../states";
-import CategoryCard from "../../../components/UI/CategoryCard";
-import StoreProductCard from "../../../components/UI/StoreProductCard";
-import ShopOverview from "../../../components/UI/ShopOverview";
+import Page from "../../components/Page";
+import routes from "../../constants/routes";
+import {getStore} from "../../states";
+import CategoryCard from "../../components/UI/CategoryCard";
+import StoreProductCard from "../../components/UI/StoreProductCard";
+import ShopOverview from "../../components/UI/ShopOverview";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import InfiniteScroll from "react-infinite-scroller";
-import Loader from "../../../components/UI/Loader";
+import Loader from "../../components/UI/Loader";
 import {InfoCircleOutlined} from "@ant-design/icons";
 
 const { Item } = Form;
@@ -180,8 +180,7 @@ export async function getServerSideProps({ req, res, params }) {
     try {
         const response = await store.dispatch.app.getStore(params.vendor)
 
-        console.log(response);
-        if(typeof response === 'string' || typeof response === 'number' || !response) {
+        if(!response) {
             res.writeHead(307, { Location: routes.stores.index });
             res.end();
             return {
@@ -193,9 +192,8 @@ export async function getServerSideProps({ req, res, params }) {
 
         vendor = response;
     } catch(e) {
-        console.log(e);
 
-        res.writeHead(307, { Location: routes.stores.index });
+        res.writeHead(307, { Location: routes.homepage });
         res.end();
         return {
             props: {

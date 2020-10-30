@@ -64,7 +64,7 @@ export default function Home() {
                         {videos.map(video => {
                             return (
                                 <Col xs={24}>
-                                    <h2 className={'text-xl font-medium mt-0 mb-4'}>{video.name}</h2>
+                                    <h2 className={'text-xl font-medium mt-0 mb-4 text-type'}>{video.name}</h2>
                                     <div className="w-full">
                                         <VideoPlayer
                                             key={`video`}
@@ -82,7 +82,7 @@ export default function Home() {
                         {videos.map(video => {
                             return (
                                 <Col xs={24} md={12}>
-                                    <h2 className={'text-xl font-medium mt-0 mb-4'}>{video.name}</h2>
+                                    <h2 className={'text-xl font-medium mt-0 mb-4 text-type'}>{video.name}</h2>
                                     <div className="w-full">
                                         <VideoPlayer
                                             key={`video`}
@@ -107,7 +107,7 @@ export default function Home() {
                 )}
 
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
-                    <h2 className={'text-xl font-medium m-0 mb-2'}>Most Popular Stores</h2>
+                    <h2 className={'text-xl font-medium m-0 mb-2 text-type'}>Most Popular Stores</h2>
                     <Select
                         placeholder={'Sort by name'}
                         style={{ minWidth: 370 }}
@@ -138,7 +138,7 @@ export default function Home() {
                                     <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
                                         <ShopOverview
                                             _id={item._id}
-                                            imageURL={item.image || '/images/temp/shop-item.png'}
+                                            imageURL={item.image}
                                             title={item.title || ''}
                                             name={item.name || ''}
                                             service={item.storeType || ''}

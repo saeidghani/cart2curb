@@ -38,12 +38,12 @@ const ProductView = props => {
                     <ProductCarousel slides={product.images}/>
                 </Col>
                 <Col xl={18} lg={16} md={12} xs={24}>
-                    <Row gutter={[0, 69]}>
+                    <Row>
                         <Col xs={24} className={`flex flex-col`}>
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-16">
                                 <div className="flex flex-col justify-center">
                                     <h1 className="text-paragraph text-2xl text-label font-medium my-0">{product.name}</h1>
-                                    <span className="text-overline text-lg font-normal">{product.category}</span>
+                                    <span className="text-info text-lg font-normal">{product.category}</span>
                                 </div>
                             </div>
                         </Col>
@@ -92,13 +92,13 @@ const ProductView = props => {
                     </Row>
                 </Col>
             </Row>
-            <Row className={'md:pt-16 pt-0'}>
+            <Row className={'md:pt-16 pt-4'}>
                 <Col xs={24}>
                     <h1 className={'text-2xl text-type mb-6 mt-0'}>Description</h1>
                     <p className="text-muted">{product.description}</p>
                 </Col>
             </Row>
-            <Row className={'md:pt-16 pt-0'}>
+            <Row className={'md:pt-16 pt-12'}>
                 <Col xs={24}>
                     <h1 className={'text-2xl text-type mb-6 mt-0'}>Related Products</h1>
                 </Col>
@@ -111,7 +111,7 @@ const ProductView = props => {
                                 </Col>
                             )
                         }).concat((
-                            <Col xs={24} className={'flex flex-row-reverse'}>
+                            <Col xs={24} className={'flex flex-row-reverse justify-center md:justify-start'}>
                                 <Link href={routes.stores.single(router.query.vendor)}>
                                     <Button className="w-32" danger>See More</Button>
                                 </Link>
