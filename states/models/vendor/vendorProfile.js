@@ -27,16 +27,16 @@ export const vendorProfile = {
             }
         },
         async updateProfile(body) {
-
             try {
                 const res = await api.post('vendor/profile/edit', body);
                 if(res.data.success) {
                     const resData = res.data;
                     dispatch.profile.setProfile({
-                        addresses: resData.data
+                        profile: resData.data
                     });
                 }
                 message.success('Your Profile Information was updated!');
+                return true;
             } catch(e) {
                 const errorData = e.response.data;
                 if(errorData.hasOwnProperty('errors')) {
@@ -46,6 +46,7 @@ export const vendorProfile = {
                 } else {
                     message.error('Something went Wrong', 5);
                 }
+                return false;
             }
 
         },

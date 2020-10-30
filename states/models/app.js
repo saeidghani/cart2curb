@@ -75,7 +75,7 @@ export const app = {
                     return res.status
                 }
             } catch(e) {
-                message.error('An Error was occurred in data fetch from server')
+                message.error('An Error was occurred in data fetch from the Server')
                 return e.response.status
             }
         },

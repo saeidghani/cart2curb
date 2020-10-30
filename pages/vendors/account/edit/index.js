@@ -39,7 +39,7 @@ function beforeUpload(file) {
 
 
 const EditAccount = props => {const [form] = Form.useForm();
-    const [fields, setFields] = useState(props.fields)
+    const [fields, setFields] = useState([])
     const [imageUrl, setImageUrl] = useState('')
     const [avatarUrl, setAvatarUrl] = useState('')
     const [marker, setMarker] = useState(props.marker)
@@ -161,11 +161,8 @@ const EditAccount = props => {const [form] = Form.useForm();
         }
 
         const vendor = {
-            email: form1.email,
             phone: form1.phone,
             contactName: form1.contactName,
-            image: "http://some.url/pic/name", // @todo: change to server mode
-            password: form1.password
         }
 
         const body = {

@@ -1,15 +1,91 @@
-import React, { useMemo } from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, Space} from 'antd';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
 import {PlusCircleOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import routes from "../../constants/routes";
 import Link from "next/link";
 import deleteModal from "../Modals/Delete";
+import {useDispatch, useSelector} from "react-redux";
+import Loader from "../UI/Loader";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const Categories = props => {
+    const loader = useRef(null);
+    const [page, setPage] = useState(1);
+    const [parentCategory, setParentCategory] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
+    const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
+    const categories = useSelector(state => state.vendorStore.categories.data);
+
+
+    useEffect(() => {
+
+        dispatch.vendorStore.getCategories()
+            .then(response => {
+                setParentCategory(response.data);
+            })
+    }, [])
+
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 1.0
+        };
+
+        const observer = new IntersectionObserver(handleObserver, options);
+        if (loader.current) {
+            observer.observe(loader.current)
+        }
+
+    }, []);
+
+
+    const handleObserver = (entities) => {
+        const target = entities[0];
+        if (target.isIntersecting) {
+            fetchCategories();
+        }
+    }
+
+    const fetchCategories = async (query = {}, forceLoad = false) => {
+        if(hasMore || forceLoad) {
+            const formFields = form.getFieldsValue()
+            let body = {
+                page_number: page,
+                ...query
+            }
+            if(formFields.search) {
+                body.search = formFields.search;
+            }
+            if(formFields.parent_category) {
+                body.parent_category = formFields.parent_category;
+            }
+            try {
+                const response = await dispatch.vendorStore.getCategories(body)
+                setPage(page + 1);
+                if(response.data.length < 30) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                setHasMore(false);
+                console.log(e);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+    }
+
+    const searchHandler = (values) => {
+        setHasMore(true);
+        setPage(1);
+        fetchCategories({
+            page_number: 1,
+        }, true)
+    }
 
     const columns = [
         {
@@ -43,16 +119,16 @@ const Categories = props => {
     ]
 
     const fakeData = useMemo(() => {
-        return [...Array(60)].map((item, index) => {
+        return categories.map((item, index) => {
             return {
-                key: index + 1,
-                index: index + 1,
-                title: `C${123456 + index}`,
-                description: 'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.',
+                key: item._id,
+                index: item._id,
+                title: item.name,
+                description: item.description,
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
-                            onOk: () => console.log('you deleted category'),
+                            onOk: async () => await dispatch.vendorStore.deleteCategory(item._id),
                             okText: 'Ok',
                             title: 'Do you want to delete this Category?',
                             content: 'Are you sure to delete this category? There is no going back!!',
@@ -61,13 +137,13 @@ const Categories = props => {
                 },
             }
         })
-    }, [])
+    }, [categories, page])
 
     return (
         <>
             <Row gutter={24} className={'flex items-center pt-17 pb-10'}>
                 <Col lg={18} xs={24}>
-                    <Form form={form} layout={'vertical'}>
+                    <Form form={form} layout={'vertical'} onFinish={searchHandler}>
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
@@ -75,18 +151,19 @@ const Categories = props => {
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>
-                                <Item name={'parentCategory'} label={'Parent Category'}>
-                                    <Select placeholder={'Parent Category'}>
-                                        <Option value={'food'}>Food</Option>
-                                        <Option value={'vegetables'}>Vegetables</Option>
-                                        <Option value={'food'}>Food</Option>
-                                        <Option value={'vegetables'}>Vegetables</Option>
+                                <Item name={'parent_category'} label={'Parent Category'}>
+                                    <Select placeholder={'Parent Category'} loading={categoryLoading}>
+                                        {parentCategory && parentCategory.map(cat => {
+                                            return (
+                                                <Option key={cat._id} value={cat._id}>{cat.name}</Option>
+                                            )
+                                        })}
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7.5'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'}>Search</Button>
+                                    <Button type={'primary'} size={'lg'} className={'w-32'} loading={categoryLoading} htmlType={'submit'}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
@@ -106,7 +183,15 @@ const Categories = props => {
             </Row>
             <Row>
                 <Col xs={24}>
-                    <Table columns={columns} dataSource={fakeData} scroll={{ x: 990 }}/>
+                    <Table columns={columns} dataSource={fakeData} pagination={false} scroll={{ x: 990 }} locale={{
+                        emptyText: 'There is no Category'
+                    }} loading={categoryLoading && categories.length === 0}/>
+
+                    <div ref={loader}>
+                        {hasMore && (
+                            <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                        )}
+                    </div>
                 </Col>
             </Row>
         </>

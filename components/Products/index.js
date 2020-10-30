@@ -1,15 +1,94 @@
-import React, { useMemo } from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, Space} from 'antd';
-import {FileSearchOutlined, PlusCircleOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
+import {
+    FileSearchOutlined,
+    PlusCircleOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    InfoCircleOutlined
+} from '@ant-design/icons';
 import routes from "../../constants/routes";
 import Link from "next/link";
 import deleteModal from "../Modals/Delete";
+import {useDispatch, useSelector} from "react-redux";
+import Loader from "../UI/Loader";
+import {getProperty} from "../../helpers";
 
 const { Item } = Form;
 const { Option } = Select;
 
-const Products = props => {
+const Products = ({vendor, ...props}) => {
+    const loader = useRef(null);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
+    const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
+    const productsLoading = useSelector(state => state.loading.effects.vendorStore.getProducts);
+    const categories = useSelector(state => state.vendorStore.categories.data);
+    const products = useSelector(state => state.vendorStore.products.data);
+
+    useEffect(() => {
+        dispatch.vendorStore.getCategories();
+    }, [])
+
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 1.0
+        };
+
+        const observer = new IntersectionObserver(handleObserver, options);
+        if (loader.current) {
+            observer.observe(loader.current)
+        }
+
+    }, []);
+
+
+    const handleObserver = (entities) => {
+        const target = entities[0];
+        if (target.isIntersecting) {
+            fetchProducts();
+        }
+    }
+
+    const fetchProducts = async (query = {}, forceLoad = false) => {
+        if(hasMore || forceLoad) {
+
+            const formFields = form.getFieldsValue()
+            let body = {
+                page_number: page,
+                ...query,
+            }
+            if(formFields.search) {
+                body.search = formFields.search;
+            }
+            if(formFields.category) {
+                body.category = formFields.category;
+            }
+            try {
+                const response = await dispatch.vendorStore.getProducts(body)
+                setPage(page + 1);
+                if(response.data.length < 30) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                setHasMore(false);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+    }
+
+    const searchHandler = (values) => {
+        setHasMore(true);
+        setPage(1);
+        fetchProducts({
+            page_number: 1,
+        }, true)
+    }
 
     const columns = [
         {
@@ -69,22 +148,24 @@ const Products = props => {
         },
     ]
 
-    const fakeData = useMemo(() => {
-        return [...Array(60)].map((item, index) => {
+    const data = useMemo(() => {
+        return products && products.map((product, index) => {
             return {
-                key: index + 1,
-                index: index + 1,
-                number: `ID${123456 + index}`,
-                name: 'Product Name',
-                unitPrice: '$10.20',
-                price: '$15.00',
-                tax: '20%',
-                stock: 100,
-                category: 'Categories name',
+                key: product._id,
+                index: product._id,
+                number: product._id,
+                name: product.name,
+                unitPrice: `$${product.priceList.price}`,
+                price: `$${product.priceList.price + product.priceList.cost}`,
+                tax: `${product.tax}%`,
+                stock: `$${product.priceList.stock}`,
+                category: categories.find(cat => cat._id === product.category),
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
-                            onOk: () => console.log('you deleted product'),
+                            onOk: async () => {
+                                const res = await dispatch.vendorStore.deleteProduct(product._id);
+                            },
                             okText: 'Ok',
                             title: 'Do you want to delete this product?',
                             content: 'Are you sure to delete this product? There is no going back!!',
@@ -93,13 +174,13 @@ const Products = props => {
                 },
             }
         })
-    }, [])
+    }, [products, categories])
 
     return (
         <>
             <Row gutter={24} className={'flex items-center pt-17 pb-10'}>
                 <Col lg={18} xs={24}>
-                    <Form form={form} layout={'vertical'}>
+                    <Form form={form} layout={'vertical'} onFinish={searchHandler}>
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
@@ -108,17 +189,18 @@ const Products = props => {
                             </Col>
                             <Col lg={9} xs={24}>
                                 <Item name={'category'} label={'Categories'}>
-                                    <Select placeholder={'Categories'}>
-                                        <Option value={'food'}>Food</Option>
-                                        <Option value={'vegetables'}>Vegetables</Option>
-                                        <Option value={'food'}>Food</Option>
-                                        <Option value={'vegetables'}>Vegetables</Option>
+                                    <Select placeholder={'Categories'} loading={categoryLoading}>
+                                        {categories && categories.map(cat => {
+                                            return (
+                                                <Option key={cat._id} value={cat._id}>{cat.name}</Option>
+                                            )
+                                        })}
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>
-                                <Item className={'pt-7.5'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'}>Search</Button>
+                                <Item className={'pt-7'}>
+                                    <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'} loading={productsLoading}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
@@ -138,7 +220,15 @@ const Products = props => {
             </Row>
             <Row>
                 <Col xs={24}>
-                    <Table columns={columns} dataSource={fakeData} scroll={{ x: 1200 }}/>
+
+                    <Table columns={columns} dataSource={data} scroll={{ x: 1200 }} locale={{
+                        emptyText: 'There is no Product'
+                    }} loading={productsLoading && products.length === 0}/>
+                    <div ref={loader}>
+                        {hasMore && (
+                            <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                        )}
+                    </div>
                 </Col>
             </Row>
         </>
