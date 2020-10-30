@@ -64,7 +64,7 @@ const Login = props => {
                                         message: "Please enter valid Email Address"
                                     }
                                 ]}>
-                                    <Input placeholder="Email Address" className={'mb-3'} />
+                                    <Input placeholder="Email Address" />
                                 </Item>
                             </Col>
                             <Col xs={24}>
@@ -74,7 +74,7 @@ const Login = props => {
                                         message: "Password Field is required"
                                     }
                                 ]}>
-                                    <Input type="password" placeholder="Password" className={'mb-3'} />
+                                    <Input.Password placeholder="Password" />
                                 </Item>
                             </Col>
                             <Col xs={24}>
