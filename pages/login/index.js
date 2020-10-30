@@ -42,8 +42,8 @@ const Login = props => {
 
     return (
         <Page title={'login'} breadcrumb={[{ title: 'Login' }]}>
-            <Row className={'flex flex-col items-center justify-center'}>
-                <Col xl={9} lg={14} md={14} sm={16} xs={24}>
+            <Row className={'flex flex-col items-stretch sm:items-center justify-center'}>
+                <Col xl={9} lg={14} md={14} sm={20} xs={24}>
                     <Form
                         form={form}
                         layout="vertical"

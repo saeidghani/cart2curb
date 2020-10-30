@@ -47,36 +47,42 @@ const ForgetPassword = props => {
 
     return (
         <Page title={'Forgot Password'} breadcrumb={breadcrumb}>
-            <Row>
-                <Col xl={{ span: 6, offset: 9}} lg={{ span: 8, offset: 8}} md={{ span: 12, offset: 6 }} sm={{ span: 16, offset: 4 }} xs={24}>
-                    <p className="text-paragraph text-base mb-8">Please enter your email associated with your account.</p>
+            <Row className={'flex flex-col items-stretch sm:items-center justify-center'}>
+                <Col xl={9} lg={14} md={14} sm={20} xs={24}>
+                    <p className="text-paragraph text-base mb-6 mt-2">Please enter your email associated with your account.</p>
                     <Form
                         onFinish={submitHandler}
                         onFinishFailed={checkValidation}
                         form={form}
                         layout="vertical"
-                        className="flex flex-col"
                     >
-                        <Item name={'email'} label={'Email Address'} rules={[
-                            {
-                                required: true,
-                                message: "Please enter your Email Address"
-                            },
-                            {
-                                pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
-                                message: "Please enter valid Email Address"
-                            }
-                        ]}>
-                            <Input placeholder="Email Address" className={'mb-3'} />
-                        </Item>
-                        <Item>
-                            <Button type="primary" htmlType={'submit'} block loading={loading}>
-                                Submit
-                            </Button>
-                        </Item>
+                        <Row>
+                            <Col xs={24}>
+                                <Item name={'email'} label={'Email Address'} className={'mb-8'} rules={[
+                                    {
+                                        required: true,
+                                        message: "Please enter your Email Address"
+                                    },
+                                    {
+                                        pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+                                        message: "Please enter valid Email Address"
+                                    }
+                                ]}>
+                                    <Input placeholder="Email Address" />
+                                </Item>
+                            </Col>
+
+                            <Col xs={24}>
+                                <Item>
+                                    <Button type="primary" htmlType={'submit'} block loading={loading}>
+                                        Submit
+                                    </Button>
+                                </Item>
+                            </Col>
+                        </Row>
                     </Form>
 
-                    <div className="flex flex-row text-center items-center justify-center mt-19">
+                    <div className="flex flex-row text-center items-center justify-center mt-15">
                         <h4 className="font-medium text-secondary text-base">Remembered your password?</h4>
                         <Link href={routes.auth.login}>
                             <a className="pl-2 text-info font-medium cursor-pointer text-base">Login</a>
