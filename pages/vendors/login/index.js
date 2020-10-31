@@ -57,7 +57,7 @@ const Login = props => {
                                         message: "Please enter your Email Address"
                                     },
                                 ]}>
-                                    <Input placeholder="Email Address" className={'mb-3'} />
+                                    <Input placeholder="Email Address" />
                                 </Item>
 
                             </Col>
@@ -69,7 +69,7 @@ const Login = props => {
                                         message: "Password Field is required"
                                     }
                                 ]}>
-                                    <Input type="password" placeholder="Password" className={'mb-3'} />
+                                    <Input type="password" placeholder="Password" />
                                 </Item>
 
                             </Col>
@@ -104,4 +104,4 @@ const Login = props => {
     )
 }
 
-export default withoutAuth(Login);
+export default withoutAuth(Login, 'vendor');

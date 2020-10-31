@@ -191,4 +191,4 @@ const Orders = props => {
     )
 }
 
-export default withAuth(Orders);
+export default withAuth(Orders, 'vendor');

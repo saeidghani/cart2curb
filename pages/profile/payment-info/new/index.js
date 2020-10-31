@@ -180,4 +180,4 @@ const AddPaymentInfo = props => {
     )
 }
 
-export default withAuth(AddPaymentInfo);
+export default withAuth(AddPaymentInfo, 'customer');

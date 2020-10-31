@@ -9,6 +9,7 @@ import cookie from "cookie";
 import {getStore} from "../../../../states";
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
+import userTypes from "../../../../constants/userTypes";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -115,8 +116,6 @@ const EditCategory = props => {
 export async function getServerSideProps({ req, res, params}) {
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
-    let userType = cookies.type;
-
 
     let category = {};
 
@@ -130,8 +129,8 @@ export async function getServerSideProps({ req, res, params}) {
         };
     }
 
-    if(userType !== 'vendor') {
-        res.writeHead(307, { Location: routes.profile.index });
+    if(cookies.type !== 'vendor') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
         res.end();
         return {
             props: {

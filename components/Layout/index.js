@@ -12,7 +12,7 @@ const Layout = props => {
     }
     return (
         <div className={'layout'}>
-            <Header/>
+            <Header avatar={props.avatar}/>
             <div className={classes.join(" ")}>
                 {props.children}
             </div>

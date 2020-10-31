@@ -37,11 +37,11 @@ export default class VendorStoreApi extends ApiInstance {
     }
 
     singleProduct(id, options = {}) {
-        return this.get(`vendor/store/products/${id}`, options)
+        return this.get(`vendor/store/products/${id}`,{}, options)
     }
 
     editProduct(id, body, options = {}) {
-        return this.post(`vendor/store/products/${id}`, body, {}, options);
+        return this.put(`vendor/store/products/${id}`, body, {}, options);
     }
 
     deleteProduct(id, options = {}) {

@@ -7,6 +7,7 @@ import Categories from "../../../components/Categories";
 import cookie from "cookie";
 import routes from "../../../constants/routes";
 import {getStore} from "../../../states";
+import userTypes from "../../../constants/userTypes";
 
 const { TabPane } = Tabs;
 
@@ -28,12 +29,11 @@ const Dashboard = props => {
 export async function getServerSideProps({ req, res }) {
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
-    let userType = cookies.type;
-
 
     let profile = {};
-    if(userType !== 'vendor') {
-        res.writeHead(307, { Location: routes.profile.index });
+
+    if (!token) {
+        res.writeHead(307, { Location: routes.vendors.auth.login });
         res.end();
         return {
             props: {
@@ -42,8 +42,8 @@ export async function getServerSideProps({ req, res }) {
         };
     }
 
-    if (!token) {
-        res.writeHead(307, { Location: routes.vendors.auth.login });
+    if(cookies.type !== 'vendor') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
         res.end();
         return {
             props: {

@@ -8,6 +8,7 @@ import routes from "../../constants/routes";
 import './styles.scss';
 import {useAuthenticatedUserType, useIsAuthenticated, useIsAuthRoute} from "../../hooks/auth";
 import {useRouter} from "next/router";
+import Avatar from "../UI/Avatar";
 
 const Header = props => {
     const [visible, setVisible] = useState(false);
@@ -16,7 +17,7 @@ const Header = props => {
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
     const userType = useAuthenticatedUserType()
-
+    console.log(props);
     useEffect(() => {
         if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
             setIsVendorPage(true)
@@ -29,6 +30,7 @@ const Header = props => {
         setVisible(false);
     }
 
+    const avatar = props.avatar || '';
     return (
         <header className={'header layout__section'}>
             <div className="header__content">
@@ -58,7 +60,7 @@ const Header = props => {
                     )}
                     {isAuthenticated ? (
                         <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
-                            <img src="/images/profile.png" alt="profile" className="ml-14 rounded-full cursor-pointer" />
+                            <Avatar src={avatar} justImage/>
                         </Link>
                     ) : (
                         <>
@@ -129,7 +131,7 @@ const Header = props => {
                                 <Row>
                                     <Col xs={24}>
                                         <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
-                                            <img src="/images/profile.png" alt="profile" className=" rounded-full cursor-pointer" />
+                                            <Avatar src={avatar} justImage/>
                                         </Link>
                                     </Col>
                                 </Row>

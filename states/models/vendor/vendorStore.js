@@ -193,7 +193,74 @@ export const vendorStore = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
+                message.error('An Error was occurred');
+                return false;
+            }
+        },
+        async addProduct(body, rootState) {
+            try {
+                const res = await api.vendor.store.addProduct(body, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.vendorAuth.token}`
+                    }
+                })
+
+                if(res.data.success) {
+                    message.success('Product added successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+
+        async getProduct({ id, token }) {
+
+            try {
+                const res = await api.vendor.store.singleProduct(id, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = res.data;
+                if(data.success) {
+                    return data.data;
+                } else {
+                    return false
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response.data);
+                }
+                return false
+            }
+        },
+
+        async editProduct(data, rootState) {
+            try {
+                const res = await api.vendor.store.editProduct(data.id, data.body, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.vendorAuth.token}`
+                    }
+                })
+
+                if(res.data.success) {
+                    message.success('Product Updated successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response);
+                }
                 message.error('An Error was occurred');
                 return false;
             }

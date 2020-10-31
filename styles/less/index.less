@@ -109,7 +109,8 @@
 }
 
 .ant-input::placeholder,
-.ant-select::placeholder {
+.ant-select::placeholder,
+.ant-select-selection-placeholder {
   font-size: .75rem;
 }
 
@@ -147,4 +148,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.upload-list-inline .ant-upload-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.upload-list-inline .ant-upload-list-item {
+  margin-right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ant-upload-list-item-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  align-self: flex-start;
+}
+
+.ant-upload-list-item-name {
+  color: #1890FF;
+}
+
+.ant-upload-list-picture .ant-upload-list-item-name-icon-count-1, .ant-upload-list-picture-card .ant-upload-list-item-name-icon-count-1 {
+  padding-right: 42px;
+}
+.ant-upload-list-item-card-actions {
+  top: 0 !important;
 }

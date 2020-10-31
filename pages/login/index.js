@@ -120,4 +120,4 @@ const Login = props => {
     )
 }
 
-export default withoutAuth(Login);
+export default withoutAuth(Login, 'customer');

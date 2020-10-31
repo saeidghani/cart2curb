@@ -5,6 +5,7 @@ import routes from "../../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import withAuth from "../../../../components/hoc/withAuth";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -101,4 +102,4 @@ const NewCategory = props => {
     )
 }
 
-export default NewCategory;
+export default withAuth(NewCategory, 'vendor');

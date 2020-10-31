@@ -246,4 +246,4 @@ const AddAddress = props => {
 }
 
 
-export default withAuth(AddAddress);
+export default withAuth(AddAddress, 'customer');

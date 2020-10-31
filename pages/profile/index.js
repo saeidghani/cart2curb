@@ -16,6 +16,7 @@ import cookie from "cookie";
 import {useAuth} from "../../providers/AuthProvider";
 import withAuth from "../../components/hoc/withAuth";
 import {useRouter} from "next/router";
+import userTypes from "../../constants/userTypes";
 
 
 const antIcon = <LoadingOutlined style={{ fontSize: 36 }} spin />;
@@ -150,7 +151,7 @@ export async function getServerSideProps({ req, res }) {
     }
 
     if(cookies.type !== 'customer') {
-        res.writeHead(307, { Location: routes.vendors.index });
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
         res.end();
         return {
             props: {

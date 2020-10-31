@@ -1,4 +1,6 @@
 import { useRouter } from 'next/router';
+import userTypes from "../../constants/userTypes";
+import {useAuthenticatedUserType} from "../../hooks/auth";
 
 function isBrowser() {
     return typeof window !== 'undefined';
@@ -23,18 +25,22 @@ function isBrowser() {
  * accepts a Next page context as a parameter so that the request can
  * be examined and the response can be changed.
  * @param location The location to redirect to.
+ * @param pageType
+ * @param userType
  */
 export default function withConditionalRedirect({
     WrappedComponent,
     clientCondition,
     serverCondition,
-    location
+    location,
+    pageType,
+    userType
 }) {
     const WithConditionalRedirectWrapper = props => {
         const router = useRouter();
         const redirectCondition = clientCondition();
         if (isBrowser() && redirectCondition) {
-            router.push(location);
+            router.push(userTypes[pageType][location]);
             return <></>;
         }
         return <WrappedComponent {...props} />;
@@ -43,9 +49,16 @@ export default function withConditionalRedirect({
     WithConditionalRedirectWrapper.getInitialProps = async (ctx) => {
         if (!isBrowser() && ctx.res) {
             if (serverCondition(ctx)) {
-                ctx.res.writeHead(302, { Location: location });
+                const type = userType(ctx);
+                if(type && type !== pageType) {
+                    ctx.res.writeHead(302, { Location: userTypes[type][location] });
+                    ctx.res.end();
+                }
+
+                ctx.res.writeHead(302, { Location: userTypes[pageType][location] });
                 ctx.res.end();
             }
+
         }
 
         const componentProps =

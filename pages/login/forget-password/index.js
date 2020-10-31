@@ -94,4 +94,4 @@ const ForgetPassword = props => {
     )
 }
 
-export default withoutAuth(ForgetPassword);
+export default withoutAuth(ForgetPassword, 'customer');

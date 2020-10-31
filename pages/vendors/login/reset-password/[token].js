@@ -7,6 +7,7 @@ import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import {useRedirectAuthenticated} from "../../../../hooks/auth";
 import Submitted from "../../../../components/Submitted";
+import withoutAuth from "../../../../components/hoc/withoutAuth";
 
 const { Item } = Form;
 
@@ -127,4 +128,4 @@ const ResetPassword = props => {
     )
 }
 
-export default ResetPassword;
+export default withoutAuth(ResetPassword, 'vendor');

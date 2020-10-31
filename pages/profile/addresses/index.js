@@ -11,6 +11,7 @@ import Link from "next/link";
 import deleteModal from "../../../components/Modals/Delete";
 import {useDispatch, useSelector} from "react-redux";
 import {useRedirectToLogin} from "../../../hooks/auth";
+import userTypes from "../../../constants/userTypes";
 
 const addresses = props => {
     const [deleted, setDeleted] = useState([]);
@@ -108,7 +109,7 @@ export async function getServerSideProps({ req, res }) {
     }
 
     if(cookies.type !== 'customer') {
-        res.writeHead(307, { Location: routes.vendors.index });
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
         res.end();
         return {
             props: {

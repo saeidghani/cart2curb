@@ -350,4 +350,4 @@ export async function getServerSideProps({ req, res }) {
 }
 
 
-export default SignUp;
+export default withoutAuth(SignUp, 'customer');

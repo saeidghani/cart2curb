@@ -17,6 +17,7 @@ import cookie from "cookie";
 import {getStore} from "../../../../states";
 import moment from "moment";
 import Link from "next/link";
+import userTypes from "../../../../constants/userTypes";
 
 const { Item } = Form;
 
@@ -219,6 +220,18 @@ export async function getServerSideProps({ req, params, res }) {
             }
         };
     }
+
+    if(cookies.type !== 'customer') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
+        res.end();
+        return {
+            props: {
+                status,
+                payment
+            }
+        };
+    }
+
     const store = getStore();
     const response = await store.dispatch.profile.getPayments({
         headers: {

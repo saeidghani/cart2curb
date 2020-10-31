@@ -14,6 +14,7 @@ import cookie from "cookie";
 import {getStore} from "../../../../states";
 import {getProperty} from "../../../../helpers";
 import {PictureOutlined, UserOutlined} from "@ant-design/icons";
+import userTypes from "../../../../constants/userTypes";
 
 
 const { Step } = Steps;
@@ -539,8 +540,8 @@ export async function getServerSideProps({ req, res }) {
         };
     }
 
-    if(userType !== 'vendor') {
-        res.writeHead(307, { Location: routes.profile.index });
+    if(cookies.type !== 'vendor') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
         res.end();
         return {
             props: {
@@ -548,7 +549,6 @@ export async function getServerSideProps({ req, res }) {
             }
         };
     }
-
 
     const store = getStore();
     const response = await store.dispatch.vendorProfile.getProfile({

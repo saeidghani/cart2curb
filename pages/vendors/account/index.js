@@ -12,19 +12,14 @@ import {getStore} from "../../../states";
 import {getProperty} from "../../../helpers";
 import moment from "moment";
 import {useAuth} from "../../../providers/AuthProvider";
-import {useRedirectToLogin} from "../../../hooks/auth";
 import {useDispatch} from "react-redux";
+import userTypes from "../../../constants/userTypes";
 
 const Account = props => {
     const screens = Grid.useBreakpoint();
     const { profile } = props;
     const dispatch = useDispatch();
     const { setAuthenticated, setUserType } = useAuth();
-    const redirect = useRedirectToLogin()
-
-    useEffect(() => {
-        redirect();
-    }, [redirect])
 
     const logoutHandler = async () => {
         await dispatch.auth.logout();
@@ -111,19 +106,9 @@ export async function getServerSideProps({ req, res }) {
 
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
-    let userType = cookies.type;
 
 
     let profile = {};
-    if(userType !== 'vendor') {
-        res.writeHead(307, { Location: routes.profile.index });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
 
     if (!token) {
         res.writeHead(307, { Location: routes.vendors.auth.login });
@@ -134,6 +119,18 @@ export async function getServerSideProps({ req, res }) {
             }
         };
     }
+
+    if(cookies.type !== 'vendor') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
+        res.end();
+        return {
+            props: {
+                profile
+            }
+        };
+    }
+
+
 
     const store = getStore();
     const response = await store.dispatch.vendorProfile.getProfile({

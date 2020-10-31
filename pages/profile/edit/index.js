@@ -18,6 +18,7 @@ import moment from "moment";
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {UserOutlined} from "@ant-design/icons";
+import userTypes from "../../../constants/userTypes";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -384,6 +385,18 @@ export async function getServerSideProps({ req, res }) {
             }
         };
     }
+
+    if(cookies.type !== 'customer') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
+        res.end();
+        return {
+            props: {
+                profile
+            }
+        };
+    }
+
+
     const store = getStore();
     const response = await store.dispatch.profile.getProfile({
         headers: {

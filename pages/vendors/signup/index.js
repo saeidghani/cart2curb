@@ -556,4 +556,4 @@ const Register = props => {
     )
 }
 
-export default withoutAuth(Register);
+export default withoutAuth(Register, 'vendor');

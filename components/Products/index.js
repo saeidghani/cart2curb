@@ -158,6 +158,7 @@ const Products = ({vendor, ...props}) => {
 
     const data = useMemo(() => {
         return products && products.filter(item => !deleted.includes(item._id)).map((product, index) => {
+            const category = categories.find(cat => cat._id === product.category)
             return {
                 key: product._id,
                 index: product._id,
@@ -167,7 +168,7 @@ const Products = ({vendor, ...props}) => {
                 price: `$${product.priceList.price + product.priceList.cost}`,
                 tax: `${product.tax}%`,
                 stock: `$${product.priceList.stock}`,
-                category: categories.find(cat => cat._id === product.category),
+                category: category ? category.name : product.category,
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
@@ -232,9 +233,7 @@ const Products = ({vendor, ...props}) => {
             <Row>
                 <Col xs={24}>
 
-                    <Table columns={columns} dataSource={data} scroll={{ x: 1100 }} locale={{
-                        emptyText: 'There is no Product'
-                    }} loading={productsLoading && products.length === 0}/>
+                    <Table columns={columns} dataSource={data} scroll={{ x: 1100 }} pagination={false} loading={productsLoading && products.length === 0}/>
                     <div ref={loader}>
                         {hasMore && (
                             <div className="flex w-full items-center justify-center py-6"><Loader/></div>

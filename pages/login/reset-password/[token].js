@@ -136,4 +136,4 @@ const ResetPassword = props => {
     )
 }
 
-export default withoutAuth(ResetPassword);
+export default withoutAuth(ResetPassword, 'customer');

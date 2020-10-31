@@ -12,6 +12,7 @@ import moment from "moment";
 import {useRouter} from "next/router";
 import routes from "../../../constants/routes";
 import Link from "next/link";
+import userTypes from "../../../constants/userTypes";
 
 const PaymentInfo = props => {
     const [deleted, setDeleted] = useState([]);
@@ -100,8 +101,9 @@ export async function getServerSideProps({ req, res }) {
         };
     }
 
+
     if(cookies.type !== 'customer') {
-        res.writeHead(307, { Location: routes.vendors.index });
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
         res.end();
         return {
             props: {

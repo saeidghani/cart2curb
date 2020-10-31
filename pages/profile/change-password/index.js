@@ -135,4 +135,4 @@ const ChangePassword = props => {
 }
 
 
-export default withAuth(ChangePassword);
+export default withAuth(ChangePassword, 'customer');

@@ -23,6 +23,8 @@ module.exports = {
         fade: '#AEB7C5',
         third: '#2B3340',
         card: '#F7F7F7',
+        border: '#f5f5f5',
+        icon: '#8c8c8c',
         label: '#262626',
         paragraph: '#696E79',
         header: '#C1C4C8',

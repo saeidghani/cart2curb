@@ -125,4 +125,4 @@ const ChangePassword = props => {
     )
 }
 
-export default withAuth(ChangePassword, routes.vendors.auth.login);
+export default withAuth(ChangePassword, 'vendor');

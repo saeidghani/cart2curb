@@ -13,7 +13,7 @@ import {getStore} from "../../../../states";
 const ProductView = props => {
     const router = useRouter();
 
-    const { product, related } = props;
+    const { product, related, storeProfile } = props;
 
     const breadcrumb = [
         {
@@ -28,7 +28,6 @@ const ProductView = props => {
             title: product.name
         }
     ]
-
     const total = product.priceList.price + product.priceList.cost;
     const tax = (total * product.tax / 100).toFixed(2)
     return (
@@ -62,10 +61,10 @@ const ProductView = props => {
                                     <DetailItem title={'Total Price'} value={`$${total}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Stock'} value={'is Available'}/>
+                                    <DetailItem title={'Stock'} value={`$${product.priceList.stock}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Store Address'} value={'Address 1'}/>
+                                    <DetailItem title={'Store'} value={storeProfile.name || '-'}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Cost Price'} value={`$${product.priceList.cost}`}/>
@@ -131,7 +130,8 @@ export async function getServerSideProps({ req, res, params }) {
     const store = getStore()
 
     let product = {};
-    let related = []
+    let related = [];
+    let storeProfile = {};
 
     try {
         const response = await store.dispatch.app.getProduct(params.product)
@@ -152,6 +152,10 @@ export async function getServerSideProps({ req, res, params }) {
             category: response.category
         })
 
+        const storeResponse = await store.dispatch.app.getStore(params.vendor);
+
+        storeProfile = storeResponse
+
         related = relatedResponse.data.filter(item => item._id !== product._id);
         product = response;
     } catch(e) {
@@ -162,14 +166,16 @@ export async function getServerSideProps({ req, res, params }) {
         return {
             props: {
                 product,
-                related
+                related,
+                storeProfile
             }
         };
     }
     return {
         props: {
             product,
-            related
+            related,
+            storeProfile
         },
     }
 }
