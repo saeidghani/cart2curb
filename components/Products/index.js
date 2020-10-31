@@ -94,37 +94,45 @@ const Products = ({vendor, ...props}) => {
         {
             title: "#",
             dataIndex: 'number',
-            key: 'number'
+            key: 'number',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Name",
             dataIndex: 'name',
-            key: 'name'
+            key: 'name',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Unit/Weight Price",
             dataIndex: 'unitPrice',
-            key: 'unitPrice'
+            key: 'unitPrice',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Cost Price",
             dataIndex: 'price',
-            key: 'price'
+            key: 'price',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Tax Rate",
             dataIndex: 'tax',
-            key: 'tax'
+            key: 'tax',
+            width: 143,
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Stock",
             dataIndex: 'stock',
-            key: 'stock'
+            key: 'stock',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Parent Categories",
             dataIndex: 'category',
-            key: 'category'
+            key: 'category',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Action",
@@ -132,19 +140,18 @@ const Products = ({vendor, ...props}) => {
             key: 'actions',
             render: (actions, row) => {
                 return (
-                    <Space size={4}>
+                    <div className={'flex flex-row items-center'}>
                         <Link href={routes.vendors.products.view()} as={routes.vendors.products.view(row.number)}>
-                            <Button type={'link'} shape="circle" icon={<FileSearchOutlined  className={'text-secondarey text-xl'}/>} />
+                            <Button type={'link'} shape="circle" icon={<FileSearchOutlined  className={'text-secondarey text-xl'}/>} className={'btn-icon-small mr-4'} />
                         </Link>
                         <Link href={routes.vendors.products.edit()} as={routes.vendors.products.edit(row.number)}>
-                            <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} />
+                            <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} className={'btn-icon-small mr-4'} />
                         </Link>
-                        <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} onClick={actions.deleteHandler} />
-                    </Space>
+                        <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} className={'btn-icon-small'} onClick={actions.deleteHandler} />
+                    </div>
                 )
             },
-            width: 170,
-            fixed: 'right',
+            width: 140,
         },
     ]
 
@@ -178,7 +185,7 @@ const Products = ({vendor, ...props}) => {
 
     return (
         <>
-            <Row gutter={24} className={'flex items-center pt-17 pb-10'}>
+            <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
                 <Col lg={18} xs={24}>
                     <Form form={form} layout={'vertical'} onFinish={searchHandler}>
                         <Row gutter={24}>
@@ -221,7 +228,7 @@ const Products = ({vendor, ...props}) => {
             <Row>
                 <Col xs={24}>
 
-                    <Table columns={columns} dataSource={data} scroll={{ x: 1200 }} locale={{
+                    <Table columns={columns} dataSource={data} scroll={{ x: 1100 }} locale={{
                         emptyText: 'There is no Product'
                     }} loading={productsLoading && products.length === 0}/>
                     <div ref={loader}>

@@ -93,11 +93,13 @@ const Categories = props => {
             dataIndex: 'title',
             key: 'title',
             width: 200,
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Description",
             dataIndex: 'description',
-            key: 'description'
+            key: 'description',
+            render: data => <span className="text-cell">{data}</span>
         },
         {
             title: "Action",
@@ -105,15 +107,15 @@ const Categories = props => {
             key: 'actions',
             render: (actions, row) => {
                 return (
-                    <Space size={4}>
+                    <div className={'flex flex-row items-center'}>
                         <Link href={routes.vendors.categories.edit()} as={routes.vendors.categories.edit(row.title)}>
-                            <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} />
+                            <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} className={'btn-icon-small mr-4'} />
                         </Link>
-                        <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} onClick={actions.deleteHandler} />
-                    </Space>
+                        <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} onClick={actions.deleteHandler} className={'btn-icon-small'} />
+                    </div>
                 )
             },
-            width: 130,
+            width: 140,
             fixed: 'right',
         },
     ]
@@ -141,7 +143,7 @@ const Categories = props => {
 
     return (
         <>
-            <Row gutter={24} className={'flex items-center pt-17 pb-10'}>
+            <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
                 <Col lg={18} xs={24}>
                     <Form form={form} layout={'vertical'} onFinish={searchHandler}>
                         <Row gutter={24}>
