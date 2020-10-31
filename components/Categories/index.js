@@ -15,6 +15,7 @@ const Categories = props => {
     const [page, setPage] = useState(1);
     const [parentCategory, setParentCategory] = useState([]);
     const [hasMore, setHasMore] = useState(true);
+    const [deleted, setDeleted] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
@@ -120,8 +121,8 @@ const Categories = props => {
         },
     ]
 
-    const fakeData = useMemo(() => {
-        return categories.map((item, index) => {
+    const data = useMemo(() => {
+        return categories.filter(item => !deleted.includes(item._id)).map((item, index) => {
             return {
                 key: item._id,
                 index: item._id,
@@ -130,7 +131,12 @@ const Categories = props => {
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
-                            onOk: async () => await dispatch.vendorStore.deleteCategory(item._id),
+                            onOk: async () => {
+                                const res = await dispatch.vendorStore.deleteCategory(item._id);
+                                if(res) {
+                                    setDeleted(deleted.concat(item._id))
+                                }
+                            },
                             okText: 'Ok',
                             title: 'Do you want to delete this Category?',
                             content: 'Are you sure to delete this category? There is no going back!!',
@@ -139,7 +145,7 @@ const Categories = props => {
                 },
             }
         })
-    }, [categories, page])
+    }, [categories, page, deleted])
 
     return (
         <>
@@ -185,7 +191,7 @@ const Categories = props => {
             </Row>
             <Row>
                 <Col xs={24}>
-                    <Table columns={columns} dataSource={fakeData} pagination={false} scroll={{ x: 990 }} locale={{
+                    <Table columns={columns} dataSource={data} pagination={false} scroll={{ x: 990 }} locale={{
                         emptyText: 'There is no Category'
                     }} loading={categoryLoading && categories.length === 0}/>
 

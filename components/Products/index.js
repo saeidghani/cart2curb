@@ -21,6 +21,7 @@ const Products = ({vendor, ...props}) => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [deleted, setDeleted] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
@@ -156,7 +157,7 @@ const Products = ({vendor, ...props}) => {
     ]
 
     const data = useMemo(() => {
-        return products && products.map((product, index) => {
+        return products && products.filter(item => !deleted.includes(item._id)).map((product, index) => {
             return {
                 key: product._id,
                 index: product._id,
@@ -172,6 +173,9 @@ const Products = ({vendor, ...props}) => {
                         deleteModal({
                             onOk: async () => {
                                 const res = await dispatch.vendorStore.deleteProduct(product._id);
+                                if(res) {
+                                    setDeleted(deleted.concat(product._id))
+                                }
                             },
                             okText: 'Ok',
                             title: 'Do you want to delete this product?',
@@ -181,7 +185,7 @@ const Products = ({vendor, ...props}) => {
                 },
             }
         })
-    }, [products, categories])
+    }, [products, categories, deleted])
 
     return (
         <>
