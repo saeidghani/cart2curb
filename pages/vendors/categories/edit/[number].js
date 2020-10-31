@@ -152,7 +152,6 @@ export async function getServerSideProps({ req, res, params}) {
             }
         })
 
-        console.log(response);
         if(response.length > 0) {
             category = response[0];
         } else {

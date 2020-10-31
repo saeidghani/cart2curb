@@ -41,7 +41,6 @@ const AddPaymentInfo = props => {
     const submitHandler = async (values) => {
         const {number, firstName, lastName, cvv, year, month} = values;
         const expirationDate = year.format('YYYY') + '-' + month.format("MM-DD")
-        console.log(values);
         const body = {
             number,
             firstName,

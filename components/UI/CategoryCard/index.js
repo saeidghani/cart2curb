@@ -19,7 +19,6 @@ const CategoryCard = ({title, changeHandler, storeId, ...props}) => {
     }
     const fetchCategories = async () => {
         const response = await dispatch.app.getCategories({storeId, page})
-        console.log(response);
         setCategories([...categories, ...response.data]);
         setPage(page + 1);
         if(response.data.length < 30) {

@@ -25,7 +25,6 @@ const EditProduct = props => {
     const router = useRouter()
 
     const { product } = props;
-    console.log(product);
 
     const onChangeUnitType = (e) => {
         setUnitType(e.target.value);

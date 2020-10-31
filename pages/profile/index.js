@@ -38,7 +38,6 @@ const profile = props => {
         setAuthenticated(false);
         setUserType(null)
     }
-    console.log(profile);
 
     useEffect(() => {
         if(!isAuthenticated) {

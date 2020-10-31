@@ -8,7 +8,6 @@ import './styles.scss';
 
 
 const ProductCard = props => {
-    console.log(props);
     return (
         <div className={'border border-overline product-card'}>
             <img className={'product-card__image'} src={props.images} alt={props.name}/>

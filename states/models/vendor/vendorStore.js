@@ -71,7 +71,6 @@ export const vendorStore = {
         async getServerSideCategory({ query, options}, rootState) {
             try {
                 const res = await api.vendor.store.categories(query, options);
-                console.log(res);
                 const data = res.data;
                 if(data.success) {
                     return data.data;

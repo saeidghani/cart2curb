@@ -48,13 +48,13 @@ export default function withConditionalRedirect({
 
     WithConditionalRedirectWrapper.getInitialProps = async (ctx) => {
         if (!isBrowser() && ctx.res) {
-            if (serverCondition(ctx)) {
-                const type = userType(ctx);
-                if(type && type !== pageType) {
-                    ctx.res.writeHead(302, { Location: userTypes[type][location] });
-                    ctx.res.end();
-                }
+            const type = userType(ctx);
+            if(type && type !== pageType) {
+                ctx.res.writeHead(302, { Location: userTypes[type]['profile'] });
+                ctx.res.end();
+            }
 
+            if (serverCondition(ctx)) {
                 ctx.res.writeHead(302, { Location: userTypes[pageType][location] });
                 ctx.res.end();
             }
