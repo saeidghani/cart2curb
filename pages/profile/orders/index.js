@@ -115,7 +115,7 @@ const Orders = props => {
                             cxName={row.name}
                             status={row.status}
                             data={row.data}
-                            total={row.total}
+                            total={row.totalPrice}
                         />
                     </>
                 )
@@ -124,10 +124,7 @@ const Orders = props => {
     ];
 
     const data = useMemo(() => {
-        return orders && orders.map((order, index) => {
-            if(deleted.includes(order._id)) {
-                return;
-            }
+        return orders && orders.filter(order => !deleted.includes(order._id)).map((order, index) => {
             return {
                 key: order._id,
                 index: order._id,
@@ -164,10 +161,9 @@ const Orders = props => {
                         total: `$${item.totalPrice}`
                     }
                 }),
-                total: order.totalPrice
             }
         })
-    }, [orders, loading])
+    }, [orders, loading, deleted])
 
     return (
         <ProfileLayout title={'Orders'} breadcrumb={[{ title: "User Profile" }]} withoutDivider={true}>

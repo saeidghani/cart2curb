@@ -34,6 +34,15 @@ export const vendorStore = {
 
             }
             state.products.metaData = payload.metaData;
+        },
+        setOrders: (state, payload) => {
+            if(payload.metaData.pagination.pageNumber === 1) {
+                state.orders.data = payload.data;
+            } else {
+                state.orders.data = [...state.orders.data, ...payload.data];
+
+            }
+            state.orders.metaData = payload.metaData;
         }
     },
     effects: dispatch => ({
@@ -188,6 +197,27 @@ export const vendorStore = {
                 message.error('An Error was occurred');
                 return false;
             }
-        }
+        },
+        async getOrders(query, rootState) {
+            try {
+                const res = await api.vendor.store.orders(query, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.vendorAuth.token}`
+                    }
+                });
+                const data = res.data;
+                if(data.success) {
+                    dispatch.vendorStore.setOrders({
+                        data: data.data,
+                        metaData: data.metaData
+                    })
+                    return data;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
     })
 }
