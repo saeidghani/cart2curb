@@ -17,7 +17,6 @@ const Header = props => {
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
     const userType = useAuthenticatedUserType()
-    console.log(props);
     useEffect(() => {
         if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
             setIsVendorPage(true)
@@ -60,7 +59,9 @@ const Header = props => {
                     )}
                     {isAuthenticated ? (
                         <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
-                            <Avatar src={avatar} justImage/>
+                            <div className="ml-14">
+                                <Avatar src={avatar} justImage/>
+                            </div>
                         </Link>
                     ) : (
                         <>
