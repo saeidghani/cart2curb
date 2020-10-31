@@ -1,4 +1,5 @@
 import  { api } from "../../../lib/api";
+import Api from '../../../http/Api';
 import {message} from "antd";
 
 export const vendorProfile = {
@@ -26,9 +27,9 @@ export const vendorProfile = {
                 console.log(e);
             }
         },
-        async updateProfile(body) {
+        async updateProfile(body, rootState) {
             try {
-                const res = await api.post('vendor/profile/edit', body);
+                const res = await api.post('vendor/profile/edit', body)
                 if(res.data.success) {
                     const resData = res.data;
                     dispatch.profile.setProfile({
@@ -38,11 +39,14 @@ export const vendorProfile = {
                 message.success('Your Profile Information was updated!');
                 return true;
             } catch(e) {
-                const errorData = e.response.data;
-                if(errorData.hasOwnProperty('errors')) {
-                    errorData.errors.map(err => {
-                        message.error(err.message || 'Something went Wrong', 4)
-                    })
+                if(e.hasOwnProperty('response')) {
+
+                    const errorData = e.response.data;
+                    if(errorData.hasOwnProperty('errors')) {
+                        errorData.errors.map(err => {
+                            message.error(err.message || 'Something went Wrong', 4)
+                        })
+                    }
                 } else {
                     message.error('Something went Wrong', 5);
                 }

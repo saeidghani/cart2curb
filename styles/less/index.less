@@ -99,10 +99,13 @@
 }
 
 .ant-input:focus, .ant-input-focused,
-.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-  border-color: #d9d9d9;
-  outline: none;
-  box-shadow: none;
+.ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input) .ant-select-selector,
+.ant-picker-input > input:focus,
+.ant-picker-input > input-focused,
+.ant-picker-focused {
+  border-color: #d9d9d9 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .ant-input::placeholder,
@@ -124,4 +127,13 @@
 
 .border-0 .ant-upload.ant-upload-select-picture-card {
   border: none !important;
+}
+
+
+.ant-picker-input > input::placeholder {
+  font-size: 0.75rem;
+}
+
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: #40BFC1;
 }

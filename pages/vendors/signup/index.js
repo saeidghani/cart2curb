@@ -104,6 +104,10 @@ const Register = props => {
     }
 
     const submitHandler = async () => {
+        if(area.length === 0) {
+            message.error("Please Select Your Service Radius")
+            return;
+        }
         const [form1, form2] = fields;
         const address = {
             country: 'Canada',
@@ -125,7 +129,7 @@ const Register = props => {
             name: form1.name,
             area: {
                 type: 'Polygon',
-                coordinates: [area.map(point => [point.lng, point.lat])],
+                coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
             needDriversToGather: form2.needDriversToGather.includes('true'),

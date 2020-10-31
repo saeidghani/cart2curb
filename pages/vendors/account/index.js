@@ -62,7 +62,7 @@ const Account = props => {
                 <Col xs={24}>
                     <Row gutter={[24, 36]} className={'flex flex-row flex-wrap items-center pt-4'}>
                         <Col xs={24} sm={12} lg={6}>
-                            <Avatar justImage/>
+                            <Avatar src={profile.image} justImage/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
                             <DetailItem title={'Company Name'} value={getProperty(profile.store, 'name', '-')}/>

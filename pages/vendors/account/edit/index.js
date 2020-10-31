@@ -13,17 +13,13 @@ import {useRouter} from "next/router";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
 import {getProperty} from "../../../../helpers";
+import {PictureOutlined, UserOutlined} from "@ant-design/icons";
 
 
 const { Step } = Steps;
 const { Item } = Form;
 const { Option } = Select;
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
 
 function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -38,10 +34,11 @@ function beforeUpload(file) {
 }
 
 
-const EditAccount = props => {const [form] = Form.useForm();
+const EditAccount = props => {
+    const [form] = Form.useForm();
     const [fields, setFields] = useState([])
-    const [imageUrl, setImageUrl] = useState('')
-    const [avatarUrl, setAvatarUrl] = useState('')
+    const [imageUrl, setImageUrl] = useState(props.fields[0].imageStore)
+    const [avatarUrl, setAvatarUrl] = useState(props.fields[0].image)
     const [marker, setMarker] = useState(props.marker)
     const [area, setArea] = useState(props.area);
     const [province, setProvince] = useState(props.fields[1].province);
@@ -99,10 +96,8 @@ const EditAccount = props => {const [form] = Form.useForm();
             return;
         }
         if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl => {
-                handler(imageUrl);
-            });
+
+            handler(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
         }
     };
 
@@ -131,6 +126,10 @@ const EditAccount = props => {const [form] = Form.useForm();
     }
 
     const submitHandler = async () => {
+        if(area.length === 0) {
+            message.error("Please Select Your Service Radius")
+            return;
+        }
         const [form1, form2] = fields;
         const address = {
             country: 'Canada',
@@ -141,7 +140,7 @@ const EditAccount = props => {const [form] = Form.useForm();
             postalCode: form2.postalCode,
             location: {
                 type: 'Point',
-                coordinates: [marker.position.lat, marker.position.lng]
+                coordinates: [marker.position.lng, marker.position.lat]
             }
         }
         const store = {
@@ -152,9 +151,9 @@ const EditAccount = props => {const [form] = Form.useForm();
             name: form1.name,
             area: {
                 type: 'Polygon',
-                coordinates: [area.map(point => [point.lat, point.lng])],
+                coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
-            image: "https://some.url/pic/name", // @todo: change to server mode
+            image: imageUrl,
             needDriversToGather: form2.needDriversToGather.includes('true'),
             storeType: form1.storeType,
             subType: form1.subType,
@@ -163,6 +162,7 @@ const EditAccount = props => {const [form] = Form.useForm();
         const vendor = {
             phone: form1.phone,
             contactName: form1.contactName,
+            image: avatarUrl,
         }
 
         const body = {
@@ -303,9 +303,9 @@ const EditAccount = props => {const [form] = Form.useForm();
                                 <Col lg={8} md={12} xs={24}>
                                     <div className={'flex items-center justify-start pt-4'}>
                                         <Upload
-                                            name="storeImage"
+                                            name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader-square"
+                                            className="avatar-uploader-square border-0"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -314,9 +314,12 @@ const EditAccount = props => {const [form] = Form.useForm();
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setImageUrl)}
                                         >
+
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
                                                 <>
-                                                    <div className={'full-rounded text-primary flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>+</div>
+                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
+                                                        <PictureOutlined className={'text-xl'} />
+                                                    </div>
                                                 </>
                                             )}
                                         </Upload>
@@ -327,9 +330,9 @@ const EditAccount = props => {const [form] = Form.useForm();
                                 <Col lg={8} md={12} xs={24}>
                                     <div className={'flex items-center justify-start pt-6'}>
                                         <Upload
-                                            name="avatar"
+                                            name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader"
+                                            className="avatar-uploader border-0"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -338,9 +341,12 @@ const EditAccount = props => {const [form] = Form.useForm();
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setAvatarUrl)}
                                         >
-                                            {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
+
+                                            {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                                 <>
-                                                    <div className={'full-rounded text-primary flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>+</div>
+                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                        <UserOutlined className={'text-lg'}/>
+                                                    </div>
                                                 </>
                                             )}
                                         </Upload>
@@ -523,6 +529,16 @@ export async function getServerSideProps({ req, res }) {
     let marker = {};
     let area = {}
     const fields = [];
+    if (!token) {
+        res.writeHead(307, { Location: routes.vendors.auth.login });
+        res.end();
+        return {
+            props: {
+                profile
+            }
+        };
+    }
+
     if(userType !== 'vendor') {
         res.writeHead(307, { Location: routes.profile.index });
         res.end();
@@ -533,15 +549,6 @@ export async function getServerSideProps({ req, res }) {
         };
     }
 
-    if (!token) {
-        res.writeHead(307, { Location: routes.vendors.auth.login });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
 
     const store = getStore();
     const response = await store.dispatch.vendorProfile.getProfile({
@@ -555,15 +562,15 @@ export async function getServerSideProps({ req, res }) {
     const markCoords = profile.store.address.location.coordinates
     marker = {
         position: {
-            lat: markCoords[0],
-            lng: markCoords[1]
+            lat: markCoords[1],
+            lng: markCoords[0]
         }
     }
     const areaCoords = profile.store.area.coordinates[0];
     area = areaCoords.map(coord => {
         return {
-            lat: coord[0],
-            lng: coord[1]
+            lat: coord[1],
+            lng: coord[0]
         }
     })
     fields[0] = {
@@ -575,6 +582,8 @@ export async function getServerSideProps({ req, res }) {
         storeType: getProperty(profile.store, 'storeType', ''),
         subType: getProperty(profile.store, 'subType', ''),
         name: getProperty(profile.store, 'name', ''),
+        imageStore: getProperty(profile.store, 'image', ''),
+        image: getProperty(profile, 'image', ''),
     }
 
     fields[1] = {
