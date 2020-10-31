@@ -331,23 +331,5 @@ const SignUp = props => {
     );
 }
 
-export async function getServerSideProps({ req, res }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-
-    if (token) {
-        res.writeHead(307, { Location: routes.profile.index });
-        res.end();
-        return {
-            props: {}
-        };
-    }
-
-    return {
-        props: {}
-    }
-}
-
 
 export default withoutAuth(SignUp, 'customer');
