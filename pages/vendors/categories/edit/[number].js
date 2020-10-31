@@ -65,9 +65,19 @@ const EditCategory = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
     return (
-        <Page title={`Edit Category ${props.category.name}`} breadcrumb={breadcrumb}>
+        <Page title={false} breadcrumb={breadcrumb}>
             <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
                 <Row gutter={24}>
+
+                    <Col xs={24}>
+                        <h1 style={{
+                            fontSize: 27,
+                            fontWeight: 'medium',
+                            marginTop: 0,
+                            marginBottom: 25,
+                            color: '#020911',
+                        }}>Edit Category {props.category.name}</h1>
+                    </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'name'} label={'Name'}>
                             <Input placeholder={'Name'}/>
@@ -75,7 +85,7 @@ const EditCategory = props => {
                     </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'parent'} label={'Parent Category'}>
-                            <Select placeholder={'Select Weight Unit'} loading={parentLoading}>
+                            <Select placeholder={'Select Parent Category'} loading={parentLoading}>
                                 {parentCategories && parentCategories.map((item, index) => {
                                     return (
                                         <Option value={item._id} key={item._id}>{item.name}</Option>
@@ -84,15 +94,15 @@ const EditCategory = props => {
                             </Select>
                         </Item>
                     </Col>
-                    <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
+                    <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-10 mt-6'}>
                         <Item>
-                            <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'} loading={loading && parentLoading}>
+                            <Button type="primary" block className={'w-full md:w-32 ml-0 md:ml-5'} htmlType={'submit'} loading={loading || parentLoading}>
                                 Save
                             </Button>
                         </Item>
                         <Item>
                             <Link href={routes.vendors.index}>
-                                <Button danger className={'w-32'}>Cancel</Button>
+                                <Button danger className={'w-full md:w-32'}>Cancel</Button>
                             </Link>
                         </Item>
                     </Col>
