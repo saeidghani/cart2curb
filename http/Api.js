@@ -4,6 +4,7 @@ import StoreApi from "./apiSections/app";
 import VendorAuthApi from "./apiSections/vendor/auth";
 import VendorProfileApi from "./apiSections/vendor/profile";
 import VendorStoreApi from "./apiSections/vendor/store";
+import CartApi from "./apiSections/cart";
 
 export class Api {
     constructor() {
@@ -17,6 +18,8 @@ export class Api {
             profile: new VendorProfileApi(),
             store: new VendorStoreApi()
         }
+
+        this.cart = new CartApi();
     }
 }
 
