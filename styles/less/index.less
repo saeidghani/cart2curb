@@ -102,7 +102,8 @@
 .ant-select-focused:not(.ant-select-disabled).ant-select-single:not(.ant-select-customize-input) .ant-select-selector,
 .ant-picker-input > input:focus,
 .ant-picker-input > input-focused,
-.ant-picker-focused {
+.ant-picker-focused,
+.ant-input-number-focused {
   border-color: #d9d9d9 !important;
   outline: none !important;
   box-shadow: none !important;
@@ -179,4 +180,33 @@
 }
 .ant-upload-list-item-card-actions {
   top: 0 !important;
+}
+
+
+.ant-checkbox-wrapper.checkbox-info:hover .ant-checkbox-inner,
+.checkbox-info .ant-checkbox:hover .ant-checkbox-inner,
+.checkbox-info .ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: #40BFC1;
+}
+
+.checkbox-info .ant-checkbox-checked::after {
+  border: 1px solid #40BFC1;
+}
+
+.checkbox-info .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #40BFC1;
+  border-color: #40BFC1;
+}
+
+.checkbox-info .ant-checkbox-indeterminate .ant-checkbox-inner::after {
+  background-color: #40BFC1;
+}
+
+.cart-number-input {
+  width: 66px;
+  height: 38px;
+
+  .ant-input-number-input {
+    height: 36px;
+  }
 }

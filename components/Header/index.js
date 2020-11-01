@@ -9,6 +9,7 @@ import './styles.scss';
 import {useAuthenticatedUserType, useIsAuthenticated, useIsAuthRoute} from "../../hooks/auth";
 import {useRouter} from "next/router";
 import Avatar from "../UI/Avatar";
+import {useDispatch} from "react-redux";
 
 const Header = props => {
     const [visible, setVisible] = useState(false);
@@ -17,6 +18,7 @@ const Header = props => {
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
     const userType = useAuthenticatedUserType()
+
     useEffect(() => {
         if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
             setIsVendorPage(true)
