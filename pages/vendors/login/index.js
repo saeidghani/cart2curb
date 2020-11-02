@@ -39,7 +39,7 @@ const Login = props => {
     }
 
     return (
-        <Page title={'login'} breadcrumb={[{ title: 'Login' }]}>
+        <Page title={'Login'} breadcrumb={[{ title: 'Login' }]}>
             <Row>
                 <Col xl={{ span: 8, offset: 8}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
                     <Form
@@ -95,7 +95,7 @@ const Login = props => {
                     </Form>
                     <div className="pt-7.5 pb-16 md:pb-24 text-center">
                         <Link href={routes.vendors.auth.forgetPassword}>
-                            <span className="text-label font-medium text-xl cursor-pointer text-type">
+                            <span className="text-label font-medium text-base cursor-pointer text-type">
                                 Forget Password?
                             </span>
                         </Link>
