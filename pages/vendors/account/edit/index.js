@@ -155,7 +155,7 @@ const EditAccount = props => {
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: form2.needDriversToGather.includes('true'),
+            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true'),
             storeType: form1.storeType,
             subType: form1.subType,
         }
