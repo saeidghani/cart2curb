@@ -29,7 +29,8 @@ const EditCategory = props => {
 
                 form.setFieldsValue({
                     name: props.category.name,
-                    parent: props.category.parent
+                    parent: props.category.parent,
+                    description: props.category.description || ''
                 })
             })
     }, [])
@@ -48,9 +49,9 @@ const EditCategory = props => {
     ]
     const submitHandler = async (values) => {
 
-        const {name, parent} = values;
+        const {name, parent, description} = values;
         const body = {
-            name, parent
+            name, parent, description
         }
 
         const res = await dispatch.vendorStore.editCategory({
@@ -77,7 +78,7 @@ const EditCategory = props => {
                             marginTop: 0,
                             marginBottom: 25,
                             color: '#020911',
-                        }}>Edit Category {props.category.name}</h1>
+                        }}>Edit Category</h1>
                     </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'name'} label={'Name'}>
@@ -93,6 +94,14 @@ const EditCategory = props => {
                                     )
                                 })}
                             </Select>
+                        </Item>
+                    </Col>
+                    <Col xs={24}>
+                        <Item
+                            name={'description'}
+                            label={'Description'}
+                        >
+                            <Input.TextArea placeholder={'description'} autoSize={{ minRows: 4, maxRows: 8 }} style={{ resize: 'none' }}/>
                         </Item>
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-10 mt-6'}>

@@ -36,9 +36,9 @@ const NewCategory = props => {
         }
     ]
     const submitHandler = async (values) => {
-        const {name, parent} = values;
+        const {name, parent, description} = values;
         const body = {
-            name, parent
+            name, parent, description
         }
 
         const res = await dispatch.vendorStore.addCategory(body);
@@ -82,6 +82,14 @@ const NewCategory = props => {
                                     )
                                 })}
                             </Select>
+                        </Item>
+                    </Col>
+                    <Col xs={24}>
+                        <Item
+                            name={'description'}
+                            label={'Description'}
+                        >
+                            <Input.TextArea placeholder={'description'} autoSize={{ minRows: 4, maxRows: 8 }} style={{ resize: 'none' }}/>
                         </Item>
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-10 mt-6'}>
