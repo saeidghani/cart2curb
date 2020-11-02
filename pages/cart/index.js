@@ -1,19 +1,86 @@
-import React from 'react';
-import {Button, Input, Table, Checkbox, InputNumber, Row, Col, Form, Select } from 'antd';
+import React, {useState, useMemo, useEffect} from 'react';
+import {Button, Input, Table, Checkbox, InputNumber, Row, Col, Form, Select, message} from 'antd';
 import Page from "../../components/Page";
+import cookie from "cookie";
+import routes from "../../constants/routes";
+import {getStore} from "../../states";
+import {useDispatch, useSelector} from "react-redux";
 
 const { Item } = Form;
 const { Option } = Select;
 
-export const CartIndex = () => {
+export const CartIndex = (props) => {
+    const { cart, stores } = props;
+
     const [form] = Form.useForm()
+    const [products, setProducts] = useState([])
+    const [total, setTotal] = useState(cart.hasOwnProperty('totalPrice') ? cart.totalPrice : 0);
+
+
+
+    useEffect(() => {
+        const total = products.reduce((total, item) => total += Number(item.totalPrice), 0) + Number(cart.deliveryCost) + Number(cart.serviceFee);
+        setTotal(total.toFixed(2));
+    }, [cart, products])
+
+    useEffect(() => {
+        if(cart.hasOwnProperty('products')) {
+            const transformedProducts = cart.products.map(product => {
+                return {
+                    _id: product._id,
+                    substituted: !!product.substitutions,
+                    substitutions: ['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : 'I need exact item',
+                    substitutionsDesc: !['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : null,
+                    quantity: product.quantity,
+                    tax: (product.tax * product.totalPrice / 100).toFixed(2),
+                    price: product.price,
+                    totalPrice: product.totalPrice
+                }
+            })
+            setProducts(transformedProducts);
+        }
+
+    }, [cart])
+
+    const changeQuantity = (value, index) => {
+        const newProducts = [...products];
+        const price = value * newProducts[index].price
+        const tax = (cart.products[index].tax * price / 100).toFixed(2)
+        const totalPrice = (Number(price) + Number(tax)).toFixed(2)
+        newProducts[index] = {
+            ...newProducts[index],
+            tax,
+            totalPrice,
+            quantity: value
+        }
+
+        setProducts(newProducts);
+    }
+
+    const changeSubstitutions = (value, index, key) => {
+        const newProducts = [...products];
+        newProducts[index] = {
+            ...newProducts[index],
+            [key]: value,
+        }
+        setProducts(newProducts);
+    }
+
+    const submitHandler = async (values) => {
+        console.log(values);
+        console.log(products);
+    }
+
+    const checkValidation = (errorInfo) => {
+        message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
 
     const columns = [
         {
             title: '#',
             dataIndex: 'index',
             key: 'index',
-            render: data => <span className="text-cell">{data}</span>
+            render: data => <span className="text-cell">{data + 1}</span>
         },
         {
             title: 'Product',
@@ -25,9 +92,9 @@ export const CartIndex = () => {
             title: 'Substitutions',
             dataIndex: 'substitutions',
             key: 'substitutions',
-            render: substitutions => {
+            render: (data, row) => {
                 return (
-                    <Checkbox className={'text-cell checkbox-info'}>{substitutions ? "Yes" : "No"}</Checkbox>
+                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubstitutions(e.target.checked, row.index, 'substituted')} checked={products[row.index]?.substituted}>{products[row.index]?.substituted ? "Yes" : "No"}</Checkbox>
                 )
             }
         },
@@ -53,7 +120,12 @@ export const CartIndex = () => {
             title: 'Quantity/Weight',
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 160
+            width: 160,
+            render: (data, row) => {
+                return (
+                    <InputNumber min={1} defaultValue={data} size={'sm'} className={'cart-number-input'} onChange={e => changeQuantity(e, row.index)}/>
+                )
+            }
         },
         {
             title: 'Total',
@@ -63,77 +135,155 @@ export const CartIndex = () => {
         },
     ];
 
-    const fakeData = [...Array(3)].map((item, index) => {
-        return {
-            key: index + 1,
-            index: index + 1,
-            product: 'Choice Beef Brisket Chunk',
-            substitutions: false,
-            price: '$150.00',
-            tax: '$20.50',
-            store: 'Store name',
-            quantity: (
-                <InputNumber min={1} defaultValue={3} size={'sm'} className={'cart-number-input'} />
-            ),
-            total: "$160.00"
+    const data = useMemo(() => {
+        if(cart.hasOwnProperty('products')) {
+            return cart.products.map((product, index) => {
+                let totalPrice = product.totalPrice;
+                let tax = product.tax * product.totalPrice / 100
+
+                if(products[index]) {
+                    tax = products[index].tax;
+                    totalPrice = products[index].totalPrice;
+                }
+                return {
+                    key: product._id,
+                    index: index,
+                    product: product.name,
+                    substitutions: !!product.substitutions,
+                    price: `$${product.price}`,
+                    tax: `$${tax}`,
+                    store: stores.find(store => store._id === product.store)?.name,
+                    quantity: product.quantity,
+                    total: `$${totalPrice}`
+                }
+            })
         }
-    })
+        return [];
+    }, [cart, products, stores]);
 
     return (
         <Page title="Cart" breadcrumb={[{ title: 'Cart'}]}>
             <div className="mt-2">
                 <Table columns={columns}
-                       dataSource={fakeData}
+                       dataSource={data}
                        pagination={false}
                 />
             </div>
             <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
-                <div className="flex flex-col pl-4" style={{ width: 210 }}>
-                    <h1 className="text-left text-4.5xl text-paragraph font-medium mb-2 mt-0">$$$</h1>
-                    <span className="text-xs text-header">+ $15 Service Fee</span>
-                </div>
+                {cart.hasOwnProperty('products') && (
+                    <div className="flex flex-col pl-4" style={{ width: 210 }}>
+                        <h1 className="text-left text-4.5xl text-paragraph font-medium mb-2 mt-0">${total}</h1>
+                        <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
+                    </div>
+                )}
             </div>
 
-                <Form form={form} layout={'vertical'}>
-                    <Row gutter={24}>
-                        <Col lg={8} md={12} xs={24}>
-                            <Item name={'item-1'} label={'Item #1 Substitution'}>
-                                <Select placeholder={'I need exact item (Do not substitute)'}>
-                                    <Option value={'exact'}>I need exact item (Do not substitute)</Option>
-                                    <Option value={'substitute'}>Do substitute</Option>
-                                </Select>
-                            </Item>
-                        </Col>
-                        <Col lg={8} md={12} xs={24}>
-                            <Item name={'item-2'} label={'Item #2 Substitution'}>
-                                <Select placeholder={'I need exact item (Do not substitute)'}>
-                                    <Option value={'exact'}>I need exact item (Do not substitute)</Option>
-                                    <Option value={'substitute'}>Do substitute</Option>
-                                </Select>
-                            </Item>
-                        </Col>
-                        <Col lg={8} md={12} xs={24}>
-                            <Item name={'item-3'} label={'Item #3 Substitution'}>
-                                <Select placeholder={'I need exact item (Do not substitute)'}>
-                                    <Option value={'exact'}>I need exact item (Do not substitute)</Option>
-                                    <Option value={'substitute'}>Do substitute</Option>
-                                </Select>
-                            </Item>
-                        </Col>
-                        <Col xs={24}>
-                            <Item name={'notes'} label={'Notes'}>
-                                <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} />
-                            </Item>
-                        </Col>
-                        <Col xs={24} className={'flex flex-row-reverse'}>
-                            <Item>
-                                <Button type={'primary'} className="w-32 mt-8">Next</Button>
-                            </Item>
-                        </Col>
-                    </Row>
-                </Form>
+            <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
+                <Row gutter={24}>
+                    {products.map((product, key) => {
+                        if(product.substituted) {
+                            return (
+                                <>
+                                    <Col lg={8} md={12} xs={24}>
+                                        <Item name={`substitution-${key + 1}`} label={`Item #${key + 1} Substitution`}>
+                                            <Select placeholder={'I need exact item (Do not substitute)'} onChange={value => changeSubstitutions(value, key, 'substitutions')} defaultValue={product.substitutions}>
+                                                <Option value={'I need exact item'}>I need exact item (Do not substitute)</Option>
+                                                <Option value={'Do substitute'}>Do substitute</Option>
+                                            </Select>
+                                        </Item>
+                                    </Col>
+                                    {product.substitutions === 'Do substitute' && (
+                                        <Col lg={16} md={12} xs={24}>
+                                            <Item name={`substitution-${key + 1}-desc`} label={'Your Substitution'}>
+                                                <Input placeholder={'I need exact item (Do not substitute)'} defaultValue={product.substitutionsDesc} onChange={e => changeSubstitutions(e.target.value, key, 'substitutionsDesc')}/>
+                                            </Item>
+                                        </Col>
+                                    )}
+
+                                </>
+                            )
+                        }
+                    })}
+
+                    <Col xs={24}>
+                        <Item name={'notes'} label={'Notes'}>
+                            <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} />
+                        </Item>
+                    </Col>
+                    <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
+                        <Item>
+                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'}>Next</Button>
+                        </Item>
+                    </Col>
+                </Row>
+            </Form>
         </Page>
     );
 };
+
+export async function getServerSideProps({ req, res }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    console.log(cookies);
+    let token = cookies.token
+    let userType = cookies.type;
+
+    let authenticated = !!token;
+    let cart = {}
+    let stores = [];
+    if (userType && userType !== 'customer') {
+        res.writeHead(307, { Location: routes.homepage });
+        res.end();
+        return {
+            props: {
+                authenticated,
+                cart,
+                stores,
+            }
+        };
+    }
+    const store = getStore();
+    try {
+        const addToCart = await store.dispatch.cart.addToCart({
+            productId: '5f7c2693534a7c7dedfa2a83',
+            quantity: 2
+        })
+        const response = await store.dispatch.cart.getCart({
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if(response) {
+            cart = response;
+
+            if(cart.hasOwnProperty('stores')) {
+                for(let i in cart.stores) {
+                    const storeId = cart.stores[i];
+                    const storeResponse = await store.dispatch.app.getStore(storeId);
+                    if(storeResponse) {
+                        stores.push(storeResponse);
+                    }
+                }
+            }
+        }
+    } catch(e) {
+        console.log(e);
+        return {
+            authenticated,
+            cart,
+            stores,
+        }
+    }
+
+    return {
+        props: {
+            authenticated,
+            cart,
+            stores,
+        }
+    };
+
+}
 
 export default CartIndex;
