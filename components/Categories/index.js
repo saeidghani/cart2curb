@@ -26,7 +26,8 @@ const Categories = props => {
 
         dispatch.vendorStore.getCategories()
             .then(response => {
-                setParentCategory(response.data);
+                if(response)
+                    setParentCategory(response.data);
             })
     }, [])
 
@@ -63,7 +64,7 @@ const Categories = props => {
             if(formFields.search) {
                 body.search = formFields.search;
             }
-            if(formFields.parent_category) {
+            if(formFields.parent_category && formFields.parent_category !== 'all') {
                 body.parent_category = formFields.parent_category;
             }
             try {
@@ -161,11 +162,16 @@ const Categories = props => {
                             <Col lg={9} xs={24}>
                                 <Item name={'parent_category'} label={'Parent Category'}>
                                     <Select placeholder={'Parent Category'} loading={categoryLoading}>
-                                        {parentCategory && parentCategory.map(cat => {
-                                            return (
-                                                <Option key={cat._id} value={cat._id}>{cat.name}</Option>
-                                            )
-                                        })}
+                                        {parentCategory && (
+                                            <>
+                                                <Option value={'all'}>All</Option>
+                                                {parentCategory.map(cat => {
+                                                    return (
+                                                    <Option key={cat._id} value={cat._id}>{cat.name}</Option>
+                                                    )
+                                                })}
+                                            </>
+                                        )}
                                     </Select>
                                 </Item>
                             </Col>

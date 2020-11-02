@@ -24,13 +24,17 @@ const Products = ({vendor, ...props}) => {
     const [deleted, setDeleted] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const [categories, setCategories] = useState([]);
     const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
     const productsLoading = useSelector(state => state.loading.effects.vendorStore.getProducts);
-    const categories = useSelector(state => state.vendorStore.categories.data);
     const products = useSelector(state => state.vendorStore.products.data);
 
     useEffect(() => {
-        dispatch.vendorStore.getCategories();
+        dispatch.vendorStore.getCategories()
+            .then(response => {
+                if(response)
+                    setCategories(response.data);
+            })
     }, [])
 
 
@@ -165,7 +169,7 @@ const Products = ({vendor, ...props}) => {
                 number: product._id,
                 name: product.name,
                 unitPrice: `$${product.priceList.price}`,
-                price: `$${product.priceList.price + product.priceList.cost}`,
+                price: `$${product.priceList.cost}`,
                 tax: `${product.tax}%`,
                 stock: `$${product.priceList.stock}`,
                 category: category ? category.name : product.category,
@@ -224,6 +228,7 @@ const Products = ({vendor, ...props}) => {
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{ fontSize: 20 }}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
+                            disabled={categories.length === 0}
                         >
                             Add New Product
                         </Button>

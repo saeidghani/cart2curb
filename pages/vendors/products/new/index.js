@@ -8,6 +8,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import withAuth from "../../../../components/hoc/withAuth";
 import Link from "next/link";
+import cookie from "cookie";
+import userTypes from "../../../../constants/userTypes";
+import {getStore} from "../../../../states";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -297,4 +300,77 @@ const NewProduct = props => {
     )
 }
 
-export default withAuth(NewProduct, 'vendor');
+
+export async function getServerSideProps({ req, res, params }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+    let userType = cookies.type;
+
+
+    let categories = [];
+
+    if (!token) {
+        res.writeHead(307, { Location: routes.vendors.auth.login });
+        res.end();
+        return {
+            props: {
+                categories,
+            }
+        };
+    }
+
+    if(cookies.type !== 'vendor') {
+        res.writeHead(307, { Location: userTypes[cookies.type].profile });
+        res.end();
+        return {
+            props: {
+                categories,
+            }
+        };
+    }
+
+    try {
+        const store = getStore();
+        const response = await store.dispatch.vendorStore.getServerSideCategory({
+            query: {
+                page_size: 100
+            },
+            options: {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        })
+
+        if(response.length > 0) {
+            categories = response;
+        } else {
+
+            res.writeHead(307, { Location: routes.vendors.index });
+            res.end();
+            return {
+                props: {
+                    categories
+                }
+            };
+        }
+    } catch(e) {
+        res.writeHead(307, { Location: routes.vendors.index });
+        res.end();
+        return {
+            props: {
+                categories
+            }
+        };
+    }
+
+    return {
+        props: {
+            categories,
+        }
+    }
+}
+
+
+export default NewProduct;
