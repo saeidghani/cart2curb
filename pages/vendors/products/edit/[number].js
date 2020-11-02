@@ -168,8 +168,8 @@ const EditProduct = props => {
                             }
                         ]}>
                             <Radio.Group onChange={onChangeUnitType} className={'flex flex-row items-center'}>
-                                <Radio value={'quantity'} className={'flex-grow'}>Quantity</Radio>
-                                <Radio value={'weight'} className={'flex-grow'}>Weight</Radio>
+                                <Radio value={'quantity'} className={'flex-grow radio-info'}>Quantity</Radio>
+                                <Radio value={'weight'} className={'flex-grow radio-info'}>Weight</Radio>
                             </Radio.Group>
                         </Item>
                     </Col>

@@ -217,3 +217,28 @@
     height: 36px;
   }
 }
+
+
+.radio-info.ant-radio-wrapper:hover .ant-radio,
+.radio-info .ant-radio:hover .ant-radio-inner,
+.radio-info .ant-radio-input:focus + .ant-radio-inner {
+  border-color: #40BFC1;
+}
+
+.radio-info .ant-radio-input:focus,
+.radio-info .ant-radio-checked::after {
+  border: 1px solid #40BFC1;
+}
+
+.radio-info .ant-radio-input:focus + .ant-radio-inner {
+  box-shadow: 0 0 0 3px rgba(64, 191, 193, 0.08);
+}
+
+
+.radio-info .ant-radio-inner::after {
+  background-color: #40BFC1;
+}
+
+.radio-info .ant-radio-checked .ant-radio-inner {
+  border-color: #40BFC1;
+}
