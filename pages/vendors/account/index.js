@@ -14,18 +14,26 @@ import moment from "moment";
 import {useAuth} from "../../../providers/AuthProvider";
 import {useDispatch} from "react-redux";
 import userTypes from "../../../constants/userTypes";
+import {useRouter} from "next/router";
 
 const Account = props => {
     const screens = Grid.useBreakpoint();
     const { profile } = props;
     const dispatch = useDispatch();
-    const { setAuthenticated, setUserType } = useAuth();
+    const router = useRouter()
+    const { setAuthenticated, setUserType, isAuthenticated } = useAuth();
 
     const logoutHandler = async () => {
         await dispatch.auth.logout();
         setAuthenticated(false);
         setUserType(null)
     }
+
+    useEffect(() => {
+        if(!isAuthenticated) {
+            router.push(routes.vendors.auth.login);
+        }
+    }, [isAuthenticated])
 
 
     const address = profile.store.address.addressLine2 ? [profile.store.address.addressLine2] : [];
