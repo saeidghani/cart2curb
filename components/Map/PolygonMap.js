@@ -3,9 +3,10 @@ import { GoogleApiWrapper, Map, Marker, Polygon } from "google-maps-react";
 
 import Loading from "./Loading";
 import {GOOGLE_MAP_API_KEY} from '../../constants';
+import salesman from '../../lib/salesman';
 
 const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
-    const [polyPoints, setPolyPoints] = useState([])
+    const [polyPoints, setPolyPoints] = useState(area || []);
 
     const style = {
         width: '100%',
@@ -25,7 +26,20 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
             lat: position.latLng.lat(),
             lng: position.latLng.lng()
         }
-        const newPolyPoints = polyPoints.concat(newPosition);
+        const newPoints = [...polyPoints.map(point => new salesman.Point(point.lat, point.lng)), new salesman.Point(newPosition.lat, newPosition.lng)];
+        const solution  = salesman.solve(newPoints);
+        const newPolyPoint = solution.map(i => ({
+            lat: newPoints[i].x,
+            lng: newPoints[i].y
+        }));
+
+        // const newPolyPoints = polyPoints.concat(newPosition);
+        clickHandler(newPolyPoint);
+        setPolyPoints(newPolyPoint);
+    }
+
+    const removePointHandler = (index) => {
+        const newPolyPoints = polyPoints.filter((item, _i) => _i !== index);
         clickHandler(newPolyPoints);
         setPolyPoints(newPolyPoints);
     }
@@ -35,8 +49,13 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
             lat: position.latLng.lat(),
             lng: position.latLng.lng()
         }
-        const newPolyPoints = [...polyPoints];
-        newPolyPoints[index] = newPosition;
+
+        const newPoints = [...polyPoints.filter((item, _i) => _i !== index).map(point => new salesman.Point(point.lat, point.lng)), new salesman.Point(newPosition.lat, newPosition.lng)];
+        const solution  = salesman.solve(newPoints);
+        const newPolyPoints = solution.map(i => ({
+            lat: newPoints[i].x,
+            lng: newPoints[i].y
+        }));
 
         clickHandler(newPolyPoints);
         setPolyPoints(newPolyPoints);
@@ -55,6 +74,9 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
                         key={`point-${index}`}
                         name={`point-${index}`}
                         position={point}
+                        onClick={removePointHandler.bind(this, index)}
+                        draggable={true}
+                        onDragend={(...e) => dragHandler(index, ...e)}
                         icon={{
                             url: "/images/marker.svg",
                             anchor: new google.maps.Point(32,32),

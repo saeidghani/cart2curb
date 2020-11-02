@@ -82,6 +82,8 @@ const Register = props => {
     const addStepHandler = (values, step) => {
         if(step === 1 && !marker.position.hasOwnProperty('lat')) {
             message.error('Please Select Your Location on Map')
+        } else if(step === 0 && (!imageUrl || !avatarUrl)) {
+            message.error('Please upload your store and profile image first');
         } else {
             const newFields = [...fields];
             newFields[step] = values;
@@ -200,6 +202,14 @@ const Register = props => {
                                               {
                                                   pattern: /^[1-9][0-9]*$/,
                                                   message: "Your Entered Phone number is not valid"
+                                              },
+                                              {
+                                                  min: 3,
+                                                  message: "Phone Number should be more than 3 digits"
+                                              },
+                                              {
+                                                  max: 14,
+                                                  message: "Phone Number should be less than 14 digits"
                                               }
                                           ]}>
                                         <Input placeholder={'Phone Number'}/>
@@ -262,7 +272,7 @@ const Register = props => {
                                     <Divider className={'mt-0 mb-6'}/>
                                 </Col>
                                 <Col lg={8} md={12} xs={24}>
-                                    <Item name={'openingHour'} label={'Store Open Time'}
+                                    <Item name={'openingHour'} label={'Store Opening Hour'}
                                           rules={[
                                               {
                                                   required: true,
@@ -273,12 +283,24 @@ const Register = props => {
                                     </Item>
                                 </Col>
                                 <Col lg={8} md={12} xs={24}>
-                                    <Item name={'closingHour'} label={'Store Close Time'}
+                                    <Item name={'closingHour'} label={'Store Closing Hour'}
+
+                                          dependencies={['openingHour']}
+                                          hasFeedback
                                           rules={[
                                               {
                                                   required: true,
-                                                  message: "Store Close Time field is required"
+                                                  message: "Store Close Time field is required",
                                               },
+                                              ({ getFieldValue }) => ({
+                                                  validator(rule, value) {
+                                                      const openingHour = getFieldValue('openingHour');
+                                                      if (!value || !openingHour || value.diff(openingHour) > 0) {
+                                                          return Promise.resolve();
+                                                      }
+                                                      return Promise.reject('Closing Hour should be later than Opening Hour');
+                                                  },
+                                              }),
                                           ]}>
                                         <TimePicker className={'w-full'}/>
                                     </Item>
@@ -330,7 +352,7 @@ const Register = props => {
                                         <Upload
                                             name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader-square border-0"
+                                            className="border-0 avatar-uploader-square-wrapper"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -339,15 +361,18 @@ const Register = props => {
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setImageUrl)}
                                         >
-                                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
-                                                <>
-                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
-                                                        <PictureOutlined className={'text-xl'} />
-                                                    </div>
-                                                </>
-                                            )}
+                                            <div className="avatar-uploader-square">
+                                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
+                                                    <>
+                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
+                                                            <PictureOutlined className={'text-xl'} />
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <label htmlFor={'photo'} className="text-secondarey ml-3">Upload Your Store Image</label>
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Store Image</label>
+
                                     </div>
                                 </Col>
 
@@ -356,7 +381,7 @@ const Register = props => {
                                         <Upload
                                             name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader border-0"
+                                            className="avatar-uploader-wrapper border-0"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -365,15 +390,18 @@ const Register = props => {
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setAvatarUrl)}
                                         >
-                                            {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
-                                                <>
-                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
-                                                        <UserOutlined className={'text-lg'}/>
-                                                    </div>
-                                                </>
-                                            )}
+                                            <div className="avatar-uploader">
+                                                {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                    <>
+                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                            <UserOutlined className={'text-lg'}/>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Profile Image</label>
+
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Profile Image</label>
                                     </div>
                                 </Col>
 
@@ -383,9 +411,6 @@ const Register = props => {
                                             Next
                                         </Button>
                                     </Item>
-                                    <Link href={routes.vendors.account.index}>
-                                        <Button danger className={'w-32'}>Cancel</Button>
-                                    </Link>
                                 </Col>
                             </Row>
                         </Form>
@@ -524,7 +549,7 @@ const Register = props => {
 
                             <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
                                 <Button type="primary" block className={'w-32 ml-5'} onClick={submitHandler} loading={loading}>
-                                    Save
+                                    Register
                                 </Button>
                                 <Item>
                                     <Button danger className={'w-32'} onClick={prevHandler.bind(this, 2)}>

@@ -7,25 +7,30 @@
 .ant-form-item-has-feedback .ant-input-affix-wrapper .ant-input-suffix {
   padding-right: 32px;
 }
-.avatar-uploader .ant-upload.ant-upload-select-picture-card {
+.avatar-uploader-wrapper .ant-upload.ant-upload-select-picture-card {
   background-color: transparent;
-  width: 50px;
   height: 50px;
-  border-radius: 50px;
-
+  width: 100%;
 }
 .avatar-uploader {
   width: 50px;
+  height: 50px;
+  border-radius: 50px;
 }
-.avatar-uploader-square .ant-upload.ant-upload-select-picture-card {
-  background-color: transparent;
-  width: 70px;
-  height: 70px;
 
+.avatar-uploader-square-wrapper .ant-upload.ant-upload-select-picture-card {
+  background-color: transparent;
+  height: 70px;
+  width: 100%;
 }
 .avatar-uploader-square {
   width: 70px;
 }
+.avatar-uploader-square-wrapper .ant-upload.ant-upload-select-picture-card > .ant-upload,
+.avatar-uploader-wrapper .ant-upload.ant-upload-select-picture-card > .ant-upload {
+  justify-content: flex-start;
+}
+
 
 .video-react .video-react-big-play-button.video-react-big-play-button-center {
   background-color: transparent;
