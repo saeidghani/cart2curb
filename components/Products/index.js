@@ -134,7 +134,7 @@ const Products = ({vendor, ...props}) => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
-            title: "Parent Categories",
+            title: "Categories",
             dataIndex: 'category',
             key: 'category',
             render: data => <span className="text-cell">{data}</span>
