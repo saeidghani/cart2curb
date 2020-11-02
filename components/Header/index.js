@@ -10,6 +10,7 @@ import {useAuthenticatedUserType, useIsAuthenticated, useIsAuthRoute} from "../.
 import {useRouter} from "next/router";
 import Avatar from "../UI/Avatar";
 import {useDispatch} from "react-redux";
+import userTypes from "../../constants/userTypes";
 
 const Header = props => {
     const [visible, setVisible] = useState(false);
@@ -67,10 +68,10 @@ const Header = props => {
                         </Link>
                     ) : (
                         <>
-                            <Link href={routes.auth.login}>
+                            <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
                                 <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
                             </Link>
-                            <Link href={routes.auth.register.index}>
+                            <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
                                 <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
                             </Link>
                         </>
@@ -141,12 +142,12 @@ const Header = props => {
                             ) : (
                                 <Row gutter={[12, 12]}>
                                     <Col xs={24}>
-                                        <Link href={routes.auth.login}>
+                                        <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
                                             <Button type={'link'} className={'w-full text-type'}>Login</Button>
                                         </Link>
                                     </Col>
                                     <Col xs={24}>
-                                        <Link href={routes.auth.register.index}>
+                                        <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
                                             <Button className={'w-full text-type text-base'}>Register</Button>
                                         </Link>
                                     </Col>
