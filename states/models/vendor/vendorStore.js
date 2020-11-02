@@ -148,6 +148,8 @@ export const vendorStore = {
                     const errorCode = errors[0].errorCode;
                     if(errorCode === 'HAS_CHILDREN') {
                         message.error('You Can\'t Delete this Category because it has children')
+                    } else if(errorCode === 'HAS_PRODUCT') {
+                        message.error('You Can\'t Delete this category because it has product')
                     } else {
 
                         message.error('An Error was occurred');
@@ -227,9 +229,8 @@ export const vendorStore = {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                const data = res.data;
-                if(data.success) {
-                    return data.data;
+                if(res.data.success) {
+                    return res.data.data;
                 } else {
                     return false
                 }

@@ -14,7 +14,7 @@ const { TabPane } = Tabs;
 const Dashboard = props => {
     return (
         <Page title={false} breadcrumb={[{ title: 'Store' }]}>
-            <Tabs defaultActiveKey={'products'}>
+            <Tabs defaultActiveKey={props.defaultTab}>
                 <TabPane key={'products'} tab={'Products'}>
                     <Products vendor={props.profile}/>
                 </TabPane>
@@ -26,18 +26,20 @@ const Dashboard = props => {
     )
 }
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req, res, query }) {
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
 
     let profile = {};
+    let defaultTab = 'products';
 
     if (!token) {
         res.writeHead(307, { Location: routes.vendors.auth.login });
         res.end();
         return {
             props: {
-                profile
+                profile,
+                defaultTab
             }
         };
     }
@@ -47,7 +49,8 @@ export async function getServerSideProps({ req, res }) {
         res.end();
         return {
             props: {
-                profile
+                profile,
+                defaultTab
             }
         };
     }
@@ -63,10 +66,12 @@ export async function getServerSideProps({ req, res }) {
         if(response) {
             profile = response;
         }
+        defaultTab = ['products', 'categories'].includes(query.tab) ? query.tab : 'products';
 
         return {
             props: {
-                profile
+                profile,
+                defaultTab
             }
         };
 
@@ -74,7 +79,8 @@ export async function getServerSideProps({ req, res }) {
         console.log(e);
         return {
             props: {
-                profile
+                profile,
+                defaultTab
             }
         }
     }

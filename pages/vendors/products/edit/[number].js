@@ -37,7 +37,7 @@ const EditProduct = props => {
             href: routes.vendors.index
         },
         {
-            title: 'Add Product',
+            title: 'Edit Product',
         }
     ]
 
@@ -148,7 +148,7 @@ const EditProduct = props => {
                             marginTop: 0,
                             marginBottom: 25,
                             color: '#020911',
-                        }}>Add Product</h1>
+                        }}>Edit Product</h1>
                     </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'name'} label={'Name'} rules={[
