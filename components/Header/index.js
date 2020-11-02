@@ -74,11 +74,15 @@ const Header = props => {
                         </Link>
                     )}
                     {isAuthenticated ? (
-                        <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
-                            <div className="ml-14">
-                                <Avatar src={avatar} justImage/>
-                            </div>
-                        </Link>
+                        <>
+                            {router.route !== routes.vendors.account.changePassword && (
+                                <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                    <div className="ml-14">
+                                        <Avatar src={avatar} justImage/>
+                                    </div>
+                                </Link>
+                            )}
+                        </>
                     ) : (
                         <>
                             <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
@@ -163,11 +167,13 @@ const Header = props => {
 
                             {isAuthenticated ? (
                                 <Row>
-                                    <Col xs={24}>
-                                        <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
-                                            <Avatar src={avatar} justImage/>
-                                        </Link>
-                                    </Col>
+                                    {router.route !== routes.vendors.account.changePassword && (
+                                        <Col xs={24}>
+                                                <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                                    <Avatar src={avatar} justImage/>
+                                                </Link>
+                                        </Col>
+                                    )}
                                 </Row>
                             ) : (
                                 <Row gutter={[12, 12]}>
