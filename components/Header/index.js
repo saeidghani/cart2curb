@@ -41,12 +41,25 @@ const Header = props => {
                     <div className="hidden md:flex items-center">
                         {!isAuthRoute.value && (
                             <>
-                                <Link href={routes.homepage} className={'header__link text-purple'}>
-                                    <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Home</a>
-                                </Link>
-                                <Link href={routes.stores.index} className={'header__link'}>
-                                    <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Stores</a>
-                                </Link>
+                                {isVendorPage ? (
+                                    <>
+                                        <Link href={routes.vendors.index} className={'header__link text-purple'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Store</a>
+                                        </Link>
+                                        <Link href={routes.vendors.orders} className={'header__link'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
+                                        </Link>
+                                    </>
+                                ): (
+                                    <>
+                                        <Link href={routes.homepage} className={'header__link text-purple'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Home</a>
+                                        </Link>
+                                        <Link href={routes.stores.index} className={'header__link'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Stores</a>
+                                        </Link>
+                                    </>
+                                )}
                             </>
                         )}
                     </div>
@@ -99,16 +112,33 @@ const Header = props => {
                             <Row gutter={[12, 32]}>
                             {!isAuthRoute.value && (
                                 <>
-                                    <Col xs={24}>
-                                        <Link href={routes.homepage} className={'header__link text-purple'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Home</a>
-                                        </Link>
-                                    </Col>
-                                    <Col xs={24}>
-                                        <Link href={routes.stores.index} className={'header__link'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Stores</a>
-                                        </Link>
-                                    </Col>
+                                    {isVendorPage ? (
+                                        <>
+                                            <Col xs={24}>
+                                                <Link href={routes.vendors.index} className={'header__link text-purple'}>
+                                                    <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Store</a>
+                                                </Link>
+                                            </Col>
+                                            <Col xs={24}>
+                                                <Link href={routes.vendors.orders} className={'header__link'}>
+                                                    <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Orders</a>
+                                                </Link>
+                                            </Col>
+                                        </>
+                                    ): (
+                                        <>
+                                            <Col xs={24}>
+                                                <Link href={routes.homepage} className={'header__link text-purple'}>
+                                                    <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Home</a>
+                                                </Link>
+                                            </Col>
+                                            <Col xs={24}>
+                                                <Link href={routes.stores.index} className={'header__link'}>
+                                                    <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Stores</a>
+                                                </Link>
+                                            </Col>
+                                        </>
+                                    )}
                                 </>
                             )}
 
