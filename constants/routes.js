@@ -71,12 +71,9 @@ export default {
             add: '/vendors/products/new'
         },
         categories: {
-            index: '/vendors/dashboard',
+            index: '/vendors/dashboard?tab=categories',
             edit(number = '[number]') {
                 return `/vendors/categories/edit/${number}`
-            },
-            view(number = '[number]') {
-                return `/vendors/categories/${number}`
             },
             add: '/vendors/categories/new'
         },

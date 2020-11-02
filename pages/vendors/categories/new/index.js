@@ -43,7 +43,7 @@ const NewCategory = props => {
 
         const res = await dispatch.vendorStore.addCategory(body);
         if(res) {
-            router.push(routes.vendors.index)
+            router.push(routes.vendors.categories.index)
         }
     }
 
@@ -99,7 +99,7 @@ const NewCategory = props => {
                             </Button>
                         </Item>
                         <Item>
-                            <Link href={routes.vendors.index}>
+                            <Link href={routes.vendors.categories.index}>
                                 <Button danger className={'w-full md:w-32'}>Cancel</Button>
                             </Link>
                         </Item>
