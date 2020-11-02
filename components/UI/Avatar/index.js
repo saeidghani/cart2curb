@@ -6,7 +6,7 @@ const Avatar = props => {
     return (
         <div className="flex items-center">
             {props.src ? (
-                <img src={props.src} alt="profile" className="rounded-full cursor-pointer" style={{ width: 50, height: 50}} />
+                <img src={props.src} alt="profile" className="rounded-full" style={{ width: 50, height: 50}} />
             ) : (
                 <div className={'rounded-full bg-card flex items-center justify-center'} style={{ width: 50, height: 50}}>
                     <UserOutlined />

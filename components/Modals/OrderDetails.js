@@ -11,27 +11,32 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
             title: '#',
             dataIndex: 'index',
             key: 'index',
+            render: data => (<span className="text-cell">{data}</span>)
         },
         {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
+            render: data => (<span className="text-cell">{data}</span>)
         },
 
         {
             title: 'Store Address',
             dataIndex: 'store',
             key: 'store',
+            render: data => (<span className="text-cell">{data}</span>)
         },
         {
             title: 'Substitutions',
             dataIndex: 'substitutions',
             key: 'substitutions',
+            render: data => (<span className="text-cell">{data}</span>)
         },
         {
             title: 'Quantity/Weight',
             dataIndex: 'quantity',
             key: 'quantity',
+            render: data => (<span className="text-cell">{data}</span>),
             width: 160
         },
         {
@@ -39,6 +44,7 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
             dataIndex: 'total',
             key: 'total',
             width: 210,
+            render: data => (<span className="text-cell">{data}</span>),
             fixed: 'right'
         },
     ];

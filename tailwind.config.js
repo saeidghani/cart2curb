@@ -31,6 +31,7 @@ module.exports = {
         button: '#FF6560',
         cell: '#595959',
         muted: '#727A8B',
+        dark: '#020911',
       },
       spacing: {
         1.5: '0.313rem',

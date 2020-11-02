@@ -25,7 +25,7 @@ const Page = props => {
                     );
                 })}
             </Breadcrumb>
-            {props.title && (<h1 className="page__title text-2xl text-label mb-8 font-medium mt-0">{props.title}</h1>)}
+            {props.title && (<h1 className="page__title text-2xl text-type mb-8 font-medium mt-0">{props.title}</h1>)}
             <div className="page__content">
                 {props.children}
             </div>

@@ -47,10 +47,10 @@ const Account = props => {
             <Row>
                 <Col xs={24} className={`flex flex-col`}>
                     <div className="flex items-center justify-between">
-                        <h1 className="page__title text-2xl text-label font-medium my-0">Account</h1>
+                        <h1 className="page__title text-2xl text-type font-medium my-0">Account</h1>
                         <div className="actions flex items-center">
                             <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
-                                <Button type={'text'} className={'text-xs'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Logout</Button>
+                                <Button type={'text'} className={'text-xs'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Log Out</Button>
                                 <Link href={routes.vendors.account.changePassword}>
                                     <Button type={'text'} className={'text-type text-base font-medium'}>Change Password</Button>
                                 </Link>
@@ -68,39 +68,39 @@ const Account = props => {
                             <Avatar src={profile.image} justImage/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Company Name'} value={getProperty(profile.store, 'name', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Company Name'} value={getProperty(profile.store, 'name', '-')}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Main Contact Name'} value={getProperty(profile, 'contactName', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Main Contact Name'} value={getProperty(profile, 'contactName', '-')}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Mobile'} value={getProperty(profile, 'phone', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Mobile'} value={getProperty(profile, 'phone', '-')}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Email'} value={getProperty(profile, 'email', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Email'} value={getProperty(profile, 'email', '-')}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Store Opening Hour'} value={getProperty(profile.store, 'openingHour', '-', (data) => moment(data).format("HH:mm A"))}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Store Opening Hour'} value={getProperty(profile.store, 'openingHour', '-', (data) => moment(data).format("HH:mm A"))}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Store Closing Hour'} value={getProperty(profile.store, 'closingHour', '-', (data) => moment(data).format("HH:mm A"))}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Store Closing Hour'} value={getProperty(profile.store, 'closingHour', '-', (data) => moment(data).format("HH:mm A"))}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Gathering Method'} value={!profile.store.hasOwnProperty('needDriversToGather') ? '-' : profile.store.needDriversToGather ? 'by Cart2Curb' : 'by Store'}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Gathering Method'} value={!profile.store.hasOwnProperty('needDriversToGather') ? '-' : profile.store.needDriversToGather ? 'by Cart2Curb' : 'by Store'}/>
                         </Col>
                         <Col xs={24}>
-                            <DetailItem title={'Description'} value={getProperty(profile.store, 'description', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Description'} value={getProperty(profile.store, 'description', '-')}/>
                         </Col>
 
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Type'} value={getProperty(profile.store, 'storeType', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Type'} value={getProperty(profile.store, 'storeType', '-')}/>
                         </Col>
                         <Col xs={24} sm={12} lg={6}>
-                            <DetailItem title={'Sub Type'} value={getProperty(profile.store, 'subType', '-')}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Sub Type'} value={getProperty(profile.store, 'subType', '-')}/>
                         </Col>
 
                         <Col xs={24}>
-                            <DetailItem title={'Address'} value={address.join(", ")}/>
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Address'} value={address.join(", ")}/>
                         </Col>
                     </Row>
                 </Col>
