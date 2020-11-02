@@ -36,6 +36,7 @@ function beforeUpload(file) {
 
 
 const EditAccount = props => {
+    console.log(props.area);
     const [form] = Form.useForm();
     const [fields, setFields] = useState([])
     const [imageUrl, setImageUrl] = useState(props.fields[0].imageStore)
@@ -306,7 +307,7 @@ const EditAccount = props => {
                                         <Upload
                                             name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader-square border-0"
+                                            className="border-0 avatar-uploader-square-wrapper"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -315,16 +316,18 @@ const EditAccount = props => {
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setImageUrl)}
                                         >
-
-                                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
-                                                <>
-                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
-                                                        <PictureOutlined className={'text-xl'} />
-                                                    </div>
-                                                </>
-                                            )}
+                                            <div className="avatar-uploader-square">
+                                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
+                                                    <>
+                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
+                                                            <PictureOutlined className={'text-xl'} />
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <label htmlFor={'photo'} className="text-secondarey ml-3">Upload Your Store Image</label>
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Store Image</label>
+
                                     </div>
                                 </Col>
 
@@ -333,7 +336,7 @@ const EditAccount = props => {
                                         <Upload
                                             name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader border-0"
+                                            className="avatar-uploader-wrapper border-0"
                                             showUploadList={false}
                                             headers={{
                                                 Authorization: `Bearer ${token}`
@@ -342,16 +345,18 @@ const EditAccount = props => {
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setAvatarUrl)}
                                         >
+                                            <div className="avatar-uploader">
+                                                {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                    <>
+                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                            <UserOutlined className={'text-lg'}/>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Profile Image</label>
 
-                                            {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
-                                                <>
-                                                    <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
-                                                        <UserOutlined className={'text-lg'}/>
-                                                    </div>
-                                                </>
-                                            )}
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Profile Image</label>
                                     </div>
                                 </Col>
 
@@ -528,7 +533,7 @@ export async function getServerSideProps({ req, res }) {
 
     let profile = {};
     let marker = {};
-    let area = {}
+    let area = []
     const fields = [];
     if (!token) {
         res.writeHead(307, { Location: routes.vendors.auth.login });
@@ -567,12 +572,15 @@ export async function getServerSideProps({ req, res }) {
         }
     }
     const areaCoords = profile.store.area.coordinates[0];
-    area = areaCoords.map(coord => {
-        return {
-            lat: coord[1],
-            lng: coord[0]
+    for(let i in areaCoords){
+        const index = area.findIndex(item => item.lat === areaCoords[i][1] && item.lng === areaCoords[i][0]);
+        if(index === -1) {
+            area.push({
+                lat: areaCoords[i][1],
+                lng: areaCoords[i][0]
+            })
         }
-    })
+    }
     fields[0] = {
         email: getProperty(profile, 'email', ''),
         phone: getProperty(profile, 'phone', ''),

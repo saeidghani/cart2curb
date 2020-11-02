@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleApiWrapper, Map, Marker, Polygon } from "google-maps-react";
+import { Button } from 'antd';
+import {RedoOutlined} from '@ant-design/icons';
 
 import Loading from "./Loading";
 import {GOOGLE_MAP_API_KEY} from '../../constants';
@@ -33,7 +35,6 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
             lng: newPoints[i].y
         }));
 
-        // const newPolyPoints = polyPoints.concat(newPosition);
         clickHandler(newPolyPoint);
         setPolyPoints(newPolyPoint);
     }
@@ -60,7 +61,13 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
         clickHandler(newPolyPoints);
         setPolyPoints(newPolyPoints);
     }
+
+    const resetHandler = () => {
+        setPolyPoints([]);
+        clickHandler([]);
+    }
     return (
+        <div className={'flex relative'}>
         <Map google={google}
              zoom={16}
              style={style}
@@ -93,6 +100,15 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
                 fillColor="#FF4B45"
                 fillOpacity={0.4}/>
         </Map>
+
+        <Button
+            shape="circle"
+            icon={<RedoOutlined />}
+            className={'flex items-center justify-center absolute border-0'}
+            style={{ top: 20, left: 20,}}
+            onClick={resetHandler}
+        />
+        </div>
     )
 };
 
