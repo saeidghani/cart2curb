@@ -41,7 +41,7 @@ const ProductView = props => {
     address.push(profile.store.address.country);
 
     return (
-        <Page title={product.name} breadcrumb={breadcrumb}>
+        <Page title={'Product'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8} xl={6}>
                     <ProductCarousel slides={product.images}/>
