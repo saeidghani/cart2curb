@@ -10,6 +10,7 @@ import withAuth from "../../../../components/hoc/withAuth";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
 import userTypes from "../../../../constants/userTypes";
+import Link from "next/link";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -178,6 +179,10 @@ const EditProduct = props => {
                                 {
                                     required: true,
                                     message: 'This Field is required'
+                                },
+                                {
+                                    pattern: /^[0-9.]+$/,
+                                    message: 'This Field should be number'
                                 }
                             ]}>
                                 <Input placeholder={'Price per Unit'}/>
@@ -215,6 +220,10 @@ const EditProduct = props => {
                                             {
                                                 required: true,
                                                 message: 'This Field is required'
+                                            },
+                                            {
+                                                pattern: /^[0-9.]+$/,
+                                                message: 'This Field should be number'
                                             }
                                         ]}>
                                             <Input placeholder={'Price per Weight'}/>
@@ -246,6 +255,10 @@ const EditProduct = props => {
                             {
                                 required: true,
                                 message: 'This Field is required'
+                            },
+                            {
+                                pattern: /^[0-9.]+$/,
+                                message: 'This Field should be number'
                             }
                         ]}>
                             <Input placeholder={'Tax'}/>
@@ -256,6 +269,10 @@ const EditProduct = props => {
                             {
                                 required: true,
                                 message: 'This Field is required'
+                            },
+                            {
+                                pattern: /^[0-9.]+$/,
+                                message: 'This Field should be number'
                             }
                         ]}>
                             <Input placeholder={'Cost Price'}/>
@@ -266,6 +283,10 @@ const EditProduct = props => {
                             {
                                 required: true,
                                 message: 'This Field is required'
+                            },
+                            {
+                                pattern: /^[0-9.]+$/,
+                                message: 'This Field should be number'
                             }
                         ]}>
                             <Input placeholder={'Stock'}/>
@@ -310,7 +331,9 @@ const EditProduct = props => {
                             </Button>
                         </Item>
                         <Item>
-                            <Button danger className={'w-full md:w-32'}>Cancel</Button>
+                            <Link href={routes.vendors.index}>
+                                <Button danger className={'w-full md:w-32'}>Cancel</Button>
+                            </Link>
                         </Item>
                     </Col>
                 </Row>

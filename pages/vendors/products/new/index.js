@@ -7,6 +7,7 @@ import routes from "../../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import withAuth from "../../../../components/hoc/withAuth";
+import Link from "next/link";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -130,6 +131,10 @@ const NewProduct = props => {
                                     {
                                         required: true,
                                         message: 'This Field is required'
+                                    },
+                                    {
+                                        pattern: /^[0-9.]+$/,
+                                        message: 'This Field should be number'
                                     }
                                 ]}>
                                 <Input placeholder={'Price per Unit'}/>
@@ -157,6 +162,10 @@ const NewProduct = props => {
                                                 {
                                                     required: true,
                                                     message: 'This Field is required'
+                                                },
+                                                {
+                                                    pattern: /^[0-9.]+$/,
+                                                    message: 'This Field should be number'
                                                 }
                                             ]}>
                                             <Input placeholder={'Weight'}/>
@@ -167,6 +176,10 @@ const NewProduct = props => {
                                                 {
                                                     required: true,
                                                     message: 'This Field is required'
+                                                },
+                                                {
+                                                    pattern: /^[0-9.]+$/,
+                                                    message: 'This Field should be number'
                                                 }
                                             ]}>
                                             <Input placeholder={'Price per Weight'}/>
@@ -198,6 +211,10 @@ const NewProduct = props => {
                                 {
                                     required: true,
                                     message: 'This Field is required'
+                                },
+                                {
+                                    pattern: /^[0-9.]+$/,
+                                    message: 'This Field should be number'
                                 }
                             ]}>
                             <Input placeholder={'Tax'}/>
@@ -208,6 +225,10 @@ const NewProduct = props => {
                                 {
                                     required: true,
                                     message: 'This Field is required'
+                                },
+                                {
+                                    pattern: /^[0-9.]+$/,
+                                    message: 'This Field should be number'
                                 }
                             ]}>
                             <Input placeholder={'Cost Price'}/>
@@ -218,6 +239,10 @@ const NewProduct = props => {
                                 {
                                     required: true,
                                     message: 'This Field is required'
+                                },
+                                {
+                                    pattern: /^[0-9.]+$/,
+                                    message: 'This Field should be number'
                                 }
                             ]}>
                             <Input placeholder={'Stock'}/>
@@ -261,7 +286,9 @@ const NewProduct = props => {
                             </Button>
                         </Item>
                         <Item>
-                            <Button danger className={'w-full md:w-32'}>Cancel</Button>
+                            <Link href={routes.vendors.index}>
+                                <Button danger className={'w-full md:w-32'}>Cancel</Button>
+                            </Link>
                         </Item>
                     </Col>
                 </Row>
