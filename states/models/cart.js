@@ -67,10 +67,12 @@ export const cart = {
         async updateCart(body) {
             try {
                 const productsRes = await api.post('cart/update', {
-                    ...body.products
+                    products: [
+                        ...body.products
+                    ]
                 })
                 const noteRes = await api.post('cart/note', {
-                    ...body.note
+                    note: body.note
                 })
 
                 if(productsRes.data.success && noteRes.data.success) {

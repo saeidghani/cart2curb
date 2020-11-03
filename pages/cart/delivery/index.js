@@ -141,4 +141,8 @@ const Delivery = props => {
     )
 }
 
+export async function getServerSideProps({ req, res }) {
+
+}
+
 export default Delivery;

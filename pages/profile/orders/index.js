@@ -153,7 +153,7 @@ const Orders = props => {
                         key: item._id,
                         index: item._id,
                         product: item.name,
-                        substitutions: item.subtitution ? 'Yes' : 'No',
+                        subtitution: item.subtitution ? 'Yes' : 'No',
                         price: `$${item.price}`,
                         tax: `$${item.tax}`,
                         store: item.store,

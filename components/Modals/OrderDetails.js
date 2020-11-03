@@ -27,9 +27,9 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
             render: data => (<span className="text-cell">{data}</span>)
         },
         {
-            title: 'Substitutions',
-            dataIndex: 'substitutions',
-            key: 'substitutions',
+            title: 'Subtitutions',
+            dataIndex: 'subtitutions',
+            key: 'subtitutions',
             render: data => (<span className="text-cell">{data}</span>)
         },
         {

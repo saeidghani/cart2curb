@@ -38,7 +38,6 @@ export default class CartApi extends Instance {
     }
 
     deleteFromCart(id, options = {}) {
-        console.log(id)
         return this.delete(`cart/product/${id}`, options);
     }
 

@@ -7,6 +7,7 @@ import cookie from "cookie";
 import routes from "../../constants/routes";
 import {getStore} from "../../states";
 import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -18,7 +19,18 @@ export const CartIndex = (props) => {
     const [deleted, setDeleted] = useState([]);
     const [total, setTotal] = useState(cart.hasOwnProperty('totalPrice') ? cart.totalPrice : 0);
     const [deleteLoading, setDeleteLoading] = useState(-1);
+    const loading = useSelector(state => state.loading.effects.cart.updateCart);
     const dispatch = useDispatch();
+    const router = useRouter()
+
+    // console.log(cart);
+    //
+    // useEffect(() => {
+    //     dispatch.cart.addToCart({
+    //         productId: '5f7c2693534a7c7dedfa2a83',
+    //         quantity: 1,
+    //     })
+    // }, [])
 
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
@@ -32,9 +44,9 @@ export const CartIndex = (props) => {
             const transformedProducts = cart.products.map(product => {
                 return {
                     _id: product._id,
-                    substituted: !!product.substitutions,
-                    substitutions: !products.substitutions ? undefined : ['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : 'Do substitute',
-                    substitutionsDesc: !['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : null,
+                    subtituted: !!product.subtitution,
+                    subtitution: !product.subtitution ? undefined : ['I need exact item', 'Do subtitute'].includes(product.subtitution) ? product.subtitution : 'Do subtitute',
+                    subtitutionDesc: !['I need exact item', 'Do subtitute'].includes(product.subtitution) ? product.subtitution : null,
                     quantity: product.quantity,
                     tax: (product.tax * product.totalPrice / 100).toFixed(2),
                     price: product.price,
@@ -61,7 +73,7 @@ export const CartIndex = (props) => {
         setProducts(newProducts);
     }
 
-    const changeSubstitutions = (value, index, key) => {
+    const changeSubtitution = (value, index, key) => {
         const newProducts = [...products];
         newProducts[index] = {
             ...newProducts[index],
@@ -71,8 +83,34 @@ export const CartIndex = (props) => {
     }
 
     const submitHandler = async (values) => {
-        console.log(values);
-        console.log(products);
+        const transformedProducts = []
+        const body = {
+            note: values.notes || '',
+        }
+        for(let i in products) {
+            if(!deleted.includes(products[i])) {
+                const product = products[i];
+                const quantity = product.quantity;
+                const _id = product._id;
+                const subtitution = !product.subtituted ? null : product.subtitution === 'I need exact item' ? product.subtitution : product.subtitutionDesc ? product.subtitutionDesc : product.subtitution || 'I need exact item'
+
+                transformedProducts.push({
+                    _id,
+                    quantity,
+                    subtitution
+                })
+            }
+        }
+        body.products = transformedProducts;
+        try {
+            const result = await dispatch.cart.updateCart(body);
+            if(result) {
+                router.push(routes.cart.delivery)
+            }
+        } catch(e) {
+            message.error('An Error was occurred while send data')
+        }
+
     }
 
     const checkValidation = (errorInfo) => {
@@ -93,12 +131,12 @@ export const CartIndex = (props) => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
-            title: 'Substitutions',
-            dataIndex: 'substitutions',
-            key: 'substitutions',
+            title: 'Subtitution',
+            dataIndex: 'subtitution',
+            key: 'subtitution',
             render: (data, row) => {
                 return (
-                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubstitutions(e.target.checked, row.index, 'substituted')} checked={products[row.index]?.substituted}>{products[row.index]?.substituted ? "Yes" : "No"}</Checkbox>
+                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtituted')} checked={products[row.index]?.subtituted}>{products[row.index]?.subtituted ? "Yes" : "No"}</Checkbox>
                 )
             }
         },
@@ -167,7 +205,7 @@ export const CartIndex = (props) => {
                     key: product._id,
                     index: index,
                     product: product.name,
-                    substitutions: !!product.substitutions,
+                    subtitution: !!product.subtitution,
                     price: `$${product.price}`,
                     tax: `$${tax}`,
                     store: stores.find(store => store._id === product.store)?.name,
@@ -209,22 +247,22 @@ export const CartIndex = (props) => {
 
             <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
                 <Row gutter={24}>
-                    {products.map((product, key) => {
-                        if(product.substituted) {
+                    {products.filter(product => !deleted.includes(product._id)).map((product, key) => {
+                        if(product.subtituted) {
                             return (
                                 <>
                                     <Col lg={8} md={12} xs={24}>
-                                        <Item name={`substitution-${key + 1}`} label={`Item #${key + 1} Substitution`}>
-                                            <Select placeholder={'I need exact item (Do not substitute)'} onChange={value => changeSubstitutions(value, key, 'substitutions')} defaultValue={product.substitutions}>
-                                                <Option value={'I need exact item'}>I need exact item (Do not substitute)</Option>
-                                                <Option value={'Do substitute'}>Do substitute</Option>
+                                        <Item name={`subtitution-${key + 1}`} label={`Item #${key + 1} Subtitution`}>
+                                            <Select placeholder={'I need exact item (Do not subtitute)'} onChange={value => changeSubtitution(value, key, 'subtitution')} defaultValue={product.subtitution}>
+                                                <Option value={'I need exact item'}>I need exact item (Do not subtitute)</Option>
+                                                <Option value={'Do subtitute'}>Do subtitute</Option>
                                             </Select>
                                         </Item>
                                     </Col>
-                                    {product.substitutions === 'Do substitute' && (
+                                    {product.subtitution === 'Do subtitute' && (
                                         <Col lg={16} md={12} xs={24}>
-                                            <Item name={`substitution-${key + 1}-desc`} label={'Your Substitution'}>
-                                                <Input placeholder={'I need exact item (Do not substitute)'} defaultValue={product.substitutionsDesc} onChange={e => changeSubstitutions(e.target.value, key, 'substitutionsDesc')}/>
+                                            <Item name={`subtitution-${key + 1}-desc`} label={'Your Subtitution'}>
+                                                <Input placeholder={'I need exact item (Do not subtitute)'} defaultValue={product.subtitutionDesc} onChange={e => changeSubtitution(e.target.value, key, 'subtitutionDesc')}/>
                                             </Item>
                                         </Col>
                                     )}
@@ -236,12 +274,12 @@ export const CartIndex = (props) => {
 
                     <Col xs={24}>
                         <Item name={'notes'} label={'Notes'}>
-                            <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} />
+                            <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} defaultValue={cart.note || ''} />
                         </Item>
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
                         <Item>
-                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} disabled={cart.products.length === 0}>Next</Button>
+                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={cart.products.length === 0 || cart.products.length === deleted.length}>Next</Button>
                         </Item>
                     </Col>
                 </Row>

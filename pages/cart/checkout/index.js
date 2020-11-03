@@ -40,7 +40,7 @@ const GuestCheckout = props => {
                                     <span className="text-type font-medium">$12.65</span>
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
-                                    <span className="text-overline">Substitution</span>
+                                    <span className="text-overline">Subtitution</span>
                                     <span className="text-type font-medium">$6.20</span>
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
