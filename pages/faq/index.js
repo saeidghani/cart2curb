@@ -6,7 +6,7 @@ import FaqCollapse from "../../components/UI/FaqCollapse";
 import faqQuestions from '../../constants/faq.json';
 import './styles.scss';
 
-const AboutUs = props => {
+const FAQ = props => {
     return (
         <Page title={false} breadcrumb={[{ title: 'FAQs'}]}>
             <Row className={'faq'} gutter={[24, 40]}>
@@ -38,4 +38,4 @@ const AboutUs = props => {
     )
 }
 
-export default AboutUs;
+export default FAQ;
