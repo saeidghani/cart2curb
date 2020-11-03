@@ -127,7 +127,18 @@ export const auth = {
                     return true;
                 }
             } catch(e) {
-                message.error('Something went wrong', 5);
+
+                if(e.hasOwnProperty('response')) {
+                    const errors = e.response.data.errors;
+                    const errorCode = errors[0].errorCode;
+                    if(errorCode === 'INCORRECT_PASSWORD') {
+                        message.error('Password is incorrect')
+                    } else {
+
+                        message.error('An Error was occurred');
+                    }
+                }
+                return false;
             }
         }
     })
