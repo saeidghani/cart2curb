@@ -1,0 +1,39 @@
+.faq-collapse {
+    position: relative;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+
+    &__header {
+        min-height: 40px;
+        line-height: 24px;
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    &__icon {
+        transition: all 0.5s ease;
+    }
+
+    &__content {
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+        will-change: height;
+    }
+
+    &__inner {
+        padding: 16px 12px 35px;
+        white-space: pre-wrap;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all ease 0.5s;
+    }
+
+    &.active &__icon {
+        transform: rotate(180deg);
+    }
+
+    &.active &__inner {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

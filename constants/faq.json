@@ -1,0 +1,66 @@
+[
+  {
+    "question": "How are online orders delivered?",
+    "answer": "Delivery is every day, between 9:30 a.m. and 9 p.m.  \nThese hours will vary by store, as we will need to pick-up from an open location.\n\nItems under 70 lbs will be delivered by a small parcel carrier.\n\nShipments that are over 70 lbs will be delivered to the curb, or more typically the front door of the house or the ground floor lobby of an apartment or condominium building. Shipments will be delivered as an NSR (No Signature Required)."
+  },
+  {
+    "question": "Who is doing the shopping and delivery? ",
+    "answer": "Cart2Curb has a network of verified shoppers who pick, check out, and pack specific items on a customer’s shopping list and then deliver the order directly to the customer. "
+  },
+  {
+    "question": "Do I need to be home for the delivery?",
+    "answer": "Except for alcohol, all shipments are delivered as NSR if the carrier deems it safe to leave the shipment. In situations where the carrier is unable to do so, they will leave a delivery notice. If you receive a notice, you may arrange another delivery time when you will be available to receive it.  A $10 premium will be added to your bill.\nAlcohol deliveries will require a person over 19 to receive the package, and sign the receipt.  ID will of course be required.  We will not make exceptions for this one."
+  },
+  {
+    "question": "What if I do not want my order delivered as No Signature Required?",
+    "answer": "There is currently no ability to “opt-out” of NSR service for all orders, however, if you are having a large item delivered (over 70lbs) and would like the carrier to book an appointment, please contact Customer Service as soon as you receive your order confirmation. They will advise the carrier that an appointment is needed. "
+  },
+  {
+    "question": "How far in advance can I place my order/what is the delivery window? ",
+    "answer": "Orders can be placed up to 7 days prior to delivery designated by the customer at check out. Orders can be scheduled for delivery in as little as 2 hours.\nYou can view available delivery times for your area after building a shopping list and then clicking checkout on the virtual store."
+  },
+  {
+    "question": "What are the delivery rates?",
+    "answer": "It’s always $10 plus 5% of the order value.  If you want to add subsequent stores on the same delivery, $5/store will be added."
+  },
+  {
+    "question": "Where does Cart2Curb deliver?",
+    "answer": "Cart2Curb will be delivering to addresses within approximately a 20 minute drive time from any store.  When you arrive at the site, you can hit the locate me, or add an address, and you will see a list of all featured stores in your area that you can get delivery from, however this is not an exclusive list. "
+  },
+  {
+    "question": "How do I track my package?",
+    "answer": "You will receive a notification once your driver is doing the pickup, as well as when he’s on his way.  If you’re enjoying the livecart experience, you will see the progress in real time, and be able to communicate directly with the driver."
+  },
+  {
+    "question": "What happens if the product I ordered is unavailable?",
+    "answer": "When an in-stock item becomes unavailable after you have placed an order, you will receive a text/email offering a substitution.  If you do not reply to the substitution email, the item will be left off the order as a default."
+  },
+  {
+    "question": "Can I change or cancel my order?",
+    "answer": "Life happens.  If you would like to change or cancel your order, please contact Customer Support as soon as possible. We will do everything we can to accommodate your request if your order has not already been processed. "
+  },
+  {
+    "question": "What happens if I do not place the order within the allocated time window shown in the cart?",
+    "answer": "If the allocated time window has expired, then the next available Express Delivery option will be selected for you."
+  },
+  {
+    "question": "What happens if I place the order outside of regular working hours?",
+    "answer": "When the order is placed outside of regular business hours, the delivery window will not start until the beginning of the next business day."
+  },
+  {
+    "question": "How will I be notified when my order is arriving?",
+    "answer": "Depending on the preference you select, You will receive an email or text when your order is on-route to the provided delivery address."
+  },
+  {
+    "question": "Can I refuse a package if it is damaged?",
+    "answer": "Yes. However, if you have already accepted the package, please call Customer Support at 548-883-2278 within 24 hours of delivery to ensure a prompt exchange."
+  },
+  {
+    "question": "How do I get a copy of my receipt? ",
+    "answer": "We will email a receipt, and/or bill when the order is completed."
+  },
+  {
+    "question": "Are there any delivery restrictions?",
+    "answer": "Cart2Curb delivers within Canada only; Orders / deliveries to select remote locations will need to be placed through Customer Support where shipping rates will be provided prior to order confirmation/completion. Deliveries can only be made to locations with a street address or rural route number with postal code. Deliveries to rural/ remote areas might require additional shipping charges.\n(We cannot deliver to PO boxes)\n\nThe local world is your oyster."
+  }
+]

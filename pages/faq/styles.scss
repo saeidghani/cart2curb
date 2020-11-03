@@ -1,0 +1,48 @@
+.faq {
+    padding-bottom: 26px;
+
+    &__visual {
+        position: relative;
+        text-align: right;
+        padding-left: 0;
+
+        @media (min-width: 768px) {
+            padding-left: 120px;
+        }
+
+        &::before {
+            content: '';
+            background-color: rgba(217, 217, 217, 0.33);
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            position: absolute;
+            top: 62px;
+            bottom: -38px;
+            left: 162px;
+            right: -16px;
+
+            @media (min-width: 768px) {
+                right: -60px;
+            }
+
+            @media (min-width: 992px) {
+                right: -90px;
+            }
+
+            @media (min-width: 1200px) {
+                right: -120px;
+            }
+
+        }
+
+    }
+
+    &__image {
+        border-radius: 5px;
+        width: 100%;
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 2;
+    }
+}

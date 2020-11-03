@@ -51,6 +51,7 @@ export default {
     },
     about: '/about',
     contact: '/contact',
+    faq: '/faq',
     vendors: {
         auth: {
             login: '/vendors/login',
