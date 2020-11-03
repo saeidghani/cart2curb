@@ -111,12 +111,14 @@ const EditAccount = props => {
             newFields[step] = values;
             setFields(newFields)
             setStep(step + 1);
+            scrollToTop();
         }
     }
 
     const prevHandler = (step) => {
         form.setFieldsValue(fields[step - 1]);
         setStep(step - 1);
+        scrollToTop();
     }
 
     const checkValidation = (errorInfo) => {
@@ -179,6 +181,17 @@ const EditAccount = props => {
         }
 
     }
+
+
+    const scrollToTop = () => {
+        const yScroll = window.scrollY;
+        window.scrollTo(0, yScroll * 0.9);
+
+        if(window.scrollY > 5) {
+            requestAnimationFrame(scrollToTop);
+        }
+    }
+
 
     return (
         <Page title={'Edit Profile'} breadcrumb={breadcrumb}>
