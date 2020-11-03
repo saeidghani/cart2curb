@@ -1,5 +1,7 @@
 import React, {useState, useMemo, useEffect} from 'react';
 import {Button, Input, Table, Checkbox, InputNumber, Row, Col, Form, Select, message} from 'antd';
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
+
 import Page from "../../components/Page";
 import cookie from "cookie";
 import routes from "../../constants/routes";
@@ -11,16 +13,18 @@ const { Option } = Select;
 
 export const CartIndex = (props) => {
     const { cart, stores } = props;
-
     const [form] = Form.useForm()
     const [products, setProducts] = useState([])
+    const [deleted, setDeleted] = useState([]);
     const [total, setTotal] = useState(cart.hasOwnProperty('totalPrice') ? cart.totalPrice : 0);
-
-
+    const [deleteLoading, setDeleteLoading] = useState(-1);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        const total = products.reduce((total, item) => total += Number(item.totalPrice), 0) + Number(cart.deliveryCost) + Number(cart.serviceFee);
-        setTotal(total.toFixed(2));
+        if(cart.hasOwnProperty('totalPrice')) {
+            const total = products.reduce((total, item) => total += Number(item.totalPrice), 0) + Number(cart.deliveryCost) + Number(cart.serviceFee);
+            setTotal(total.toFixed(2));
+        }
     }, [cart, products])
 
     useEffect(() => {
@@ -29,7 +33,7 @@ export const CartIndex = (props) => {
                 return {
                     _id: product._id,
                     substituted: !!product.substitutions,
-                    substitutions: ['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : 'I need exact item',
+                    substitutions: !products.substitutions ? undefined : ['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : 'Do substitute',
                     substitutionsDesc: !['I need exact item', 'Do substitute'].includes(product.substitutions) ? product.substitutions : null,
                     quantity: product.quantity,
                     tax: (product.tax * product.totalPrice / 100).toFixed(2),
@@ -131,13 +135,27 @@ export const CartIndex = (props) => {
             title: 'Total',
             dataIndex: 'total',
             key: 'total',
-            width: 210
+            width: 140,
+            render: (data, row) => {
+                return (
+                    <div className="flex items-center justify-between">
+                        <span className="text-cell">{data}</span>
+                        <Button type='link' shape={'circle'} className="flex items-center justify-center btn-icon-small text-cell hover:text-cell" onClick={row.deleteHandler}>
+                            {row.key === deleteLoading ? (
+                                <LoadingOutlined />
+                            ) : (
+                                <DeleteOutlined />
+                            )}
+                        </Button>
+                    </div>
+                )
+            }
         },
     ];
 
     const data = useMemo(() => {
         if(cart.hasOwnProperty('products')) {
-            return cart.products.map((product, index) => {
+            return cart.products.filter(product => !deleted.includes(product._id)).map((product, index) => {
                 let totalPrice = product.totalPrice;
                 let tax = product.tax * product.totalPrice / 100
 
@@ -154,12 +172,22 @@ export const CartIndex = (props) => {
                     tax: `$${tax}`,
                     store: stores.find(store => store._id === product.store)?.name,
                     quantity: product.quantity,
-                    total: `$${totalPrice}`
+                    total: `$${totalPrice}`,
+                    deleteHandler: async () => {
+                        setDeleteLoading(product._id);
+                        const res = await dispatch.cart.deleteFromCart(product._id);
+                        if(res) {
+                            changeQuantity(0, index);
+                            message.success('Products deleted successfully!')
+                            setDeleted([...deleted, product._id])
+                        }
+                        setDeleteLoading(-1);
+                    }
                 }
             })
         }
         return [];
-    }, [cart, products, stores]);
+    }, [cart, products, stores, deleted]);
 
     return (
         <Page title="Cart" breadcrumb={[{ title: 'Cart'}]}>
@@ -167,10 +195,11 @@ export const CartIndex = (props) => {
                 <Table columns={columns}
                        dataSource={data}
                        pagination={false}
+                       scroll={{ x: 1100 }}
                 />
             </div>
             <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
-                {cart.hasOwnProperty('products') && (
+                {cart.products.filter(product => !deleted.includes(product._id)).length > 0 && (
                     <div className="flex flex-col pl-4" style={{ width: 210 }}>
                         <h1 className="text-left text-4.5xl text-paragraph font-medium mb-2 mt-0">${total}</h1>
                         <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
@@ -212,7 +241,7 @@ export const CartIndex = (props) => {
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
                         <Item>
-                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'}>Next</Button>
+                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} disabled={cart.products.length === 0}>Next</Button>
                         </Item>
                     </Col>
                 </Row>
@@ -224,7 +253,6 @@ export const CartIndex = (props) => {
 export async function getServerSideProps({ req, res }) {
 
     let cookies = cookie.parse(req.headers.cookie || '');
-    console.log(cookies);
     let token = cookies.token
     let userType = cookies.type;
 
@@ -244,10 +272,6 @@ export async function getServerSideProps({ req, res }) {
     }
     const store = getStore();
     try {
-        const addToCart = await store.dispatch.cart.addToCart({
-            productId: '5f7c2693534a7c7dedfa2a83',
-            quantity: 2
-        })
         const response = await store.dispatch.cart.getCart({
             headers: {
                 Authorization: `Bearer ${token}`
@@ -268,7 +292,6 @@ export async function getServerSideProps({ req, res }) {
             }
         }
     } catch(e) {
-        console.log(e);
         return {
             authenticated,
             cart,
