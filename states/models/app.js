@@ -81,7 +81,7 @@ export const app = {
         },
         async getProducts(body) {
             try {
-                const res = await api.app.products({ ...body, pageSize: 30 });
+                const res = await api.app.products({ ...body, pageSize: 15 });
                 const data = res.data;
 
                 if(data.success) {
