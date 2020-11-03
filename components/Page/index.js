@@ -5,7 +5,7 @@ import Link from 'next/link';
 const Page = props => {
     return (
         <div className="page md:pb-15 pb-12">
-            <Breadcrumb separator=">" className={'pt-8 pb-15 text-xs text-paragraph'}>
+            <Breadcrumb separator=">" className={`pt-8 pb-15 text-xs text-${props.breadcrumbColor || 'paragraph'}`}>
                 {props.hasHome && (
                     <Breadcrumb.Item>
                         <Link href={'/'}>
@@ -15,13 +15,13 @@ const Page = props => {
                 )}
                 {props.breadcrumb && props.breadcrumb.map(item => {
                     return item.href ? (
-                        <Breadcrumb.Item key={item.title + '-breadcrumb'} className={'text-paragraph'}>
+                        <Breadcrumb.Item key={item.title + '-breadcrumb'} className={`text-${props.breadcrumbColor || 'paragraph'}\``}>
                             <Link href={item.href}>
                                 {item.title}
                             </Link>
                         </Breadcrumb.Item>
                     ) : (
-                        <Breadcrumb.Item key={item.title + '-breadcrumb'} className={'text-paragraph'}>{item.title}</Breadcrumb.Item>
+                        <Breadcrumb.Item key={item.title + '-breadcrumb'} className={`text-${props.breadcrumbColor || 'paragraph'}\``}>{item.title}</Breadcrumb.Item>
                     );
                 })}
             </Breadcrumb>

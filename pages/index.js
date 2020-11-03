@@ -48,7 +48,7 @@ export default function Home() {
     }
 
     return (
-        <Page title={false} breadcrumb={[{ title: 'Home' }]}>
+        <Page title={false} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
             <div className="flex items-center justify-between bg-primary p-4 mb-16">
                 <span className="text-2xl font-bold text-white pl-6">Search By GPS</span>
                 <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>
@@ -64,7 +64,7 @@ export default function Home() {
                         {videos.map(video => {
                             return (
                                 <Col xs={24}>
-                                    <h2 className={'text-xl font-medium mt-0 mb-4 text-type'}>{video.name}</h2>
+                                    <h2 className={'text-xl font-medium mt-0 mb-4 text-label'}>{video.name}</h2>
                                     <div className="w-full">
                                         <VideoPlayer
                                             key={`video`}
@@ -107,7 +107,7 @@ export default function Home() {
                 )}
 
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
-                    <h2 className={'text-xl font-medium m-0 mb-2 text-type'}>Most Popular Stores</h2>
+                    <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Most Popular Stores</h2>
                     <Select
                         placeholder={'Sort by name'}
                         style={{ minWidth: 370 }}
