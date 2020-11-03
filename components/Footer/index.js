@@ -9,8 +9,14 @@ const Footer = props => {
                 <Link href={routes.contact}>
                     <span className="col-span-1 cursor-pointer text-base">Contact Us</span>
                 </Link>
-                <span className="col-span-1 text-base"> FAQ(s) </span>
-                <span className="col-span-2 text-base"> Ask Us to Host Your Local Products </span>
+
+                <Link href={routes.faq}>
+                    <span className="col-span-1 text-base cursor-pointer"> FAQ(s) </span>
+                </Link>
+
+                <Link href={routes.vendors.auth.login}>
+                    <span className="col-span-2 text-base cursor-pointer"> Ask Us to Host Your Local Products </span>
+                </Link>
 
                 <Link href={routes.about}>
                     <span className="col-span-1 text-base cursor-pointer">About Us</span>
