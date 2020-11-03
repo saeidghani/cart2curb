@@ -14,10 +14,17 @@ export default function Stores() {
     const [usedGps, setUsedGps] = useState(false);
     const storesLoading = useSelector(state => state.loading.effects.app.getStores)
     const { stores } = useSelector(state => state.app);
+    const [sort, setSort] = useState(undefined);
 
     useEffect(() => {
-        dispatch.app.getStores();
-    }, [])
+        if(sort) {
+            dispatch.app.getStores({
+                sort,
+            })
+        } else {
+            dispatch.app.getStores();
+        }
+    }, [sort])
 
     const searchWithGps = () => {
         if ("geolocation" in navigator) {
@@ -56,10 +63,12 @@ export default function Stores() {
                     <Select
                         placeholder={'Sort by name'}
                         style={{ minWidth: 370 }}
+                        onChange={(e) => setSort(e)}
                     >
+                        <Option value={''}>Default</Option>
                         <Option value={'name'}>Name</Option>
-                        <Option value={'date'}>Date</Option>
-                        <Option value={'Gps'}>Gps</Option>
+                        <Option value={'storeType'}>Store Type</Option>
+                        <Option value={'address'}>Address</Option>
                     </Select>
                 </div>
 

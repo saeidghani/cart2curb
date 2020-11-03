@@ -17,11 +17,22 @@ export default function Home() {
     const videoLoading = useSelector(state => state.loading.effects.app.getVideos);
     const storesLoading = useSelector(state => state.loading.effects.app.getStores)
     const { stores, videos } = useSelector(state => state.app);
+    const [sort, setSort] = useState(undefined);
+    console.log(stores, videos);
 
     useEffect(() => {
         dispatch.app.getVideos();
-        dispatch.app.getStores();
     }, [])
+
+    useEffect(() => {
+        if(sort) {
+            dispatch.app.getStores({
+                sort,
+            })
+        } else {
+            dispatch.app.getStores();
+        }
+    }, [sort])
 
     const searchWithGps = () => {
         if ("geolocation" in navigator) {
@@ -111,10 +122,12 @@ export default function Home() {
                     <Select
                         placeholder={'Sort by name'}
                         style={{ minWidth: 370 }}
+                        onChange={(e) => setSort(e)}
                         >
+                        <Option value={''}>Default</Option>
                         <Option value={'name'}>Name</Option>
-                        <Option value={'date'}>Date</Option>
-                        <Option value={'Gps'}>Gps</Option>
+                        <Option value={'storeType'}>Store Type</Option>
+                        <Option value={'address'}>Address</Option>
                     </Select>
                 </div>
 
