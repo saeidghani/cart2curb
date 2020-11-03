@@ -9,9 +9,9 @@ const AddressCard = ({title, value, deleteHandler, ...props}) => {
                     <span className="text-paragraph text-xs font-medium mb-3">{title}</span>
                     <span className="text-type text-base font-medium">{value}</span>
                 </div>
-                <Button type={'link'} onClick={deleteHandler} className={'px-0'}>
+                <Button type={'link'} onClick={deleteHandler} className={'px-0'} disabled={props.disabled}>
                     <span className="text-paragraph text-base underline">
-                                            Delete
+                        Delete
                     </span>
                 </Button>
             </div>

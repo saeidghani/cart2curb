@@ -60,7 +60,7 @@ const addresses = props => {
                             address.push(item.country);
                             return (
                                 <Col xs={24} key={`address-${index}`}>
-                                    <AddressCard title={`Address ${index + 1}`} value={address.join(', ')} deleteHandler={() => deleteModal({
+                                    <AddressCard title={`Address ${index + 1}`} value={address.join(', ')} disabled={props.addresses.length < 2} deleteHandler={() => deleteModal({
                                         onOk: deleteAddress.bind(this, item._id),
                                         okText: 'Yes, Delete',
                                         title: "Delete Address?",
