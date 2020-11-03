@@ -59,7 +59,6 @@ const PaymentInfo = props => {
                             <PaymentInfoCard
                                 card={`**** ${item.number.slice(-4)}`}
                                 expireInfo={moment(item.expirationDate).format('MM/YY')}
-                                editHandler={() => router.push(routes.profile.payments.edit(item._id))}
                                 deleteHandler={() => deleteModal({
                                     onOk: deletePayment.bind(this, item._id),
                                     okText: 'Yes, Delete',

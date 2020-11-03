@@ -43,9 +43,6 @@ export default {
         payments: {
             index: '/profile/payment-info',
             new: '/profile/payment-info/new',
-            edit(number = '[payment]') {
-                return `/profile/payment-info/edit/${number}`
-            },
         },
         orders: '/profile/orders'
     },
