@@ -66,6 +66,7 @@ const Products = ({vendor, ...props}) => {
             const formFields = form.getFieldsValue()
             let body = {
                 page_number: page,
+                page_size: 15,
                 ...query,
             }
             if(formFields.search) {
@@ -77,7 +78,7 @@ const Products = ({vendor, ...props}) => {
             try {
                 const response = await dispatch.vendorStore.getProducts(body)
                 setPage(page + 1);
-                if(response.data.length < 30) {
+                if(response.data.length < 15) {
                     setHasMore(false);
                 }
             } catch(e) {
