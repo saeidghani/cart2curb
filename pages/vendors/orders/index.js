@@ -168,7 +168,7 @@ const Orders = props => {
                     <Table
                         columns={columns}
                         dataSource={data}
-                        scroll={{ x: 1200 }}
+                        scroll={{ x: 1100 }}
                         pagination={false}
                         locale={{
                            emptyText: 'You have no Order'
