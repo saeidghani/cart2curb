@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRouter } from 'next/router';
 import userTypes from "../../constants/userTypes";
 import {useAuthenticatedUserType} from "../../hooks/auth";
@@ -41,7 +42,6 @@ export default function withConditionalRedirect({
         const redirectCondition = clientCondition();
         if (isBrowser() && redirectCondition) {
             router.push(userTypes[pageType][location]);
-            return <></>;
         }
         return <WrappedComponent {...props} />;
     };

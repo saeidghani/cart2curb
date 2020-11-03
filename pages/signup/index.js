@@ -332,4 +332,4 @@ const SignUp = props => {
 }
 
 
-export default withoutAuth(SignUp, 'customer');
+export default withoutAuth(SignUp, 'customer', true);
