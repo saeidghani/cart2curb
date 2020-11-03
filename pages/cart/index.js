@@ -245,7 +245,9 @@ export const CartIndex = (props) => {
                 )}
             </div>
 
-            <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
+            <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation} initialValues={{
+                notes: cart.note
+            }}>
                 <Row gutter={24}>
                     {products.filter(product => !deleted.includes(product._id)).map((product, key) => {
                         if(product.subtituted) {
@@ -274,7 +276,7 @@ export const CartIndex = (props) => {
 
                     <Col xs={24}>
                         <Item name={'notes'} label={'Notes'}>
-                            <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} defaultValue={cart.note || ''} />
+                            <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} />
                         </Item>
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
@@ -298,7 +300,7 @@ export async function getServerSideProps({ req, res }) {
     let cart = {}
     let stores = [];
     if (userType && userType !== 'customer') {
-        res.writeHead(307, { Location: routes.homepage });
+        res.writeHead(307, { Location: routes.auth.login });
         res.end();
         return {
             props: {
@@ -310,11 +312,16 @@ export async function getServerSideProps({ req, res }) {
     }
     const store = getStore();
     try {
-        const response = await store.dispatch.cart.getCart({
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        let response;
+        if(token) {
+            response = await store.dispatch.cart.getCart({
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        } else {
+            response = await store.dispatch.cart.getCart();
+        }
 
         if(response) {
             cart = response;
