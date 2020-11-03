@@ -46,7 +46,7 @@ const profile = props => {
 
     const actions = (
         <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
-            <Button type={'text'} className={'text-xs'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Logout</Button>
+            <Button type={'text'} className={'text-xs'} danger onClick={LogoutModal.bind(this, logoutHandler)}>Log Out</Button>
             <Link href={routes.profile.changePassword}>
                 <Button type={'text'} className={'text-type text-base font-medium'}>Change Password</Button>
             </Link>
