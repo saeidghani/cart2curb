@@ -20,7 +20,23 @@ const Orders = props => {
     const loading = useSelector(state => state.loading.effects.vendorStore.getOrders);
     const orders = useSelector(state => state.vendorStore.orders.data);
 
+    useEffect(async () => {
+        if(hasMore) {
+            let body = {
+                page_number: page,
+            }
 
+            try {
+                const response = await dispatch.vendorStore.getOrders(body)
+                if(response.data.length < 30) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                setHasMore(false);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+    }, [page, hasMore])
 
     useEffect(() => {
         const options = {
@@ -40,30 +56,9 @@ const Orders = props => {
     const handleObserver = (entities) => {
         const target = entities[0];
         if (target.isIntersecting) {
-            fetchOrders();
+            setPage((page) => page + 1)
         }
     }
-
-    const fetchOrders = async (query = {}, forceLoad = false) => {
-        if(hasMore || forceLoad) {
-
-            let body = {
-                page_number: page,
-            }
-
-            try {
-                const response = await dispatch.vendorStore.getOrders(body)
-                setPage(page + 1);
-                if(response.data.length < 30) {
-                    setHasMore(false);
-                }
-            } catch(e) {
-                setHasMore(false);
-                message.error('An Error was occurred while fetching data')
-            }
-        }
-    }
-
 
     const columns = [
         {

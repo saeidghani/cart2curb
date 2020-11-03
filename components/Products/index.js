@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
 import {
     FileSearchOutlined,
@@ -19,7 +19,7 @@ const { Option } = Select;
 
 const Products = ({vendor, ...props}) => {
     const loader = useRef(null);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [deleted, setDeleted] = useState([]);
     const [form] = Form.useForm();
@@ -28,6 +28,33 @@ const Products = ({vendor, ...props}) => {
     const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
     const productsLoading = useSelector(state => state.loading.effects.vendorStore.getProducts);
     const products = useSelector(state => state.vendorStore.products.data);
+
+    useEffect(async () => {
+        if(hasMore) {
+            const formFields = form.getFieldsValue()
+            let body = {
+                page_number: page,
+                page_size: 15,
+            }
+            if(formFields.search) {
+                body.search = formFields.search;
+            }
+            if(formFields.category) {
+                body.category = formFields.category;
+            }
+            try {
+                const response = await dispatch.vendorStore.getProducts(body)
+                if(response.data.length < 15) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                console.log(e);
+                setHasMore(false);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+    }, [page, hasMore])
+
 
     useEffect(() => {
         dispatch.vendorStore.getCategories()
@@ -42,7 +69,7 @@ const Products = ({vendor, ...props}) => {
         const options = {
             root: null,
             rootMargin: "20px",
-            threshold: 1.0
+            threshold: 1
         };
 
         const observer = new IntersectionObserver(handleObserver, options);
@@ -50,50 +77,18 @@ const Products = ({vendor, ...props}) => {
             observer.observe(loader.current)
         }
 
-    }, []);
-
+    }, [loader.current]);
 
     const handleObserver = (entities) => {
         const target = entities[0];
         if (target.isIntersecting) {
-            fetchProducts();
-        }
-    }
-
-    const fetchProducts = async (query = {}, forceLoad = false) => {
-        if(hasMore || forceLoad) {
-
-            const formFields = form.getFieldsValue()
-            let body = {
-                page_number: page,
-                page_size: 15,
-                ...query,
-            }
-            if(formFields.search) {
-                body.search = formFields.search;
-            }
-            if(formFields.category) {
-                body.category = formFields.category;
-            }
-            try {
-                const response = await dispatch.vendorStore.getProducts(body)
-                setPage(page + 1);
-                if(response.data.length < 15) {
-                    setHasMore(false);
-                }
-            } catch(e) {
-                setHasMore(false);
-                message.error('An Error was occurred while fetching data')
-            }
+            setPage((page) => page + 1)
         }
     }
 
     const searchHandler = (values) => {
         setHasMore(true);
         setPage(1);
-        fetchProducts({
-            page_number: 1,
-        }, true)
     }
 
     const columns = [

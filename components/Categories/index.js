@@ -22,6 +22,33 @@ const Categories = props => {
     const categories = useSelector(state => state.vendorStore.categories.data);
 
 
+    useEffect(async () => {
+        if(hasMore) {
+            const formFields = form.getFieldsValue()
+            let body = {
+                page_number: page,
+                page_size: 15,
+            }
+            if(formFields.search) {
+                body.search = formFields.search;
+            }
+            if(formFields.parent_category && formFields.parent_category !== 'all') {
+                body.parent_category = formFields.parent_category;
+            }
+            try {
+                const response = await dispatch.vendorStore.getCategories(body)
+                if(response.data.length < 15) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                setHasMore(false);
+                console.log(e);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+    }, [page, hasMore])
+
+
     useEffect(() => {
 
         dispatch.vendorStore.getCategories()
@@ -50,45 +77,15 @@ const Categories = props => {
     const handleObserver = (entities) => {
         const target = entities[0];
         if (target.isIntersecting) {
-            fetchCategories();
-        }
-    }
-
-    const fetchCategories = async (query = {}, forceLoad = false) => {
-        if(hasMore || forceLoad) {
-            const formFields = form.getFieldsValue()
-            let body = {
-                page_number: page,
-                page_size: 15,
-                ...query
-            }
-            if(formFields.search) {
-                body.search = formFields.search;
-            }
-            if(formFields.parent_category && formFields.parent_category !== 'all') {
-                body.parent_category = formFields.parent_category;
-            }
-            try {
-                const response = await dispatch.vendorStore.getCategories(body)
-                setPage(page + 1);
-                if(response.data.length < 15) {
-                    setHasMore(false);
-                }
-            } catch(e) {
-                setHasMore(false);
-                console.log(e);
-                message.error('An Error was occurred while fetching data')
-            }
+            setPage((page) => page + 1)
         }
     }
 
     const searchHandler = (values) => {
         setHasMore(true);
         setPage(1);
-        fetchCategories({
-            page_number: 1,
-        }, true)
     }
+
 
     const columns = [
         {
