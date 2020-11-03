@@ -77,7 +77,7 @@ const Header = props => {
                         <>
                             {router.route !== routes.vendors.account.changePassword && (
                                 <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
-                                    <div className="ml-14">
+                                    <div className="ml-14 cursor-pointer">
                                         <Avatar src={avatar} justImage/>
                                     </div>
                                 </Link>
@@ -169,9 +169,11 @@ const Header = props => {
                                 <Row>
                                     {router.route !== routes.vendors.account.changePassword && (
                                         <Col xs={24}>
-                                                <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                            <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                                <div className="cursor-pointer">
                                                     <Avatar src={avatar} justImage/>
-                                                </Link>
+                                                </div>
+                                            </Link>
                                         </Col>
                                     )}
                                 </Row>
