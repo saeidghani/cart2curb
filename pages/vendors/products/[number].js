@@ -30,7 +30,7 @@ const ProductView = props => {
             href: routes.vendors.products.index,
         },
         {
-            title: router.query.number
+            title: product.name
         }
     ]
 
