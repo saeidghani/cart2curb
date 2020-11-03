@@ -12,7 +12,7 @@ const Footer = props => {
                 <span className="col-span-1 text-base"> FAQ(s) </span>
                 <span className="col-span-2 text-base"> Ask Us to Host Your Local Products </span>
 
-                <Link href={routes.contact}>
+                <Link href={routes.about}>
                     <span className="col-span-1 text-base cursor-pointer">About Us</span>
                 </Link>
                 <span className="col-span-1 text-base"> Report Page </span>
