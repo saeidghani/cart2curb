@@ -45,6 +45,7 @@ const AccountEdit = props => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const router = useRouter();
+    console.log(stream);
 
     const { profile } = props;
 
@@ -59,6 +60,7 @@ const AccountEdit = props => {
         if(streamOnIndex > -1) {
             streamPreference = profile.socialMedias[streamOnIndex].provider;
             streamId = profile.socialMedias[streamOnIndex].username;
+            setStream(streamPreference);
         }
         if(instagramIndex > -1) {
             instagram = profile.socialMedias[instagramIndex].username;
@@ -260,7 +262,7 @@ const AccountEdit = props => {
                                                     </>
                                                 )}
                                             </div>
-                                            <label htmlFor={'avatar'} className="text-secondarey ml-3 cursor-pointer">Upload Image</label>
+                                            <label htmlFor={'avatar'} className="text-info ml-3 cursor-pointer">Upload Image</label>
 
                                         </Upload>
                                     </div>
@@ -293,14 +295,10 @@ const AccountEdit = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item
                                     name={'streamPreference'}
-                                    label={'Stream Preference'}
-                                    onChange={setStream}
-                                    rules={[{
-                                        required: true,
-                                        message: 'This Field is required'
-                                    }]}>
+                                    label={'Stream Preference'}>
                                     <Select
                                         placeholder={'Select'}
+                                        onChange={setStream}
                                     >
                                         <Option value={'facebook'}>Facebook</Option>
                                         <Option value={'instagram'}>Instagram</Option>
@@ -312,11 +310,7 @@ const AccountEdit = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={`${stream} ID`}
-                                    rules={[{
-                                        required: true,
-                                        message: 'This Field is required'
-                                    }]}>
+                                <Item name={'streamId'} label={`${stream} ID`}>
                                     <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
@@ -329,20 +323,12 @@ const AccountEdit = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook'} label={'Facebook'}
-                                    rules={[{
-                                        required: true,
-                                        message: 'This Field is required'
-                                    }]}>
+                                <Item name={'facebook'} label={'Facebook'}>
                                     <Input placeholder="Facebook Username" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram'} label={'Instagram'}
-                                    rules={[{
-                                        required: true,
-                                        message: 'This Field is required'
-                                    }]}>
+                                <Item name={'instagram'} label={'Instagram'}>
                                     <Input placeholder="Instagram Username" />
                                 </Item>
                             </Col>

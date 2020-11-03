@@ -14,7 +14,6 @@ import moment from "moment";
 import {getStore} from "../../states";
 import cookie from "cookie";
 import {useAuth} from "../../providers/AuthProvider";
-import withAuth from "../../components/hoc/withAuth";
 import {useRouter} from "next/router";
 import userTypes from "../../constants/userTypes";
 
@@ -103,7 +102,7 @@ const profile = props => {
                             title={'Instagram'}
                             value={getProperty(profile, 'socialMedias', '-', (data) => {
                                 let instagram = data.find(item => item.provider === 'instagram');
-                                if(instagram) {
+                                if(instagram && instagram.username) {
                                     return `@${instagram.username}`
                                 } else {
                                     return '-'
@@ -115,7 +114,7 @@ const profile = props => {
                             title={'Facebook'}
                             value={getProperty(profile, 'socialMedias', '-', (data) => {
                                 let facebook = data.find(item => item.provider === 'facebook');
-                                if(facebook) {
+                                if(facebook && facebook.username) {
                                     return `@${facebook.username}`
                                 } else {
                                     return '-'

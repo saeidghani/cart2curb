@@ -191,10 +191,6 @@ const AccountInfo = props => {
                                     <Select
                                         placeholder={'Select'}
                                         onChange={setStream}
-                                            rules={[{
-                                                required: true,
-                                                message: "This Field is required"
-                                            }]}
                                     >
                                         <Option value={'facebook'}>Facebook</Option>
                                         <Option value={'instagram'}>Instagram</Option>
@@ -206,11 +202,7 @@ const AccountInfo = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={`${stream} ID`}
-                                    rules={[{
-                                        required: true,
-                                        message: "This Field is required"
-                                    }]}>
+                                <Item name={'streamId'} label={`${stream} ID`}>
                                     <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
@@ -223,20 +215,12 @@ const AccountInfo = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook'} label={'Facebook'}
-                                    rules={[{
-                                        required: true,
-                                        message: "This Field is required"
-                                    }]}>
+                                <Item name={'facebook'} label={'Facebook'}>
                                     <Input placeholder="Facebook Username" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram'} label={'Instagram'}
-                                    rules={[{
-                                        required: true,
-                                        message: "This Field is required"
-                                    }]}>
+                                <Item name={'instagram'} label={'Instagram'}>
                                     <Input placeholder="Instagram Username" />
                                 </Item>
                             </Col>
