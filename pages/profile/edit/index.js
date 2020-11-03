@@ -245,22 +245,24 @@ const AccountEdit = props => {
                                         <Upload
                                             name="photo"
                                             listType="picture-card"
-                                            className="avatar-uploader"
+                                            className="avatar-uploader-wrapper border-0"
                                             showUploadList={false}
                                             beforeUpload={beforeUpload}
                                             onChange={handleChange}
                                             {...uploadProps}
-
                                         >
-                                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
-                                                <>
-                                                    <div className={'full-rounded text-type flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
-                                                        <UserOutlined />
-                                                    </div>
-                                                </>
-                                            )}
+                                            <div className="avatar-uploader">
+                                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                    <>
+                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                            <UserOutlined className={'text-lg'}/>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <label htmlFor={'avatar'} className="text-secondarey ml-3 cursor-pointer">Upload Image</label>
+
                                         </Upload>
-                                        <label htmlFor={'avatar'} className="text-info ml-3">Upload Image</label>
                                     </div>
                                 </Item>
                             </Col>

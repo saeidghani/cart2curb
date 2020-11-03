@@ -25,7 +25,7 @@ const ReportModal = ({ visible, onHide, onOk }) => {
         >
             <Form form={form} layout={'vertical'}>
                 <Item name={'message'} label={'Write Your Report Here'}>
-                    <Input.TextArea placeholder={'Report Message'} autoSize={{ minRows: 4, maxRows: 9 }}/>
+                    <Input.TextArea placeholder={'Report Message'} autoSize={{ minRows: 4, maxRows: 9 }}  style={{ resize: 'none' }}/>
                 </Item>
             </Form>
         </Modal>

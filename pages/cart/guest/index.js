@@ -111,12 +111,12 @@ const CartGuest = props => {
                             </Col>
                             <Col span={24}>
                                 <Item name={'address-line1'} label={'Address Line 1'}>
-                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }}/>
+                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                 </Item>
                             </Col>
                             <Col span={24}>
                                 <Item name={'address-line2'} label={'Address Line 2'}>
-                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }}/>
+                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                 </Item>
                             </Col>
 

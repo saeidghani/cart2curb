@@ -172,12 +172,12 @@ const AddAddress = props => {
                                               message: "Address Line 1 is required"
                                           }
                                       ]}>
-                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }}/>
+                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                 </Item>
                             </Col>
                             <Col span={24}>
                                 <Item name={'addressLine2'} label={'Address Line 2'}>
-                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }}/>
+                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                 </Item>
                             </Col>
 

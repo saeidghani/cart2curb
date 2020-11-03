@@ -450,12 +450,12 @@ const EditAccount = props => {
                                                   message: 'Address Line 1 is required'
                                               }
                                           ]}>
-                                        <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }}/>
+                                        <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                     </Item>
                                 </Col>
                                 <Col span={24}>
                                     <Item name={'addressLine2'} label={'Address Line 2'}>
-                                        <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }}/>
+                                        <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                     </Item>
                                 </Col>
 
@@ -477,7 +477,7 @@ const EditAccount = props => {
 
                                 <Col span={24}>
                                     <Item name={'description'} label={'Store Description'}>
-                                        <Input.TextArea placeholder={'Store Description'} autoSize={{ minRows: 4, maxRows: 9 }}/>
+                                        <Input.TextArea placeholder={'Store Description'} autoSize={{ minRows: 4, maxRows: 9 }} style={{ resize: 'none' }}/>
                                     </Item>
                                 </Col>
                                 <Col span={24}>
