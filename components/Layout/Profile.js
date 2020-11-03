@@ -15,7 +15,7 @@ const ProfileLayout = ({title, breadcrumb, actions, withoutDivider, ...props}) =
                     {title && (
                         <div className={`flex flex-col ${withoutDivider && 'mb-6'}`}>
                             <div className="flex items-center justify-between">
-                                <h1 className="page__title text-2xl text-label font-medium my-0">{title}</h1>
+                                <h1 className="page__title text-2xl text-type font-medium my-0">{title}</h1>
                                 <div className="actions flex items-center">{actions || null}</div>
                             </div>
                             {!withoutDivider && (<Divider/>)}

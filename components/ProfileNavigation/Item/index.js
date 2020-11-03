@@ -11,13 +11,12 @@ const NavigationItem = props => {
     };
     const Icon = props.icon;
     return (
-        <div className="flex flex-row py-6 cursor-pointer">
-            <Icon className="mr-7.5" highlighted={isCurrentRoute} size={24} />
-
-            <Link href={props.href}>
-                <a className={getRouteClassNames(isCurrentRoute)}>{props.title} </a>
-            </Link>
-        </div>
+        <Link href={props.href}>
+            <div className="flex flex-row py-6 cursor-pointer hover:text-primary">
+                <Icon className="mr-7.5" highlighted={isCurrentRoute} size={24} />
+                <a className={`${getRouteClassNames(isCurrentRoute)} text-base`}>{props.title} </a>
+            </div>
+        </Link>
     )
 }
 
