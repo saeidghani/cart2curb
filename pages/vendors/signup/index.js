@@ -383,7 +383,7 @@ const Register = props => {
                                                     </>
                                                 )}
                                             </div>
-                                            <label htmlFor={'photo'} className="text-secondarey ml-3">Upload Your Store Image</label>
+                                            <label htmlFor={'photo'} className="text-secondarey ml-3 cursor-pointer">Upload Your Store Image</label>
                                         </Upload>
 
                                     </div>
@@ -412,7 +412,7 @@ const Register = props => {
                                                     </>
                                                 )}
                                             </div>
-                                            <label htmlFor={'avatar'} className="text-secondarey ml-3">Upload Your Profile Image</label>
+                                            <label htmlFor={'avatar'} className="text-secondarey ml-3 cursor-pointer">Upload Your Profile Image</label>
 
                                         </Upload>
                                     </div>
