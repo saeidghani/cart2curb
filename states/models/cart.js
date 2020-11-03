@@ -85,6 +85,43 @@ export const cart = {
 
                 return false;
             }
+        },
+        async checkAddress(body) {
+            try {
+                const res = await api.post('cart/check-address', body);
+                console.log(res);
+                if(res.data.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+
+                return false;
+            }
+        },
+        async updateDelivery(body) {
+            try {
+                const productsRes = await api.post('cart/update', {
+                    products: [
+                        ...body.products
+                    ]
+                })
+                const noteRes = await api.post('cart/note', {
+                    note: body.note
+                })
+
+                if(productsRes.data.success && noteRes.data.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+
+                return false;
+            }
         }
     })
 }

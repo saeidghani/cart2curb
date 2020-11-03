@@ -9,7 +9,7 @@ import {
     Select,
     DatePicker,
     TimePicker,
-    Radio
+    Radio, message
 } from 'antd';
 
 import Page from '../../../components/Page';
@@ -19,6 +19,8 @@ import {getStore} from "../../../states";
 import GoogleMap from "../../../components/Map";
 import {useCities, useProvinces} from "../../../hooks/region";
 import Link from "next/link";
+import {useDispatch} from "react-redux";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -30,7 +32,10 @@ const Delivery = props => {
     const [marker, setMarker] = useState({ position: {}})
     const provinces = useProvinces();
     const cities = useCities(province);
+    const dispatch = useDispatch();
+    const router = useRouter();
 
+    console.log(props);
     const breadcrumb = [
         {
             title: 'Cart',
@@ -61,6 +66,60 @@ const Delivery = props => {
         }
     }
 
+    const submitHandler = async (values) => {
+        if(values.address === 'new' && !marker.position.hasOwnProperty('lat')) {
+            message.error('Please select your location in map');
+            return false;
+        }
+        const {date, time, address} = values;
+        const deliveryTime = date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
+        let transformedAddress;
+        if(address === 'new') {
+            const { province, city, addressLine1, addressLine2, postalCode} = values;
+
+            transformedAddress = {
+                country: 'Canada',
+                province,
+                city,
+                addressLine1,
+                addressLine2,
+                postalCode,
+                location: {
+                    type: 'Point',
+                    coordinates: [marker.position.lng, marker.position.lat]
+                }
+            }
+        } else {
+            const { country, province, city, addressLine1, addressLine2, postalCode, location} = addresses.find(item => item._id === address)
+            transformedAddress = {
+                country, province, city, addressLine1, addressLine2, postalCode, location
+            };
+        }
+
+        // @todo: add check address logics here
+        // const res = await dispatch.cart.checkAddress({
+        //     ...transformedAddress
+        // })
+        // if(res) {
+        //
+        // } else {
+        //     message.error('An Error was occurred');
+        // }
+        const body = {
+            time: deliveryTime,
+            address: transformedAddress
+        }
+
+        const res = await dispatch.cart.updateDelivery(body);
+        if(res) {
+            router.push(routes.cart.invoice.index);
+        }
+    }
+
+    const checkValidation = errorInfo => {
+        message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
+
     return (
         <Page title={'Delivery Time & Checkout'} breadcrumb={breadcrumb}>
             <Row>
@@ -69,22 +128,52 @@ const Delivery = props => {
                         form={form}
                         layout="vertical"
                         className="flex flex-col"
+                        onFinish={submitHandler}
+                        onFinishFailed={checkValidation}
                     >
                         <Row gutter={24}>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'date'} label={'Delivery Date'}>
+                                <Item
+                                    name={'date'}
+                                    label={'Delivery Date'}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "This Field is required"
+                                        }
+                                    ]}
+                                >
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'time'} label={'Delivery Time'}>
+                                <Item
+                                    name={'time'}
+                                    label={'Delivery Time'}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "This Field is required"
+                                        }
+                                    ]}
+                                >
                                     <TimePicker className={'w-full'}/>
                                 </Item>
                             </Col>
 
                             <Col xs={24}>
-                                <Item name={'address'} label={'Address'} className={'mb-0'}>
+                                <Item
+                                    name={'address'}
+                                    label={'Address'}
+                                    className={'mb-0'}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please choose an Address or Create new'
+                                        }
+                                    ]}
+                                >
                                     <Radio.Group className={'flex flex-col'} onChange={changeAddressHandler}>
                                         {addresses.map(address => {
 
@@ -166,18 +255,27 @@ const Delivery = props => {
                                         </Item>
                                     </Col>
                                     <Col span={24}>
-                                        <Item name={'address-line1'} label={'Address Line 1'}>
+                                        <Item
+                                            name={'addressLine1'}
+                                            label={'Address Line 1'}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: "Address Line 1 is required"
+                                                }
+                                            ]}
+                                        >
                                             <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                         </Item>
                                     </Col>
                                     <Col span={24}>
-                                        <Item name={'address-line2'} label={'Address Line 2'}>
+                                        <Item name={'addressLine2'} label={'Address Line 2'}>
                                             <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
                                         </Item>
                                     </Col>
 
                                     <Col lg={8} md={12} xs={24}>
-                                        <Item name={'postal-code'} label={'Postal Code'}
+                                        <Item name={'postalCode'} label={'Postal Code'}
                                               rules={[
                                                   {
                                                       len: 5,
