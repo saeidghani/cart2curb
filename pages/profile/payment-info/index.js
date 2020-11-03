@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {PlusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {CreditCardOutlined, PlusOutlined} from "@ant-design/icons";
 import {Button, Col, Row} from "antd";
 
 import ProfileLayout from "../../../components/Layout/Profile";
@@ -47,18 +47,8 @@ const PaymentInfo = props => {
 
                 {payments.length === 0 || payments.length === deleted.length ? (
                     <Col xs={24} className={'flex flex-col items-center justify-center pt-6'}>
-                        <PlusCircleOutlined className={'text-paragraph mb-6 text-4xl'} />
-                        <span className="text-paragraph mb-4">You have no Card, Use below button to add.</span>
-
-                        <Link href={routes.profile.payments.new}>
-                            <Button
-                                type={'link'}
-                                icon={<PlusOutlined className={'text-info border-info'} style={{ fontSize: 12 }}/>}
-                                className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            >
-                                Add New Card
-                            </Button>
-                        </Link>
+                        <CreditCardOutlined className={'text-paragraph mb-6 text-4xl'} />
+                        <span className="text-paragraph mb-4">You have no Card</span>
                     </Col>
                 ) : payments.map((item, index) => {
                     if(deleted.includes(item._id)) {
