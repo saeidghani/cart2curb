@@ -1,24 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Row, Col, Form, Button, Input, Select, message} from 'antd';
+import {Row, Col, Form, Button, Input, Select} from 'antd';
 import Page from "../../components/Page";
 import routes from "../../constants/routes";
 import {getStore} from "../../states";
 import CategoryCard from "../../components/UI/CategoryCard";
 import StoreProductCard from "../../components/UI/StoreProductCard";
-import ShopOverview from "../../components/UI/ShopOverview";
-import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
-import InfiniteScroll from "react-infinite-scroller";
 import Loader from "../../components/UI/Loader";
 import {InfoCircleOutlined, ShopOutlined} from "@ant-design/icons";
 
 const { Item } = Form;
 const { Option } = Select;
 
+let isIntersecting = true;
 const VendorPage = props => {
     const [form] = Form.useForm();
     const loader = useRef(null);
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const loading = useSelector(state => state.loading.effects.app.getProducts);
     const [products, setProducts] = useState([]);
@@ -26,9 +24,10 @@ const VendorPage = props => {
     const dispatch = useDispatch();
     const [hasError, setHasError] = useState(false);
     const [imageStore, setImageStore] = useState('');
+    const [search, setSearch] = useState('');
+    const [type, setType] = useState('');
 
     const changeToPlaceholder = (source) => {
-        console.log('im in source');
         setHasError(true);
         return true;
     }
@@ -50,7 +49,7 @@ const VendorPage = props => {
     }, [vendor])
 
     useEffect(async () => {
-        if(hasMore) {
+        if(hasMore || page === 1) {
             const formFields = form.getFieldsValue()
             const body = {
                 storeId: vendor._id,
@@ -68,18 +67,21 @@ const VendorPage = props => {
             try {
                 const response = await dispatch.app.getProducts(body)
                 if(page !== 1) {
-                    setProducts(products.concat(response.data));
+                    setProducts(products => products.concat(response.data));
                 } else {
-                    setProducts(response.data);
+                    setProducts(products => response.data);
                 }
                 if(response.data.length < 15) {
                     setHasMore(false);
+                } else {
+                    setHasMore(true);
                 }
             } catch(e) {
                 console.log(e);
             }
         }
-    }, [page, hasMore, selectedCategory])
+        isIntersecting = true;
+    }, [page, selectedCategory, search, type])
 
 
     useEffect(() => {
@@ -98,22 +100,25 @@ const VendorPage = props => {
 
     const handleObserver = (entities) => {
         const target = entities[0];
-        if (target.isIntersecting) {
+        if (target.isIntersecting && isIntersecting) {
+            isIntersecting = false
             setPage((page) => page + 1)
         }
     }
 
 
     const selectCategoryHandler = (catId) => {
-        setProducts([]);
-        setSelectedCategory(catId);
-        setHasMore(true);
-        setPage(1);
+        if(catId !== selectedCategory) {
+            setProducts([]);
+            setSelectedCategory(catId);
+            setPage(1)
+        }
     }
 
     const searchHandler = (values) => {
         setProducts([]);
-        setHasMore(true);
+        setSearch(values.search);
+        setType(values.storeType);
         setPage(1);
     }
 
@@ -205,9 +210,9 @@ const VendorPage = props => {
                                 </Col>
                             )
                         })}
-                        <div className="flex w-full items-center justify-center py-6" ref={loader}>
-                            {hasMore && (<Loader/>)}
-                        </div>
+                        {hasMore && (<div className="flex w-full items-center justify-center py-6" ref={loader}>
+                            <Loader/>
+                        </div>)}
                     </Row>
                 </Col>
             </Row>
