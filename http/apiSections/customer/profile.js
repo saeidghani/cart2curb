@@ -149,4 +149,7 @@ export default class CustomerProfileApi extends ApiInstance {
         return this.delete(`customer/profile/orders/${id}`, options)
     }
 
+    reportOrder(id, body, options = {}) {
+        return this.post(`customer/profile/orders/${id}/report`, body, {}, options);
+    }
 }

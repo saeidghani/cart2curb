@@ -234,5 +234,22 @@ export const profile = {
                 return false;
             }
         },
+        async reportOrder(data, rootState) {
+            try {
+                const res = await Api.customer.profile.reportOrder(data.id, data.body, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.auth.token}`
+                    }
+                });
+                if(res?.data?.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+                return false;
+            }
+        }
     })
 }

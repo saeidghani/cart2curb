@@ -12,7 +12,7 @@ import Loader from "../../../components/UI/Loader";
 
 const Orders = props => {
     const screens = Grid.useBreakpoint()
-    const [reportModalShow, setReportModalShow] = useState(false);
+    const [reportModalShow, setReportModalShow] = useState(-1);
     const [deleted, setDeleted] = useState([]);
     const [detailsModal, setDetailsModal] = useState(-1);
     const loader = useRef(null);
@@ -114,6 +114,11 @@ const Orders = props => {
                             data={row.data}
                             total={row.totalPrice}
                         />
+
+                        <ReportModal
+                            visible={row.key === reportModalShow}
+                            onOk={actions.reportHandler}
+                            onHide={setReportModalShow.bind(this, -1)} />
                     </>
                 )
             },
@@ -140,9 +145,23 @@ const Orders = props => {
                                 }
                             });
                         } else {
-                            setReportModalShow(true)
+                            setReportModalShow(order._id)
                         }
                     },
+                    reportHandler: async (message) => {
+                        const res = await dispatch.profile.reportOrder({
+                            id: order._id,
+                            body: {
+                                message,
+                            }
+                        })
+
+                        if(res) {
+                            message.success('Report sent successfully!')
+                        } else {
+                            message.error('An Error was occurred');
+                        }
+                    }
                 },
                 name: "-",
                 data: order.products.map((item, index) => {
@@ -181,10 +200,6 @@ const Orders = props => {
                     </div>
                 </Col>
             </Row>
-            <ReportModal
-                visible={reportModalShow}
-                onOk={setReportModalShow.bind(this, false)}
-                onHide={setReportModalShow.bind(this, false)} />
         </ProfileLayout>
     )
 }

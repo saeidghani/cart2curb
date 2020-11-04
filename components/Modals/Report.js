@@ -1,15 +1,25 @@
 import React from 'react';
-import { Modal, Form, Input } from "antd";
+import {Modal, Form, Input, message} from "antd";
 
 const { Item } = Form;
 
 const ReportModal = ({ visible, onHide, onOk }) => {
     const [form] = Form.useForm();
+
+    const submitHandler = () => {
+        const formFields = form.getFieldsValue();
+        if(!formFields.message) {
+            message.error('Please write your Report Message first');
+            return false;
+        }
+        onOk(formFields.message);
+    }
+
     return (
         <Modal
             title={'Report'}
             visible={visible}
-            onOk={onOk}
+            onOk={submitHandler}
             onCancel={onHide}
             centered
             okText={'Send'}
@@ -25,7 +35,7 @@ const ReportModal = ({ visible, onHide, onOk }) => {
         >
             <Form form={form} layout={'vertical'}>
                 <Item name={'message'} label={'Write Your Report Here'}>
-                    <Input.TextArea placeholder={'Report Message'} autoSize={{ minRows: 4, maxRows: 9 }}  style={{ resize: 'none' }}/>
+                    <Input.TextArea placeholder={'Report Message'} autoSize={{ minRows: 5, maxRows: 5 }}  style={{ resize: 'none' }}/>
                 </Item>
             </Form>
         </Modal>
