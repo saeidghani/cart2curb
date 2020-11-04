@@ -7,6 +7,7 @@ import OrderDetailsModal from "../../../components/Modals/OrderDetails";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../../components/UI/Loader";
 import withAuth from "../../../components/hoc/withAuth";
+import moment from "moment";
 
 const { Item } = Form;
 
@@ -68,16 +69,16 @@ const Orders = props => {
             render: number => <span className={`text-cell`}>{number}</span>
         },
         {
-            title: 'Cart Number',
-            dataIndex: 'cartNumber',
-            key: 'cartNumber',
-            render: cartNumber => <span className={`text-cell`}>{cartNumber}</span>
+            title: 'CX Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: name => <span className={`text-cell`}>{name}</span>
         },
         {
-            title: 'Total Price',
-            dataIndex: 'totalPrice',
-            key: 'totalPrice',
-            render: totalPrice => <span className={`text-cell`}>{totalPrice}</span>
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: date => <span className={`text-cell`}>{date}</span>
         },
         {
             title: 'Items',
@@ -99,7 +100,7 @@ const Orders = props => {
                             visible={row.key === detailsModal}
                             onHide={setDetailsModal.bind(this, -1)}
                             orderNumber={row.number}
-                            date={'-'}
+                            date={row.date}
                             cxName={row.name}
                             status={row.status}
                             data={row.data}
@@ -117,14 +118,14 @@ const Orders = props => {
             return {
                 key: order._id,
                 index: order._id,
-                number: order._id,
+                number: order.orderNumber || order._id,
+                date: moment(order.date).format('YYYY-MM-DD'),
                 totalPrice: order.products.reduce((total, item) => total += item.totalPrice, 0),
                 items: order.products.length,
                 status: order.status,
                 actions: {
                     showMoreHandler: () => setDetailsModal(order._id),
                 },
-                cartNumber: order.cartNumber,
                 name: "-",
                 data: order.products.map((item, index) => {
                     return {

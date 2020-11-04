@@ -9,6 +9,7 @@ import OrderDetailsModal from "../../../components/Modals/OrderDetails";
 import withAuth from "../../../components/hoc/withAuth";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../../components/UI/Loader";
+import moment from "moment";
 
 const Orders = props => {
     const screens = Grid.useBreakpoint()
@@ -71,10 +72,10 @@ const Orders = props => {
             render: number => <span className={`text-cell`}>{number}</span>
         },
         {
-            title: 'Total Price',
-            dataIndex: 'totalPrice',
-            key: 'totalPrice',
-            render: totalPrice => <span className={`text-cell`}>${totalPrice}</span>
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: date => <span className={`text-cell`}>{date}</span>
         },
         {
             title: 'Status',
@@ -108,7 +109,7 @@ const Orders = props => {
                             visible={row.key === detailsModal}
                             onHide={setDetailsModal.bind(this, -1)}
                             orderNumber={row.number}
-                            date={'-'}
+                            date={row.date}
                             cxName={row.name}
                             status={row.status}
                             data={row.data}
@@ -130,7 +131,8 @@ const Orders = props => {
             return {
                 key: order._id,
                 index: order._id,
-                number: order._id,
+                number: order.orderNumber || order._id,
+                date: moment(order.date).format('YYYY-MM-DD'),
                 totalPrice: order.totalPrice,
                 status: order.status,
                 actions: {
