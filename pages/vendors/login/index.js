@@ -77,7 +77,7 @@ const Login = props => {
                                         message: "Password should be 6 characters at least"
                                     }
                                 ]}>
-                                    <Input type="password" placeholder="Password" />
+                                    <Input.Password placeholder="Password" />
                                 </Item>
 
                             </Col>
