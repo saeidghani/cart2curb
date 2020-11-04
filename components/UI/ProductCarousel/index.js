@@ -38,7 +38,6 @@ const ProductCarousel = ({slides, ...props}) => {
                     visibleSlides={3}
                     totalSlides={slides.length}
                     step={1}
-                    currentSlide={slide}
                     naturalSlideWidth={128}
                     naturalSlideHeight={120}
                     hasMasterSpinner

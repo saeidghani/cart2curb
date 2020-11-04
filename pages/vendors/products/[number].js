@@ -43,10 +43,10 @@ const ProductView = props => {
     return (
         <Page title={'Product'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
-                <Col xs={24} md={12} lg={8} xl={6}>
+                <Col xs={24} md={12} lg={8}>
                     <ProductCarousel slides={product.images}/>
                 </Col>
-                <Col xl={18} lg={16} md={12} xs={24}>
+                <Col lg={16} md={12} xs={24}>
                     <Row>
                         <Col xs={24} className={`flex flex-col`}>
                             <div className="flex items-center justify-between mb-16">
