@@ -36,7 +36,6 @@ function beforeUpload(file) {
 
 
 const EditAccount = props => {
-    console.log(props.area);
     const [form] = Form.useForm();
     const [fields, setFields] = useState([])
     const [imageUrl, setImageUrl] = useState(props.fields[0].imageStore)

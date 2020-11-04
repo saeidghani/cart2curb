@@ -19,8 +19,6 @@ const ProductView = props => {
     const screens = Grid.useBreakpoint();
     const {product, profile} = props;
     const dispatch = useDispatch();
-    console.log(props);
-
     const breadcrumb = [
         {
             title: 'Store',

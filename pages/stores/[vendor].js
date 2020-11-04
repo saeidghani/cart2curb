@@ -27,7 +27,6 @@ const VendorPage = props => {
     const [hasError, setHasError] = useState(false);
 
     const changeToPlaceholder = (source) => {
-        console.log('hh')
         setHasError(true);
 
         source.onError = '';

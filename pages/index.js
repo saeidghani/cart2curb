@@ -18,7 +18,6 @@ export default function Home() {
     const storesLoading = useSelector(state => state.loading.effects.app.getStores)
     const { stores, videos } = useSelector(state => state.app);
     const [sort, setSort] = useState(undefined);
-    console.log(stores, videos);
 
     useEffect(() => {
         dispatch.app.getVideos();

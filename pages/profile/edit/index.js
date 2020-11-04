@@ -45,7 +45,6 @@ const AccountEdit = props => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const router = useRouter();
-    console.log(stream);
 
     const { profile } = props;
 

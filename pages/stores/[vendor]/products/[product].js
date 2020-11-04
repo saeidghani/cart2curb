@@ -42,7 +42,7 @@ const ProductView = props => {
                             <div className="flex items-center justify-between mb-16">
                                 <div className="flex flex-col justify-center">
                                     <h1 className="text-paragraph text-2xl text-label font-medium my-0">{product.name}</h1>
-                                    <span className="text-info text-lg font-normal">{product.category}</span>
+                                    <span className="text-info text-lg font-normal">{product.category.name}</span>
                                 </div>
                             </div>
                         </Col>
