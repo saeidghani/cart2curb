@@ -18,7 +18,7 @@ const { Option } = Select;
 const VendorPage = props => {
     const [form] = Form.useForm();
     const loader = useRef(null);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const loading = useSelector(state => state.loading.effects.app.getProducts);
     const [products, setProducts] = useState([]);
