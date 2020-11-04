@@ -91,7 +91,7 @@ const ProductView = props => {
                                     <DetailItem title={'Total Price'} value={`$${product.priceList.price + product.priceList.cost}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Stock'} value={getProperty(product.priceList, 'stock', '-', (data) => `$${data}`)}/>
+                                    <DetailItem title={'Stock'} value={getProperty(product.priceList, 'stock', '-')}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Store Address'} value={address.join(", ")}/>

@@ -61,7 +61,7 @@ const ProductView = props => {
                                     <DetailItem title={'Total Price'} value={`$${total}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Stock'} value={`$${product.priceList.stock}`}/>
+                                    <DetailItem title={'Stock'} value={`${product.priceList.stock}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Store'} value={storeProfile.name || '-'}/>
