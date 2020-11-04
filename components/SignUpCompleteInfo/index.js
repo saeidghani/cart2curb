@@ -86,37 +86,59 @@ const AccountInfo = props => {
     };
 
     const submitHandler = async (values) => {
-            const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram } = values;
-            const body = {
-                notifyMethod,
-                birthdate: moment(birthdate).format('YYYY-MM-DD'),
-                image: imageUrl,
+        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram } = values;
+        let wasStreamSet = false;
+        const body = {
+            notifyMethod,
+            birthdate: moment(birthdate).format('YYYY-MM-DD'),
+        }
+
+        if(imageUrl) {
+            body.image = imageUrl
+        }
+
+        const socialMedias = [];
+        if(facebook) {
+            socialMedias.push({
+                "username": facebook,
+                "provider": "facebook",
+                "streamOn": streamPreference === 'facebook'
+            })
+            if(streamPreference === 'facebook') {
+                wasStreamSet = true;
             }
-            const socialMedias = [
-                {
-                    "username": streamPreference === 'instagram' ? streamId : instagram,
-                    "provider": "instagram",
-                    "streamOn": streamPreference === 'instagram'
-                },
-                {
-                    "username": streamPreference === 'facebook' ? streamId : facebook,
-                    "provider": "facebook",
-                    "streamOn": streamPreference === 'facebook'
-                }
-            ];
-            if(!['facebook', 'instagram'].includes(streamPreference)) {
+        }
+        if(facebook) {
+            socialMedias.push({
+                "username": instagram,
+                "provider": "instagram",
+                "streamOn": streamPreference === 'instagram'
+            })
+            if(streamPreference === 'instagram') {
+                wasStreamSet = true;
+            }
+        }
+        if(streamPreference && !wasStreamSet) {
+            if(!streamId) {
+                message.error('Please enter your Username');
+                return false;
+            }
+
+            if(!wasStreamSet) {
                 socialMedias.push({
                     "username": streamId,
                     "provider": streamPreference,
                     "streamOn": true
                 })
             }
-            body.socialMedias = socialMedias;
+        }
+        body.socialMedias = socialMedias;
 
-            const res = await dispatch.profile.updateProfile(body)
-            if(res) {
-                router.push(routes.profile.index);
-            }
+
+        const res = await dispatch.profile.updateProfile(body)
+        if(res) {
+            router.push(routes.profile.index);
+        }
     }
 
     const checkValidation = (errorInfo) => {
