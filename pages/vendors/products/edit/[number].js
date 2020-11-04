@@ -94,6 +94,7 @@ const EditProduct = props => {
     const submitHandler = async (values) => {
         if(imagesList.length === 0) {
             message.warning('Please Upload some images form your product');
+            return false;
         }
         const images = imagesList.map(image => product.images.includes(image.url) ? image.url : `http://165.227.34.172:3003/api/v1/files/photos${image.response.data.path}`);
         const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
@@ -259,7 +260,15 @@ const EditProduct = props => {
                             {
                                 pattern: /^[0-9.]+$/,
                                 message: 'This Field should be number'
-                            }
+                            },
+                            ({getFieldValue}) => ({
+                                validator(rule, value) {
+                                    if (!value || (Number(value) <= 100 && Number(value) >= 0)) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject('Tax rate must be greater than 0 and less than 100');
+                                },
+                            }),
                         ]}>
                             <Input placeholder={'Tax'}/>
                         </Item>
