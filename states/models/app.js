@@ -107,6 +107,19 @@ export const app = {
             } catch(e) {
                 return e.response.status
             }
+        },
+        async contact(body) {
+            try {
+                const res = await api.app.contact(body);
+                if(res?.data?.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+                return false;
+            }
         }
 
     })

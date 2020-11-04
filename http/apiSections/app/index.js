@@ -10,7 +10,8 @@ export default class StoreApi extends ApiInstance {
             category: this.category,
             products: this.products,
             product: this.product,
-            videos: this.videos
+            videos: this.videos,
+            contact: this.contact
         }
     }
 
@@ -40,6 +41,10 @@ export default class StoreApi extends ApiInstance {
 
     videos() {
         return this.get('videos')
+    }
+
+    contact(body) {
+        return this.post('contact-us', body)
     }
 
 }
