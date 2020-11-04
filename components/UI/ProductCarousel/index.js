@@ -7,6 +7,23 @@ import './styles.scss';
 
 const ProductCarousel = ({slides, ...props}) => {
     const [slide, setSlide] = useState(0)
+    const [bottomSlide, setBottomSlide] = useState(0);
+
+    const changeSlideHandler = (index) => {
+        setSlide(index)
+        if(slides.length === 1) {
+            setBottomSlide(index);
+        } else if(slides.length === 2) {
+            setBottomSlide(0);
+        } else {
+            if((index + 1 >= slides.length - 2)) {
+                setBottomSlide(slides.length - 3);
+            } else {
+                setBottomSlide(index);
+            }
+        }
+    }
+
     return (
         <Row gutter={[16, 16]}>
             <Col xs={24}>
@@ -23,7 +40,7 @@ const ProductCarousel = ({slides, ...props}) => {
                     <Slider>
                         {slides.map((item, index) => {
                             return (
-                                <Slide key={item + index} index={index}>
+                                <Slide key={item + index} index={index} onClick={changeSlideHandler.bind(this, index)}>
                                     <div className="px-2 w-full h-full">
                                         <ImageWithZoom src={item} className={' border border-overline'} />
                                     </div>
@@ -38,6 +55,7 @@ const ProductCarousel = ({slides, ...props}) => {
                     visibleSlides={3}
                     totalSlides={slides.length}
                     step={1}
+                    currentSlide={bottomSlide}
                     naturalSlideWidth={128}
                     naturalSlideHeight={120}
                     hasMasterSpinner
@@ -46,7 +64,7 @@ const ProductCarousel = ({slides, ...props}) => {
                     <Slider>
                         {slides.map((item, index) => {
                             return (
-                                <Slide key={item + index + 'dots'} index={index} onClick={setSlide.bind(this, index)}>
+                                <Slide key={item + index + 'dots'} index={index} onClick={changeSlideHandler.bind(this, index)}>
                                     <div className="px-2 w-full h-full">
                                         <Image src={item} className={' border border-overline'}/>
                                     </div>
