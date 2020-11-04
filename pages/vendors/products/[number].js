@@ -19,6 +19,7 @@ const ProductView = props => {
     const screens = Grid.useBreakpoint();
     const {product, profile} = props;
     const dispatch = useDispatch();
+    console.log(props);
 
     const breadcrumb = [
         {
@@ -80,7 +81,7 @@ const ProductView = props => {
                         <Col xs={24}>
                             <Row gutter={[24, 32]}>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Weight'} value={getProperty(product.priceList, 'weight', '-', (data) => `${data}${product.weightUnit}`)}/>
+                                    <DetailItem title={'Weight'} value={product.weight ? getProperty(product, 'weight', '-', (data) => `${data}${product.weightUnit}`) : '-'}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Price per Weight'} value={getProperty(product.priceList, 'price', '-', (data) => `$${data}`)}/>
