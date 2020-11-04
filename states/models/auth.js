@@ -77,8 +77,17 @@ export const auth = {
                 }
                 return false;
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong', 5);
+
+                if(e.hasOwnProperty('response')) {
+                    const errors = e.response.data.errors;
+                    const errorCode = errors[0].errorCode;
+                    if(errorCode === 'EMAIL_EXISTS') {
+                        message.error('Email already exists, Please login into your account or use forget password')
+                    } else {
+
+                        message.error('An Error was occurred');
+                    }
+                }
 
                 return false;
             }
