@@ -10,7 +10,7 @@ import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import InfiniteScroll from "react-infinite-scroller";
 import Loader from "../../components/UI/Loader";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {InfoCircleOutlined, ShopOutlined} from "@ant-design/icons";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -24,6 +24,15 @@ const VendorPage = props => {
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(false);
     const dispatch = useDispatch();
+    const [hasError, setHasError] = useState(false);
+
+    const changeToPlaceholder = (source) => {
+        console.log('hh')
+        setHasError(true);
+
+        source.onError = '';
+        return true;
+    }
 
     const breadcrumb = [
         {
@@ -110,7 +119,14 @@ const VendorPage = props => {
         <Page title={'Vendor Details Page'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={8} lg={6}>
-                    <img src={vendor.image || ''} alt={'shop name'} className={'rounded-sm w-full'}/>
+
+                    {hasError ? (
+                        <div className="bg-card flex items-center justify-center text-4xl text-gray h-full" style={{ minHeight: 384, objectFit: 'cover', width: '100%', borderRadius: 2 }}>
+                            <ShopOutlined />
+                        </div>
+                    ) : (
+                        <img src={vendor.image} alt={'shop name'} className={'rounded-sm w-full'} onError={changeToPlaceholder}/>
+                    )}
                 </Col>
                 <Col xs={24} md={16} lg={18} className={'flex flex-col'}>
                     <h1 className={'text-type text-2xl mb-2 mt-0'}>{vendor.name}</h1>
@@ -171,7 +187,7 @@ const VendorPage = props => {
                             return (
                                 <Col xs={24} md={12} lg={8} key={p.id}>
                                     <StoreProductCard
-                                        imageURL={p.images ? p.images : '/images/temp/shop-item.png'}
+                                        imageURL={p.images}
                                         price={p.priceList.price || ""}
                                         name={p.name}
                                         vendor={vendor.name}

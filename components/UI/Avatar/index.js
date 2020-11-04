@@ -1,12 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Space } from 'antd';
 import { StarFilled, StarOutlined, UserOutlined } from '@ant-design/icons';
 
 const Avatar = props => {
+    const [hasError, setHasError] = useState(false);
+
+    const changeToPlaceholder = (source) => {
+        setHasError(true);
+
+        source.onError = '';
+        return true;
+    }
     return (
         <div className="flex items-center">
-            {props.src ? (
-                <img src={props.src} alt="profile" className="rounded-full" style={{ width: 50, height: 50}} />
+            {!hasError ? (
+                <img src={props.src} alt="profile" className="rounded-full" style={{ width: 50, height: 50}} onError={changeToPlaceholder} />
             ) : (
                 <div className={'rounded-full bg-card flex items-center justify-center'} style={{ width: 50, height: 50}}>
                     <UserOutlined />
