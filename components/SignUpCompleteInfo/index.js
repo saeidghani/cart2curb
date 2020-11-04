@@ -224,8 +224,8 @@ const AccountInfo = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={`${stream} ID`}>
-                                    <Input placeholder={`${stream} ID`} />
+                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
+                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
                                 </Item>
                             </Col>
 

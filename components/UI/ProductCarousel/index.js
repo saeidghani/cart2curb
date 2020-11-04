@@ -33,7 +33,7 @@ const ProductCarousel = ({slides, ...props}) => {
                     step={1}
                     currentSlide={slide}
                     naturalSlideWidth={400}
-                    naturalSlideHeight={450}
+                    naturalSlideHeight={384}
                     hasMasterSpinner
                     isPlaying={false}
                 >
@@ -41,8 +41,8 @@ const ProductCarousel = ({slides, ...props}) => {
                         {slides.map((item, index) => {
                             return (
                                 <Slide key={item + index} index={index} onClick={changeSlideHandler.bind(this, index)}>
-                                    <div className="px-2 w-full h-full">
-                                        <ImageWithZoom src={item} className={' border border-overline'} />
+                                    <div className="w-full h-full" style={{ padding: '0 6px'}}>
+                                        <ImageWithZoom src={item} className={' border border-overline'} style={{ maxHeight: 384 }} />
                                     </div>
                                 </Slide>
                             )
@@ -65,7 +65,7 @@ const ProductCarousel = ({slides, ...props}) => {
                         {slides.map((item, index) => {
                             return (
                                 <Slide key={item + index + 'dots'} index={index} onClick={changeSlideHandler.bind(this, index)}>
-                                    <div className="px-2 w-full h-full">
+                                    <div className="w-full h-full" style={{ padding: '0 6px'}}>
                                         <Image src={item} className={' border border-overline'}/>
                                     </div>
                                 </Slide>

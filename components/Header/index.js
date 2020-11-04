@@ -176,7 +176,7 @@ const Header = props => {
                                         <Col xs={24}>
                                             <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
                                                 <div className="cursor-pointer">
-                                                    <Avatar src={avatar} justImage/>
+                                                    <Avatar src={avatarImage} justImage/>
                                                 </div>
                                             </Link>
                                         </Col>

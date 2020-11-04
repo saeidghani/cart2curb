@@ -47,7 +47,7 @@ const ProductView = props => {
                             </div>
                         </Col>
                         <Col xs={24}>
-                            <Row gutter={[24, 32]}>
+                            <Row gutter={[24, 24]}>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Weight'} value={`${product.weight} ${product.weightUnit}`}/>
                                 </Col>
@@ -61,16 +61,13 @@ const ProductView = props => {
                                     <DetailItem title={'Total Price'} value={`$${total}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Stock'} value={`${product.priceList.stock}`}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
                                     <DetailItem title={'Store'} value={storeProfile.name || '-'}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Cost Price'} value={`$${product.priceList.cost}`}/>
                                 </Col>
                                 <Col xs={24}>
-                                    <div className="pt-6 flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                                    <div className="pt-11 flex flex-col lg:flex-row items-start lg:items-center justify-between">
                                         <div className="flex flex-col justify-center pb-4 lg:pb-0">
                                             <span className="text-xs text-muted pb-2">Quantity</span>
                                             <InputNumber min={1} max={10} defaultValue={1}/>

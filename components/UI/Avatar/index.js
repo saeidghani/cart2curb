@@ -7,13 +7,11 @@ const Avatar = props => {
 
     const changeToPlaceholder = (source) => {
         setHasError(true);
-
-        source.onError = '';
         return true;
     }
     return (
         <div className="flex items-center">
-            {!hasError ? (
+            {(!hasError && props.src) ? (
                 <img src={props.src} alt="profile" className="rounded-full" style={{ width: 50, height: 50}} onError={changeToPlaceholder} />
             ) : (
                 <div className={'rounded-full bg-card flex items-center justify-center'} style={{ width: 50, height: 50}}>

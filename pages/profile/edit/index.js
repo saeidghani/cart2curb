@@ -73,7 +73,7 @@ const AccountEdit = props => {
             email: profile.email || '',
             phone: profile.phone || '',
             birthdate: profile.birthdate ? moment(profile.birthdate || '') : '',
-            notifyMethod: profile.notifyMethod || '',
+            notifyMethod: profile.notifyMethod || undefined,
             streamPreference,
             streamId,
             instagram,
@@ -328,8 +328,8 @@ const AccountEdit = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={`${stream} ID`}>
-                                    <Input placeholder={`${stream} ID`} />
+                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
+                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
                                 </Item>
                             </Col>
 
