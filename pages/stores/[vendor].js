@@ -25,6 +25,7 @@ const VendorPage = props => {
     const [selectedCategory, setSelectedCategory] = useState(false);
     const dispatch = useDispatch();
     const [hasError, setHasError] = useState(false);
+    console.log(props);
 
     const changeToPlaceholder = (source) => {
         setHasError(true);
@@ -114,6 +115,12 @@ const VendorPage = props => {
         setPage(1);
     }
 
+    const address = vendor.address.addressLine2 ? [vendor.address.addressLine2] : [];
+    address.push(vendor.address.addressLine1);
+    address.push(vendor.address.city);
+    address.push(vendor.address.province);
+    address.push(vendor.address.country);
+
     return (
         <Page title={'Vendor Details Page'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
@@ -129,7 +136,7 @@ const VendorPage = props => {
                 </Col>
                 <Col xs={24} md={16} lg={18} className={'flex flex-col'}>
                     <h1 className={'text-type text-2xl mb-2 mt-0'}>{vendor.name}</h1>
-                    <span className="text-type mb-4 text-sm">{moment(vendor.openingTime).format('HH:mm A')} &mdash; {moment(vendor.closingTime).format('HH:mm A')}</span>
+                    <span className="text-type mb-4 text-sm">{address.join(", ")}</span>
                     <span className="text-overline md:mb-12 mb-8 text-sm capitalize">{vendor.storeType}</span>
                     <p className="mb-8 mt-0 text-muted text-xs">{vendor.description}</p>
                 </Col>
