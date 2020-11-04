@@ -25,12 +25,11 @@ const VendorPage = props => {
     const [selectedCategory, setSelectedCategory] = useState(false);
     const dispatch = useDispatch();
     const [hasError, setHasError] = useState(false);
-    console.log(props);
+    const [imageStore, setImageStore] = useState('');
 
     const changeToPlaceholder = (source) => {
+        console.log('im in source');
         setHasError(true);
-
-        source.onError = '';
         return true;
     }
 
@@ -46,6 +45,9 @@ const VendorPage = props => {
 
     const { vendor } = props;
 
+    useEffect(() => {
+        setImageStore(vendor.image);
+    }, [vendor])
 
     useEffect(async () => {
         if(hasMore) {
@@ -131,7 +133,7 @@ const VendorPage = props => {
                             <ShopOutlined />
                         </div>
                     ) : (
-                        <img src={vendor.image} alt={'shop name'} className={'rounded-sm w-full'} onError={changeToPlaceholder}/>
+                        <img src={imageStore} alt={'shop name'} className={'rounded-sm w-full'} onErrorCapture={changeToPlaceholder}/>
                     )}
                 </Col>
                 <Col xs={24} md={16} lg={18} className={'flex flex-col'}>

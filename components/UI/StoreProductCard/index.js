@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button } from 'antd';
 import {EyeOutlined, PictureOutlined} from '@ant-design/icons';
 import Link from "next/link";
@@ -6,11 +6,14 @@ import routes from "../../../constants/routes";
 
 const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, ...props}) => {
     const [hasError, setHasError] = useState(false);
+    const [imageProduct, setImageProduct] = useState('');
+
+    useEffect(() => {
+        setImageProduct(imageURL);
+    }, [imageURL])
 
     const changeToPlaceholder = (source) => {
         setHasError(true);
-
-        source.onError = '';
         return true;
     }
     return (
@@ -21,7 +24,7 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
                     <PictureOutlined  />
                 </div>
             ) : (
-                <img src={imageURL} alt="shop name" style={{ height: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
+                <img src={imageProduct} alt="shop name" style={{ height: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
             )}
             <div className="flex flex-col mt-3">
                 <div className="flex items-center justify-between mb-4">

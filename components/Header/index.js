@@ -14,11 +14,16 @@ import userTypes from "../../constants/userTypes";
 
 const Header = props => {
     const [visible, setVisible] = useState(false);
+    const [avatarImage, setAvatarImage] = useState('');
     const [isVendorPage, setIsVendorPage] = useState(false);
     const isAuthenticated = useIsAuthenticated();
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
     const userType = useAuthenticatedUserType()
+
+    useEffect(() => {
+        setAvatarImage(props.avatar);
+    }, [userType])
 
     useEffect(() => {
         if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
@@ -78,7 +83,7 @@ const Header = props => {
                             {router.route !== routes.vendors.account.changePassword && (
                                 <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
                                     <div className="ml-14 cursor-pointer">
-                                        <Avatar src={avatar} justImage/>
+                                        <Avatar src={avatarImage} justImage/>
                                     </div>
                                 </Link>
                             )}
