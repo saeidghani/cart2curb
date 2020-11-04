@@ -86,7 +86,7 @@ export const auth = {
         },
         async forgetPassword(body) {
             try {
-                const res = await api.put('auth/forgetPassword', body);
+                const res = await api.post('auth/forgetPassword', body);
                 if(res.data.success) {
                     message.success('Reset Link was sent to your email');
                 }
@@ -98,13 +98,10 @@ export const auth = {
         },
         async resetPassword(body) {
             try {
-                const res = await api.put('auth/resetPassword', body);
+                const res = await api.post('auth/resetPassword', body);
                 if(res.data.success) {
                     dispatch.auth.setResetToken({ token: body.token });
                     message.success('Your Password was changed!');
-                    emitter.emit('change-route', {
-                        path: routes.auth.resetPassword.submitted,
-                    })
                     return true;
                 } else {
                     message.error('Your Token is not valid or expired', 5);

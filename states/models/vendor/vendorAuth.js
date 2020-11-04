@@ -94,7 +94,7 @@ export const vendorAuth = {
         },
         async resetPassword(body) {
             try {
-                const res = await api.put('vendor/auth/resetPassword', body);
+                const res = await api.post('vendor/auth/resetPassword', body);
                 if(res.data.success) {
                     dispatch.vendorAuth.setResetToken({ token: body.token });
                     message.success('Your Password was changed!');
