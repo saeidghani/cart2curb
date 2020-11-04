@@ -165,7 +165,7 @@ const Orders = props => {
                         }
                     }
                 },
-                name: "-",
+                name: order.customer ? `${order.customer.fname} ${order.customer.lname}` : '-',
                 data: order.products.map((item, index) => {
                     return {
                         key: item._id,
