@@ -149,13 +149,12 @@ export async function getServerSideProps({ req, res, params }) {
             pageNumber: 1,
             pageSize: 6,
             storeId: params.vendor,
-            category: response.category
+            category: response.category._id
         })
 
         const storeResponse = await store.dispatch.app.getStore(params.vendor);
 
         storeProfile = storeResponse
-
         related = relatedResponse.data.filter(item => item._id !== product._id);
         product = response;
     } catch(e) {

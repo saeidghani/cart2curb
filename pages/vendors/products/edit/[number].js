@@ -78,7 +78,7 @@ const EditProduct = props => {
             weight: weight || '',
             weightUnit: weightUnit || '',
             unitPrice: priceList.price || '',
-            category: category || '',
+            category: category?.name || '',
             tax: tax || '',
             description: description || '',
             costPrice: priceList.cost || '',

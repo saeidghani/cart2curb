@@ -51,7 +51,7 @@ const ProductView = props => {
                             <div className="flex items-center justify-between mb-16">
                                 <div className="flex flex-col justify-center">
                                     <h1 className="text-paragraph text-2xl text-label font-medium my-0">{product.name}</h1>
-                                    <span className="text-overline text-lg font-normal">{product.category}</span>
+                                    <span className="text-overline text-lg font-normal">{product.category.name}</span>
                                 </div>
                                 <div className="actions flex items-center">
                                     <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
