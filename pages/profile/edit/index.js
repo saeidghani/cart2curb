@@ -102,32 +102,51 @@ const AccountEdit = props => {
 
     const submitHandler = async (values) => {
         const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
+        let wasStreamSet = false;
         const body = {
             notifyMethod,
             birthdate: moment(birthdate).format('YYYY-MM-DD'),
-            image: imageUrl,
             firstName,
             lastName,
             phone
         }
-        const socialMedias = [
-            {
-                "username": streamPreference === 'instagram' ? streamId : instagram,
-                "provider": "instagram",
-                "streamOn": streamPreference === 'instagram'
-            },
-            {
-                "username": streamPreference === 'facebook' ? streamId : facebook,
+        if(imageUrl) {
+            body.image = imageUrl
+        }
+        const socialMedias = [];
+        if(facebook) {
+            socialMedias.push({
+                "username": facebook,
                 "provider": "facebook",
                 "streamOn": streamPreference === 'facebook'
-            }
-        ];
-        if(!['facebook', 'instagram'].includes(streamPreference)) {
-            socialMedias.push({
-                "username": streamId,
-                "provider": streamPreference,
-                "streamOn": true
             })
+            if(streamPreference === 'facebook') {
+                wasStreamSet = true;
+            }
+        }
+        if(facebook) {
+            socialMedias.push({
+                "username": instagram,
+                "provider": "instagram",
+                "streamOn": streamPreference === 'instagram'
+            })
+            if(streamPreference === 'instagram') {
+                wasStreamSet = true;
+            }
+        }
+        if(streamPreference && !wasStreamSet) {
+            if(!streamId) {
+                message.error('Please enter your Username');
+                return false;
+            }
+
+            if(!wasStreamSet) {
+                socialMedias.push({
+                    "username": streamId,
+                    "provider": streamPreference,
+                    "streamOn": true
+                })
+            }
         }
         body.socialMedias = socialMedias;
 
