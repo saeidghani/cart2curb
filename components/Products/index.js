@@ -39,7 +39,7 @@ const Products = ({vendor, ...props}) => {
             if(formFields.search) {
                 body.search = formFields.search;
             }
-            if(formFields.category) {
+            if(formFields.category && formFields.category !== 'all') {
                 body.category = formFields.category;
             }
             try {
@@ -202,6 +202,7 @@ const Products = ({vendor, ...props}) => {
                             <Col lg={9} xs={24}>
                                 <Item name={'category'} label={'Categories'}>
                                     <Select placeholder={'Categories'} loading={categoryLoading}>
+                                        <Option value={'all'}>All</Option>
                                         {categories && categories.map(cat => {
                                             return (
                                                 <Option key={cat._id} value={cat._id}>{cat.name}</Option>
