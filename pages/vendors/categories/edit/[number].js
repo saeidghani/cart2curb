@@ -88,7 +88,8 @@ const EditCategory = props => {
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'parent'} label={'Parent Category'}>
                             <Select placeholder={'Select Parent Category'} loading={parentLoading}>
-                                {parentCategories && parentCategories.map((item, index) => {
+                                <Option value={''}>None</Option>
+                                {parentCategories && parentCategories.filter(item => item._id !== props.category._id).map((item, index) => {
                                     return (
                                         <Option value={item._id} key={item._id}>{item.name}</Option>
                                     )

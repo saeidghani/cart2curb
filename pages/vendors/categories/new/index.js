@@ -76,6 +76,7 @@ const NewCategory = props => {
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'parent'} label={'Parent Category'}>
                             <Select placeholder={'Select Parent Category'} loading={parentLoading}>
+                                <Option value={''}>None</Option>
                                 {parentCategories && parentCategories.map((item, index) => {
                                     return (
                                         <Option value={item._id} key={item._id}>{item.name}</Option>
