@@ -46,19 +46,19 @@ const GuestCheckout = props => {
                             <Row>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Cart Price</span>
-                                    <span className="text-type font-medium">$12.65</span>
+                                    <span className="text-type font-medium">${cart.cartPrice}</span>
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
-                                    <span className="text-overline">Subtitution</span>
-                                    <span className="text-type font-medium">$6.20</span>
+                                    <span className="text-overline">Service Fee</span>
+                                    <span className="text-type font-medium">${cart.serviceFee}</span>
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Delivery</span>
-                                    <span className="text-type font-medium">$8.00</span>
+                                    <span className="text-type font-medium">${cart.deliveryCost}</span>
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Promo Code</span>
-                                    <span className="text-type font-medium">-${cart.cartPrice}</span>
+                                    <span className="text-type font-medium">-{cart.promo.hasOwnProperty('off') ? `$${(Number(cart.promo.off) * Number(cart.cartPrice) / 100).toFixed(2)}` : ""}</span>
                                 </Col>
                                 <Divider className={'my-2'}/>
                                 <Col span={24} className="flex items-center justify-between py-3">
