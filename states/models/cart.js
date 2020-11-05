@@ -1,4 +1,5 @@
 import {api} from '../../lib/api';
+import {message} from "antd";
 
 export const cart = {
     state: {
@@ -17,6 +18,35 @@ export const cart = {
         async getCart(options) {
 
             try {
+                const res = await api.get('cart', options);
+
+                if(res.data.success) {
+                    dispatch.cart.setCart({
+                        cart: res.data.data
+                    })
+
+                    return res.data.data;
+                }
+
+                return false;
+            } catch (e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response.data);
+                }
+                console.log(e);
+
+                return false;
+            }
+        },
+        async getClientCart(query, rootState) {
+            try {
+                const token = rootState.auth.token;
+                const options = {
+                    headers: {}
+                }
+                if(token) {
+                    options.headers.Authorization = `Bearer ${token}`
+                }
                 const res = await api.get('cart', options);
 
                 if(res.data.success) {
@@ -89,7 +119,6 @@ export const cart = {
         async checkAddress(body) {
             try {
                 const res = await api.post('cart/check-address', body);
-                console.log(res);
                 if(res.data.success) {
                     return true;
                 } else {
@@ -140,5 +169,27 @@ export const cart = {
                 return false;
             }
         },
+        async promoTip(body) {
+            try {
+                const res = await api.post('cart/promotip', body);
+                if(res.data.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    const errors = e.response.data.errors;
+                    const errorCode = errors[0].errorCode;
+                    if(errorCode === 'INVALID_PROMO') {
+                        message.error('Promo code is invalid')
+                    } else {
+                        message.error('An Error was occurred');
+                    }
+                }
+
+                return false;
+            }
+        }
     })
 }

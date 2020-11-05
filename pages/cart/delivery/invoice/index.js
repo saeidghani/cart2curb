@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Button,
     Input,
@@ -10,7 +10,7 @@ import {
     Space,
     TimePicker,
     Radio,
-    Table
+    Table, message
 } from 'antd';
 
 import Page from '../../../../components/Page';
@@ -19,21 +19,41 @@ import DetailItem from "../../../../components/UI/DetailItem";
 import cookie from "cookie";
 import routes from "../../../../constants/routes";
 import {getStore} from "../../../../states";
+import Link from "next/link";
+import moment from "moment";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const Invoices = props => {
     const [form] = Form.useForm();
+    const [orderDate, setOrderDate] = useState(moment());
+    const [deliveryTime, setDeliveryTime] = useState(moment(props.cart.deliveryTime || ''));
+    const [tip, setTip] = useState(10);
+    const [promoPrice, setPromoPrice] = useState(props.cart.priceAfterPromoTip)
+    const loading = useSelector(state => state.loading.effects.cart.promoTip);
+    const dispatch = useDispatch();
+    const router = useRouter();
+
+    const { profile, stores, cart } = props;
+
+    const changeTipHandler = (value) => {
+        setTip(Number(value));
+        form.setFieldsValue({
+            tip: Number(value)
+        })
+    }
 
     const breadcrumb = [
         {
             title: 'Cart',
-            href: '/cart'
+            href: routes.cart.index
         },
         {
             title: 'Delivery',
-            href: '/cart/delivery'
+            href: routes.cart.delivery
         },
         {
             title: 'Invoice'
@@ -63,15 +83,66 @@ const Invoices = props => {
         },
     ];
 
-    const fakeData = [
+    const data = [
         {
             key: 'cart',
-            items: 10,
-            price: '$160.30',
-            delivery: '$15.20',
-            total: '$175.50'
+            items: cart.totalQuantity,
+            price: `$${cart.cartPrice}`,
+            delivery: `$${cart.deliveryCost}`,
+            total: `$${cart.totalPrice}`
         }
     ]
+
+    const transformed = cart.address.addressLine2 ? [cart.address.addressLine2] : [];
+    transformed.push(cart.address.addressLine1);
+    transformed.push(cart.address.city);
+    transformed.push(cart.address.province);
+    transformed.push(cart.address.country);
+
+    const applyPromoHandler = async () => {
+        const value = form.getFieldValue('promo');
+        if(!value) {
+            message.info('Please enter Promo code first');
+            return false;
+        }
+
+        const body = {
+            promoCode: value
+        }
+
+        const res = await dispatch.cart.promoTip(body)
+        if(res) {
+            const cart = await dispatch.cart.getClientCart();
+            if(cart) {
+                setPromoPrice(cart.priceAfterPromoTip)
+            }
+
+            message.success('Promo Code applied!')
+        }
+    }
+
+    const submitHandler = async (values) => {
+
+        const body = {
+            tip,
+        }
+        if(values.promo) {
+            body.promoCode = values.promo
+        }
+
+        const res = await dispatch.cart.promoTip(body)
+        if(res) {
+            message.success('Cart Information updated successfully!')
+            router.push(routes.cart.checkout);
+        } else {
+            message.error('An Error was occurred');
+        }
+    }
+
+    const checkValidation = (errorInfo) => {
+        message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
+
 
     return (
         <Page title={'Checkout'} breadcrumb={breadcrumb}>
@@ -81,7 +152,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Date'} value={'2020.02.20'}/>
+                    <DetailItem title={'Date'} value={orderDate.format('YYYY-MM-DD')}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
                     <DetailItem title={'Company'} value={'Cart2Curb'}/>
@@ -94,53 +165,57 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Order Number'} value={'#21'}/>
+                    <DetailItem title={'Order Number'} value={cart._id}/>
                 </Col>
 
                 <div className="w-full px-3">
-                    <Divider className={'my-8'}/>
+                    <Divider className={'mb-5 mt-6'}/>
                 </div>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Customer Name'} value={'Barry Wood'}/>
+                    <DetailItem title={'Customer Name'} value={`${profile.firstName} ${profile.lastName}`}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Phone Number'} value={'+1 234 (567) 8910'}/>
+                    <DetailItem title={'Phone Number'} value={profile.phone}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Email Address'} value={'Barry@gmail.com'}/>
+                    <DetailItem title={'Email Address'} value={profile.email}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Order Date'} value={'02.02.2020'}/>
+                    <DetailItem title={'Order Date'} value={orderDate.format('YYYY-MM-DD')}/>
                 </Col>
 
                 <Col xs={24} md={12}>
-                    <DetailItem title={'Address'} value={'Address Line 2, Address Line 2, City, State, Country, Zip Code'}/>
+                    <DetailItem title={'Address'} value={transformed.join(", ")}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Scheduled Delivery Time'} value={'02.05.2020 | 12:30 - 13:30'}/>
+                    <DetailItem title={'Scheduled Delivery Time'} value={`${deliveryTime.format('YYYY-MM-DD')} | ${deliveryTime.format("HH:mm")}`}/>
                 </Col>
                 <Col xs={24}>
-                    <DetailItem title={'Comments'} value={'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.'}/>
+                    <DetailItem title={'Comments'} value={cart.note}/>
                 </Col>
 
                 <div className="w-full px-3">
-                    <Divider className={'my-8'}/>
+                    <Divider className={'mb-5 mt-6'}/>
                 </div>
-
-                <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Store #1 Name'} value={'Store name'}/>
-                </Col>
+                {stores.map((store, index) => {
+                    return (
+                        <Col xs={24} md={12} lg={6} key={store._id}>
+                            <DetailItem title={`Store #${index + 1} Name`} value={store.name}/>
+                        </Col>
+                    )
+                })}
 
                 <Col xs={24}>
                     <Table
                         pagination={false}
                         columns={columns}
-                        dataSource={fakeData}
+                        dataSource={data}
+                        scroll={{ x: 1000 }}
                     />
                 </Col>
                 <Col span={24}>
@@ -148,20 +223,25 @@ const Invoices = props => {
                         form={form}
                         layout="vertical"
                         className="flex flex-col"
+                        initialValues={{
+                            tip,
+                        }}
+                        onFinish={submitHandler}
+                        onFinishFailed={checkValidation}
                     >
                         <Row gutter={24}>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'tip'} label={'Tip'}>
-                                    <Input placeholder={'Tip'}/>
+                                    <Input placeholder={`${tip}%`} onChange={e => changeTipHandler(e.target.value)}/>
                                 </Item>
                             </Col>
-                            <Col lg={16} md={12} xs={24} className={'md:pt-7.5 mb-6'}>
+                            <Col lg={16} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
-                                    <Button className={'w-16'} type={'primary'}>10%</Button>
-                                    <Button className={'w-16'} danger>15%</Button>
-                                    <Button className={'w-16'} danger>20%</Button>
-                                    <Button className={'w-16'} danger>25%</Button>
-                                    <Button className={'w-22'} danger>Custom</Button>
+                                    <Button className={'w-16'} type={tip === 10 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10)}>10%</Button>
+                                    <Button className={'w-16'} type={tip === 15 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15)}>15%</Button>
+                                    <Button className={'w-16'} type={tip === 20 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20)}>20%</Button>
+                                    <Button className={'w-16'} type={tip === 25 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25)}>25%</Button>
+                                    <Button className={'w-22'} type={![10, 15, 20, 25].includes(tip) ? 'primary' : 'normal'} danger>Custom</Button>
                                 </Space>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -169,27 +249,29 @@ const Invoices = props => {
                                     <Input placeholder={'Promo'}/>
                                 </Item>
                             </Col>
-                            <Col lg={8} md={12} xs={24} className={'md:pt-7.5'}>
-                                <Button className={'w-32'} danger size={'lg'}>Apply</Button>
+                            <Col lg={8} md={12} xs={24} className={'md:pt-7'}>
+                                <Button className={'w-32'} danger size={'lg'} onClick={applyPromoHandler}>Apply</Button>
                             </Col>
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex flex-col pl-4 justify-end">
-                                    <h1 className="text-right text-4.5xl text-paragraph font-medium mb-2 mt-0">$$$</h1>
-                                    <span className="text-xs text-header">+ $15 Service Fee</span>
+                                    <h1 className="text-right text-4.5xl text-paragraph font-medium mb-2 mt-0">${promoPrice}</h1>
+                                    <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
                                 </div>
                             </Col>
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'}>
+                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                                         Next
                                     </Button>
                                 </Item>
                                 <Item>
-                                    <Button danger className={'w-32'}>
-                                        Prev
-                                    </Button>
+                                    <Link href={routes.cart.delivery}>
+                                        <Button danger className={'w-32'}>
+                                            Prev
+                                        </Button>
+                                    </Link>
                                 </Item>
                             </Col>
                         </Row>
@@ -207,6 +289,7 @@ export async function getServerSideProps({ req, res }) {
     let token = cookies.token
     let userType = cookies.type;
 
+    let profile = {};
     let cart = {}
     let stores = [];
     if (userType && userType !== 'customer') {
@@ -214,6 +297,7 @@ export async function getServerSideProps({ req, res }) {
         res.end();
         return {
             props: {
+                profile,
                 cart,
                 stores,
             }
@@ -222,18 +306,46 @@ export async function getServerSideProps({ req, res }) {
     const store = getStore();
     try {
         let response;
-        if(token) {
-            response = await store.dispatch.cart.getCart({
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-        } else {
-            response = await store.dispatch.cart.getCart();
+        response = await store.dispatch.cart.getCart({
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const profileRes = await store.dispatch.profile.getProfile({
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        if(profileRes) {
+            profile = profileRes;
         }
 
         if(response) {
             cart = response;
+            if(!cart.products || cart.products.length === 0) {
+                res.writeHead(307, { Location: routes.cart.index });
+                res.end();
+                return {
+                    props: {
+                        profile,
+                        cart,
+                        stores,
+                    }
+                };
+            }
+            if(!cart.deliveryTime || !cart.address) {
+                res.writeHead(307, { Location: routes.cart.delivery });
+                res.end();
+                return {
+                    props: {
+                        profile,
+                        cart,
+                        stores,
+                    }
+                };
+            }
 
             if(cart.hasOwnProperty('stores')) {
                 for(let i in cart.stores) {
@@ -254,6 +366,7 @@ export async function getServerSideProps({ req, res }) {
 
     return {
         props: {
+            profile,
             cart,
             stores,
         }
