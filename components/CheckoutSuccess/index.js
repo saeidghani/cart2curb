@@ -5,13 +5,14 @@ import {
     Divider,
 } from 'antd';
 
-import Page from '../../../../../components/Page';
-import {HeaderLogoIcon} from "../../../../../components/icons";
-import DetailItem from "../../../../../components/UI/DetailItem";
+import Page from '../Page';
+import {HeaderLogoIcon} from "../icons";
+import DetailItem from "../UI/DetailItem";
 import Link from "next/link";
-import routes from "../../../../../constants/routes";
+import routes from "../../constants/routes";
+import moment from "moment";
 
-const Invoices = props => {
+const CheckoutSuccess = props => {
     const breadcrumb = [
         {
             title: 'Cart',
@@ -34,7 +35,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Date'} value={'2020.02.20'}/>
+                    <DetailItem title={'Date'} value={moment().format("YYYY-MM-DD")}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
                     <DetailItem title={'Company'} value={'Cart2Curb'}/>
@@ -47,7 +48,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Order Number'} value={'#21'}/>
+                    <DetailItem title={'Order Number'} value={props.cart._id}/>
                 </Col>
 
                 <div className="w-full px-3">
@@ -71,4 +72,4 @@ const Invoices = props => {
     )
 }
 
-export default Invoices;
+export default CheckoutSuccess;

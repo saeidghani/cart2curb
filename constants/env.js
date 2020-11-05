@@ -8,5 +8,8 @@ export default Object.freeze({
     },
     app: {
         title: 'Cart 2 Curb'
+    },
+    stripe: {
+        key: 'pk_test_51Hbq1NB7TliuUA9h29MCPiNfNDZLIvhMyhXWXFJkwDGybQ0vgjSYaZgf09mcRqjJqDHSZFYOALFIP0P4K1keAmjS00JZ9uQinT'
     }
 });

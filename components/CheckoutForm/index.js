@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+    useElements,
     useStripe,
     CardNumberElement,
     CardCvcElement,
@@ -12,14 +13,58 @@ import {useDispatch} from "react-redux";
 
 const { Item } = Form;
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ onComplete, backHref }) => {
     const [form] = Form.useForm();
     const stripe = useStripe();
-    const disaptch = useDispatch();
+    const elements = useElements();
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
 
     const submitHandler = async (values) => {
-        console.log(values);
-        console.log(stripe);
+        const formFields = form.getFieldsValue()
+        const cardNumber = elements.getElement(CardNumberElement);
+        setLoading(true);
+        const { error, paymentMethod } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: cardNumber,
+            billing_details: {
+                name: `${formFields.firstName} ${formFields.lastName}`
+            }
+        })
+
+        if(error) {
+            message.error(error.message);
+            setLoading(false);
+            return false;
+        } else {
+            const clientSecret = await dispatch.cart.checkout({
+                paymentMethod: paymentMethod.id
+            })
+            if(clientSecret) {
+                const payment = await stripe.handleCardAction(clientSecret);
+                if(payment.error) {
+                    message.error('Your card was not authenticated, please try again')
+                    setLoading(false);
+                    return false;
+                } else {
+                    if(payment.paymentIntent.status === "requires_confirmation") {
+                        const response = await dispatch.cart.confirmCheckout({
+                            paymentIntentId: payment.paymentIntent.id
+                        })
+
+                        if(response) {
+                            setLoading(false);
+                            onComplete(true);
+
+                        } else {
+                            message.error('An Error was occurred, please try again later');
+                            setLoading(false);
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     const checkValidation = errorInfo => {
@@ -59,12 +104,21 @@ const CheckoutForm = () => {
                     </Item>
                 </Col>
                 <Col md={12} xs={24}>
-                    <Item name={'firstname'} label={'First Name'}>
+                    <Item name={'firstName'} label={'First Name'} rules={[
+                        {
+                            required: true,
+                            message: 'First Name is required',
+                        },
+                        {
+                            min: 3,
+                            message: "First Name should be at least 3 characters"
+                        }
+                    ]}>
                         <Input placeholder="First Name" />
                     </Item>
                 </Col>
                 <Col md={12} xs={24}>
-                    <Item name={'cvv'} label={'CVV'}>
+                    <Item name={'cvc'} label={'CVC'}>
                         <CardCvcElement
                             options={{
                                 style: {
@@ -88,7 +142,16 @@ const CheckoutForm = () => {
                     </Item>
                 </Col>
                 <Col md={12} xs={24}>
-                    <Item name={'lastname'} label={'Last Name'}>
+                    <Item name={'lastName'} label={'Last Name'} rules={[
+                        {
+                            required: true,
+                            message: 'Last Name is required',
+                        },
+                        {
+                            min: 3,
+                            message: "Last Name should be at least 3 characters"
+                        }
+                    ]}>
                         <Input placeholder="Last Name" />
                     </Item>
                 </Col>
@@ -119,12 +182,12 @@ const CheckoutForm = () => {
 
                 <Col md={12} xs={24} className={'flex items-end flex-row-reverse'}>
                     <Item className={'mb-0'}>
-                        <Button type="primary" className={'w-32 ml-5'}>
+                        <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                             Pay
                         </Button>
                     </Item>
                     <Item className={'mb-0'}>
-                        <Link href={routes.cart.invoice.index}>
+                        <Link href={backHref || routes.cart.invoice.index}>
 
                             <Button danger className={'w-32'}>
                                 Prev

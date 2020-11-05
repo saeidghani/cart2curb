@@ -190,6 +190,34 @@ export const cart = {
 
                 return false;
             }
+        },
+        async checkout(body) {
+            try {
+                const res = await api.post('cart/checkout', body);
+                if(res.data.success) {
+                    return res.data.data.clientSecret;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+
+                return false;
+            }
+        },
+        async confirmCheckout(body) {
+            try {
+                const res = await api.post('cart/checkout/confirm', body);
+                if(res.data.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+
+                return false;
+            }
         }
     })
 }

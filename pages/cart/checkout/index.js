@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Button,
     Input,
@@ -17,14 +17,20 @@ import routes from "../../../constants/routes";
 import {getStore} from "../../../states";
 import Link from "next/link";
 import CheckoutForm from "../../../components/CheckoutForm";
+import env from "../../../constants/env";
+import CheckoutSuccess from "../../../components/CheckoutSuccess";
 
 const { Item } = Form;
-const stripePromise = loadStripe('pk_test_51Hbq1NB7TliuUA9h29MCPiNfNDZLIvhMyhXWXFJkwDGybQ0vgjSYaZgf09mcRqjJqDHSZFYOALFIP0P4K1keAmjS00JZ9uQinT');
 
-const GuestCheckout = props => {
+const stripePromise = loadStripe(env.stripe.key);
 
+const Checkout = props => {
+    const [completed, setCompleted] = useState(false);
     const { cart } = props;
 
+    const completeCheckoutHandler = (value) => {
+        setCompleted(value)
+    }
 
     const breadcrumb = [
         {
@@ -40,7 +46,9 @@ const GuestCheckout = props => {
         }
     ]
 
-    return (
+    return completed ? (
+        <CheckoutSuccess cart={cart}/>
+    ) : (
         <Page title={'Guest Cart'} breadcrumb={breadcrumb}>
             <h2 className="text-type font-medium text-base mb-6">Credit Card Info</h2>
             <Row gutter={[24, 24]} align={'stretch'}>
@@ -62,7 +70,7 @@ const GuestCheckout = props => {
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Promo Code</span>
-                                    <span className="text-type font-medium">-{cart.promo.hasOwnProperty('off') ? `$${(Number(cart.promo.off) * Number(cart.cartPrice) / 100).toFixed(2)}` : ""}</span>
+                                    <span className="text-type font-medium">-{cart.hasOwnProperty('promo') && cart.promo?.hasOwnProperty('off') ? `$${(Number(cart.promo.off) * Number(cart.cartPrice) / 100).toFixed(2)}` : ""}</span>
                                 </Col>
                                 <Divider className={'my-2'}/>
                                 <Col span={24} className="flex items-center justify-between py-3">
@@ -76,7 +84,7 @@ const GuestCheckout = props => {
 
                 <Elements stripe={stripePromise}>
                     <Col md={16} xs={24}>
-                        <CheckoutForm/>
+                        <CheckoutForm onComplete={completeCheckoutHandler}/>
                     </Col>
                 </Elements>
             </Row>
@@ -146,4 +154,4 @@ export async function getServerSideProps({ req, res }) {
 
 }
 
-export default GuestCheckout;
+export default Checkout;
