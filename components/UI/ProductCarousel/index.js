@@ -32,7 +32,7 @@ const ProductCarousel = ({slides, ...props}) => {
                     totalSlides={slides.length}
                     step={1}
                     currentSlide={slide}
-                    naturalSlideWidth={400}
+                    naturalSlideWidth={396}
                     naturalSlideHeight={384}
                     hasMasterSpinner
                     isPlaying={false}
