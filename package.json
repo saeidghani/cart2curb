@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev2": "next dev -p 3002",
     "dev": "PORT=3002 && next dev -p $PORT",
     "build": "next build",
     "start": "PORT=3002 && next start -p $PORT"
