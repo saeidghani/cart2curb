@@ -109,17 +109,17 @@ const VendorPage = props => {
 
     const selectCategoryHandler = (catId) => {
         if(catId !== selectedCategory) {
-            setProducts([]);
             setSelectedCategory(catId);
             setPage(1)
+            isIntersecting = false;
         }
     }
 
     const searchHandler = (values) => {
-        setProducts([]);
         setSearch(values.search);
         setType(values.storeType);
         setPage(1);
+        isIntersecting = false;
     }
 
     const address = vendor.address.addressLine2 ? [vendor.address.addressLine2] : [];
@@ -198,7 +198,7 @@ const VendorPage = props => {
                         )}
                         {products.map(p => {
                             return (
-                                <Col xs={24} md={12} lg={8} key={p.id}>
+                                <Col xs={24} md={12} lg={8} key={p._id}>
                                     <StoreProductCard
                                         imageURL={p.images}
                                         price={p.priceList.price || ""}

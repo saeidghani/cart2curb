@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useRouter } from "next/router";
-import {Row, Col, Button, InputNumber} from 'antd';
+import {Row, Col, Button, InputNumber, message} from 'antd';
 
 import DetailItem from "../../../../components/UI/DetailItem";
 import Page from "../../../../components/Page";
@@ -9,9 +9,13 @@ import ProductCarousel from "../../../../components/UI/ProductCarousel";
 import Link from "next/link";
 import ProductCard from "../../../../components/UI/ProductCard";
 import {getStore} from "../../../../states";
+import {useDispatch, useSelector} from "react-redux";
 
 const ProductView = props => {
     const router = useRouter();
+    const [quantity, setQuantity] = useState(1);
+    const loading = useSelector(state => state.loading.effects.cart.addToCart);
+    const dispatch = useDispatch();
 
     const { product, related, storeProfile } = props;
 
@@ -28,8 +32,24 @@ const ProductView = props => {
             title: product.name
         }
     ]
-    const total = product.priceList.price + product.priceList.cost;
-    const tax = (total * product.tax / 100).toFixed(2)
+    const total = product.priceList.price;
+    const tax = (quantity * total * product.tax / 100).toFixed(2)
+
+    const addToCartHandler = async () => {
+        const body = {
+            productId: product._id,
+            quantity
+        }
+
+        const res = await dispatch.cart.addToCart(body)
+        if(res) {
+            message.success('Product added to your cart');
+            setQuantity(1);
+        } else {
+            message.error('An Error was occurred');
+        }
+    }
+
     return (
         <Page title={product.name} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
@@ -70,14 +90,14 @@ const ProductView = props => {
                                     <div className="pt-11 flex flex-col lg:flex-row items-start lg:items-center justify-between">
                                         <div className="flex flex-col justify-center pb-4 lg:pb-0">
                                             <span className="text-xs text-muted pb-2">Quantity</span>
-                                            <InputNumber min={1} max={10} defaultValue={1}/>
+                                            <InputNumber min={1} max={10} value={quantity} onChange={setQuantity}/>
                                         </div>
 
                                         <div className={'flex flex-col lg:flex-row items-start lg:items-center'}>
                                             <span className="text-paragraph font-bold text-base pr-4">${tax} TAX</span>
                                             <div className="bg-primary py-2 rounded-sm flex flex-row items-center">
-                                                <span className="text-white px-8 py-1.5 border-r border-white font-bold text-base flex">${(Number(total) + Number(tax)).toFixed(2)} TOTAL</span>
-                                                <Button type={'link'} className={' px-8 py-1.5 text-white hover:text-white font-bold text-base'}>Add To Cart</Button>
+                                                <span className="text-white px-8 py-1.5 border-r border-white font-bold text-base flex">${(quantity * Number(total) + Number(tax)).toFixed(2)} TOTAL</span>
+                                                <Button type={'link'} className={' px-8 py-1.5 text-white hover:text-white focus:text-white focus:bg-transparent font-bold text-base flex items-center without-before'} onClick={addToCartHandler} loading={loading}>Add To Cart</Button>
                                             </div>
 
                                         </div>

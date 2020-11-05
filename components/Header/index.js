@@ -9,7 +9,7 @@ import './styles.scss';
 import {useAuthenticatedUserType, useIsAuthenticated, useIsAuthRoute} from "../../hooks/auth";
 import {useRouter} from "next/router";
 import Avatar from "../UI/Avatar";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import userTypes from "../../constants/userTypes";
 
 const Header = props => {
@@ -20,6 +20,13 @@ const Header = props => {
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
     const userType = useAuthenticatedUserType()
+    const dispatch = useDispatch();
+    const token = useSelector(state => state.auth.token);
+    const cart = useSelector(state => state.cart.cart);
+
+    useEffect(() => {
+        dispatch.cart.getClientCart();
+    }, [token, cart])
 
     useEffect(() => {
         if(userType) {
@@ -80,7 +87,7 @@ const Header = props => {
                 <div className="hidden md:flex flex-row items-center">
                     {!isVendorPage && (
                         <Link href={routes.cart.index}>
-                            <Badge count={5} className={'cursor-pointer'}>
+                            <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
                                 <HeaderNotificationIcon />
                             </Badge>
                         </Link>
@@ -166,7 +173,7 @@ const Header = props => {
                                                 Cart
                                             </a>
 
-                                            <Badge count={5} className={'cursor-pointer'}>
+                                            <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
                                                 <HeaderNotificationIcon />
                                             </Badge>
                                         </div>

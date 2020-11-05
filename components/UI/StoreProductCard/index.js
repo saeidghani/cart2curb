@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import { Button } from 'antd';
+import {Button, message} from 'antd';
 import {EyeOutlined, PictureOutlined} from '@ant-design/icons';
 import Link from "next/link";
 import routes from "../../../constants/routes";
+import {useDispatch, useSelector} from "react-redux";
 
 const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, ...props}) => {
     const [hasError, setHasError] = useState(false);
     const [imageProduct, setImageProduct] = useState('');
+    const loading = useSelector(state => state.loading.effects.cart.addToCart);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setImageProduct(imageURL);
@@ -16,6 +19,21 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
         setHasError(true);
         return true;
     }
+
+    const addToCartHandler = async () => {
+        const body = {
+            productId,
+            quantity: 1,
+        }
+
+        const res = await dispatch.cart.addToCart(body)
+        if(res) {
+            message.success('Product added to your cart');
+        } else {
+            message.error('An Error was occurred');
+        }
+    }
+
     return (
         <div className="flex flex-col">
 
@@ -38,7 +56,7 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
                     <Link href={routes.stores.product()} as={routes.stores.product(vendorId, productId)}>
                     <Button danger icon={<EyeOutlined style={{ fontSize: 18}} />} className={'flex items-center font-bold justify-center mr-2 rounded-sm'} style={{ width: 50, height: 50}}/>
                     </Link>
-                    <Button type={'primary'} style={{ height: 50}} className={'flex-grow flex items-center justify-center font-medium rounded-sm'}>Add to Cart</Button>
+                    <Button type={'primary'} style={{ height: 50}} className={'flex-grow flex items-center justify-center font-medium rounded-sm'} onClick={addToCartHandler} loading={loading}>Add to Cart</Button>
                 </div>
             </div>
         </div>

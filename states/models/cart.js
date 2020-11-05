@@ -10,6 +10,18 @@ export const cart = {
         setCart: (state, payload) => {
             state.cart = payload.cart;
         },
+        addProduct: (state, payload) => {
+            if(state.cart.hasOwnProperty('products')) {
+                state.cart.products.push(payload.product);
+            } else {
+                state.cart.products = [
+                    payload.product,
+                ]
+            }
+        },
+        deleteProduct: (state, payload) => {
+            cart.refresh = payload.id
+        },
         setGuestId: (state, payload) => {
             state.guestId = payload.guestId;
         }
@@ -86,6 +98,9 @@ export const cart = {
                     id
                 })
                 if(res.data.success) {
+                    dispatch.cart.deleteProduct({
+                        id
+                    })
                     return id;
                 }
                 return false;
@@ -106,6 +121,11 @@ export const cart = {
                 })
 
                 if(productsRes.data.success && noteRes.data.success) {
+                    dispatch.cart.setCart({
+                        cart: {
+                            products: body.products,
+                        }
+                    })
                     return true;
                 } else {
                     return false;

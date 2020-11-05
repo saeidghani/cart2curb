@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Input,
@@ -48,7 +48,15 @@ const Delivery = props => {
         }
     ]
 
-    const { addresses } = props;
+    const { addresses, cart } = props;
+
+    useEffect(() => {
+        form.setFieldsValue({
+            date: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
+            time: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
+            address: cart.address?._id || undefined
+        })
+    }, [])
 
     const changeMarkerPosition = (e, map, position) => {
         const newPosition = {
