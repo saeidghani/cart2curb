@@ -22,8 +22,15 @@ const Header = props => {
     const userType = useAuthenticatedUserType()
 
     useEffect(() => {
-        setAvatarImage(props.avatar);
-    }, [userType])
+        if(userType) {
+            if(props.avatar) {
+                setAvatarImage(props.avatar);
+            }
+        } else {
+            setAvatarImage('');
+        }
+
+    }, [userType, props])
 
     useEffect(() => {
         if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
