@@ -8,16 +8,20 @@ import {
     DatePicker,
     Divider
 } from 'antd';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 
 import Page from '../../../components/Page';
 import cookie from "cookie";
 import routes from "../../../constants/routes";
 import {getStore} from "../../../states";
+import Link from "next/link";
+import CheckoutForm from "../../../components/CheckoutForm";
 
 const { Item } = Form;
+const stripePromise = loadStripe('pk_test_51Hbq1NB7TliuUA9h29MCPiNfNDZLIvhMyhXWXFJkwDGybQ0vgjSYaZgf09mcRqjJqDHSZFYOALFIP0P4K1keAmjS00JZ9uQinT');
 
 const GuestCheckout = props => {
-    const [form] = Form.useForm();
 
     const { cart } = props;
 
@@ -69,67 +73,12 @@ const GuestCheckout = props => {
                         </div>
                     </div>
                 </Col>
-                <Col md={16} xs={24}>
-                    <Form
-                        form={form}
-                        layout="vertical"
-                        className="flex flex-col"
-                    >
-                        <Row gutter={24}>
-                            <Col md={12} xs={24}>
-                                <Item name={'card-number'} label={'Card Number'}>
-                                    <Input placeholder="Card Number" />
-                                </Item>
-                            </Col>
-                            <Col md={12} xs={24}>
-                                <Item name={'firstname'} label={'First Name'}>
-                                    <Input placeholder="First Name" />
-                                </Item>
-                            </Col>
-                            <Col md={12} xs={24}>
-                                <Item name={'cvv'} label={'Cvv'}>
-                                    <Input placeholder="Cvv" />
-                                </Item>
-                            </Col>
-                            <Col md={12} xs={24}>
-                                <Item name={'lastname'} label={'Last Name'}>
-                                    <Input placeholder="Last Name" />
-                                </Item>
-                            </Col>
-                            <Col md={12} xs={24}>
-                                <Item label={'Expiration Date'} className={'mb-0'}>
-                                    <Row gutter={24}>
 
-                                        <Col xs={12}>
-                                            <Item name={'year'}>
-                                                <DatePicker className={'w-full'} picker={'year'}/>
-                                            </Item>
-                                        </Col>
-                                        <Col xs={12}>
-                                            <Item name={'month'}>
-                                                <DatePicker className={'w-full'} picker={'month'} format={'MMMM'}/>
-                                            </Item>
-                                        </Col>
-                                    </Row>
-                                </Item>
-                            </Col>
-
-                            <Col md={12} xs={24} className={'flex items-center flex-row-reverse'}>
-                                <Item className={'mb-0'}>
-                                    <Button type="primary" className={'w-32 ml-5'}>
-                                        Next
-                                    </Button>
-                                </Item>
-                                <Item className={'mb-0'}>
-                                    <Button danger className={'w-32'}>
-                                        Prev
-                                    </Button>
-                                </Item>
-                            </Col>
-                        </Row>
-
-                    </Form>
-                </Col>
+                <Elements stripe={stripePromise}>
+                    <Col md={16} xs={24}>
+                        <CheckoutForm/>
+                    </Col>
+                </Elements>
             </Row>
         </Page>
     )
