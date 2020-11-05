@@ -103,15 +103,13 @@ export const cart = {
         },
         async updateDelivery(body) {
             try {
-                const productsRes = await api.post('cart/update', {
-                    products: [
-                        ...body.products
-                    ]
+                const productsRes = await api.post('cart/address', {
+                    ...body.address
                 })
-                const noteRes = await api.post('cart/note', {
-                    note: body.note
+                const noteRes = await api.post('cart/deliverytime/update', {
+                    time: body.time
                 })
-
+                console.log(productsRes);
                 if(productsRes.data.success && noteRes.data.success) {
                     return true;
                 } else {
@@ -122,6 +120,25 @@ export const cart = {
 
                 return false;
             }
-        }
+        },
+        async getDeliveryTime(options) {
+
+            try {
+                const res = await api.get('cart/deliverytime', options);
+
+                if(res.data.success) {
+                    return res.data.data;
+                }
+
+                return false;
+            } catch (e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response.data);
+                }
+                console.log(e);
+
+                return false;
+            }
+        },
     })
 }

@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     let token = cookies.token
     try {
         if(token) {
-            const response = await api.cart.checkAddress(req.body, {
+            const response = await api.cart.promoTip(req.body, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
             );
             res.status(200).json(response.data);
         } else {
-            const response = await api.cart.checkAddress(req.body);
+            const response = await api.cart.promoTip(req.body);
             res.status(200).json(response.data);
         }
     } catch(e) {

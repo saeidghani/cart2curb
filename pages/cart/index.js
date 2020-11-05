@@ -237,7 +237,7 @@ export const CartIndex = (props) => {
                 />
             </div>
             <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
-                {cart.products.filter(product => !deleted.includes(product._id)).length > 0 && (
+                {cart?.products?.filter(product => !deleted.includes(product._id)).length > 0 && (
                     <div className="flex flex-col pl-4" style={{ width: 210 }}>
                         <h1 className="text-left text-4.5xl text-paragraph font-medium mb-2 mt-0">${total}</h1>
                         <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
@@ -281,7 +281,7 @@ export const CartIndex = (props) => {
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
                         <Item>
-                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={cart.products.length === 0 || cart.products.length === deleted.length}>Next</Button>
+                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0 || cart.products?.length === deleted.length}>Next</Button>
                         </Item>
                     </Col>
                 </Row>

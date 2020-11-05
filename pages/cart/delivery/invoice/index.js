@@ -16,6 +16,9 @@ import {
 import Page from '../../../../components/Page';
 import {HeaderLogoIcon} from "../../../../components/icons";
 import DetailItem from "../../../../components/UI/DetailItem";
+import cookie from "cookie";
+import routes from "../../../../constants/routes";
+import {getStore} from "../../../../states";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -198,4 +201,63 @@ const Invoices = props => {
     )
 }
 
+export async function getServerSideProps({ req, res }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+    let userType = cookies.type;
+
+    let cart = {}
+    let stores = [];
+    if (userType && userType !== 'customer') {
+        res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                cart,
+                stores,
+            }
+        };
+    }
+    const store = getStore();
+    try {
+        let response;
+        if(token) {
+            response = await store.dispatch.cart.getCart({
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        } else {
+            response = await store.dispatch.cart.getCart();
+        }
+
+        if(response) {
+            cart = response;
+
+            if(cart.hasOwnProperty('stores')) {
+                for(let i in cart.stores) {
+                    const storeId = cart.stores[i];
+                    const storeResponse = await store.dispatch.app.getStore(storeId);
+                    if(storeResponse) {
+                        stores.push(storeResponse);
+                    }
+                }
+            }
+        }
+    } catch(e) {
+        return {
+            cart,
+            stores,
+        }
+    }
+
+    return {
+        props: {
+            cart,
+            stores,
+        }
+    };
+
+}
 export default Invoices;

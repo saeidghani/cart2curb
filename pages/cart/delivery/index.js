@@ -19,8 +19,9 @@ import {getStore} from "../../../states";
 import GoogleMap from "../../../components/Map";
 import {useCities, useProvinces} from "../../../hooks/region";
 import Link from "next/link";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
+import moment from "moment";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -30,12 +31,13 @@ const Delivery = props => {
     const [newAddress, setNewAddress] = useState(false);
     const [province, setProvince] = useState('');
     const [marker, setMarker] = useState({ position: {}})
+    const checkAddressLoading = useSelector(state => state.loading.effects.cart.checkAddress);
+    const updateLoading = useSelector(state => state.loading.effects.cart.updateDelivery)
     const provinces = useProvinces();
     const cities = useCities(province);
     const dispatch = useDispatch();
     const router = useRouter();
 
-    console.log(props);
     const breadcrumb = [
         {
             title: 'Cart',
@@ -73,6 +75,14 @@ const Delivery = props => {
         }
         const {date, time, address} = values;
         const deliveryTime = date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
+        const fromTime = moment(props.deliveryTimes.from);
+        const toTime = moment(props.deliveryTimes.to);
+        if(deliveryTime.diff(fromTime) < 0 || deliveryTime.diff(toTime) > 0) {
+            message.error(`Delivery time should be between ${fromTime.format('YYYY-MM-DD - HH:mm')} and ${toTime.format('YYYY-MM-DD - HH:mm')}`)
+            return false;
+        }
+
+
         let transformedAddress;
         if(address === 'new') {
             const { province, city, addressLine1, addressLine2, postalCode} = values;
@@ -96,23 +106,24 @@ const Delivery = props => {
             };
         }
 
-        // @todo: add check address logics here
-        // const res = await dispatch.cart.checkAddress({
-        //     ...transformedAddress
-        // })
-        // if(res) {
-        //
-        // } else {
-        //     message.error('An Error was occurred');
-        // }
+
+        const res = await dispatch.cart.checkAddress({
+            ...transformedAddress
+        })
+        if(!res) {
+            message.error('An Error was occurred');
+            return false;
+        }
         const body = {
             time: deliveryTime,
             address: transformedAddress
         }
-
-        const res = await dispatch.cart.updateDelivery(body);
-        if(res) {
+        const finalRes = await dispatch.cart.updateDelivery(body);
+        if(finalRes) {
+            message.success('Cart Address and Delivery time updated!')
             router.push(routes.cart.invoice.index);
+        } else {
+            message.error('An Error was occurred')
         }
     }
 
@@ -294,7 +305,7 @@ const Delivery = props => {
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'}>
+                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={checkAddressLoading || updateLoading}>
                                         Next
                                     </Button>
                                 </Item>
@@ -323,12 +334,13 @@ export async function getServerSideProps({ req, res }) {
 
     let cart = {}
     let addresses = [];
+    let deliveryTimes = {}
     if (userType !== 'customer') {
         res.writeHead(307, { Location: routes.auth.login });
         res.end();
         return {
             props: {
-                authenticated,
+                deliveryTimes,
                 cart,
                 addresses,
             }
@@ -345,17 +357,18 @@ export async function getServerSideProps({ req, res }) {
     try {
         const response = await store.dispatch.cart.getCart(config);
         const addressesRes = await store.dispatch.profile.getAddresses(config)
+        const deliveryTimesRes = await store.dispatch.cart.getDeliveryTime(config);
 
         if(response) {
             cart = response;
-
-            if(cart.products.length === 0) {
+            if(!cart.products || cart.products?.length === 0) {
                 res.writeHead(307, { Location: routes.cart.index });
                 res.end();
                 return {
                     props: {
                         cart,
                         addresses,
+                        deliveryTimes
                     }
                 };
             } else {
@@ -363,20 +376,28 @@ export async function getServerSideProps({ req, res }) {
                 if(addressesRes) {
                     addresses = addressesRes;
                 }
+                if(deliveryTimesRes){
+                    deliveryTimes = deliveryTimesRes;
+                }
                 return {
                     props: {
                         cart,
                         addresses,
+                        deliveryTimes
                     }
                 };
             }
         }
     } catch(e) {
         console.log(e);
+
+        res.writeHead(307, { Location: routes.cart.index });
+        res.end();
         return {
             props: {
                 cart,
                 addresses,
+                deliveryTimes
             }
         }
     }
