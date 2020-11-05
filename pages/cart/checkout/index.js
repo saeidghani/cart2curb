@@ -49,7 +49,7 @@ const Checkout = props => {
     return completed ? (
         <CheckoutSuccess cart={cart}/>
     ) : (
-        <Page title={'Guest Cart'} breadcrumb={breadcrumb}>
+        <Page title={'Checkout'} breadcrumb={breadcrumb}>
             <h2 className="text-type font-medium text-base mb-6">Credit Card Info</h2>
             <Row gutter={[24, 24]} align={'stretch'}>
                 <Col md={8} xs={24}>
