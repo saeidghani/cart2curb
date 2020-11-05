@@ -10,20 +10,29 @@ import {
 } from 'antd';
 
 import Page from '../../../components/Page';
+import cookie from "cookie";
+import routes from "../../../constants/routes";
+import {getStore} from "../../../states";
 
 const { Item } = Form;
 
 const GuestCheckout = props => {
     const [form] = Form.useForm();
 
+    const { cart } = props;
+
 
     const breadcrumb = [
         {
             title: 'Cart',
-            href: '/cart'
+            href: routes.cart.index
         },
         {
-            title: 'Guest'
+            title: 'Delivery',
+            href: routes.cart.delivery
+        },
+        {
+            title: 'Invoice'
         }
     ]
 
@@ -49,12 +58,12 @@ const GuestCheckout = props => {
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Promo Code</span>
-                                    <span className="text-type font-medium">-$13.20</span>
+                                    <span className="text-type font-medium">-${cart.cartPrice}</span>
                                 </Col>
                                 <Divider className={'my-2'}/>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Total Price</span>
-                                    <span className="text-type font-medium text-xl">$14.80</span>
+                                    <span className="text-type font-medium text-xl">${cart.totalPrice}</span>
                                 </Col>
                             </Row>
                         </div>
@@ -124,6 +133,68 @@ const GuestCheckout = props => {
             </Row>
         </Page>
     )
+}
+
+
+export async function getServerSideProps({ req, res }) {
+
+    let cookies = cookie.parse(req.headers.cookie || '');
+    let token = cookies.token
+    let userType = cookies.type;
+
+    let cart = {}
+    if (userType && userType !== 'customer') {
+        res.writeHead(307, { Location: routes.auth.login });
+        res.end();
+        return {
+            props: {
+                cart,
+            }
+        };
+    }
+    const store = getStore();
+    try {
+        let response;
+        response = await store.dispatch.cart.getCart({
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if(response) {
+            cart = response;
+            if(!cart.products || cart.products.length === 0) {
+                res.writeHead(307, { Location: routes.cart.index });
+                res.end();
+                return {
+                    props: {
+                        cart,
+                    }
+                };
+            }
+            if(!cart.deliveryTime || !cart.address) {
+                res.writeHead(307, { Location: routes.cart.delivery });
+                res.end();
+                return {
+                    props: {
+                        cart,
+                    }
+                };
+            }
+
+        }
+    } catch(e) {
+        return {
+            cart,
+        }
+    }
+
+    return {
+        props: {
+            cart,
+        }
+    };
+
 }
 
 export default GuestCheckout;
