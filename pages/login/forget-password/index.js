@@ -5,7 +5,6 @@ import {Button, Col, Form, Input, message, Row} from "antd";
 import Link from "next/link";
 import routes from "../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
-import {useRedirectAuthenticated} from "../../../hooks/auth";
 import withoutAuth from "../../../components/hoc/withoutAuth";
 
 const { Item } = Form;
@@ -14,12 +13,6 @@ const ForgetPassword = props => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.auth.forgetPassword);
-
-    const redirect = useRedirectAuthenticated();
-
-    useEffect(() => {
-        redirect();
-    }, [redirect])
 
 
     const breadcrumb = [

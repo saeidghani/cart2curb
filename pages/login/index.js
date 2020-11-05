@@ -6,7 +6,6 @@ import Page from '../../components/Page';
 import { GoogleIcon, FacebookIcon } from "../../components/icons";
 import routes from "../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
-import {useRedirectAuthenticated} from "../../hooks/auth";
 import { useAuth } from "../../providers/AuthProvider";
 import withoutAuth from "../../components/hoc/withoutAuth";
 
@@ -16,12 +15,8 @@ const Login = props => {
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.auth.login);
     const dispatch = useDispatch();
-    const redirect = useRedirectAuthenticated();
     const { setAuthenticated, setUserType } = useAuth();
 
-    useEffect(() => {
-        redirect();
-    }, [redirect])
 
     const submitHandler = async (values) => {
         const { username, password } = values;

@@ -6,7 +6,6 @@ import Page from '../../../components/Page';
 import routes from "../../../constants/routes";
 import withoutAuth from "../../../components/hoc/withoutAuth";
 import {useDispatch, useSelector} from "react-redux";
-import {useRedirectAuthenticated} from "../../../hooks/auth";
 import {useAuth} from "../../../providers/AuthProvider";
 
 const { Item } = Form;
@@ -15,12 +14,7 @@ const Login = props => {
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.vendorAuth.login);
     const dispatch = useDispatch();
-    const redirect = useRedirectAuthenticated();
     const { setAuthenticated, setUserType } = useAuth();
-
-    useEffect(() => {
-        redirect();
-    }, [redirect])
 
     const submitHandler = async (values) => {
         const { username, password } = values;

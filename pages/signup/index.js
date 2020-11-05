@@ -15,7 +15,6 @@ import Page from '../../components/Page';
 import GoogleMap from "../../components/Map";
 import routes from "../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
-import {useRedirectAuthenticated} from "../../hooks/auth";
 import {useAuth} from "../../providers/AuthProvider";
 import withoutAuth from "../../components/hoc/withoutAuth";
 import {useCities, useProvinces} from "../../hooks/region";

@@ -5,7 +5,6 @@ import {Button, Col, Form, Input, message, Row} from "antd";
 import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import {useRedirectAuthenticated} from "../../../../hooks/auth";
 import Submitted from "../../../../components/Submitted";
 import withoutAuth from "../../../../components/hoc/withoutAuth";
 
@@ -16,14 +15,7 @@ const ResetPassword = props => {
     const router = useRouter();
     const loading = useSelector(state => state.loading.effects.vendorAuth.resetPassword);
     const dispatch = useDispatch()
-    const redirect = useRedirectAuthenticated();
     const [submitted, setSubmitted] = useState(false);
-
-    useEffect(() => {
-        redirect();
-    }, [redirect])
-
-
 
     const breadcrumb = [
         {

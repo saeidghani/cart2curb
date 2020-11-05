@@ -1,17 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Link from "next/link";
 
 import { GreenCheckmarkIcon } from "../icons";
 import routes from "../../constants/routes";
-import {useRedirectAuthenticated} from "../../hooks/auth";
 
 const Index = props => {
-    const redirect = useRedirectAuthenticated();
-
-    useEffect(() => {
-        redirect();
-    }, [redirect])
-
     return (
         <div>
             <div className="flex items-center text-center flex-col justify-center">
