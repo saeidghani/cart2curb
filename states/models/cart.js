@@ -4,23 +4,15 @@ import {message} from "antd";
 export const cart = {
     state: {
         cart: {},
+        cartChanges: 0,
         guestId: null
     },
     reducers: {
         setCart: (state, payload) => {
             state.cart = payload.cart;
         },
-        addProduct: (state, payload) => {
-            if(state.cart.hasOwnProperty('products')) {
-                state.cart.products.push(payload.product);
-            } else {
-                state.cart.products = [
-                    payload.product,
-                ]
-            }
-        },
-        deleteProduct: (state, payload) => {
-            cart.refresh = payload.id
+        changeCart: (state) => {
+            state.cartChanges++;
         },
         setGuestId: (state, payload) => {
             state.guestId = payload.guestId;
@@ -43,7 +35,7 @@ export const cart = {
                 return false;
             } catch (e) {
                 if(e.hasOwnProperty('response')) {
-                    console.log(e.response.data);
+                    console.log(e.response?.data);
                 }
                 console.log(e);
 
@@ -83,6 +75,7 @@ export const cart = {
             try {
                 const res = await api.post('cart/add', body);
                 if(res.data.success) {
+                    dispatch.cart.changeCart();
                     return res;
                 }
 
@@ -98,9 +91,7 @@ export const cart = {
                     id
                 })
                 if(res.data.success) {
-                    dispatch.cart.deleteProduct({
-                        id
-                    })
+                    dispatch.cart.changeCart();
                     return id;
                 }
                 return false;
@@ -121,11 +112,7 @@ export const cart = {
                 })
 
                 if(productsRes.data.success && noteRes.data.success) {
-                    dispatch.cart.setCart({
-                        cart: {
-                            products: body.products,
-                        }
-                    })
+                    dispatch.cart.changeCart();
                     return true;
                 } else {
                     return false;

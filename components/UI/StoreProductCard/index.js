@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, ...props}) => {
     const [hasError, setHasError] = useState(false);
     const [imageProduct, setImageProduct] = useState('');
-    const loading = useSelector(state => state.loading.effects.cart.addToCart);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -25,6 +25,7 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
             productId,
             quantity: 1,
         }
+        setLoading(true)
 
         const res = await dispatch.cart.addToCart(body)
         if(res) {
@@ -32,6 +33,7 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
         } else {
             message.error('An Error was occurred');
         }
+        setLoading(false);
     }
 
     return (

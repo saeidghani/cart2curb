@@ -23,10 +23,11 @@ const Header = props => {
     const dispatch = useDispatch();
     const token = useSelector(state => state.auth.token);
     const cart = useSelector(state => state.cart.cart);
+    const cartChanges = useSelector(state => state.cart.cartChanges);
 
     useEffect(() => {
         dispatch.cart.getClientCart();
-    }, [token, cart])
+    }, [token, cartChanges])
 
     useEffect(() => {
         if(userType) {
