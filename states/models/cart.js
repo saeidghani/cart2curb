@@ -218,6 +218,31 @@ export const cart = {
 
                 return false;
             }
+        },
+        async guestInfo(body) {
+            try {
+                const res = await api.post('cart/checkout/confirm', body);
+                if(res.data.success) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    const errors = e.response.data?.errors;
+                    const errorCode = errors?.[0].errorCode;
+                    if(errorCode === 'EMAIL_EXISTS') {
+                        message.error('Email already exists, Please login into your account or use forget password')
+                    } else if(errorCode === 'EMPTY_CART') {
+                        message.error('Your Cart is empty!')
+                    } else {
+                        message.error('An Error was occurred');
+                    }
+                }
+
+
+                return false;
+            }
         }
     })
 }

@@ -378,6 +378,15 @@ export async function getServerSideProps({ req, res }) {
                 }
                 if(deliveryTimesRes){
                     deliveryTimes = deliveryTimesRes;
+                }else {
+                    res.writeHead(307, { Location: routes.cart.index });
+                    res.end();
+                    return {
+                        props: {
+                            cart,
+                            deliveryTimes
+                        }
+                    };
                 }
                 return {
                     props: {

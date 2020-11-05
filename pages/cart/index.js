@@ -23,15 +23,6 @@ export const CartIndex = (props) => {
     const dispatch = useDispatch();
     const router = useRouter()
 
-    // console.log(cart);
-    //
-    // useEffect(() => {
-    //     dispatch.cart.addToCart({
-    //         productId: '5f7c2693534a7c7dedfa2a83',
-    //         quantity: 1,
-    //     })
-    // }, [])
-
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
             const total = products.reduce((total, item) => total += Number(item.totalPrice), 0) + Number(cart.deliveryCost) + Number(cart.serviceFee);
@@ -320,7 +311,11 @@ export async function getServerSideProps({ req, res }) {
                 }
             });
         } else {
-            response = await store.dispatch.cart.getCart();
+            response = await store.dispatch.cart.getCart({
+                headers: {
+                    ...req.headers
+                }
+            });
         }
 
         if(response) {
