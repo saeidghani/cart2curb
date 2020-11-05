@@ -40,9 +40,9 @@ const ProductCarousel = ({slides, ...props}) => {
                     <Slider>
                         {slides.map((item, index) => {
                             return (
-                                <Slide key={item + index} index={index} onClick={changeSlideHandler.bind(this, index)}>
+                                <Slide key={item + index} index={index} onClick={changeSlideHandler.bind(this, index)} >
                                     <div className="w-full h-full" style={{ padding: '0 6px'}}>
-                                        <ImageWithZoom src={item} className={' border border-overline'} style={{ maxHeight: 384 }} />
+                                        <ImageWithZoom src={item} className={' border border-overline'} />
                                     </div>
                                 </Slide>
                             )
