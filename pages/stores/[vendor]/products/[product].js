@@ -114,29 +114,31 @@ const ProductView = props => {
                     <p className="text-muted">{product.description}</p>
                 </Col>
             </Row>
-            <Row className={'md:pt-16 pt-12'}>
-                <Col xs={24}>
-                    <h1 className={'text-2xl text-type mb-6 mt-0'}>Related Products</h1>
-                </Col>
-                <Col xs={24}>
-                    <Row gutter={[24, 24]}>
-                        {related.length > 0 && related.filter(item => item._id !== product._id).map((item, index) => {
-                            return (
-                                <Col key={`related-${index}`} xl={4} lg={6} md={8} sm={12} xs={24}>
-                                    <ProductCard images={item.images} _id={item._id} vendor={router.query.vendor} name={item.name}/>
+            {related.filter(item => item._id !== product._id).length > 0 && (
+                <Row className={'md:pt-16 pt-12'}>
+                    <Col xs={24}>
+                        <h1 className={'text-2xl text-type mb-6 mt-0'}>Related Products</h1>
+                    </Col>
+                    <Col xs={24}>
+                        <Row gutter={[24, 24]}>
+                            {related.filter(item => item._id !== product._id).length > 0 ? related.filter(item => item._id !== product._id).map((item, index) => {
+                                return (
+                                    <Col key={`related-${index}`} xl={4} lg={6} md={8} sm={12} xs={24}>
+                                        <ProductCard images={item.images} _id={item._id} vendor={router.query.vendor} name={item.name}/>
+                                    </Col>
+                                )
+                            }).concat((
+                                <Col xs={24} className={'flex flex-row-reverse justify-center md:justify-start'}>
+                                    <Link href={routes.stores.single(router.query.vendor)}>
+                                        <Button className="w-32" danger>See More</Button>
+                                    </Link>
                                 </Col>
-                            )
-                        }).concat((
-                            <Col xs={24} className={'flex flex-row-reverse justify-center md:justify-start'}>
-                                <Link href={routes.stores.single(router.query.vendor)}>
-                                    <Button className="w-32" danger>See More</Button>
-                                </Link>
-                            </Col>
-                        ))}
+                            )) : null}
 
-                    </Row>
-                </Col>
-            </Row>
+                        </Row>
+                    </Col>
+                </Row>
+            )}
         </Page>
     )
 }
