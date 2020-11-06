@@ -25,7 +25,7 @@ export const CartIndex = (props) => {
 
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
-            const total = products.reduce((total, item) => total += Number(item.totalPrice), 0) + Number(cart.deliveryCost) + Number(cart.serviceFee);
+            const total = products.reduce((total, item) => total += Number(item.totalPrice), 0);
             setTotal(total.toFixed(2));
         }
     }, [cart, products])
