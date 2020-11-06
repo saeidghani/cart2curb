@@ -9,7 +9,7 @@ import * as models from './models';
 const persistConfig = {
     key: 'initial',
     storage,
-    blacklist: ['vendorStore']
+    blacklist: ['vendorStore', 'app']
 }
 
 const store = init({

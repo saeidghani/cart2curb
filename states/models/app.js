@@ -12,8 +12,13 @@ export const app = {
             state.videos = payload;
         },
         setStores: (state, payload) => {
-            state.stores = payload.data;
-            state.storesMetaData = payload.metaData
+            if(payload.metaData.pagination.pageNumber === 1) {
+                state.stores = payload.data;
+            } else {
+                state.stores = [...state.stores, ...payload.data];
+
+            }
+            state.storesMetaData = payload.metaData;
         }
 
     },
@@ -41,6 +46,7 @@ export const app = {
                         data: data.data,
                         metaData: data.metaData,
                     });
+                    return data;
                 } else {
                     message.error('An Error was occurred in data fetch')
                 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, Select, Row, Col, message} from 'antd';
 
 import Page from '../components/Page';
@@ -11,6 +11,7 @@ import {InfoCircleOutlined} from "@ant-design/icons";
 
 const { Option } = Select;
 
+let isIntersecting = true;
 export default function Home() {
     const dispatch = useDispatch();
     const [usedGps, setUsedGps] = useState(false);
@@ -18,20 +19,67 @@ export default function Home() {
     const storesLoading = useSelector(state => state.loading.effects.app.getStores)
     const { stores, videos } = useSelector(state => state.app);
     const [sort, setSort] = useState(undefined);
+    const loader = useRef(null);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [location, setLocation] = useState(null);
 
     useEffect(() => {
         dispatch.app.getVideos();
     }, [])
 
-    useEffect(() => {
-        if(sort) {
-            dispatch.app.getStores({
-                sort,
-            })
-        } else {
-            dispatch.app.getStores();
+    useEffect(async () => {
+        if(hasMore || page === 1) {
+            let body = {
+                page_number: page,
+                page_size: 16,
+            }
+            if(sort) {
+                body.sort = sort;
+            }
+            if(location) {
+                body.lat = location.lat;
+                body.lng = location.lng;
+            }
+            try {
+                const response = await dispatch.app.getStores(body)
+                if(response.data.length < 16) {
+                    setHasMore(false);
+                }
+            } catch(e) {
+                console.log(e);
+                setHasMore(false);
+                message.error('An Error was occurred while fetching data')
+            }
         }
-    }, [sort])
+        isIntersecting = true;
+    }, [page, sort, location])
+
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 1.0
+        };
+
+        const observer = new IntersectionObserver(handleObserver, options);
+        if (loader.current) {
+            observer.observe(loader.current)
+        }
+
+    }, []);
+
+
+    const handleObserver = (entities) => {
+        const target = entities[0];
+        console.log(target.isIntersecting, isIntersecting);
+        if (target.isIntersecting && isIntersecting) {
+            isIntersecting = false
+            setPage((page) => page + 1)
+        }
+    }
+
 
     const searchWithGps = () => {
         if ("geolocation" in navigator) {
@@ -40,9 +88,12 @@ export default function Home() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 }
-                dispatch.app.getStores({
-                    ...pos
+                isIntersecting = false;
+                setLocation({
+                    ...pos,
                 })
+                setPage(1);
+                setHasMore(true)
                 setUsedGps(true);
             }, (e) => {
                 if(e.code === 2) {
@@ -57,6 +108,12 @@ export default function Home() {
         }
     }
 
+    const sortHandler = e => {
+        isIntersecting = false;
+        setHasMore(true);
+        setSort(e)
+        setPage(1);
+    }
     return (
         <Page title={false} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
             <div className="flex items-center justify-between bg-primary p-4 mb-16">
@@ -121,7 +178,7 @@ export default function Home() {
                     <Select
                         placeholder={'Sort by name'}
                         style={{ minWidth: 370 }}
-                        onChange={(e) => setSort(e)}
+                        onChange={sortHandler}
                         >
                         <Option value={''}>Default</Option>
                         <Option value={'name'}>Name</Option>
@@ -130,38 +187,38 @@ export default function Home() {
                     </Select>
                 </div>
 
-                {storesLoading ? (
-
-                    <div className="flex flex-row items-center justify-center py-10">
-                        <Loader/>
-                    </div>
-                ) : stores.length === 0 ? (
-                        <Row gutter={24}>
-                            <Col xs={24} className={'flex flex-col items-center justify-center pt-6'}>
-                                <InfoCircleOutlined className={'text-paragraph mb-6 text-4xl'} />
-                                <span className="text-paragraph mb-4">{usedGps ? 'There is no Store near your location' : 'There is no store'}</span>
-                            </Col>
-                        </Row>
-                    ) : (
-
-                        <Row gutter={[50, 50]}>
-                            {stores.map((item ,index) => {
-                                return (
-                                    <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
-                                        <ShopOverview
-                                            _id={item._id}
-                                            imageURL={item.image}
-                                            title={item.title || ''}
-                                            name={item.name || ''}
-                                            service={item.storeType || ''}
-                                            subType={item.subType || ''}
-                                        />
-                                    </Col>
-                                )
-                            })}
-                        </Row>
-                    )
-                }
+                {!hasMore && stores.length === 0 ? (
+                    <Row gutter={24}>
+                        <Col xs={24} className={'flex flex-col items-center justify-center pt-6'}>
+                            <InfoCircleOutlined className={'text-paragraph mb-6 text-4xl'} />
+                            <span className="text-paragraph mb-4">{usedGps ? 'There is no Store near your location' : 'There is no store'}</span>
+                        </Col>
+                    </Row>
+                ) : (
+                    <Row gutter={[50, 50]}>
+                        {stores.map((item ,index) => {
+                            return (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
+                                    <ShopOverview
+                                        _id={item._id}
+                                        imageURL={item.image}
+                                        title={item.title || ''}
+                                        name={item.name || ''}
+                                        service={item.storeType || ''}
+                                        subType={item.subType || ''}
+                                    />
+                                </Col>
+                            )
+                        })}
+                    </Row>
+                )}
+                <div ref={loader}>
+                    {hasMore && (
+                        <div className="flex flex-row items-center justify-center py-10">
+                            <Loader/>
+                        </div>
+                    )}
+                </div>
             </div>
         </Page>
     )
