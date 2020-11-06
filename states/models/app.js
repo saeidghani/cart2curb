@@ -78,11 +78,11 @@ export const app = {
                     return data;
                 } else {
                     message.error('An Error was occurred in data fetch')
-                    return res.status
+                    return false
                 }
             } catch(e) {
                 message.error('An Error was occurred in data fetch from the Server')
-                return e.response.status
+                return false
             }
         },
         async getProducts(body) {
