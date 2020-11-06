@@ -93,7 +93,7 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
                         />
                 </Col>
                 <Col xs={24}>
-                    <Table dataSource={data} columns={columns} pagination={false} className={'pt-4'} scroll={{ x: 870 }}/>
+                    <Table dataSource={data} columns={columns} pagination={false} className={'pt-4'} scroll={{ x: 950 }}/>
                 </Col>
                 <Col xs={24}>
                     <div className={'flex flex-row-reverse items-start'}>
