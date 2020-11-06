@@ -207,11 +207,11 @@ const Categories = props => {
                         emptyText: 'There is no Category'
                     }} loading={categoryLoading && categories.length === 0}/>
 
-                    <div ref={loader}>
-                        {hasMore && (
+                    {hasMore && (
+                        <div ref={loader}>
                             <div className="flex w-full items-center justify-center py-6"><Loader/></div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </Col>
             </Row>
         </>

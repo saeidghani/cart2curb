@@ -244,11 +244,12 @@ const Products = ({vendor, ...props}) => {
                 <Col xs={24}>
 
                     <Table columns={columns} dataSource={data} scroll={{ x: 1100 }} pagination={false} loading={productsLoading && products.length === 0}/>
-                    <div ref={loader}>
-                        {hasMore && (
-                            <div className="flex w-full items-center justify-center py-6"><Loader/></div>
-                        )}
-                    </div>
+                    {hasMore && (
+                        <div ref={loader}>
+
+                                <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                        </div>
+                    )}
                 </Col>
             </Row>
         </>
