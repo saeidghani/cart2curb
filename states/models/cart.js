@@ -216,6 +216,7 @@ export const cart = {
             try {
                 const res = await api.post('cart/checkout/confirm', body);
                 if(res.data.success) {
+                    dispatch.cart.changeCart();
                     return true;
                 } else {
                     return false;
