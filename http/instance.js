@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import env from "../constants/env";
 import {emitter} from "../helpers/emitter";
 
 export default class ApiInstance {
@@ -10,7 +9,7 @@ export default class ApiInstance {
      */
     constructor(baseURL) {
         this.instance = axios.create({
-            baseURL: baseURL || env.api.baseURL,
+            baseURL: baseURL || process.env.NEXT_PUBLIC_API_BASE_URL,
             timeout: 30000
         })
     }

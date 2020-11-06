@@ -1,11 +1,7 @@
 import React, {useState} from 'react';
 import {
-    Button,
-    Input,
-    Form,
     Row,
     Col,
-    DatePicker,
     Divider
 } from 'antd';
 import {Elements} from '@stripe/react-stripe-js';
@@ -15,14 +11,11 @@ import Page from '../../../components/Page';
 import cookie from "cookie";
 import routes from "../../../constants/routes";
 import {getStore} from "../../../states";
-import Link from "next/link";
 import CheckoutForm from "../../../components/CheckoutForm";
-import env from "../../../constants/env";
 import CheckoutSuccess from "../../../components/CheckoutSuccess";
 
-const { Item } = Form;
 
-const stripePromise = loadStripe(env.stripe.key);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY);
 
 const Checkout = props => {
     const [completed, setCompleted] = useState(false);

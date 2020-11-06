@@ -2,7 +2,6 @@ import React from 'react';
 import { GoogleApiWrapper, Map, Marker } from "google-maps-react";
 
 import Loading from "./Loading";
-import {GOOGLE_MAP_API_KEY} from '../../constants';
 
 const GoogleMap = ({height, google, marker, clickHandler, ...props}) => {
     const style = {
@@ -32,6 +31,6 @@ const GoogleMap = ({height, google, marker, clickHandler, ...props}) => {
 };
 
 export default GoogleApiWrapper({
-    apiKey: (GOOGLE_MAP_API_KEY),
+    apiKey: (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY),
     LoadingContainer: Loading
 })(GoogleMap)

@@ -4,7 +4,6 @@ import { Button } from 'antd';
 import {RedoOutlined} from '@ant-design/icons';
 
 import Loading from "./Loading";
-import {GOOGLE_MAP_API_KEY} from '../../constants';
 import salesman from '../../lib/salesman';
 
 const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
@@ -113,6 +112,6 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
 };
 
 export default GoogleApiWrapper({
-    apiKey: (GOOGLE_MAP_API_KEY),
+    apiKey: (process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY),
     LoadingContainer: Loading
 })(GoogleMap)
