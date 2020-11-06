@@ -17,20 +17,23 @@ import {getProperty} from "../../helpers";
 const { Item } = Form;
 const { Option } = Select;
 
+let isIntersecting = true;
 const Products = ({vendor, ...props}) => {
     const loader = useRef(null);
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [deleted, setDeleted] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
+    const [search, setSearch] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
     const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
     const productsLoading = useSelector(state => state.loading.effects.vendorStore.getProducts);
     const products = useSelector(state => state.vendorStore.products.data);
 
     useEffect(async () => {
-        if(hasMore) {
+        if(hasMore || page === 1) {
             const formFields = form.getFieldsValue()
             let body = {
                 page_number: page,
@@ -53,7 +56,8 @@ const Products = ({vendor, ...props}) => {
                 message.error('An Error was occurred while fetching data')
             }
         }
-    }, [page, hasMore])
+        isIntersecting = true;
+    }, [page, selectedCategory, search])
 
 
     useEffect(() => {
@@ -81,14 +85,18 @@ const Products = ({vendor, ...props}) => {
 
     const handleObserver = (entities) => {
         const target = entities[0];
-        if (target.isIntersecting) {
+        if (target.isIntersecting && isIntersecting) {
+            isIntersecting = false
             setPage((page) => page + 1)
         }
     }
 
     const searchHandler = (values) => {
-        setHasMore(true);
+        isIntersecting = false;
         setPage(1);
+        setHasMore(true);
+        setSearch(values.search);
+        setSelectedCategory(values.category);
     }
 
     const columns = [

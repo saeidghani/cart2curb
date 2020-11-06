@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../../components/UI/Loader";
 import moment from "moment";
 
+let isIntersecting = true;
 const Orders = props => {
     const screens = Grid.useBreakpoint()
     const [reportModalShow, setReportModalShow] = useState(-1);
@@ -25,7 +26,7 @@ const Orders = props => {
 
 
     useEffect(async () => {
-        if(hasMore) {
+        if(hasMore || page === 1) {
             let body = {
                 page_number: page,
                 page_size: 15,
@@ -40,6 +41,7 @@ const Orders = props => {
                 message.error('An Error was occurred while fetching data')
             }
         }
+        isIntersecting = true;
     }, [page, hasMore])
 
     useEffect(() => {
@@ -59,7 +61,8 @@ const Orders = props => {
 
     const handleObserver = (entities) => {
         const target = entities[0];
-        if (target.isIntersecting) {
+        if (target.isIntersecting && isIntersecting) {
+            isIntersecting = false
             setPage((page) => page + 1)
         }
     }

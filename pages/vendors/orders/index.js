@@ -11,6 +11,7 @@ import moment from "moment";
 
 const { Item } = Form;
 
+let isIntersecting = true;
 const Orders = props => {
     const [form] = Form.useForm();
     const [detailsModal, setDetailsModal] = useState(-1);
@@ -22,7 +23,7 @@ const Orders = props => {
     const orders = useSelector(state => state.vendorStore.orders.data);
 
     useEffect(async () => {
-        if(hasMore) {
+        if(hasMore || page === 1) {
             let body = {
                 page_number: page,
             }
@@ -37,6 +38,7 @@ const Orders = props => {
                 message.error('An Error was occurred while fetching data')
             }
         }
+        isIntersecting = true;
     }, [page, hasMore])
 
     useEffect(() => {
@@ -56,7 +58,8 @@ const Orders = props => {
 
     const handleObserver = (entities) => {
         const target = entities[0];
-        if (target.isIntersecting) {
+        if (target.isIntersecting && isIntersecting) {
+            isIntersecting = false
             setPage((page) => page + 1)
         }
     }
