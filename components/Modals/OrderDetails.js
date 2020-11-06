@@ -28,8 +28,8 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
         },
         {
             title: 'Subtitutions',
-            dataIndex: 'subtitutions',
-            key: 'subtitutions',
+            dataIndex: 'subtitution',
+            key: 'subtitution',
             render: data => (<span className="text-cell">{data}</span>)
         },
         {

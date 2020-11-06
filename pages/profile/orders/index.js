@@ -128,7 +128,6 @@ const Orders = props => {
 
     const data = useMemo(() => {
         return orders && orders.filter(order => !deleted.includes(order._id)).map((order, index) => {
-            console.log(order);
             return {
                 key: order._id,
                 index: order._id,
