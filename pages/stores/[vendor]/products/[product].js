@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useRouter } from "next/router";
 import {Row, Col, Button, InputNumber, message} from 'antd';
 
@@ -16,8 +16,13 @@ const ProductView = props => {
     const [quantity, setQuantity] = useState(1);
     const loading = useSelector(state => state.loading.effects.cart.addToCart);
     const dispatch = useDispatch();
+    const { product, related, storeProfile, relatedMetaData } = props;
+    const [transformedRelated, setTransformedRelated] = useState([]);
 
-    const { product, related, storeProfile } = props;
+    useEffect(() => {
+        const result = related.filter(item => item._id !== product._id).slice(0, 6);
+        setTransformedRelated(result);
+    }, [props])
 
     const breadcrumb = [
         {
@@ -114,27 +119,27 @@ const ProductView = props => {
                     <p className="text-muted">{product.description}</p>
                 </Col>
             </Row>
-            {related.filter(item => item._id !== product._id).length > 0 && (
+            {transformedRelated.length > 0 && (
                 <Row className={'md:pt-16 pt-12'}>
                     <Col xs={24}>
                         <h1 className={'text-2xl text-type mb-6 mt-0'}>Related Products</h1>
                     </Col>
                     <Col xs={24}>
                         <Row gutter={[24, 24]}>
-                            {related.filter(item => item._id !== product._id).length > 0 ? related.filter(item => item._id !== product._id).map((item, index) => {
+                            {transformedRelated.length > 0 ? transformedRelated.map((item, index) => {
                                 return (
                                     <Col key={`related-${index}`} xl={4} lg={6} md={8} sm={12} xs={24}>
                                         <ProductCard images={item.images} _id={item._id} vendor={router.query.vendor} name={item.name}/>
                                     </Col>
                                 )
-                            }).concat((
+                            }) : null}
+                            {relatedMetaData.pagination.totalRecords > 6 && (
                                 <Col xs={24} className={'flex flex-row-reverse justify-center md:justify-start'}>
                                     <Link href={routes.stores.single(router.query.vendor)}>
                                         <Button className="w-32" danger>See More</Button>
                                     </Link>
                                 </Col>
-                            )) : null}
-
+                            )}
                         </Row>
                     </Col>
                 </Row>
@@ -151,6 +156,7 @@ export async function getServerSideProps({ req, res, params }) {
     let product = {};
     let related = [];
     let storeProfile = {};
+    let relatedMetaData = {}
 
     try {
         const response = await store.dispatch.app.getProduct(params.product)
@@ -160,7 +166,9 @@ export async function getServerSideProps({ req, res, params }) {
             return {
                 props: {
                     product,
-                    related
+                    related,
+                    relatedMetaData,
+                    storeProfile
                 }
             };
         }
@@ -175,6 +183,7 @@ export async function getServerSideProps({ req, res, params }) {
 
         storeProfile = storeResponse
         related = relatedResponse.data.filter(item => item._id !== product._id);
+        relatedMetaData = relatedResponse.metaData;
         product = response;
     } catch(e) {
         console.log(e);
@@ -185,6 +194,7 @@ export async function getServerSideProps({ req, res, params }) {
             props: {
                 product,
                 related,
+                relatedMetaData,
                 storeProfile
             }
         };
@@ -193,6 +203,7 @@ export async function getServerSideProps({ req, res, params }) {
         props: {
             product,
             related,
+            relatedMetaData,
             storeProfile
         },
     }
