@@ -8,6 +8,7 @@ import routes from "../../constants/routes";
 import {getStore} from "../../states";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
+import {useIsAuthenticated} from "../../providers/AuthProvider";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -22,6 +23,7 @@ export const CartIndex = (props) => {
     const loading = useSelector(state => state.loading.effects.cart.updateCart);
     const dispatch = useDispatch();
     const router = useRouter()
+    const isAuthenticated = useIsAuthenticated()
 
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
@@ -96,7 +98,11 @@ export const CartIndex = (props) => {
         try {
             const result = await dispatch.cart.updateCart(body);
             if(result) {
-                router.push(routes.cart.delivery)
+                if(isAuthenticated) {
+                    router.push(routes.cart.delivery)
+                } else {
+                    router.push(routes.cart.guest.index);
+                }
             }
         } catch(e) {
             message.error('An Error was occurred while send data')
