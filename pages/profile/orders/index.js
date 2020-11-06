@@ -166,10 +166,10 @@ const Orders = props => {
                     }
                 },
                 name: order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : '-',
-                data: order.products.map((item, index) => {
+                data: order.products.map((item, i) => {
                     return {
                         key: item._id,
-                        index: item._id,
+                        index: i + 1,
                         product: item.name,
                         subtitution: item.subtitution ? 'Yes' : 'No',
                         price: `$${item.price}`,

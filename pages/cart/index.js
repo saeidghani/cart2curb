@@ -122,7 +122,7 @@ export const CartIndex = (props) => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
-            title: 'Subtitution',
+            title: 'Substitution',
             dataIndex: 'subtitution',
             key: 'subtitution',
             render: (data, row) => {
@@ -229,7 +229,7 @@ export const CartIndex = (props) => {
             </div>
             <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
                 {cart?.products?.filter(product => !deleted.includes(product._id)).length > 0 && (
-                    <div className="flex flex-col pl-4" style={{ width: 210 }}>
+                    <div className="flex flex-col" style={{ width: 210, paddingLeft: 10 }}>
                         <h1 className="text-left text-4.5xl text-paragraph font-medium mb-2 mt-0">${total}</h1>
                         <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
                     </div>
@@ -247,15 +247,15 @@ export const CartIndex = (props) => {
                                     <Col lg={8} md={12} xs={24}>
                                         <Item name={`subtitution-${key + 1}`} label={`Item #${key + 1} Subtitution`}>
                                             <Select placeholder={'I need exact item (Do not subtitute)'} onChange={value => changeSubtitution(value, key, 'subtitution')} defaultValue={product.subtitution}>
-                                                <Option value={'I need exact item'}>I need exact item (Do not subtitute)</Option>
-                                                <Option value={'Do subtitute'}>Do subtitute</Option>
+                                                <Option value={'I need exact item'}>I need exact item (Do not substitute)</Option>
+                                                <Option value={'Do subtitute'}>Do substitute</Option>
                                             </Select>
                                         </Item>
                                     </Col>
                                     {product.subtitution === 'Do subtitute' && (
                                         <Col lg={16} md={12} xs={24}>
                                             <Item name={`subtitution-${key + 1}-desc`} label={'Your Subtitution'}>
-                                                <Input placeholder={'I need exact item (Do not subtitute)'} defaultValue={product.subtitutionDesc} onChange={e => changeSubtitution(e.target.value, key, 'subtitutionDesc')}/>
+                                                <Input placeholder={'I need exact item (Do not substitute)'} defaultValue={product.subtitutionDesc} onChange={e => changeSubtitution(e.target.value, key, 'subtitutionDesc')}/>
                                             </Item>
                                         </Col>
                                     )}
