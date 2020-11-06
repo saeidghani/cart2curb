@@ -65,7 +65,6 @@ export default function Stores() {
 
     const handleObserver = (entities) => {
         const target = entities[0];
-        console.log(target.isIntersecting, isIntersecting);
         if (target.isIntersecting && isIntersecting) {
             isIntersecting = false
             setPage((page) => page + 1)
@@ -108,7 +107,7 @@ export default function Stores() {
     }
 
     return (
-        <Page title={false} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
+        <Page title={false} headTitle={'Most Popular Stores'} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
             <div className="flex items-center justify-between bg-primary p-4 mb-16">
                 <span className="text-2xl font-bold text-white pl-6">Search By GPS</span>
                 <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>

@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 
 const Dashboard = props => {
     return (
-        <Page title={false} breadcrumb={[{ title: 'Store' }]}>
+        <Page title={false} headTitle={'Store'}  breadcrumb={[{ title: 'Store' }]}>
             <Tabs defaultActiveKey={props.defaultTab}>
                 <TabPane key={'products'} tab={'Products'}>
                     <Products vendor={props.profile}/>

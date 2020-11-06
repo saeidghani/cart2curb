@@ -1,10 +1,14 @@
 import React from 'react';
 import {Breadcrumb} from "antd";
 import Link from 'next/link';
+import Head from "next/head";
 
 const Page = props => {
     return (
         <div className="page md:pb-15 pb-12">
+            <Head>
+                <title>{props.headTitle || props.title ? `${props.headTitle || props.title} - ` : ''}{process.env.NEXT_PUBLIC_APP_TITLE}</title>
+            </Head>
             <Breadcrumb separator=">" className={`pt-8 pb-15 text-xs text-${props.breadcrumbColor || 'paragraph'}`}>
                 {props.hasHome && (
                     <Breadcrumb.Item>

@@ -73,7 +73,6 @@ export default function Home() {
 
     const handleObserver = (entities) => {
         const target = entities[0];
-        console.log(target.isIntersecting, isIntersecting);
         if (target.isIntersecting && isIntersecting) {
             isIntersecting = false
             setPage((page) => page + 1)

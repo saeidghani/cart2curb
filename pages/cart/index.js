@@ -39,7 +39,7 @@ export const CartIndex = (props) => {
                     subtitution: !product.subtitution ? undefined : ['I need exact item', 'Do subtitute'].includes(product.subtitution) ? product.subtitution : 'Do subtitute',
                     subtitutionDesc: !['I need exact item', 'Do subtitute'].includes(product.subtitution) ? product.subtitution : null,
                     quantity: product.quantity,
-                    tax: (product.tax * product.totalPrice / 100).toFixed(2),
+                    tax: (product.tax * product.price * product.quantity / 100).toFixed(2),
                     price: product.price,
                     totalPrice: product.totalPrice
                 }
@@ -186,7 +186,7 @@ export const CartIndex = (props) => {
         if(cart.hasOwnProperty('products')) {
             return cart.products.filter(product => !deleted.includes(product._id)).map((product, index) => {
                 let totalPrice = product.totalPrice;
-                let tax = product.tax * product.totalPrice / 100
+                let tax = product.tax * product.price * product.quantity / 100
 
                 if(products[index]) {
                     tax = products[index].tax;

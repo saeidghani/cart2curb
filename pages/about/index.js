@@ -6,7 +6,7 @@ import {CreditCartIcon, ShoppingCartIcon, SmilingIcon} from "../../components/ic
 
 const AboutUs = props => {
     return (
-        <Page title={false} breadcrumb={[{ title: 'About Us'}]}>
+        <Page title={false} headTitle={'About Us'} breadcrumb={[{ title: 'About Us'}]}>
             <Row gutter={[24, 24]} align={'stretch'}>
                 <Col xs={24} lg={16}>
                     <h1 className="text-2xl text-type font-medium mt-0 mb-4">About Us</h1>

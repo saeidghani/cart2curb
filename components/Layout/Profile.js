@@ -6,7 +6,7 @@ import ProfileNavigation from "../ProfileNavigation";
 
 const ProfileLayout = ({title, breadcrumb, actions, withoutDivider, ...props}) => {
     return (
-        <Page title={false} breadcrumb={breadcrumb}>
+        <Page title={false} headTitle={title || ''} breadcrumb={breadcrumb}>
             <Row gutter={32} className="flex md:flex-row flex-col items-stretch">
                 <Col xs={24} md={8} lg={6} className={'hidden md:flex md:flex-col'}>
                     <ProfileNavigation/>

@@ -8,7 +8,7 @@ import './styles.scss';
 
 const FAQ = props => {
     return (
-        <Page title={false} breadcrumb={[{ title: 'FAQs'}]}>
+        <Page title={false} headTitle={'FAQs'} breadcrumb={[{ title: 'FAQs'}]}>
             <Row className={'faq'} gutter={[24, 40]}>
                 <Col xs={24} md={12} className={'order-last md:order-first'}>
                     <Row gutter={[24, 24]}>

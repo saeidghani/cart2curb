@@ -67,7 +67,7 @@ const EditCategory = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
     return (
-        <Page title={false} breadcrumb={breadcrumb}>
+        <Page title={false} headTitle={'Edit Category'} breadcrumb={breadcrumb}>
             <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
                 <Row gutter={24}>
 

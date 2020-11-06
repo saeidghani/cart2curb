@@ -43,7 +43,7 @@ const Account = props => {
     address.push(profile.store.address.country);
 
     return (
-        <Page title={false} breadcrumb={[{ title: 'Vendor Profile' }]}>
+        <Page title={false} headTitle={'Profile'} breadcrumb={[{ title: 'Vendor Profile' }]}>
             <Row>
                 <Col xs={24} className={`flex flex-col`}>
                     <div className="flex items-center justify-between">

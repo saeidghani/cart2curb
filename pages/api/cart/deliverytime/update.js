@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     let token = cookies.token
     try {
         if(token) {
-            console.log(req.body);
             const response = await api.cart.setDeliveryTime(req.body, {
                     headers: {
                         Authorization: `Bearer ${token}`

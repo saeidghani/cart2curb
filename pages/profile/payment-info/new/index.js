@@ -60,7 +60,7 @@ const AddPaymentInfo = props => {
     }
 
     return (
-        <Page title={false} breadcrumb={breadcrumb}>
+        <Page title={false} headTitle={'Add Credit Card Info'} breadcrumb={breadcrumb}>
             <Row>
                 <Col span={24}>
                     <Form

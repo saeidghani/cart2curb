@@ -145,7 +145,6 @@ export const cart = {
                 const noteRes = await api.post('cart/deliverytime/update', {
                     time: body.time
                 })
-                console.log(productsRes);
                 if(productsRes.data.success && noteRes.data.success) {
                     return true;
                 } else {

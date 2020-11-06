@@ -118,7 +118,6 @@ const Orders = props => {
 
     const data = useMemo(() => {
         return orders && orders.map((order, index) => {
-            console.log(order);
             return {
                 key: order._id,
                 index: order._id,

@@ -134,7 +134,7 @@ const EditProduct = props => {
     }
 
     return (
-        <Page title={false} breadcrumb={breadcrumb}>
+        <Page title={false} headTitle={'Edit Product'} breadcrumb={breadcrumb}>
             <Form form={form} layout={'vertical'}
                   initialValues={{
                       unitType: 'quantity',
