@@ -109,17 +109,21 @@ const VendorPage = props => {
 
     const selectCategoryHandler = (catId) => {
         if(catId !== selectedCategory) {
+            isIntersecting = false;
+            setProducts([]);
+            setHasMore(true);
             setSelectedCategory(catId);
             setPage(1)
-            isIntersecting = false;
         }
     }
 
     const searchHandler = (values) => {
+        isIntersecting = false;
+        setProducts([]);
+        setHasMore(true);
         setSearch(values.search);
         setType(values.storeType);
         setPage(1);
-        isIntersecting = false;
     }
 
     const address = vendor.address.addressLine2 ? [vendor.address.addressLine2] : [];
@@ -189,7 +193,7 @@ const VendorPage = props => {
                 <Col xs={24} md={16} lg={18}>
                     <Row gutter={[24, 42]}>
 
-                        {products.length === 0 && !loading && (
+                        {products.length === 0 && !hasMore && (
                             <Col xs={24} className={'flex flex-col items-center justify-center py-8'}>
                                 <InfoCircleOutlined className={'text-paragraph mb-6 text-4xl'} />
                                 <span className="text-paragraph mb-4">There is no Products.</span>
