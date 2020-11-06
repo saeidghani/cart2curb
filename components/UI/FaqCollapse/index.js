@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { DownOutlined } from '@ant-design/icons';
 
-import './styles.scss';
+import './styles.less';
 
 const FaqCollapse = ({question, answer, ...props}) => {
     const [active, setActive] = useState(false);

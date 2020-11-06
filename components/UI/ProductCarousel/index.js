@@ -3,7 +3,7 @@ import { Row, Col } from 'antd';
 import {
     CarouselProvider, DotGroup, ImageWithZoom, Slide, Slider, Image
 } from 'pure-react-carousel';
-import './styles.scss';
+import './styles.less';
 
 const ProductCarousel = ({slides, ...props}) => {
     const [slide, setSlide] = useState(0)

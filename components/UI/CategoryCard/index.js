@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import './styles.scss';
+import './styles.less';
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../Loader";
 import {message} from "antd";

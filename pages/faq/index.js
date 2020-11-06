@@ -4,7 +4,7 @@ import { Row, Col } from 'antd';
 import Page from '../../components/Page';
 import FaqCollapse from "../../components/UI/FaqCollapse";
 import faqQuestions from '../../constants/faq.json';
-import './styles.scss';
+import './styles.less';
 
 const FAQ = props => {
     return (

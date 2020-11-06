@@ -4,7 +4,7 @@ import { EyeOutlined } from '@ant-design/icons';
 
 import routes from "../../../constants/routes";
 
-import './styles.scss';
+import './styles.less';
 
 
 const ProductCard = props => {

@@ -4,7 +4,6 @@ import App from 'next/app';
 import cookie from 'cookie';
 
 import '../styles/less/index.less';
-import '../styles/scss/global.scss';
 import AppProvider from "../providers/AppProvider";
 import Layout from "../components/Layout";
 import RouterChanger from "../components/RouteChanger";

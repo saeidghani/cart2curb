@@ -5,7 +5,7 @@ import { MenuOutlined } from '@ant-design/icons';
 
 import {HeaderLogoIcon, HeaderNotificationIcon} from '../icons';
 import routes from "../../constants/routes";
-import './styles.scss';
+import './styles.less';
 import {useAuthenticatedUserType, useIsAuthenticated, useIsAuthRoute} from "../../hooks/auth";
 import {useRouter} from "next/router";
 import Avatar from "../UI/Avatar";

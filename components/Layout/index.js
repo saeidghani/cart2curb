@@ -1,7 +1,7 @@
 import React from 'react';
 import { Breadcrumb } from "antd";
 
-import './styles.scss';
+import './styles.less';
 import Header from '../Header';
 import Footer from '../Footer';
 
