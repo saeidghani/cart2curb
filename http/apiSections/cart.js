@@ -26,54 +26,93 @@ export default class CartApi extends Instance {
     }
 
     cart(options = {}) {
-        return this.get('cart', {}, options);
+        return this.get('cart', {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     addToCart(body, options = {}) {
-        return this.post('cart', body, {}, options);
+        return this.post('cart', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     editCart(body, options = {}) {
-        return this.put('cart', body, {}, options)
+        return this.put('cart', body, {}, {
+            ...options,
+            withCredentials: true,
+        })
     }
 
     deleteFromCart(id, options = {}) {
-        return this.delete(`cart/product/${id}`, options);
+        return this.delete(`cart/product/${id}`, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     addNote(body, options = {}) {
-        return this.put(`cart/note`, body, {}, options);
+        return this.put(`cart/note`, body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     guestInfo(body, options = {}) {
-        return this.put('cart/guest', body, {}, options);
+        return this.put('cart/guest', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     checkAddress(body, options = {}) {
-        return this.post('cart/check-address', body, {}, options);
+        return this.post('cart/check-address', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     address(body, options = {}) {
-        return this.put('cart/address', body, {}, options);
+        return this.put('cart/address', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     deliveryTime(options = {}) {
-        return this.get('cart/deliverytime', {}, options);
+        return this.get('cart/deliverytime', {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     setDeliveryTime(body, options = {}) {
-        return this.put('cart/deliverytime', body, {}, options);
+        return this.put('cart/deliverytime', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     promoTip(body, options = {}) {
-        return this.put('cart/promotip', body, {}, options);
+        return this.put('cart/promotip', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     checkout(body, options = {}) {
-        return this.post('cart/checkout', body, {}, options);
+        return this.post('cart/checkout', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 
     confirmCheckout(body, options = {}) {
-        return this.post('cart/confirm-checkout', body, {}, options);
+        return this.post('cart/confirm-checkout', body, {}, {
+            ...options,
+            withCredentials: true,
+        });
     }
 }
