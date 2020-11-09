@@ -53,7 +53,6 @@ export const auth = {
 
                 return false;
             } catch(e) {
-                console.log(e.response);
                 message.error('Username Or Password is wrong', 5);
                 return false;
             }

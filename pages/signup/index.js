@@ -319,7 +319,7 @@ const SignUp = props => {
 
                     </Form>
                     <div className="flex flex-row text-center items-center justify-center pt-8">
-                        <h4 className="font-medium text-secondary text-base">Already a member?</h4>
+                        <span className="font-medium text-secondary text-base">Already a member?</span>
                         <Link href={routes.auth.login}>
                             <a className="pl-2 text-info font-medium cursor-pointer text-base">Login</a>
                         </Link>

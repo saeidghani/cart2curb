@@ -6,8 +6,8 @@
     "dev:windows": "SET NODE_ENV=development && node server.js",
     "dev": "NODE_ENV='development' && node server.js",
     "build": "next build",
-    "start": "NODE_ENV='production' && node server.js",
-    "start:windows": "SET NODE_ENV=production && node server.js"
+    "start": "cross-env NODE_ENV=production node server.js",
+    "start:windows": "cross-env NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
@@ -28,6 +28,7 @@
     "babel-plugin-import": "^1.13.1",
     "canada": "^0.1.0",
     "cookie": "^0.4.1",
+    "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "google-maps-react": "^2.0.6",
     "http-proxy-middleware": "^1.0.6",

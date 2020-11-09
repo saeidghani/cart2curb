@@ -104,7 +104,7 @@ const Login = props => {
                     </div>
 
                     <div className="flex flex-row text-center items-center justify-center">
-                        <h4 className="font-medium text-secondary text-base">Do not have an account?</h4>
+                        <span className="font-medium text-secondary text-base">Do not have an account?</span>
                         <Link href={routes.auth.register.index}>
                             <a className="pl-2 text-info font-medium cursor-pointer text-base">Register</a>
                         </Link>

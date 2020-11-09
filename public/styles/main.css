@@ -3348,7 +3348,7 @@ html {
 }
 
 .ant-btn {
-  line-height: 1.5715;
+  line-height: 23px;
   position: relative;
   display: inline-block;
   font-weight: 500;
