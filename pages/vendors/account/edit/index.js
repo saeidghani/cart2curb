@@ -50,6 +50,7 @@ const EditAccount = props => {
     const cities = useCities(province);
     const dispatch = useDispatch();
     const router = useRouter();
+    const [lastReached, setLastReached] = useState(0);
 
     useEffect(() => {
 
@@ -98,7 +99,7 @@ const EditAccount = props => {
         }
         if (info.file.status === 'done') {
 
-            handler(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
+            handler(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
 
@@ -109,6 +110,7 @@ const EditAccount = props => {
             const newFields = [...fields];
             newFields[step] = values;
             setFields(newFields)
+            setLastReached(step + 1);
             setStep(step + 1);
             scrollToTop();
         }
@@ -181,6 +183,12 @@ const EditAccount = props => {
 
     }
 
+    const jumpHandler = (newStep) => {
+        if(newStep <= lastReached) {
+            setStep(newStep);
+            scrollToTop();
+        }
+    }
 
     const scrollToTop = () => {
         const yScroll = window.scrollY;
@@ -196,7 +204,7 @@ const EditAccount = props => {
         <Page title={'Edit Profile'} breadcrumb={breadcrumb}>
             <Row>
                 <Col xs={24} xl={{ span: 14, offset: 5}} lg={{ span: 18, offset: 3}}>
-                    <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'}>
+                    <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'} onChange={jumpHandler}>
                         <Step title="Store Info" description="Enter store info." />
                         <Step title="Store Addresses"  description="Enter store Adresses." />
                         <Step title="Service Area" description="Select service radius." />
@@ -296,7 +304,7 @@ const EditAccount = props => {
                                                   ]}>
                                                 <Select placeholder={'Type/Service'}>
                                                     <Option value={'product'}>Product</Option>
-                                                    <Option value={'service'}>Service</Option>
+                                                    <Option value={'service'} disabled>Service</Option>
                                                 </Select>
                                             </Item>
                                         </Col>
@@ -324,7 +332,7 @@ const EditAccount = props => {
                                             headers={{
                                                 Authorization: `Bearer ${token}`
                                             }}
-                                            action="http://165.227.34.172:3003/api/v1/files/photos/"
+                                            action="/v1/files/photos/"
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setImageUrl)}
                                         >
@@ -353,7 +361,7 @@ const EditAccount = props => {
                                             headers={{
                                                 Authorization: `Bearer ${token}`
                                             }}
-                                            action="http://165.227.34.172:3003/api/v1/files/photos/"
+                                            action="/v1/files/photos/"
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setAvatarUrl)}
                                         >

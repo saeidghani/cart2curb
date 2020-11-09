@@ -96,7 +96,7 @@ const EditProduct = props => {
             message.warning('Please Upload some images form your product');
             return false;
         }
-        const images = imagesList.map(image => product.images.includes(image.url) ? image.url : `http://165.227.34.172:3003/api/v1/files/photos${image.response.data.path}`);
+        const images = imagesList.map(image => product.images.includes(image.url) ? image.url : `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
         const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
         const body = {
             name,
@@ -305,7 +305,7 @@ const EditProduct = props => {
                         <Item name={'photo'}>
                             <Upload
                                 name={'photo'}
-                                action={'http://165.227.34.172:3003/api/v1/files/photos/'}
+                                action={'/v1/files/photos/'}
                                 headers={{
                                     Authorization: `Bearer ${token}`
                                 }}

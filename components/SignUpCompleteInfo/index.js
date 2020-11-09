@@ -57,7 +57,7 @@ const AccountInfo = props => {
     ]
 
     const uploadProps = {
-        action: 'http://165.227.34.172:3003/api/v1/files/photos/',
+        action: '/v1/files/photos/',
         headers: {
             Authorization: `Bearer ${token}`
         },
@@ -81,7 +81,7 @@ const AccountInfo = props => {
             return;
         }
         if (info.file.status === 'done') {
-            setImageUrl(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
+            setImageUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
 

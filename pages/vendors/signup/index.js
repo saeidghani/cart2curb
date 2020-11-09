@@ -52,6 +52,7 @@ const Register = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [submitted, setSubmitted] = useState(false);
+    const [lastReached, setLastReached] = useState(0);
     const loading = useSelector(state => state.loading.effects.vendorAuth.register);
 
     const breadcrumb = [
@@ -75,7 +76,7 @@ const Register = props => {
             return;
         }
         if (info.file.status === 'done') {
-            handler(`http://165.227.34.172:3003/api/v1/files/photos${info.file.response.data.path}`);
+            handler(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
 
@@ -89,6 +90,7 @@ const Register = props => {
             newFields[step] = values;
             setFields(newFields)
             setStep(step + 1);
+            setLastReached(step + 1);
             scrollToTop();
         }
     }
@@ -97,6 +99,13 @@ const Register = props => {
         form.setFieldsValue(fields[step - 1]);
         setStep(step - 1);
         scrollToTop();
+    }
+
+    const jumpHandler = (newStep) => {
+        if(newStep <= lastReached) {
+            setStep(newStep);
+            scrollToTop();
+        }
     }
 
     const checkValidation = (errorInfo) => {
@@ -158,6 +167,7 @@ const Register = props => {
 
         if(result) {
             setSubmitted(true)
+            scrollToTop();
         }
 
     }
@@ -180,7 +190,7 @@ const Register = props => {
             ) : (
             <Row>
                 <Col xs={24} xl={{ span: 14, offset: 5}} lg={{ span: 18, offset: 3}}>
-                    <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'}>
+                    <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'} onChange={jumpHandler}>
                         <Step title="Store Info" description="Enter store info." />
                         <Step title="Store Addresses"  description="Enter store Adresses." />
                         <Step title="Service Area" description="Select service radius." />
@@ -342,7 +352,7 @@ const Register = props => {
                                                   ]}>
                                                 <Select placeholder={'Type/Service'}>
                                                     <Option value={'product'}>Product</Option>
-                                                    <Option value={'service'}>Service</Option>
+                                                    <Option value={'service'} disabled>Service</Option>
                                                 </Select>
                                             </Item>
                                         </Col>
@@ -370,7 +380,7 @@ const Register = props => {
                                             headers={{
                                                 Authorization: `Bearer ${token}`
                                             }}
-                                            action="http://165.227.34.172:3003/api/v1/files/photos/"
+                                            action="/v1/files/photos/"
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setImageUrl)}
                                         >
@@ -399,7 +409,7 @@ const Register = props => {
                                             headers={{
                                                 Authorization: `Bearer ${token}`
                                             }}
-                                            action="http://165.227.34.172:3003/api/v1/files/photos/"
+                                            action="/v1/files/photos/"
                                             beforeUpload={beforeUpload}
                                             onChange={(info) => handleChange(info, setAvatarUrl)}
                                         >
