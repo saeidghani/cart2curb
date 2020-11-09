@@ -7,19 +7,19 @@ import VendorStoreApi from "./apiSections/vendor/store";
 import CartApi from "./apiSections/cart";
 
 export class Api {
-    constructor() {
+    constructor(baseURL = false) {
         this.customer = {
-            auth: new CustomerAuthApi(),
-            profile: new CustomerProfileApi(),
+            auth: new CustomerAuthApi(baseURL),
+            profile: new CustomerProfileApi(baseURL),
         }
-        this.app = new StoreApi()
+        this.app = new StoreApi(baseURL)
         this.vendor = {
-            auth: new VendorAuthApi(),
-            profile: new VendorProfileApi(),
-            store: new VendorStoreApi()
+            auth: new VendorAuthApi(baseURL),
+            profile: new VendorProfileApi(baseURL),
+            store: new VendorStoreApi(baseURL)
         }
 
-        this.cart = new CartApi();
+        this.cart = new CartApi(baseURL);
     }
 }
 

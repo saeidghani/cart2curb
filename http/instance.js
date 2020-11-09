@@ -9,7 +9,7 @@ export default class ApiInstance {
      */
     constructor(baseURL) {
         this.instance = axios.create({
-            baseURL: baseURL || process.env.NEXT_PUBLIC_API_BASE_URL,
+            baseURL: baseURL || `${process.env.NEXT_PUBLIC_LOCAL_BASE_URL}v1/`,
             timeout: 30000
         })
     }

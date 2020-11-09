@@ -2,9 +2,7 @@ import { serialize } from 'cookie';
 import api from '../../../http/Api';
 
 export default async function handler(req, res) {
-
     try {
-
         const response = await api.customer.auth.login(req.body);
         if(response.data.success) {
             res.setHeader('Set-Cookie', [
