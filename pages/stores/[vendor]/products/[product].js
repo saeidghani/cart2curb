@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useRouter } from "next/router";
 import {Row, Col, Button, InputNumber, message} from 'antd';
+import NoSSR from 'react-no-ssr';
 
 import DetailItem from "../../../../components/UI/DetailItem";
 import Page from "../../../../components/Page";
@@ -10,6 +11,7 @@ import Link from "next/link";
 import ProductCard from "../../../../components/UI/ProductCard";
 import {getStore} from "../../../../states";
 import {useDispatch, useSelector} from "react-redux";
+
 
 const ProductView = props => {
     const router = useRouter();
@@ -59,7 +61,9 @@ const ProductView = props => {
         <Page title={product.name} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8}>
-                    <ProductCarousel slides={product.images}/>
+                    <NoSSR>
+                        <ProductCarousel slides={product.images}/>
+                    </NoSSR>
                 </Col>
                 <Col lg={16} md={12} xs={24}>
                     <Row>

@@ -13,6 +13,7 @@ import {getStore} from "../../../states";
 import {getProperty} from "../../../helpers";
 import {useDispatch} from "react-redux";
 import userTypes from "../../../constants/userTypes";
+import NoSSR from "react-no-ssr";
 
 const ProductView = props => {
     const router = useRouter();
@@ -43,7 +44,9 @@ const ProductView = props => {
         <Page title={'Product'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8}>
-                    <ProductCarousel slides={product.images}/>
+                    <NoSSR>
+                        <ProductCarousel slides={product.images}/>
+                    </NoSSR>
                 </Col>
                 <Col lg={16} md={12} xs={24}>
                     <Row>
