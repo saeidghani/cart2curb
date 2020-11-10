@@ -199,11 +199,11 @@ export const profile = {
                     })
                     return data;
                 } else {
-                    message.error('An Error was occurred in data fetch')
+                    return false;
                 }
             } catch(e) {
                 console.log(e)
-                message.error('An Error was occurred in data fetch from the Server')
+                return false;
             }
         },
         async deleteOrder(id, rootState) {

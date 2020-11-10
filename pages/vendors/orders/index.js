@@ -14,6 +14,7 @@ const { Item } = Form;
 let isIntersecting = true;
 const Orders = props => {
     const [form] = Form.useForm();
+    const [search, setSearch] = useState('');
     const [detailsModal, setDetailsModal] = useState(-1);
     const loader = useRef(null);
     const [page, setPage] = useState(1);
@@ -24,8 +25,13 @@ const Orders = props => {
 
     useEffect(async () => {
         if(hasMore || page === 1) {
+            const formFields = form.getFieldsValue()
             let body = {
                 page_number: page,
+            }
+
+            if(formFields.search) {
+                body.search = formFields.search;
             }
 
             try {
@@ -39,7 +45,7 @@ const Orders = props => {
             }
         }
         isIntersecting = true;
-    }, [page, hasMore])
+    }, [page, search])
 
     useEffect(() => {
         const options = {
@@ -63,6 +69,14 @@ const Orders = props => {
             setPage((page) => page + 1)
         }
     }
+
+    const searchHandler = (values) => {
+        isIntersecting = false;
+        setPage(1);
+        setHasMore(true);
+        setSearch(values.search);
+    }
+
 
     const columns = [
         {
@@ -151,7 +165,7 @@ const Orders = props => {
         <Page title={'Orders'} breadcrumb={[{ title: 'Orders' }]}>
             <Row gutter={24} className={'flex items-center pt-2 pb-4'}>
                 <Col lg={18} xs={24}>
-                    <Form form={form} layout={'vertical'}>
+                    <Form form={form} layout={'vertical'} onFinish={searchHandler}>
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
@@ -160,7 +174,7 @@ const Orders = props => {
                             </Col>
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'}>Search</Button>
+                                    <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
