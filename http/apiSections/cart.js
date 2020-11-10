@@ -61,7 +61,7 @@ export default class CartApi extends Instance {
     }
 
     guestInfo(body, options = {}) {
-        return this.put('cart/guest', body, {}, {
+        return this.put('cart/guest-info', body, {}, {
             ...options,
             withCredentials: true,
         });
