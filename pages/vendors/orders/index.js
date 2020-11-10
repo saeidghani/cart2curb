@@ -118,6 +118,7 @@ const Orders = props => {
 
     const data = useMemo(() => {
         return orders && orders.map((order, index) => {
+            console.log(order);
             return {
                 key: order._id,
                 index: order._id,
@@ -129,7 +130,7 @@ const Orders = props => {
                 actions: {
                     showMoreHandler: () => setDetailsModal(order._id),
                 },
-                name: order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : '-',
+                name: order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : order.guest ? `${order.guest.firstName} ${order.guest.lastName}` : '-',
                 data: order.products.map((item, i) => {
                     return {
                         key: item._id,
@@ -138,7 +139,6 @@ const Orders = props => {
                         subtitution: item.subtitution ? 'Yes' : 'No',
                         price: `$${item.price}`,
                         tax: `$${item.tax}`,
-                        store: item.store,
                         quantity: item.quantity,
                         total: `$${item.totalPrice}`
                     }

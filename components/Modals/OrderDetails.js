@@ -20,13 +20,6 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
             key: 'product',
             render: data => (<span className="text-cell">{data}</span>)
         },
-
-        {
-            title: 'Store Address',
-            dataIndex: 'store',
-            key: 'store',
-            render: data => (<span className="text-cell">{data}</span>)
-        },
         {
             title: 'Substitutions',
             dataIndex: 'subtitution',
