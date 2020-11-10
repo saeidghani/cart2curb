@@ -117,6 +117,7 @@ const Orders = props => {
                             status={row.status}
                             data={row.data}
                             total={row.totalPrice}
+                            isCustomer={true}
                         />
 
                         <ReportModal

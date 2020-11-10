@@ -77,11 +77,9 @@ export const app = {
                 if(data.success) {
                     return data;
                 } else {
-                    message.error('An Error was occurred in data fetch')
                     return false
                 }
             } catch(e) {
-                message.error('An Error was occurred in data fetch from the Server')
                 return false
             }
         },
