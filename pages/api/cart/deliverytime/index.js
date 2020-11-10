@@ -1,5 +1,6 @@
 
 import api from '../../../../http/Api';
+import cookie from "cookie";
 
 export default async function handler(req, res) {
     try {
@@ -13,7 +14,21 @@ export default async function handler(req, res) {
             })
             res.status(200).json(response.data);
         } else {
-            const response = await api.cart.deliveryTime();
+
+            let cookies = cookie.parse(req.headers.cookie || '');
+            const options = {}
+            if(cookies.hasOwnProperty('guestId')) {
+                options.headers = {
+                    Cookie: `guestId=${cookies.guestId}`
+                }
+            }
+            const response = await api.cart.deliveryTime(options);
+            if(response.headers['set-cookie']) {
+                console.log(response.headers);
+                res.setHeader('Set-Cookie', [
+                    ...response.headers['set-cookie']
+                ])
+            }
             res.status(200).json(response.data);
         }
     } catch(e) {

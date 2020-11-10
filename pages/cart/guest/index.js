@@ -17,6 +17,8 @@ import Link from "next/link";
 import moment from "moment";
 import cookie from "cookie";
 import {getStore} from "../../../states";
+import {useDispatch} from "react-redux";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -28,6 +30,8 @@ const CartGuest = props => {
     const provinces = useProvinces();
     const cities = useCities(province);
     const [stream, setStream] = useState("Facebook")
+    const dispatch = useDispatch();
+    const router = useRouter()
 
     const breadcrumb = [
         {
@@ -70,9 +74,7 @@ const CartGuest = props => {
             lastName,
             email,
             phone,
-            streamPreference,
-            streamId,
-            birthdate: birthdate.toISOString(),
+            birthdate: birthdate.format('YYYY-MM-DD'),
             socialMedias: {
                 username: streamId,
                 provider: streamPreference,
@@ -411,7 +413,6 @@ const CartGuest = props => {
 export async function getServerSideProps({ req, res }) {
 
     let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
     let userType = cookies.type;
 
     let cart = {}
@@ -440,8 +441,16 @@ export async function getServerSideProps({ req, res }) {
     const store = getStore();
 
     try {
-        const response = await store.dispatch.cart.getCart();
-        const deliveryTimesRes = await store.dispatch.cart.getDeliveryTime();
+        const response = await store.dispatch.cart.getCart({
+            headers: {
+                ...req.headers
+            }
+        });
+        const deliveryTimesRes = await store.dispatch.cart.getDeliveryTime({
+            headers: {
+                ...req.headers
+            }
+        });
 
         if(response) {
             cart = response;
@@ -477,8 +486,6 @@ export async function getServerSideProps({ req, res }) {
         }
     } catch(e) {
         console.log(e);
-        res.writeHead(307, { Location: routes.cart.index });
-        res.end();
         return {
             props: {
                 cart,

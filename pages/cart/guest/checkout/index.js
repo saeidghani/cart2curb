@@ -113,7 +113,11 @@ export async function getServerSideProps({ req, res }) {
     const store = getStore();
     try {
         let response;
-        response = await store.dispatch.cart.getCart();
+        response = await store.dispatch.cart.getCart({
+            headers: {
+                ...req.headers
+            }
+        });
 
         if(response) {
             cart = response;

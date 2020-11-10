@@ -15,7 +15,21 @@ export default async function handler(req, res) {
             );
             res.status(200).json(response.data);
         } else {
-            const response = await api.cart.confirmCheckout(req.body);
+
+            let cookies = cookie.parse(req.headers.cookie || '');
+            const options = {}
+            if(cookies.hasOwnProperty('guestId')) {
+                options.headers = {
+                    Cookie: `guestId=${cookies.guestId}`
+                }
+            }
+            const response = await api.cart.confirmCheckout(req.body, options);
+            if(response.headers['set-cookie']) {
+                console.log(response.headers);
+                res.setHeader('Set-Cookie', [
+                    ...response.headers['set-cookie']
+                ])
+            }
             res.status(200).json(response.data);
         }
 

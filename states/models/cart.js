@@ -228,7 +228,7 @@ export const cart = {
         },
         async guestInfo(body) {
             try {
-                const res = await api.post('cart/checkout/confirm', body);
+                const res = await api.post('cart/guest-info', body);
                 if(res.data.success) {
                     return true;
                 } else {
