@@ -167,7 +167,7 @@ export const CartIndex = (props) => {
             }
         },
         {
-            title: 'Total',
+            title: 'Total Price',
             dataIndex: 'total',
             key: 'total',
             width: 140,
