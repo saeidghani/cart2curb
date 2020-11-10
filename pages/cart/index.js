@@ -38,8 +38,8 @@ export const CartIndex = (props) => {
                 return {
                     _id: product._id,
                     subtituted: !!product.subtitution,
-                    subtitution: !product.subtitution ? undefined : ['I need exact item', 'Do subtitute'].includes(product.subtitution) ? product.subtitution : 'Do subtitute',
-                    subtitutionDesc: !['I need exact item', 'Do subtitute'].includes(product.subtitution) ? product.subtitution : null,
+                    subtitution: !product.subtitution ? undefined : ['I need exact item', 'Do substitute'].includes(product.subtitution) ? product.subtitution : 'Do substitute',
+                    subtitutionDesc: !['I need exact item', 'Do substitute'].includes(product.subtitution) ? product.subtitution : null,
                     quantity: product.quantity,
                     tax: (product.tax * product.price * product.quantity / 100).toFixed(2),
                     price: product.price,
@@ -251,16 +251,16 @@ export const CartIndex = (props) => {
                             return (
                                 <>
                                     <Col lg={8} md={12} xs={24}>
-                                        <Item name={`subtitution-${key + 1}`} label={`Item #${key + 1} Subtitution`}>
-                                            <Select placeholder={'I need exact item (Do not subtitute)'} onChange={value => changeSubtitution(value, key, 'subtitution')} defaultValue={product.subtitution}>
+                                        <Item name={`subtitution-${key + 1}`} label={`Item #${key + 1} Substitution`}>
+                                            <Select placeholder={'I need exact item (Do not substitute)'} onChange={value => changeSubtitution(value, key, 'subtitution')} defaultValue={product.subtitution}>
                                                 <Option value={'I need exact item'}>I need exact item (Do not substitute)</Option>
-                                                <Option value={'Do subtitute'}>Do substitute</Option>
+                                                <Option value={'Do substitute'}>Do substitute</Option>
                                             </Select>
                                         </Item>
                                     </Col>
-                                    {product.subtitution === 'Do subtitute' && (
+                                    {product.subtitution === 'Do substitute' && (
                                         <Col lg={16} md={12} xs={24}>
-                                            <Item name={`subtitution-${key + 1}-desc`} label={'Your Subtitution'}>
+                                            <Item name={`subtitution-${key + 1}-desc`} label={'Your Substitution'}>
                                                 <Input placeholder={'I need exact item (Do not substitute)'} defaultValue={product.subtitutionDesc} onChange={e => changeSubtitution(e.target.value, key, 'subtitutionDesc')}/>
                                             </Item>
                                         </Col>
