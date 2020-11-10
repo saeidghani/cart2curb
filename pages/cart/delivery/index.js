@@ -196,8 +196,10 @@ const Delivery = props => {
                                     <Radio.Group className={'flex flex-col'} onChange={changeAddressHandler}>
                                         {addresses.map(address => {
 
-                                            const transformed = address.addressLine2 ? [address.addressLine2] : [];
-                                            transformed.push(address.addressLine1);
+                                            const transformed = [address.addressLine1];
+                                            if(address.addressLine2) {
+                                                transformed.push(address.addressLine2);
+                                            }
                                             transformed.push(address.city);
                                             transformed.push(address.province);
                                             transformed.push(address.country);

@@ -36,8 +36,10 @@ const Account = props => {
     }, [isAuthenticated])
 
 
-    const address = profile.store.address.addressLine2 ? [profile.store.address.addressLine2] : [];
-    address.push(profile.store.address.addressLine1);
+    const address = [profile.store.address.addressLine1];
+    if(profile.store.address.addressLine2) {
+        address.push(profile.store.address.addressLine2);
+    }
     address.push(profile.store.address.city);
     address.push(profile.store.address.province);
     address.push(profile.store.address.country);

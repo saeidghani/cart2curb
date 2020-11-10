@@ -126,8 +126,10 @@ const VendorPage = props => {
         setPage(1);
     }
 
-    const address = vendor.address.addressLine2 ? [vendor.address.addressLine2] : [];
-    address.push(vendor.address.addressLine1);
+    const address = [vendor.address.addressLine1];
+    if(vendor.address.addressLine2) {
+        address.push(vendor.address.addressLine2);
+    }
     address.push(vendor.address.city);
     address.push(vendor.address.province);
     address.push(vendor.address.country);

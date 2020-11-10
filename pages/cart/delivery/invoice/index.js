@@ -93,8 +93,10 @@ const Invoices = props => {
         }
     ]
 
-    const transformed = cart.address.addressLine2 ? [cart.address.addressLine2] : [];
-    transformed.push(cart.address.addressLine1);
+    const transformed = [cart.address.addressLine1];
+    if(cart.address.addressLine2) {
+        transformed.push(cart.address.addressLine2);
+    }
     transformed.push(cart.address.city);
     transformed.push(cart.address.province);
     transformed.push(cart.address.country);

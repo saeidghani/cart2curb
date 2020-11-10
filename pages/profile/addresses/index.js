@@ -53,8 +53,11 @@ const addresses = props => {
                             if(deleted.includes(item._id)) {
                                 return null;
                             }
-                            const address = item.addressLine2 ? [item.addressLine2] : [];
-                            address.push(item.addressLine1);
+
+                            const address = [item.addressLine1];
+                            if(item.addressLine2) {
+                                address.push(item.addressLine2);
+                            }
                             address.push(item.city);
                             address.push(item.province);
                             address.push(item.country);
