@@ -55,7 +55,7 @@ const VendorPage = props => {
                 storeId: vendor._id,
                 pageNumber: page,
             }
-            if(selectedCategory) {
+            if(selectedCategory && selectedCategory !== 'all') {
                 body.category = selectedCategory;
             }
             if(formFields.search) {

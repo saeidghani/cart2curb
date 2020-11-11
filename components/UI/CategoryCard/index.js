@@ -20,14 +20,6 @@ const CategoryCard = ({title, changeHandler, storeId, ...props}) => {
         setActive(id);
         changeHandler(id)
     }
-    const fetchCategories = async () => {
-        const response = await dispatch.app.getCategories({storeId, page})
-        setCategories(categories => [...categories, ...response.data]);
-        setPage(page => page + 1);
-        if(response.data.length < 30) {
-            setHasMore(false);
-        }
-    }
 
     useEffect(async () => {
         if(hasMore || page === 1) {
@@ -80,6 +72,9 @@ const CategoryCard = ({title, changeHandler, storeId, ...props}) => {
             <span className={'category-card__header'}>{title}</span>
             {categories.length === 0 && !hasMore && (
                 <span className="text-paragraph py-4 block">&mdash; There is no Category</span>
+            )}
+            {categories.length > 0 && (
+                <span className={`category-card__item ${active === 'all' || active === '' ? 'active' : ''}`} onClick={clickHandler.bind(this, 'all')}>All</span>
             )}
             {categories.map((cat, index) => {
                 const classes = ['category-card__item'];
