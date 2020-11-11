@@ -46,7 +46,7 @@ const Checkout = props => {
             <Row gutter={[24, 24]} align={'stretch'}>
                 <Col md={8} xs={24}>
                     <div className="pb-6 w-full h-full">
-                        <div className="border border-input rounded-sm px-7.5 py-4.5 h-full">
+                        <div className="border border-input rounded-sm px-7.5 pt-3 pb-1.5 h-full">
                             <Row>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Cart Price</span>

@@ -96,7 +96,7 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                                         },
                                     },
                                     invalid: {
-                                        color: '#FF4B45',
+                                        color: '#242b36',
                                         borderColor: '#FF4B45'
                                     },
                                 },
@@ -134,7 +134,7 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                                         },
                                     },
                                     invalid: {
-                                        color: '#FF4B45',
+                                        color: '#242b36',
                                         borderColor: '#FF4B45'
                                     },
                                 },
@@ -172,7 +172,7 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                                         },
                                     },
                                     invalid: {
-                                        color: '#FF4B45',
+                                        color: '#242b36',
                                         borderColor: '#FF4B45'
                                     },
                                 },

@@ -139,6 +139,15 @@ const Delivery = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+
+    const disabledDate = (current) => {
+
+        const fromTime = moment(props.deliveryTimes.from);
+        const toTime = moment(props.deliveryTimes.to);
+        return current && (current.diff(fromTime) < 0 || current.diff(toTime) > 0);
+    }
+
+
     return (
         <Page title={'Delivery Time & Checkout'} breadcrumb={breadcrumb}>
             <Row>
@@ -162,7 +171,7 @@ const Delivery = props => {
                                         }
                                     ]}
                                 >
-                                    <DatePicker className={'w-full'}/>
+                                    <DatePicker className={'w-full'} disabledDate={disabledDate}/>
                                 </Item>
                             </Col>
 
@@ -177,7 +186,7 @@ const Delivery = props => {
                                         }
                                     ]}
                                 >
-                                    <TimePicker className={'w-full'}/>
+                                    <TimePicker className={'w-full'} format={'HH:mm'}/>
                                 </Item>
                             </Col>
 
