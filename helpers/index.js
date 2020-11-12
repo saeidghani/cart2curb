@@ -45,3 +45,14 @@ export const getProperty = (object, key, placeholder = null, converter = false) 
 
     return placeholder;
 }
+
+export const convertAddress = (address) => {
+    const result = [address.addressLine1];
+    if(address.addressLine2) {
+        result.push(address.addressLine2);
+    }
+    result.push(address.city);
+    result.push(address.province);
+    result.push(address.country);
+    return result.join(", ");
+}

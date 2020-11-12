@@ -10,6 +10,7 @@ import withAuth from "../../../components/hoc/withAuth";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../../components/UI/Loader";
 import moment from "moment";
+import {convertAddress} from "../../../helpers";
 
 let isIntersecting = true;
 const Orders = props => {
@@ -178,7 +179,7 @@ const Orders = props => {
                         subtitution: item.subtitution ? 'Yes' : 'No',
                         price: `$${item.price}`,
                         tax: `$${item.tax}`,
-                        store: item.store,
+                        store: convertAddress(item.store.address),
                         quantity: item.quantity,
                         total: `$${item.totalPrice}`
                     }
