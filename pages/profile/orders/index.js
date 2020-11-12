@@ -16,6 +16,7 @@ let isIntersecting = true;
 const Orders = props => {
     const screens = Grid.useBreakpoint()
     const [reportModalShow, setReportModalShow] = useState(-1);
+    const [orders, setOrders] = useState([]);
     const [deleted, setDeleted] = useState([]);
     const [detailsModal, setDetailsModal] = useState(-1);
     const loader = useRef(null);
@@ -23,7 +24,11 @@ const Orders = props => {
     const [hasMore, setHasMore] = useState(true);
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.profile.getOrders);
-    const orders = useSelector(state => state.profile.orders.data);
+    const stateOrders = useSelector(state => state.profile.orders.data);
+
+    useEffect(() => {
+        setOrders(stateOrders);
+    }, [stateOrders]);
 
 
     useEffect(async () => {
@@ -132,19 +137,20 @@ const Orders = props => {
     ];
 
     const data = useMemo(() => {
-        return orders && orders.filter(order => !deleted.includes(order._id)).map((order, index) => {
+        return orders && orders.map((order, index) => {
+            const status = !deleted.includes(order._id) ? order.status : 'canceled';
             return {
                 key: order._id,
                 index: order._id,
                 number: order.orderNumber || order._id,
                 date: moment(order.date).format('YYYY-MM-DD'),
                 totalPrice: order.totalPrice,
-                status: order.status,
+                status: status,
                 actions: {
-                    dangerText: order.status.toLowerCase() === 'pending' ? 'Delete' : 'Report',
+                    dangerText: status.toLowerCase() === 'pending' ? 'Delete' : 'Report',
                     showMoreHandler: () => setDetailsModal(order._id),
                     deleteHandler: () => {
-                        if(order.status.toLowerCase() === 'pending') {
+                        if(status.toLowerCase() === 'pending') {
                             deleteOrderModal(async () => {
                                 const res = await dispatch.profile.deleteOrder(order._id);
                                 if(res) {
