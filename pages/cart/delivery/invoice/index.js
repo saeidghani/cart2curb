@@ -31,7 +31,9 @@ const Invoices = props => {
     const [form] = Form.useForm();
     const [orderDate, setOrderDate] = useState(moment());
     const [deliveryTime, setDeliveryTime] = useState(moment(props.cart.deliveryTime || ''));
-    const [tip, setTip] = useState(10);
+    const [tip, setTip] = useState(props.cart.tip || 10);
+    const [promo, setPromo] = useState(props.cart.promo);
+    const [isCustom, setIsCustom] = useState(false);
     const [promoPrice, setPromoPrice] = useState(props.cart.priceAfterPromoTip)
     const loading = useSelector(state => state.loading.effects.cart.promoTip);
     const dispatch = useDispatch();
@@ -39,8 +41,25 @@ const Invoices = props => {
 
     const { profile, stores, cart } = props;
 
-    const changeTipHandler = (value) => {
+    const changeTipHandler = (value, isOption = false) => {
+        if(isOption) {
+            setIsCustom(false);
+        }
+        if(!(Number(value) <= 100 && Number(value) >= 0)) {
+            let cartPrice = cart.cartPrice;
+            if(promo.hasOwnProperty('off')) {
+                cartPrice -= (promo.off / 100) * cart.cartPrice;
+            }
+            setPromoPrice(cartPrice.toFixed(2));
+            return;
+        }
+
+        let cartPrice = cart.cartPrice * (1 + value / 100);
+        if(promo.hasOwnProperty('off')) {
+            cartPrice -= (promo.off / 100) * cart.cartPrice;
+        }
         setTip(Number(value));
+        setPromoPrice(cartPrice.toFixed(2));
         form.setFieldsValue({
             tip: Number(value)
         })
@@ -116,7 +135,12 @@ const Invoices = props => {
         if(res) {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
-                setPromoPrice(cart.priceAfterPromoTip)
+                let cartPrice = cart.cartPrice * (1 + tip / 100);
+                if(cart.promo.hasOwnProperty('off')) {
+                    cartPrice -= (cart.promo.off / 100) * cart.cartPrice;
+                }
+                setPromo(cart.promo);
+                setPromoPrice(cartPrice.toFixed(2));
             }
 
             message.success('Promo Code applied!')
@@ -233,17 +257,27 @@ const Invoices = props => {
                     >
                         <Row gutter={24}>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'tip'} label={'Tip'}>
-                                    <Input placeholder={`${tip}%`} onChange={e => changeTipHandler(e.target.value)}/>
+                                <Item name={'tip'} label={'Tip'} rules={[
+                                    ({getFieldValue}) => ({
+                                        validator(rule, value) {
+                                            const transformedValue = Number(value);
+                                            if (!value || (transformedValue >= 0 && transformedValue <= 100)) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject('Tip should be between 0 and 100');
+                                        },
+                                    })
+                                ]}>
+                                    <Input placeholder={`${tip}%`} onChange={e => changeTipHandler(e.target.value)} disabled={!isCustom}/>
                                 </Item>
                             </Col>
                             <Col lg={16} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
-                                    <Button className={'w-16'} type={tip === 10 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10)}>10%</Button>
-                                    <Button className={'w-16'} type={tip === 15 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15)}>15%</Button>
-                                    <Button className={'w-16'} type={tip === 20 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20)}>20%</Button>
-                                    <Button className={'w-16'} type={tip === 25 ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25)}>25%</Button>
-                                    <Button className={'w-22'} type={![10, 15, 20, 25].includes(tip) ? 'primary' : 'normal'} danger>Custom</Button>
+                                    <Button className={'w-16'} type={(tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
+                                    <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
+                                    <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
+                                    <Button className={'w-16'} type={(tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
+                                    <Button className={'w-22'} type={(![10, 15, 20, 25].includes(tip) || isCustom) ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
                                 </Space>
                             </Col>
                             <Col lg={8} md={12} xs={24}>

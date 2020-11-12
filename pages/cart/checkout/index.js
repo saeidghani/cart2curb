@@ -63,7 +63,7 @@ const Checkout = props => {
                                 </Col>
                                 <Col span={24} className="flex items-center justify-between py-3">
                                     <span className="text-overline">Promo Code</span>
-                                    <span className="text-type font-medium">-{cart.hasOwnProperty('promo') && cart.promo?.hasOwnProperty('off') ? `$${(Number(cart.promo.off) * Number(cart.cartPrice) / 100).toFixed(2)}` : ""}</span>
+                                    <span className="text-type font-medium">-{cart.hasOwnProperty('promo') && cart.promo.hasOwnProperty('off') ? `$${(Number(cart.promo.off) * Number(cart.cartPrice) / 100).toFixed(2)}` : ""}</span>
                                 </Col>
                                 <Divider className={'my-0 border-input'} />
                                 <Col span={24} className="flex items-center justify-between py-3">
