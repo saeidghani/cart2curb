@@ -31,22 +31,23 @@ const Invoices = props => {
     const [form] = Form.useForm();
     const [orderDate, setOrderDate] = useState(moment());
     const [deliveryTime, setDeliveryTime] = useState(moment(props.cart.deliveryTime || ''));
-    const [tip, setTip] = useState(props.cart.tip || 10);
+    const [tip, setTip] = useState(props.cart.tip || 0);
     const [promo, setPromo] = useState(props.cart.promo);
     const [isCustom, setIsCustom] = useState(false);
-    const [promoPrice, setPromoPrice] = useState(props.cart.priceAfterPromoTip)
+    const [promoPrice, setPromoPrice] = useState(props.cart.totalPrice)
     const loading = useSelector(state => state.loading.effects.cart.promoTip);
     const dispatch = useDispatch();
     const router = useRouter();
 
     const { profile, stores, cart } = props;
+    console.log(cart);
 
     const changeTipHandler = (value, isOption = false) => {
         if(isOption) {
             setIsCustom(false);
         }
         if(!(Number(value) <= 100 && Number(value) >= 0)) {
-            let cartPrice = cart.cartPrice;
+            let cartPrice = Number(cart.cartPrice) + Number(cart.deliveryCost) + Number(cart.serviceFee);
             if(promo.hasOwnProperty('off')) {
                 cartPrice -= (promo.off / 100) * cart.cartPrice;
             }
@@ -54,7 +55,7 @@ const Invoices = props => {
             return;
         }
 
-        let cartPrice = cart.cartPrice * (1 + value / 100);
+        let cartPrice = cart.cartPrice * (1 + value / 100) + Number(cart.deliveryCost) + Number(cart.serviceFee);
         if(promo.hasOwnProperty('off')) {
             cartPrice -= (promo.off / 100) * cart.cartPrice;
         }
@@ -96,9 +97,9 @@ const Invoices = props => {
             key: 'delivery',
         },
         {
-            title: 'Total Price',
-            dataIndex: 'total',
-            key: 'total',
+            title: 'Service Fee',
+            dataIndex: 'service',
+            key: 'service',
         },
     ];
 
@@ -108,7 +109,7 @@ const Invoices = props => {
             items: cart.totalQuantity,
             price: `$${cart.cartPrice}`,
             delivery: `$${cart.deliveryCost}`,
-            total: `$${cart.totalPrice}`
+            service: `$${cart.serviceFee}`
         }
     ]
 
@@ -135,7 +136,7 @@ const Invoices = props => {
         if(res) {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
-                let cartPrice = cart.cartPrice * (1 + tip / 100);
+                let cartPrice = cart.cartPrice * (1 + tip / 100) + Number(cart.deliveryCost) + Number(cart.serviceFee);
                 if(cart.promo.hasOwnProperty('off')) {
                     cartPrice -= (cart.promo.off / 100) * cart.cartPrice;
                 }
@@ -291,8 +292,7 @@ const Invoices = props => {
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex flex-col pl-4 justify-end">
-                                    <h1 className="text-right text-4.5xl text-paragraph font-medium mb-2 mt-0">${promoPrice}</h1>
-                                    <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
+                                    <h1 className="text-right text-4.5xl text-paragraph font-medium mt-0">${promoPrice}</h1>
                                 </div>
                             </Col>
 
