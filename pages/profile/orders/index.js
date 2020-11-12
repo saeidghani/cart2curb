@@ -91,7 +91,7 @@ const Orders = props => {
             dataIndex: 'status',
             key: 'status',
             render: status => {
-                const classes = ['text-cell'];
+                const classes = ['text-cell', 'capitalize'];
                 if(status.toLowerCase() === 'canceled') {
                     classes.push('text-opacity-50')
                 }
@@ -112,7 +112,9 @@ const Orders = props => {
                     <>
                         <Space size={screens.lg ? 60 : screens.md ? 40 : screens.sm ? 24 : 16}>
                             <Button type={'link'} shape="circle" icon={<FileSearchOutlined  className={'text-secondarey text-xl'}/>} onClick={actions.showMoreHandler} />
-                            <Button type={'link'} className={'underline text-base font-medium'} onClick={actions.deleteHandler}>{actions.dangerText}</Button>
+                            {row.status.toLowerCase() !== 'canceled' && (
+                                <Button type={'link'} className={'underline text-base font-medium'} onClick={actions.deleteHandler}>{actions.dangerText}</Button>
+                            )}
                         </Space>
                         <OrderDetailsModal
                             visible={row.key === detailsModal}
