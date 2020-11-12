@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Input,
@@ -32,6 +32,8 @@ const CartGuest = props => {
     const [stream, setStream] = useState("Facebook")
     const dispatch = useDispatch();
     const router = useRouter()
+    const { cart } = props;
+    console.log(cart);
 
     const breadcrumb = [
         {
@@ -42,6 +44,40 @@ const CartGuest = props => {
             title: 'Guest'
         }
     ]
+
+    useEffect(() => {
+        if(cart.guest) {
+            const { firstName, lastName, birthdate, phone, email } = cart.guest;
+            form.setFieldsValue({
+                firstName,
+                lastName,
+                birthdate: moment(birthdate || ''),
+                phone,
+                email,
+                date: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
+                time: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
+            })
+            if(cart.guest.hasOwnProperty('socialMedias')) {
+                form.setFieldsValue({
+                    streamPreference: cart.guest.socialMedias.provider,
+                    streamId: cart.guest.socialMedias.username
+                })
+            }
+        }
+        if(cart.address) {
+            const { province, city, addressLine1, addressLine2, postalCode, location } = cart.address;
+            form.setFieldsValue({
+                province, city, addressLine1, addressLine2, postalCode
+            })
+            setMarker({
+                position: {
+                    lat: location.coordinates[1],
+                    lng: location.coordinates[0],
+                }
+            })
+        }
+
+    }, [cart])
 
     const changeMarkerPosition = (e, map, position) => {
         const newPosition = {
@@ -75,7 +111,9 @@ const CartGuest = props => {
             email,
             phone,
             birthdate: birthdate.format('YYYY-MM-DD'),
-            socialMedias: {
+        }
+        if(streamPreference && streamId) {
+            guestBody.socialMedias = {
                 username: streamId,
                 provider: streamPreference,
                 streamOn: true,
@@ -221,12 +259,7 @@ const CartGuest = props => {
 
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamPreference'} label={'Messaging Platform'} rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please select your messaging platform',
-                                    }
-                                ]}>
+                                <Item name={'streamPreference'} label={'Messaging Platform'}>
                                     <Select
                                         placeholder={'Select'}
                                         onChange={setStream}
@@ -241,12 +274,7 @@ const CartGuest = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>} rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please Enter Your ID',
-                                    }
-                                ]}>
+                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
                                     <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
                                 </Item>
                             </Col>
