@@ -10,7 +10,7 @@ import './styles.less';
 const ProductCard = props => {
     return (
         <div className={'border border-overline product-card'}>
-            <img className={'product-card__image'} src={props.images} alt={props.name}/>
+            <img className={'product-card__image h-full'} src={props.images} alt={props.name}/>
             <Link href={routes.stores.product()} as={routes.stores.product(props.vendor, props._id)}>
                 <div className={'product-card__overlay'}>
                     <EyeOutlined className={'text-white text-3xl'}/>
