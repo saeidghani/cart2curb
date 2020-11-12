@@ -22,6 +22,7 @@ const CheckoutForm = ({ onComplete, backHref }) => {
 
     const submitHandler = async (values) => {
         const formFields = form.getFieldsValue()
+        console.log(formFields);
         const cardNumber = elements.getElement(CardNumberElement);
         setLoading(true);
         const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -80,7 +81,23 @@ const CheckoutForm = ({ onComplete, backHref }) => {
         >
             <Row gutter={24}>
                 <Col md={12} xs={24}>
-                    <Item name={'card-number'} label={'Card Number'}>
+                    <Item name={'card-number'} label={'Card Number'} rules={[
+                        ({getFieldValue}) => ({
+                            validator(rule, value) {
+                                console.log(value)
+                                if(!value || value.empty) {
+                                    return Promise.reject('Card Number is required');
+                                }
+                                if(value.error) {
+                                    return Promise.reject(value.error.message);
+                                }
+                                if(!value.complete) {
+                                    return Promise.reject('Please enter complete Card Number');
+                                }
+                                return Promise.resolve();
+                            },
+                        })
+                    ]}>
                         <CardNumberElement
                             options={{
                                 style: {
@@ -118,7 +135,22 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                     </Item>
                 </Col>
                 <Col md={12} xs={24}>
-                    <Item name={'cvc'} label={'CVC'}>
+                    <Item name={'cvc'} label={'CVC'} rules={[
+                        ({getFieldValue}) => ({
+                            validator(rule, value) {
+                                if(!value || value.empty) {
+                                    return Promise.reject('CVC is required');
+                                }
+                                if(value.error) {
+                                    return Promise.reject(value.error.message);
+                                }
+                                if(!value.complete) {
+                                    return Promise.reject('Please enter valid CVC');
+                                }
+                                return Promise.resolve();
+                            },
+                        })
+                    ]}>
                         <CardCvcElement
                             options={{
                                 style: {
@@ -156,7 +188,22 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                     </Item>
                 </Col>
                 <Col md={12} xs={24}>
-                    <Item label={'Expiration Date'} className={'mb-0'}>
+                    <Item label={'Expiration Date'} name='expiration-date' className={'mb-0'} rules={[
+                        ({getFieldValue}) => ({
+                            validator(rule, value) {
+                                if(!value || value.empty) {
+                                    return Promise.reject('Expiration Date is required');
+                                }
+                                if(value.error) {
+                                    return Promise.reject(value.error.message);
+                                }
+                                if(!value.complete) {
+                                    return Promise.reject('Please enter complete Expiration Date');
+                                }
+                                return Promise.resolve();
+                            },
+                        })
+                    ]}>
                         <CardExpiryElement
                             options={{
                                 style: {

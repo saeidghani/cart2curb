@@ -187927,7 +187927,8 @@ body {
   justify-content: space-between;
   height: 100%;
 }
-.StripeElement--invalid {
+.StripeElement--invalid,
+.ant-form-item-has-error .StripeElement {
     border-color: #ff4d4f;
     color: #242b36;
 }
