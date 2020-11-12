@@ -24,6 +24,7 @@ export default {
         checkout: '/cart/checkout',
         guest: {
             index: '/cart/guest',
+            invoice: '/cart/guest/invoice',
             checkout: '/cart/guest/checkout'
         },
         delivery: '/cart/delivery',

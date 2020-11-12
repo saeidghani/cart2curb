@@ -31,7 +31,7 @@ const Checkout = props => {
         },
         {
             title: 'Delivery',
-            href: routes.cart.delivery
+            href: routes.cart.guest.index
         },
         {
             title: 'Invoice'
@@ -76,7 +76,7 @@ const Checkout = props => {
 
                 <Elements stripe={stripePromise}>
                     <Col md={16} xs={24}>
-                        <CheckoutForm backHref={routes.cart.guest.index} onComplete={completeCheckoutHandler}/>
+                        <CheckoutForm backHref={routes.cart.guest.invoice} onComplete={completeCheckoutHandler}/>
                     </Col>
                 </Elements>
             </Row>

@@ -39,7 +39,7 @@ const Invoices = props => {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const { profile, stores, cart } = props;
+    const { stores, cart } = props;
 
     const changeTipHandler = (value, isOption = false) => {
         if(isOption) {
@@ -72,7 +72,7 @@ const Invoices = props => {
         },
         {
             title: 'Delivery',
-            href: routes.cart.delivery
+            href: routes.cart.guest.index
         },
         {
             title: 'Invoice'
@@ -159,7 +159,7 @@ const Invoices = props => {
         const res = await dispatch.cart.promoTip(body)
         if(res) {
             message.success('Cart Information updated successfully!')
-            router.push(routes.cart.checkout);
+            router.push(routes.cart.guest.checkout);
         } else {
             message.error('An Error was occurred');
         }
@@ -199,15 +199,15 @@ const Invoices = props => {
                 </div>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Customer Name'} value={`${profile.firstName} ${profile.lastName}`}/>
+                    <DetailItem title={'Customer Name'} value={`${cart.guest.firstName} ${cart.guest.lastName}`}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Phone Number'} value={profile.phone}/>
+                    <DetailItem title={'Phone Number'} value={cart.guest.phone}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Email Address'} value={profile.email}/>
+                    <DetailItem title={'Email Address'} value={cart.guest.email}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
@@ -302,7 +302,7 @@ const Invoices = props => {
                                     </Button>
                                 </Item>
                                 <Item>
-                                    <Link href={routes.cart.delivery}>
+                                    <Link href={routes.cart.guest.index}>
                                         <Button danger className={'w-32'}>
                                             Prev
                                         </Button>
@@ -324,38 +324,38 @@ export async function getServerSideProps({ req, res }) {
     let token = cookies.token
     let userType = cookies.type;
 
-    let profile = {};
     let cart = {}
     let stores = [];
-    if (userType && userType !== 'customer') {
-        res.writeHead(307, { Location: routes.auth.login });
-        res.end();
-        return {
-            props: {
-                profile,
-                cart,
-                stores,
-            }
-        };
+    if(userType) {
+        if(userType === 'customer') {
+            res.writeHead(307, { Location: routes.cart.invoice.index });
+            res.end();
+            return {
+                props: {
+                    stores,
+                    cart,
+                }
+            };
+        } else {
+            res.writeHead(307, { Location: routes.auth.login });
+            res.end();
+            return {
+                props: {
+                    cart,
+                    stores,
+                }
+            };
+        }
     }
     const store = getStore();
     try {
         let response;
         response = await store.dispatch.cart.getCart({
             headers: {
-                Authorization: `Bearer ${token}`
+                ...req.headers
             }
         });
 
-        const profileRes = await store.dispatch.profile.getProfile({
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        if(profileRes) {
-            profile = profileRes;
-        }
 
         if(response) {
             cart = response;
@@ -364,18 +364,16 @@ export async function getServerSideProps({ req, res }) {
                 res.end();
                 return {
                     props: {
-                        profile,
                         cart,
                         stores,
                     }
                 };
             }
             if(!cart.deliveryTime || !cart.address) {
-                res.writeHead(307, { Location: routes.cart.delivery });
+                res.writeHead(307, { Location: routes.cart.guest.index });
                 res.end();
                 return {
                     props: {
-                        profile,
                         cart,
                         stores,
                     }
@@ -401,7 +399,6 @@ export async function getServerSideProps({ req, res }) {
 
     return {
         props: {
-            profile,
             cart,
             stores,
         }

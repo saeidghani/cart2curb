@@ -155,7 +155,7 @@ const CartGuest = props => {
         const finalRes = await dispatch.cart.updateDelivery(body);
         if(finalRes) {
             message.success('Cart Address and Delivery time updated!')
-            router.push(routes.cart.guest.checkout);
+            router.push(routes.cart.guest.invoice);
         } else {
             message.error('An Error was occurred')
         }
