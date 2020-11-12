@@ -108,9 +108,9 @@ const Delivery = props => {
                 }
             }
         } else {
-            const { country, province, city, addressLine1, addressLine2, postalCode, location} = addresses.find(item => item._id === address)
+            const { country, province, city, addressLine1, addressLine2, postalCode, location, _id} = addresses.find(item => item._id === address)
             transformedAddress = {
-                country, province, city, addressLine1, addressLine2, postalCode, location
+                country, province, city, addressLine1, addressLine2, postalCode, location, _id
             };
         }
 
