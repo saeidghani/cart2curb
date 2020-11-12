@@ -170,6 +170,7 @@ const Orders = props => {
                         })
 
                         if(res) {
+                            setReportModalShow(-1)
                             message.success('Report sent successfully!')
                         } else {
                             message.error('An Error was occurred');
