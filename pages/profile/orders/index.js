@@ -36,6 +36,7 @@ const Orders = props => {
             let body = {
                 page_number: page,
                 page_size: 15,
+                sort: '-date'
             }
             try {
                 const response = await dispatch.profile.getOrders(body)

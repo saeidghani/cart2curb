@@ -28,6 +28,7 @@ const Orders = props => {
             const formFields = form.getFieldsValue()
             let body = {
                 page_number: page,
+                sort: '-date'
             }
 
             if(formFields.search) {
