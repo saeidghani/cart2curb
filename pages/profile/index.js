@@ -83,7 +83,7 @@ const profile = props => {
                         <DetailItem title={'Email'} value={getProperty(profile, 'email', '-')}/>
                     </Col>
                     <Col xs={24} sm={12} lg={6}>
-                        <DetailItem title={'Birthdate'} value={moment(profile.birthdate).format('YYYY-MM-DD')}/>
+                        <DetailItem title={'Birthdate'} value={moment(profile.birthdate).format('MM.DD.YYYY')}/>
                     </Col>
                     <Col xs={24} sm={12} lg={6}>
                         <DetailItem

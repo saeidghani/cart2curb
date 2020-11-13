@@ -137,8 +137,8 @@ const Orders = props => {
                 key: order._id,
                 index: order._id,
                 number: order.orderNumber || order._id,
-                date: moment(order.date).format('YYYY-MM-DD'),
-                totalPrice: order.products.reduce((total, item) => total += item.totalPrice, 0),
+                date: moment(order.date).format('MM.DD.YYYY'),
+                totalPrice: order.products.reduce((total, item) => total += item.totalPrice, 0).toFixed(2),
                 items: order.totalQuantity || order.products.reduce((initial, item) => initial += item.quantity, 0) || order.products.length,
                 status: order.status,
                 actions: {

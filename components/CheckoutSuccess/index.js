@@ -35,7 +35,7 @@ const CheckoutSuccess = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Date'} value={moment().format("YYYY-MM-DD")}/>
+                    <DetailItem title={'Date'} value={moment().format("MM.DD.YYYY")}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
                     <DetailItem title={'Company'} value={'Cart2Curb'}/>

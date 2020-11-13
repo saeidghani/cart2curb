@@ -100,7 +100,7 @@ const CartGuest = props => {
         const fromTime = moment(props.deliveryTimes.from);
         const toTime = moment(props.deliveryTimes.to);
         if(deliveryTime.diff(fromTime) < 0 || deliveryTime.diff(toTime) > 0) {
-            message.error(`Delivery time should be between ${fromTime.format('YYYY-MM-DD - HH:mm')} and ${toTime.format('YYYY-MM-DD - HH:mm')}`)
+            message.error(`Delivery time should be between ${fromTime.format('MM.DD.YYYY - HH:mm')} and ${toTime.format('MM.DD.YYYY - HH:mm')}`)
             return false;
         }
 
@@ -110,7 +110,7 @@ const CartGuest = props => {
             lastName,
             email,
             phone,
-            birthdate: birthdate.format('YYYY-MM-DD'),
+            birthdate: birthdate.format('MM.DD.YYYY'),
         }
         if(streamPreference && streamId) {
             guestBody.socialMedias = {

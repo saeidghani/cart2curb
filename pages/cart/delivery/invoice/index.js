@@ -178,7 +178,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Date'} value={orderDate.format('YYYY-MM-DD')}/>
+                    <DetailItem title={'Date'} value={orderDate.format('MM.DD.YYYY')}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
                     <DetailItem title={'Company'} value={'Cart2Curb'}/>
@@ -211,7 +211,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Order Date'} value={orderDate.format('YYYY-MM-DD')}/>
+                    <DetailItem title={'Order Date'} value={orderDate.format('MM.DD.YYYY')}/>
                 </Col>
 
                 <Col xs={24} md={12}>
@@ -219,7 +219,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Scheduled Delivery Time'} value={`${deliveryTime.format('YYYY-MM-DD')} | ${deliveryTime.format("HH:mm")}`}/>
+                    <DetailItem title={'Scheduled Delivery Time'} value={`${deliveryTime.format('MM.DD.YYYY')} | ${deliveryTime.format("HH:mm")}`}/>
                 </Col>
                 <Col xs={24}>
                     <DetailItem title={'Comments'} value={cart.note}/>

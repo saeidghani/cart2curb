@@ -145,7 +145,7 @@ const Orders = props => {
                 key: order._id,
                 index: order._id,
                 number: order.orderNumber || order._id,
-                date: moment(order.date).format('YYYY-MM-DD'),
+                date: moment(order.date).format('MM.DD.YYYY'),
                 totalPrice: order.totalPrice,
                 status: status,
                 actions: {

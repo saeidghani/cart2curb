@@ -106,7 +106,7 @@ const AccountEdit = props => {
         let wasStreamSet = false;
         const body = {
             notifyMethod,
-            birthdate: moment(birthdate).format('YYYY-MM-DD'),
+            birthdate: moment(birthdate).format('MM.DD.YYYY'),
             firstName,
             lastName,
             phone
