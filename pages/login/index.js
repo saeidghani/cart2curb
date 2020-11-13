@@ -90,17 +90,30 @@ const Login = props => {
                     </div>
 
                     <div className="mb-16 flex flex-col lg:flex-row w-full">
-                        <Button size="large" style={{ height: '50px' }} className="flex flex-row-reverse text-center justify-center lg:pl-6 lg:pr-3 items-center text-14px border border-secondary flex-1 mb-4 lg:mb-0 mr-0 lg:mr-3" icon={<GoogleIcon />}>
-                            <span className="pr-7">
-                                Continue With
-                            </span>
-                        </Button>
-                        <Button size="large" style={{ height: '50px' }} className="flex flex-row-reverse text-center justify-center lg:pl-6 lg:pr-3 items-center text-14px border border-secondary flex-1" icon={<FacebookIcon />}>
-
-                            <span className="pr-7">
-                                Continue With
-                            </span>
-                        </Button>
+                        <Link href={'/v1/customer/auth/google'}>
+                            <Button
+                                size="large"
+                                style={{ height: '50px' }}
+                                className="flex flex-row-reverse text-center justify-center lg:pl-6 lg:pr-3 items-center text-14px border border-secondary flex-1 mb-4 lg:mb-0 mr-0 lg:mr-3"
+                                icon={<GoogleIcon />}
+                            >
+                                <span className="pr-7">
+                                    Continue With
+                                </span>
+                            </Button>
+                        </Link>
+                        <Link href={'/v1/customer/auth/facebook'}>
+                            <Button
+                                size="large"
+                                style={{ height: '50px' }}
+                                className="flex flex-row-reverse text-center justify-center lg:pl-6 lg:pr-3 items-center text-14px border border-secondary flex-1"
+                                icon={<FacebookIcon />}
+                            >
+                                <span className="pr-7">
+                                    Continue With
+                                </span>
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className="flex flex-row text-center items-center justify-center">

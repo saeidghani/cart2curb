@@ -110,7 +110,7 @@ const CartGuest = props => {
             lastName,
             email,
             phone,
-            birthdate: birthdate.format('MM.DD.YYYY'),
+            birthdate: birthdate.format('YYYY-MM-DD'),
         }
         if(streamPreference && streamId) {
             guestBody.socialMedias = {

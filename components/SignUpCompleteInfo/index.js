@@ -91,7 +91,7 @@ const AccountInfo = props => {
         let wasStreamSet = false;
         const body = {
             notifyMethod,
-            birthdate: moment(birthdate).format('MM.DD.YYYY'),
+            birthdate: moment(birthdate).format('YYYY-MM-DD'),
         }
 
         if(imageUrl) {
