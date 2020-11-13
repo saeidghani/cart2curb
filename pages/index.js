@@ -135,7 +135,7 @@ export default function Home() {
                                         <VideoPlayer
                                             key={`video`}
                                             src={video.url}
-                                            poster={'http://cart2curb.agencywolfe.com/wp-content/themes/cart-2-curb-landing-page/assets/img/raw/video.jpg'}
+                                            poster={video.cover}
                                         />
                                     </div>
                                 </Col>
@@ -153,7 +153,7 @@ export default function Home() {
                                         <VideoPlayer
                                             key={`video`}
                                             src={video.url}
-                                            poster={'http://cart2curb.agencywolfe.com/wp-content/themes/cart-2-curb-landing-page/assets/img/raw/video.jpg'}
+                                            poster={video.cover}
                                         />
                                     </div>
                                 </Col>
@@ -166,7 +166,7 @@ export default function Home() {
                         <VideoSlider videos={videos.map(item => {
                             return {
                                 src: item.url,
-                                poster: 'http://cart2curb.agencywolfe.com/wp-content/themes/cart-2-curb-landing-page/assets/img/raw/video.jpg'
+                                poster: item.cover
                             }
                         })}/>
                     </div>
