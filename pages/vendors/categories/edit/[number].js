@@ -55,7 +55,7 @@ const EditCategory = props => {
         }
 
         const res = await dispatch.vendorStore.editCategory({
-            id: props.category._id,
+            id: props.id,
             body
         });
         if(res) {
@@ -134,7 +134,8 @@ export async function getServerSideProps({ req, res, params}) {
         res.end();
         return {
             props: {
-                category
+                category,
+                id: params.number
             }
         };
     }
@@ -144,7 +145,8 @@ export async function getServerSideProps({ req, res, params}) {
         res.end();
         return {
             props: {
-                category
+                category,
+                id: params.number
             }
         };
     }
@@ -168,7 +170,8 @@ export async function getServerSideProps({ req, res, params}) {
             res.end();
             return {
                 props: {
-                    category
+                    category,
+                    id: params.number
                 }
             };
         }
@@ -177,14 +180,16 @@ export async function getServerSideProps({ req, res, params}) {
         res.end();
         return {
             props: {
-                category
+                category,
+                id: params.number
             }
         };
     }
 
     return {
         props: {
-            category
+            category,
+            id: params.number
         }
     }
 
