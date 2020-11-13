@@ -8,7 +8,7 @@ const deleteOrderModal = (onOk) => {
             <span className="text-paragraph">Are you sure to cancel this order? There is no going back!!</span>
         ),
         onOk,
-        okText: 'Ok',
+        okText: 'OK',
         cancelText: 'Cancel',
         cancelButtonProps: {
             danger: true,
