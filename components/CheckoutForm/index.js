@@ -188,7 +188,7 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                     </Item>
                 </Col>
                 <Col md={12} xs={24}>
-                    <Item label={'Expiration Date'} name='expiration-date' className={'mb-0'} rules={[
+                    <Item label={'Expiration Date'} name='expiration-date' rules={[
                         ({getFieldValue}) => ({
                             validator(rule, value) {
                                 if(!value || value.empty) {
@@ -227,7 +227,7 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                     </Item>
                 </Col>
 
-                <Col md={12} xs={24} className={'flex items-end flex-row-reverse'}>
+                <Col md={12} xs={24} className={'flex items-end flex-row-reverse mb-6'}>
                     <Item className={'mb-0'}>
                         <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
                             Pay
