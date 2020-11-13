@@ -20,6 +20,10 @@ export default class VendorStoreApi extends ApiInstance {
         return this.post('vendor/store/categories', body, {}, options)
     }
 
+    singleCategory(id, options = {}) {
+        return this.get(`vendor/store/categories/${id}`, {}, options);
+    }
+
     editCategory(id, body, options = {}) {
         return this.put(`vendor/store/categories/${id}`, body, {}, options);
     }

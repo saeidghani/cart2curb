@@ -344,7 +344,7 @@ export async function getServerSideProps({ req, res, params }) {
 
     try {
         const store = getStore();
-        const response = await store.dispatch.vendorStore.getServerSideCategory({
+        const response = await store.dispatch.vendorStore.getServerSideCategories({
             query: {
                 page_size: 100
             },

@@ -68,7 +68,7 @@ export const vendorStore = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
-        async getServerSideCategory({ query, options}, rootState) {
+        async getServerSideCategories({ query, options}) {
             try {
                 const res = await api.vendor.store.categories(query, options);
                 const data = res.data;
@@ -80,6 +80,20 @@ export const vendorStore = {
             } catch(e) {
                 console.log(e)
                 return []
+            }
+        },
+        async getServerSideCategory({ id, options }) {
+            try {
+                const res = await api.vendor.store.singleCategory(id,options);
+                const data = res.data;
+                if(data.success) {
+                    return data.data;
+                } else {
+                    return false
+                }
+            } catch(e) {
+                console.log(e)
+                return false
             }
         },
         async addCategory(body, rootState) {

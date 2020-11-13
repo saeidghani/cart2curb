@@ -114,9 +114,10 @@ const Categories = props => {
             dataIndex: 'actions',
             key: 'actions',
             render: (actions, row) => {
+                console.log(row);
                 return (
                     <div className={'flex flex-row items-center'}>
-                        <Link href={routes.vendors.categories.edit()} as={routes.vendors.categories.edit(row.title)}>
+                        <Link href={routes.vendors.categories.edit()} as={routes.vendors.categories.edit(row.index)}>
                             <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} className={'btn-icon-small mr-4'} />
                         </Link>
                         <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} onClick={actions.deleteHandler} className={'btn-icon-small'} />

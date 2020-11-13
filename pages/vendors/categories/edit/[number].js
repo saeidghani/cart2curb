@@ -152,9 +152,7 @@ export async function getServerSideProps({ req, res, params}) {
     try {
         const store = getStore();
         const response = await store.dispatch.vendorStore.getServerSideCategory({
-            query: {
-                search: params.number,
-            },
+            id: params.number,
             options: {
                 headers: {
                     Authorization: `Bearer ${token}`
