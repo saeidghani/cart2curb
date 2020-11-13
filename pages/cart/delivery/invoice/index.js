@@ -35,7 +35,7 @@ const Invoices = props => {
     const [promo, setPromo] = useState(props.cart.promo);
     const [isCustom, setIsCustom] = useState(false);
     const [promoPrice, setPromoPrice] = useState(props.cart.totalPrice)
-    const loading = useSelector(state => state.loading.effects.cart.promoTip);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -148,20 +148,19 @@ const Invoices = props => {
     }
 
     const submitHandler = async (values) => {
-
+        setLoading(true);
         const body = {
             tip,
-        }
-        if(values.promo) {
-            body.promoCode = values.promo
         }
 
         const res = await dispatch.cart.promoTip(body)
         if(res) {
             message.success('Cart Information updated successfully!')
+            setLoading(false);
             router.push(routes.cart.checkout);
         } else {
             message.error('An Error was occurred');
+            setLoading(false);
         }
     }
 
