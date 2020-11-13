@@ -94,6 +94,7 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
                         labelColor={'muted'}
                         valueColor={'dark'}
                         value={status}
+                        capitalize={true}
                         />
                 </Col>
                 <Col xs={24}>
