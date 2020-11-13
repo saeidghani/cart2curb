@@ -19,6 +19,7 @@ import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import {UserOutlined} from "@ant-design/icons";
+import ImgCrop from "antd-img-crop";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -160,6 +161,7 @@ const AccountInfo = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
+                                        <ImgCrop>
                                         <Upload
                                             name="photo"
                                             listType="picture-card"
@@ -181,6 +183,8 @@ const AccountInfo = props => {
                                             <label htmlFor={'avatar'} className="text-info ml-3 cursor-pointer">Upload Image</label>
 
                                         </Upload>
+
+                                        </ImgCrop>
                                     </div>
                                 </Item>
                             </Col>
