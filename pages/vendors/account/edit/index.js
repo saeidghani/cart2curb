@@ -15,6 +15,7 @@ import {getStore} from "../../../../states";
 import {getProperty} from "../../../../helpers";
 import {PictureOutlined, UserOutlined} from "@ant-design/icons";
 import userTypes from "../../../../constants/userTypes";
+import ImgCrop from "antd-img-crop";
 
 
 const { Step } = Steps;
@@ -324,59 +325,63 @@ const EditAccount = props => {
 
                                 <Col lg={8} md={12} xs={24}>
                                     <div className={'flex items-center justify-start pt-4'}>
-                                        <Upload
-                                            name="photo"
-                                            listType="picture-card"
-                                            className="border-0 avatar-uploader-square-wrapper"
-                                            showUploadList={false}
-                                            headers={{
-                                                Authorization: `Bearer ${token}`
-                                            }}
-                                            action="/v1/files/photos/"
-                                            beforeUpload={beforeUpload}
-                                            onChange={(info) => handleChange(info, setImageUrl)}
-                                        >
-                                            <div className="avatar-uploader-square">
-                                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
-                                                    <>
-                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
-                                                            <PictureOutlined className={'text-xl'} />
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                            <label htmlFor={'photo'} className="text-secondarey ml-3 cursor-pointer">Upload Your Store Image</label>
-                                        </Upload>
+                                        <ImgCrop>
+                                            <Upload
+                                                name="photo"
+                                                listType="picture-card"
+                                                className="border-0 avatar-uploader-square-wrapper"
+                                                showUploadList={false}
+                                                headers={{
+                                                    Authorization: `Bearer ${token}`
+                                                }}
+                                                action="/v1/files/photos/"
+                                                beforeUpload={beforeUpload}
+                                                onChange={(info) => handleChange(info, setImageUrl)}
+                                            >
+                                                <div className="avatar-uploader-square">
+                                                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
+                                                        <>
+                                                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
+                                                                <PictureOutlined className={'text-xl'} />
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                <label htmlFor={'photo'} className="text-secondarey ml-3 cursor-pointer">Upload Your Store Image</label>
+                                            </Upload>
+                                        </ImgCrop>
 
                                     </div>
                                 </Col>
 
                                 <Col lg={8} md={12} xs={24}>
                                     <div className={'flex items-center justify-start pt-6'}>
-                                        <Upload
-                                            name="photo"
-                                            listType="picture-card"
-                                            className="avatar-uploader-wrapper border-0"
-                                            showUploadList={false}
-                                            headers={{
-                                                Authorization: `Bearer ${token}`
-                                            }}
-                                            action="/v1/files/photos/"
-                                            beforeUpload={beforeUpload}
-                                            onChange={(info) => handleChange(info, setAvatarUrl)}
-                                        >
-                                            <div className="avatar-uploader">
-                                                {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
-                                                    <>
-                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
-                                                            <UserOutlined className={'text-lg'}/>
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                            <label htmlFor={'avatar'} className="text-secondarey ml-3 cursor-pointer">Upload Your Profile Image</label>
+                                        <ImgCrop>
+                                            <Upload
+                                                name="photo"
+                                                listType="picture-card"
+                                                className="avatar-uploader-wrapper border-0"
+                                                showUploadList={false}
+                                                headers={{
+                                                    Authorization: `Bearer ${token}`
+                                                }}
+                                                action="/v1/files/photos/"
+                                                beforeUpload={beforeUpload}
+                                                onChange={(info) => handleChange(info, setAvatarUrl)}
+                                            >
+                                                <div className="avatar-uploader">
+                                                    {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                        <>
+                                                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                                <UserOutlined className={'text-lg'}/>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                <label htmlFor={'avatar'} className="text-secondarey ml-3 cursor-pointer">Upload Your Profile Image</label>
 
-                                        </Upload>
+                                            </Upload>
+                                        </ImgCrop>
                                     </div>
                                 </Col>
 

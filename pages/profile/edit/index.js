@@ -19,6 +19,7 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import {UserOutlined} from "@ant-design/icons";
 import userTypes from "../../../constants/userTypes";
+import ImgCrop from "antd-img-crop";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -262,27 +263,30 @@ const AccountEdit = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
-                                        <Upload
-                                            name="photo"
-                                            listType="picture-card"
-                                            className="avatar-uploader-wrapper border-0"
-                                            showUploadList={false}
-                                            beforeUpload={beforeUpload}
-                                            onChange={handleChange}
-                                            {...uploadProps}
-                                        >
-                                            <div className="avatar-uploader">
-                                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
-                                                    <>
-                                                        <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
-                                                            <UserOutlined className={'text-lg'}/>
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                            <label htmlFor={'avatar'} className="text-info ml-3 cursor-pointer">Upload Image</label>
 
-                                        </Upload>
+                                        <ImgCrop>
+                                            <Upload
+                                                name="photo"
+                                                listType="picture-card"
+                                                className="avatar-uploader-wrapper border-0"
+                                                showUploadList={false}
+                                                beforeUpload={beforeUpload}
+                                                onChange={handleChange}
+                                                {...uploadProps}
+                                            >
+                                                <div className="avatar-uploader">
+                                                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                        <>
+                                                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                                <UserOutlined className={'text-lg'}/>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                <label htmlFor={'avatar'} className="text-info ml-3 cursor-pointer">Upload Image</label>
+
+                                            </Upload>
+                                        </ImgCrop>
                                     </div>
                                 </Item>
                             </Col>

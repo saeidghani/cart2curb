@@ -11,6 +11,7 @@ import Link from "next/link";
 import cookie from "cookie";
 import userTypes from "../../../../constants/userTypes";
 import {getStore} from "../../../../states";
+import ImgCrop from "antd-img-crop";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -262,23 +263,25 @@ const NewProduct = props => {
                     </Col>
                     <Col xs={24}>
                         <Item name={'photo'}>
-                            <Upload
-                                name={'photo'}
-                                action={'/v1/files/photos/'}
-                                headers={{
-                                    Authorization: `Bearer ${token}`
-                                }}
-                                listType="picture"
-                                className={'flex upload-list-inline flex-row-reverse justify-end items-stretch flex-wrap-reverse'}
-                                onChange={handleChange}
-                            >
-                                <div className="pt-2 h-full" style={{ float: 'left'}}>
-                                    <div className={'flex items-center flex-row justify-center border border-dashed border-input px-12 bg-card h-full'} style={{ height: 66}}>
-                                        <PlusOutlined className={'text-2xl text-icon'} />
-                                        <div className={'pl-3 text-cell'}>Upload</div>
+                            <ImgCrop>
+                                <Upload
+                                    name={'photo'}
+                                    action={'/v1/files/photos/'}
+                                    headers={{
+                                        Authorization: `Bearer ${token}`
+                                    }}
+                                    listType="picture"
+                                    className={'flex upload-list-inline flex-row-reverse justify-end items-stretch flex-wrap-reverse'}
+                                    onChange={handleChange}
+                                >
+                                    <div className="pt-2 h-full" style={{ float: 'left'}}>
+                                        <div className={'flex items-center flex-row justify-center border border-dashed border-input px-12 bg-card h-full'} style={{ height: 66}}>
+                                            <PlusOutlined className={'text-2xl text-icon'} />
+                                            <div className={'pl-3 text-cell'}>Upload</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </Upload>
+                                </Upload>
+                            </ImgCrop>
                         </Item>
                     </Col>
                     <Col xs={24}>
