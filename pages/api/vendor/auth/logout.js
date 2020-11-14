@@ -6,10 +6,12 @@ export default async function handler(req, res) {
         serialize('token', '', {
             maxAge: -1,
             path: '/',
+            httpOnly: true,
         }),
         serialize('type', '', {
             maxAge: -1,
             path: '/',
+            httpOnly: true,
         }),
 
     ]);

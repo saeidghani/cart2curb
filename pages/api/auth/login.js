@@ -9,12 +9,14 @@ export default async function handler(req, res) {
                 serialize('token', String(response.data.data.token),  {
                     path: '/',
                     expires: (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
-                    maxAge: 30 * 24 * 60 * 60
+                    maxAge: 30 * 24 * 60 * 60,
+                    httpOnly: true
                 }),
                 serialize('type', String("customer"),  {
                     path: '/',
                     expires: (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
-                    maxAge: 30 * 24 * 60 * 60
+                    maxAge: 30 * 24 * 60 * 60,
+                    httpOnly: true
                 })
             ])
         }
