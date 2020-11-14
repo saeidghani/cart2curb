@@ -138,14 +138,17 @@ const VendorPage = props => {
         <Page title={'Vendor Details Page'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={8} lg={6}>
-
-                    {hasError ? (
-                        <div className="bg-card flex items-center justify-center text-4xl text-gray h-full" style={{ minHeight: 384, objectFit: 'cover', width: '100%', borderRadius: 2 }}>
-                            <ShopOutlined />
+                    <div style={{ position: 'relative', paddingTop: '100%'}}>
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+                            {hasError ? (
+                                <div className="bg-card flex items-center justify-center text-4xl text-gray h-full" style={{ height: '100%', objectFit: 'cover', width: '100%', borderRadius: 2 }}>
+                                    <ShopOutlined />
+                                </div>
+                            ) : (
+                                <img src={imageStore} alt={'shop name'} className={'rounded-sm w-full h-full'} style={{ objectFit: 'cover' }} onErrorCapture={changeToPlaceholder}/>
+                            )}
                         </div>
-                    ) : (
-                        <img src={imageStore} alt={'shop name'} className={'rounded-sm w-full'} onErrorCapture={changeToPlaceholder}/>
-                    )}
+                    </div>
                 </Col>
                 <Col xs={24} md={16} lg={18} className={'flex flex-col'}>
                     <h1 className={'text-type text-2xl mb-2 mt-0'}>{vendor.name}</h1>

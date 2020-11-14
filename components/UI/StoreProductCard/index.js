@@ -38,14 +38,18 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
 
     return (
         <div className="flex flex-col">
-
-            {hasError ? (
-                <div className="bg-card flex items-center justify-center text-4xl text-gray" style={{ maxHeight: 288, minHeight: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }}>
-                    <PictureOutlined  />
+            <div style={{ position: 'relative', paddingTop: '100%'}}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+                    {hasError ? (
+                        <div className="bg-card flex items-center justify-center text-4xl text-gray" style={{ height: '100%', objectFit: 'cover', width: '100%', borderRadius: 2 }}>
+                            <PictureOutlined  />
+                        </div>
+                    ) : (
+                        <img src={imageProduct} alt="shop name" style={{ height: '100%', objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
+                    )}
                 </div>
-            ) : (
-                <img src={imageProduct} alt="shop name" style={{ height: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
-            )}
+            </div>
+
             <div className="flex flex-col mt-3">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex flex-col">
