@@ -48,6 +48,7 @@ const Invoices = props => {
     const [isCustom, setIsCustom] = useState(false);
     const [promoPrice, setPromoPrice] = useState(props.cart.totalPrice)
     const [loading, setLoading] = useState(false);
+    const [promoLoading, setPromoLoading] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -132,7 +133,9 @@ const Invoices = props => {
     transformed.push(cart.address.province);
     transformed.push(cart.address.country);
 
-    const applyPromoHandler = async () => {
+    const applyPromoHandler = async (e) => {
+        e.preventDefault();
+        setPromoLoading(true);
         const value = form.getFieldValue('promo');
         if(!value) {
             message.info('Please enter Promo code first');
@@ -155,7 +158,10 @@ const Invoices = props => {
                 setPromoPrice(cartPrice.toFixedNoRounding(2));
             }
 
+            setPromoLoading(false);
             message.success('Promo Code applied!')
+        } else {
+            setPromoLoading(false);
         }
     }
 
@@ -293,11 +299,11 @@ const Invoices = props => {
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'promo'} label={'Promo'}>
-                                    <Input placeholder={'Promo'}/>
+                                    <Input placeholder={'Promo'} onPressEnter={applyPromoHandler}/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24} className={'md:pt-7'}>
-                                <Button className={'w-32'} danger size={'lg'} onClick={applyPromoHandler}>Apply</Button>
+                                <Button className={'w-32'} danger size={'lg'} onClick={applyPromoHandler} loading={promoLoading}>Apply</Button>
                             </Col>
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
