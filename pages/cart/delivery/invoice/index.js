@@ -345,8 +345,24 @@ export async function getServerSideProps({ req, res }) {
     let profile = {};
     let cart = {}
     let stores = [];
+
+    if(!userType || !token) {
+        res.writeHead(307, { Location: routes.cart.guest.invoice });
+        res.end();
+        return {
+            props: {
+                profile,
+                cart,
+                stores,
+            }
+        };
+    }
     if (userType && userType !== 'customer') {
-        res.writeHead(307, { Location: routes.auth.login });
+        if(userType === 'vendor') {
+            res.writeHead(307, { Location: routes.cart.guest.invoice })
+        } else {
+            res.writeHead(307, { Location: routes.auth.login });
+        }
         res.end();
         return {
             props: {
@@ -361,6 +377,7 @@ export async function getServerSideProps({ req, res }) {
         let response;
         response = await store.dispatch.cart.getCart({
             headers: {
+                ...req.headers,
                 Authorization: `Bearer ${token}`
             }
         });

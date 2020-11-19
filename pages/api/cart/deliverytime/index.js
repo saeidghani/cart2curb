@@ -5,8 +5,10 @@ import cookie from "cookie";
 export default async function handler(req, res) {
     try {
 
+        let cookies = cookie.parse(req.headers.cookie || '');
+        let type = cookies.type;
         const token = req.headers.authorization;
-        if(token) {
+        if(token && type === 'customer') {
             const response = await api.cart.deliveryTime({
                 headers: {
                     ...req.headers
@@ -15,7 +17,6 @@ export default async function handler(req, res) {
             res.status(200).json(response.data);
         } else {
 
-            let cookies = cookie.parse(req.headers.cookie || '');
             const options = {}
             if(cookies.hasOwnProperty('guestId')) {
                 options.headers = {

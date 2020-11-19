@@ -41,7 +41,7 @@ const Header = props => {
     }, [userType, props])
 
     useEffect(() => {
-        if(router.route.indexOf('/vendors') === 0 || userType === 'vendor') {
+        if(router.route.indexOf('/vendors') === 0) {
             setIsVendorPage(true)
         } else {
             setIsVendorPage(false);

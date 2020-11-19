@@ -353,7 +353,7 @@ export async function getServerSideProps({ req, res }) {
                     cart,
                 }
             };
-        } else {
+        } else if(userType !== 'vendor') {
             res.writeHead(307, { Location: routes.auth.login });
             res.end();
             return {

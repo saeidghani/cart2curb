@@ -8,7 +8,7 @@ import routes from "../../constants/routes";
 import {getStore} from "../../states";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
-import {useIsAuthenticated} from "../../providers/AuthProvider";
+import {useAuth} from "../../providers/AuthProvider";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -23,7 +23,7 @@ export const CartIndex = (props) => {
     const loading = useSelector(state => state.loading.effects.cart.updateCart);
     const dispatch = useDispatch();
     const router = useRouter()
-    const isAuthenticated = useIsAuthenticated()
+    const auth = useAuth()
 
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
@@ -98,7 +98,7 @@ export const CartIndex = (props) => {
         try {
             const result = await dispatch.cart.updateCart(body);
             if(result) {
-                if(isAuthenticated) {
+                if(auth.isAuthenticated && auth.userType === 'customer') {
                     router.push(routes.cart.delivery)
                 } else {
                     router.push(routes.cart.guest.index);
@@ -296,7 +296,7 @@ export async function getServerSideProps({ req, res }) {
     let authenticated = !!token;
     let cart = {}
     let stores = [];
-    if (userType && userType !== 'customer') {
+    if (userType && !['customer', 'vendor'].includes(userType)) {
         res.writeHead(307, { Location: routes.auth.login });
         res.end();
         return {
@@ -310,9 +310,10 @@ export async function getServerSideProps({ req, res }) {
     const store = getStore();
     try {
         let response;
-        if(token) {
+        if(token && userType === 'customer') {
             response = await store.dispatch.cart.getCart({
                 headers: {
+                    ...req.headers,
                     Authorization: `Bearer ${token}`
                 }
             });

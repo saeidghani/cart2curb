@@ -4,9 +4,10 @@ import api from '../../../http/Api';
 export default async function handler(req, res) {
 
     let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
+    let token = cookies.token;
+    let type = cookies.type;
     try {
-        if(token) {
+        if(token && type === 'customer') {
             const response = await api.cart.checkAddress(req.body, {
                     headers: {
                         Authorization: `Bearer ${token}`

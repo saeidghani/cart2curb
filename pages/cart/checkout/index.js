@@ -93,8 +93,22 @@ export async function getServerSideProps({ req, res }) {
     let userType = cookies.type;
 
     let cart = {}
+
+    if(!userType || !token) {
+        res.writeHead(307, { Location: routes.cart.guest.checkout });
+        res.end();
+        return {
+            props: {
+                cart,
+            }
+        };
+    }
     if (userType && userType !== 'customer') {
-        res.writeHead(307, { Location: routes.auth.login });
+        if(userType === 'vendor') {
+            res.writeHead(307, { Location: routes.cart.guest.checkout })
+        } else {
+            res.writeHead(307, { Location: routes.auth.login });
+        }
         res.end();
         return {
             props: {
@@ -107,6 +121,7 @@ export async function getServerSideProps({ req, res }) {
         let response;
         response = await store.dispatch.cart.getCart({
             headers: {
+                ...req.headers,
                 Authorization: `Bearer ${token}`
             }
         });
