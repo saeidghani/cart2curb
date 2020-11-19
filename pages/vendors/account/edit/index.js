@@ -129,9 +129,6 @@ const EditAccount = props => {
 
     const addPointToAreaHandler = (newPoly) => {
         setArea(newPoly);
-        let isInside = isPointInside([marker.position.lng, marker.position.lat], newPoly.map(point => [point.lng, point.lat]));
-        console.log(newPoly);
-        console.log(marker.position.lng, marker.position.lat, isInside);
     }
 
     const submitHandler = async () => {
