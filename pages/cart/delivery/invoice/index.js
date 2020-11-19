@@ -27,6 +27,17 @@ import {useRouter} from "next/router";
 const { Item } = Form;
 const { Option } = Select;
 
+Number.prototype.toFixedNoRounding = function(n) {
+    const reg = new RegExp("^-?\\d+(?:\\.\\d{0," + n + "})?", "g")
+    const a = this.toString().match(reg)[0];
+    const dot = a.indexOf(".");
+    if (dot === -1) { // integer, insert decimal dot and pad up zeros
+        return a + "." + "0".repeat(n);
+    }
+    const b = n - (a.length - dot) + 1;
+    return b > 0 ? (a + "0".repeat(b)) : a;
+}
+
 const Invoices = props => {
     const [form] = Form.useForm();
     const [orderDate, setOrderDate] = useState(moment());
@@ -50,7 +61,7 @@ const Invoices = props => {
             if(promo.hasOwnProperty('off')) {
                 cartPrice -= (promo.off / 100) * cart.cartPrice;
             }
-            setPromoPrice(cartPrice.toFixed(2));
+            setPromoPrice(cartPrice.toFixedNoRounding(2));
             return;
         }
 
@@ -59,7 +70,7 @@ const Invoices = props => {
             cartPrice -= (promo.off / 100) * cart.cartPrice;
         }
         setTip(Number(value));
-        setPromoPrice(cartPrice.toFixed(2));
+        setPromoPrice(cartPrice.toFixedNoRounding(2));
         form.setFieldsValue({
             tip: Number(value)
         })
@@ -140,7 +151,8 @@ const Invoices = props => {
                     cartPrice -= (cart.promo.off / 100) * cart.cartPrice;
                 }
                 setPromo(cart.promo);
-                setPromoPrice(cartPrice.toFixed(2));
+                console.log(cartPrice);
+                setPromoPrice(cartPrice.toFixedNoRounding(2));
             }
 
             message.success('Promo Code applied!')
