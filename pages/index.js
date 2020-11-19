@@ -107,11 +107,15 @@ export default function Home() {
         }
     }
 
-    const sortHandler = e => {
-        isIntersecting = false;
-        setHasMore(true);
-        setSort(e)
-        setPage(1);
+    const sortHandler = parameter => {
+        if(parameter === 'address') {
+            searchWithGps();
+        } else {
+            isIntersecting = false;
+            setHasMore(true);
+            setSort(parameter)
+            setPage(1);
+        }
     }
     return (
         <Page title={false} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
