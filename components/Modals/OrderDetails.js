@@ -101,9 +101,12 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
                     <Table dataSource={data} columns={columns} pagination={false} className={'pt-4'} scroll={{ x: 950 }}/>
                 </Col>
                 <Col xs={24}>
-                    <div className={'flex flex-row-reverse items-start'}>
-                        <div className="flex flex-col" style={{ width: 210, paddingLeft: 10 }}>
+                    <div className={'flex flex-row-reverse items-center'}>
+                        <div className="flex flex-col" style={{ width: 210, paddingLeft: 7}}>
                             <h1 className="text-left text-4.5xl text-cell font-medium mb-2 mt-0">${total}</h1>
+                        </div>
+                        <div className="flex items-center justify-end pr-3">
+                            <span className="text-cell">Delivery Cost + Extra</span>
                         </div>
                     </div>
                 </Col>
