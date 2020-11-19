@@ -57,7 +57,11 @@ const Header = props => {
         <header className={'header layout__section'}>
             <div className="header__content">
                 <div className="flex flex-row items-center">
-                    <img src={'/images/Logo.png'} alt={'Cart2Curb'} style={{ height: 48, width: 130}} />
+                    <Link href={routes.homepage}>
+                        <a>
+                            <img src={'/images/Logo.png'} alt={'Cart2Curb'} style={{ height: 48, width: 130}} />
+                        </a>
+                    </Link>
                     <div className="hidden md:flex items-center">
                         {!isAuthRoute.value && (
                             <>
