@@ -6,7 +6,7 @@ import {RedoOutlined} from '@ant-design/icons';
 import Loading from "./Loading";
 import salesman from '../../lib/salesman';
 
-const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
+const GoogleMap = ({height, google, clickHandler, area, marker, ...props}) => {
     const [polyPoints, setPolyPoints] = useState(area || []);
 
     const style = {
@@ -74,6 +74,12 @@ const GoogleMap = ({height, google, clickHandler,area, ...props}) => {
              onClick={addCoordsHandler}
              {...props}
         >
+
+            {marker && (
+                <Marker
+                    {...marker}/>
+            )}
+
             {area.map((point, index) => {
                 return (
                     <Marker

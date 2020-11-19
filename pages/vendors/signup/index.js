@@ -13,6 +13,7 @@ import {useRouter} from "next/router";
 import withoutAuth from "../../../components/hoc/withoutAuth";
 import Submitted from "../../../components/Submitted";
 import ImgCrop from "antd-img-crop";
+import {isPointInside} from "../../../helpers";
 
 
 const { Step } = Steps;
@@ -120,6 +121,11 @@ const Register = props => {
     const submitHandler = async () => {
         if(area.length === 0) {
             message.error("Please Select Your Service Radius")
+            return;
+        }
+        let isInside = isPointInside([marker.position.lng, marker.position.lat], area.map(point => [point.lng, point.lat]));
+        if(!isInside) {
+            message.error('Your Store location must be in your service radius');
             return;
         }
         const [form1, form2] = fields;
@@ -570,6 +576,7 @@ const Register = props => {
                                         lng: -73.9666857
                                     }}
                                     area={area}
+                                    marker={marker}
                                     clickHandler={addPointToAreaHandler}
                                 />
                             </Col>

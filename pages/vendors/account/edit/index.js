@@ -12,7 +12,7 @@ import {useCities, useProvinces} from "../../../../hooks/region";
 import {useRouter} from "next/router";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
-import {getProperty} from "../../../../helpers";
+import {getProperty, isPointInside} from "../../../../helpers";
 import {PictureOutlined, UserOutlined} from "@ant-design/icons";
 import userTypes from "../../../../constants/userTypes";
 import ImgCrop from "antd-img-crop";
@@ -129,11 +129,19 @@ const EditAccount = props => {
 
     const addPointToAreaHandler = (newPoly) => {
         setArea(newPoly);
+        let isInside = isPointInside([marker.position.lng, marker.position.lat], newPoly.map(point => [point.lng, point.lat]));
+        console.log(newPoly);
+        console.log(marker.position.lng, marker.position.lat, isInside);
     }
 
     const submitHandler = async () => {
         if(area.length === 0) {
             message.error("Please Select Your Service Radius")
+            return;
+        }
+        let isInside = isPointInside([marker.position.lng, marker.position.lat], area.map(point => [point.lng, point.lat]));
+        if(!isInside) {
+            message.error('Your Store location must be in your service radius');
             return;
         }
         const [form1, form2] = fields;
@@ -277,6 +285,15 @@ const EditAccount = props => {
                                                   required: true,
                                                   message: "Store Close Time field is required"
                                               },
+                                              ({ getFieldValue }) => ({
+                                                  validator(rule, value) {
+                                                      const openingHour = getFieldValue('openingHour');
+                                                      if (!value || !openingHour || value.diff(openingHour) > 0) {
+                                                          return Promise.resolve();
+                                                      }
+                                                      return Promise.reject('Closing Hour should be later than Opening Hour');
+                                                  },
+                                              }),
                                           ]}>
                                         <TimePicker className={'w-full'}/>
                                     </Item>
@@ -526,6 +543,7 @@ const EditAccount = props => {
                                         lng: -73.9666857
                                     }}
                                     area={area}
+                                    marker={marker}
                                     clickHandler={addPointToAreaHandler}
                                 />
                             </Col>
