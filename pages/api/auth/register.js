@@ -1,9 +1,16 @@
-import { serialize } from 'cookie';
+import cookie, { serialize } from 'cookie';
 import api from '../../../http/Api';
 
 export default async function handler(req, res) {
     try {
-        const response = await api.customer.auth.register(req.body);
+        let cookies = cookie.parse(req.headers.cookie || '');
+        const options = {}
+        if(cookies.hasOwnProperty('guestId')) {
+            options.headers = {
+                Cookie: `guestId=${cookies.guestId}`
+            }
+        }
+        const response = await api.customer.auth.register(req.body, options);
         if(response.data.success) {
 
             res.setHeader('Set-Cookie', [

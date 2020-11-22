@@ -17,22 +17,24 @@ export default class CustomerAuthApi extends ApiInstance {
      * Customer Login Method
      * @param username
      * @param password
+     * @param options
      * @returns {Promise} Token
      */
-    login({username, password}) {
+    login({username, password}, options = {}) {
         return this.post('customer/auth/login', {
                 username,
                 password,
-            })
+            }, {}, options)
     }
 
     /**
      * Customer Register Method
      * @param body
+     * @param options
      * @returns {Promise} Token
      */
-    register(body) {
-        return this.post('customer/auth/register', body)
+    register(body, options = {}) {
+        return this.post('customer/auth/register', body, {}, options)
     }
 
     /**

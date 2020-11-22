@@ -17,22 +17,24 @@ export default class VendorAuthApi extends ApiInstance {
      * Vendor Login Method
      * @param username
      * @param password
+     * @param options
      * @returns {Promise} Token
      */
-    login({username, password}) {
+    login({username, password}, options = {}) {
         return this.post('vendor/auth/login', {
             username,
             password,
-        })
+        }, {}, options)
     }
 
     /**
      * Vendor Register Method
      * @param body
+     * @param options
      * @returns {Promise} Token
      */
-    register(body) {
-        return this.post('vendor/auth/register', body)
+    register(body, options = {}) {
+        return this.post('vendor/auth/register', body, {}, options)
     }
 
     /**
