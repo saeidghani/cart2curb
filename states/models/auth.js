@@ -93,6 +93,30 @@ export const auth = {
             }
 
         },
+        async registerFromSocials(body) {
+            try {
+                const res = await api.post('auth/registerFromSocials', body);
+                if(res.data.success) {
+                    const resData = res.data;
+                    dispatch.profile.setProfile({
+                        addresses: resData.data
+                    });
+                    message.success('Your Profile Information was updated!');
+                    return true;
+                }
+                return false;
+            } catch(e) {
+                const errorData = e.response.data;
+                if(errorData.hasOwnProperty('errors')) {
+                    errorData.errors.map(err => {
+                        message.error(err.message || 'Something Went wrong', 4)
+                    })
+                } else {
+                    message.error('Something went wrong', 5);
+                }
+                return false;
+            }
+        },
         async forgetPassword(body) {
             try {
                 const res = await api.post('auth/forgetPassword', body);
