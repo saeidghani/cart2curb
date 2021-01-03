@@ -5,6 +5,8 @@ import VendorAuthApi from "./apiSections/vendor/auth";
 import VendorProfileApi from "./apiSections/vendor/profile";
 import VendorStoreApi from "./apiSections/vendor/store";
 import CartApi from "./apiSections/cart";
+import AdminStoreApi from "./apiSections/admin/store";
+import AdminDeliveryApi from "./apiSections/admin/delivery";
 
 export class Api {
     constructor(baseURL = false) {
@@ -17,6 +19,13 @@ export class Api {
             auth: new VendorAuthApi(baseURL),
             profile: new VendorProfileApi(baseURL),
             store: new VendorStoreApi(baseURL)
+        }
+        this.admin = {
+            auth: new VendorAuthApi(baseURL),
+            profile: new VendorProfileApi(baseURL),
+            store: new AdminStoreApi(baseURL),
+            user: new AdminStoreApi(baseURL),
+            delivery: new AdminDeliveryApi(baseURL),
         }
 
         this.cart = new CartApi(baseURL);

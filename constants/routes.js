@@ -83,5 +83,52 @@ export default {
             edit: '/vendors/account/edit'
         },
         index: '/vendors/dashboard'
+    },
+    admin: {
+        auth: {
+            login: '/admin/login',
+            forgetPassword: '/admin/login/forget-password',
+            resetPassword: '/admin/login/reset-password',
+            profile: '/admin/profile',
+            register: {
+                index: '/admin/signup',
+            },
+            account: {
+                index: '/admin/account',
+            }
+        },
+        deliveries: {
+            index: '/admin/deliveries'
+        },
+        orders: {
+            index: '/admin/orders'
+        },
+        stores: {
+            index: '/admin/stores',
+            storeDetails: '/admin/stores/store-details'
+        },
+        users: {
+            index: '/admin/users'
+        },
+        products: {
+            index: '/admin/store-details?tab=products',
+            edit(productId = '[productId]') {
+                return `/admin/products/edit/${productId}`
+            },
+            view(number = '[number]') {
+                return `/admin/products/${number}`
+            },
+            add: '/admin/products/new'
+        },
+        categories: {
+            index: '/admin/store-details',
+            edit(number = '[number]') {
+                return `/admin/categories/edit/${number}`
+            },
+            add: '/admin/categories/new'
+        },
+        vendors: {
+            signup: '/admin/signup'
+        }
     }
 }

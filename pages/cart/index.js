@@ -213,7 +213,7 @@ export const CartIndex = (props) => {
                         const res = await dispatch.cart.deleteFromCart(product._id);
                         if(res) {
                             changeQuantity(0, index);
-                            message.success('Products deleted successfully!')
+                            message.success('products deleted successfully!')
                             setDeleted([...deleted, product._id])
                         }
                         setDeleteLoading(-1);

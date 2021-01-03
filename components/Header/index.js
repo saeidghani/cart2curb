@@ -16,6 +16,7 @@ const Header = props => {
     const [visible, setVisible] = useState(false);
     const [avatarImage, setAvatarImage] = useState('');
     const [isVendorPage, setIsVendorPage] = useState(false);
+    const [isAdminPage, setIsAdminPage] = useState(false);
     const isAuthenticated = useIsAuthenticated();
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
@@ -46,6 +47,11 @@ const Header = props => {
         } else {
             setIsVendorPage(false);
         }
+        if(router.route.indexOf('/admin') === 0) {
+            setIsAdminPage(true);
+        } else {
+            setIsAdminPage(false);
+        }
     }, [router, userType])
 
     const onCloseDrawer = () => {
@@ -74,7 +80,22 @@ const Header = props => {
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
                                         </Link>
                                     </>
-                                ): (
+                                ): (isAdminPage && !isAuthenticated) ? (
+                                    <>
+                                        <Link href={routes.admin.deliveries.index} className={'header__link'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Deliveries</a>
+                                        </Link>
+                                        <Link href={routes.admin.orders.index} className={'header__link'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
+                                        </Link>
+                                        <Link href={routes.admin.stores.index} className={'header__link text-purple'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Store</a>
+                                        </Link>
+                                        <Link href={routes.admin.users.index} className={'header__link text-purple'}>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Users</a>
+                                        </Link>
+                                    </>
+                                ) : (
                                     <>
                                         <Link href={routes.homepage} className={'header__link text-purple'}>
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Home</a>

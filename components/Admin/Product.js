@@ -13,6 +13,8 @@ import deleteModal from "../Modals/Delete";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../UI/Loader";
 import {getProperty} from "../../helpers";
+import {useRouter} from "next/router";
+import store from '../../states/index';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -28,25 +30,36 @@ const Products = ({vendor, ...props}) => {
     const [categories, setCategories] = useState([]);
     const [search, setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
-    const categoryLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
-    const productsLoading = useSelector(state => state.loading.effects.vendorStore.getProducts);
-    const products = useSelector(state => state.vendorStore.products.data);
+    const categoryLoading = useSelector(state => state?.loading?.effects?.adminStore?.getCategories);
+    const productsLoading = useSelector(state => state?.loading?.effects?.adminStore?.getProducts);
+    const products = useSelector(state => state?.adminStore?.products?.data);
+    const token = store?.getState()?.adminAuth?.token;
+    const router = useRouter();
+    const {storeId} = router.query;
+
+    useEffect(() => {
+        dispatch.adminStore.getCategories({storeId, query: {}, token})
+            .then(response => {
+                if(response)
+                    setCategories(response.data);
+            })
+    }, [storeId, token]);
 
     useEffect(async () => {
         if(hasMore || page === 1) {
             const formFields = form.getFieldsValue()
-            let body = {
+            let query = {
                 page_number: page,
                 page_size: 15,
             }
             if(formFields.search) {
-                body.search = formFields.search;
+                query.search = formFields.search;
             }
             if(formFields.category && formFields.category !== 'all') {
-                body.category = formFields.category;
+                query.category = formFields.category;
             }
             try {
-                const response = await dispatch.vendorStore.getProducts(body)
+                const response = await dispatch.adminStore.getProducts({storeId, query, token});
                 if(response.data.length < 15) {
                     setHasMore(false);
                 }
@@ -57,19 +70,9 @@ const Products = ({vendor, ...props}) => {
             }
         }
         isIntersecting = true;
-    }, [page, selectedCategory, search])
+    }, [page, selectedCategory, search, storeId, token]);
 
-
-    useEffect(() => {
-        dispatch.vendorStore.getCategories()
-            .then(response => {
-                if(response)
-                    setCategories(response.data);
-            })
-    }, []);
-
-
-    useEffect(() => {
+   useEffect(() => {
         const options = {
             root: null,
             rootMargin: "20px",
@@ -150,10 +153,11 @@ const Products = ({vendor, ...props}) => {
             render: (actions, row) => {
                 return (
                     <div className={'flex flex-row items-center'}>
-                        <Link href={routes.vendors.products.view()} as={routes.vendors.products.view(row.number)}>
+                        {/*as={routes.admin.products.view(row.number)}*/}
+                        <Link href={{pathname: routes.admin.products.view(row.key), query: {storeId}}}>
                             <Button type={'link'} shape="circle" icon={<FileSearchOutlined  className={'text-secondarey text-xl'}/>} className={'btn-icon-small mr-4'} />
                         </Link>
-                        <Link href={routes.vendors.products.edit()} as={routes.vendors.products.edit(row.number)}>
+                        <Link href={{pathname: routes.admin.products.edit(row.key), query: {storeId}}} as={routes.admin.products.edit(row.number)}>
                             <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} className={'btn-icon-small mr-4'} />
                         </Link>
                         <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} className={'btn-icon-small'} onClick={actions.deleteHandler} />
@@ -170,7 +174,7 @@ const Products = ({vendor, ...props}) => {
             return {
                 key: product._id,
                 index: product._id,
-                number: product._id,
+                number: '11111',
                 name: product.name,
                 unitPrice: `$${product.priceList.price}`,
                 price: `$${product.priceList.cost}`,
@@ -181,7 +185,7 @@ const Products = ({vendor, ...props}) => {
                     deleteHandler: () => {
                         deleteModal({
                             onOk: async () => {
-                                const res = await dispatch.vendorStore.deleteProduct(product._id);
+                                const res = await dispatch.adminStore.deleteProduct(product._id);
                                 if(res) {
                                     setDeleted(deleted.concat(product._id))
                                 }
@@ -208,8 +212,8 @@ const Products = ({vendor, ...props}) => {
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>
-                                <Item name={'category'} label={'Categories'}>
-                                    <Select placeholder={'Categories'} loading={categoryLoading}>
+                                <Item name={'category'} label={'Category'}>
+                                    <Select placeholder={'Category'} loading={categoryLoading}>
                                         <Option value={'all'}>All</Option>
                                         {categories && categories.map(cat => {
                                             return (
@@ -228,12 +232,12 @@ const Products = ({vendor, ...props}) => {
                     </Form>
                 </Col>
                 <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
-                    <Link href={routes.vendors.products.add}>
+                    <Link href={{pathname: routes.admin.products.add, query: {storeId}}}>
                         <Button
                             type={'link'}
-                            icon={<PlusCircleOutlined className={'text-info mr-3'} style={{ fontSize: 20 }}/>}
-                            className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            disabled={categories.length === 0}
+                            icon={<PlusCircleOutlined className={'text-secondarey mr-3'} style={{ fontSize: 20 }}/>}
+                            className={'flex items-center justify-center px-0 text-secondarey hover:text-teal-500 text-base'}
+                            //disabled={categories.length === 0}
                         >
                             Add New Product
                         </Button>
@@ -242,12 +246,11 @@ const Products = ({vendor, ...props}) => {
             </Row>
             <Row>
                 <Col xs={24}>
-
                     <Table columns={columns} dataSource={data} scroll={{ x: 1100 }} pagination={false} loading={productsLoading && products.length === 0}/>
                     {hasMore && (
                         <div ref={loader}>
 
-                                <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                            <div className="flex w-full items-center justify-center py-6"><Loader/></div>
                         </div>
                     )}
                 </Col>

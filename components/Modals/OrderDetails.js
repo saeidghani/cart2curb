@@ -4,7 +4,7 @@ import {Table, Modal, Row, Col} from 'antd';
 import DetailItem from "../UI/DetailItem";
 import Page from "../Page";
 
-const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, status, total, isCustomer }) => {
+const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, status, total, isCustomer, isAdmin }) => {
 
     const columns = [
         {
@@ -22,7 +22,7 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
         },
     ];
 
-    if(isCustomer) {
+    if(isCustomer || isAdmin) {
         columns.push({
             title: 'Store Address',
             dataIndex: 'store',
@@ -56,7 +56,7 @@ const OrderDetailsModal = ({ visible, onHide, data, orderNumber, cxName, date, s
     ])
     return (
         <Modal
-            title={'Cart Details'}
+            title='Cart Details'
             visible={visible}
             onCancel={onHide}
             centered
