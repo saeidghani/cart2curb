@@ -5,6 +5,7 @@ import VendorAuthApi from "./apiSections/vendor/auth";
 import VendorProfileApi from "./apiSections/vendor/profile";
 import VendorStoreApi from "./apiSections/vendor/store";
 import CartApi from "./apiSections/cart";
+import AdminUserApi from "./apiSections/admin/user";
 import AdminStoreApi from "./apiSections/admin/store";
 import AdminDeliveryApi from "./apiSections/admin/delivery";
 
@@ -24,7 +25,7 @@ export class Api {
             auth: new VendorAuthApi(baseURL),
             profile: new VendorProfileApi(baseURL),
             store: new AdminStoreApi(baseURL),
-            user: new AdminStoreApi(baseURL),
+            user: new AdminUserApi(baseURL),
             delivery: new AdminDeliveryApi(baseURL),
         }
 
