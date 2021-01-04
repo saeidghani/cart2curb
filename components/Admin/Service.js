@@ -20,7 +20,7 @@ const {Item} = Form;
 const {Option} = Select;
 
 let isIntersecting = true;
-const Products = ({vendor, ...props}) => {
+const Services = ({vendor, ...props}) => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -31,8 +31,8 @@ const Products = ({vendor, ...props}) => {
     const [search, setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const categoryLoading = useSelector(state => state?.loading?.effects?.adminStore?.getCategories);
-    const productsLoading = useSelector(state => state?.loading?.effects?.adminStore?.getProducts);
-    const products = useSelector(state => state?.adminStore?.products?.data);
+    const servicesLoading = useSelector(state => state?.loading?.effects?.adminStore?.getServices);
+    const services = useSelector(state => state?.adminStore?.services?.data);
     const token = store?.getState()?.adminAuth?.token;
     const router = useRouter();
     const {storeId, storeType} = router.query;
@@ -62,7 +62,7 @@ const Products = ({vendor, ...props}) => {
             }
             if (token) {
                 try {
-                    const response = await dispatch.adminStore.getProducts({storeId, query, token});
+                    const response = await dispatch.adminStore.getServices({storeId, query, token});
                     if (response.data.length < 15) {
                         setHasMore(false);
                     }
@@ -157,13 +157,13 @@ const Products = ({vendor, ...props}) => {
             render: (actions, row) => {
                 return (
                     <div className={'flex flex-row items-center'}>
-                        {/*as={routes.admin.products.view(row.number)}*/}
-                        <Link href={{pathname: routes.admin.products.view(row.key), query: {storeId, storeType}}}>
+                        {/*as={routes.admin.services.view(row.number)}*/}
+                        <Link href={{pathname: routes.admin.services.view(row.key), query: {storeId, storeType}}}>
                             <Button type={'link'} shape="circle"
                                     icon={<FileSearchOutlined className={'text-secondarey text-xl'}/>}
                                     className={'btn-icon-small mr-4'}/>
                         </Link>
-                        <Link href={{pathname: routes.admin.products.edit(row.key), query: {storeId, storeType}}}>
+                        <Link href={{pathname: routes.admin.services.edit(row.key), query: {storeId, storeType}}}>
                             <Button type={'link'} shape={'circle'}
                                     icon={<EditOutlined className={'text-secondarey text-xl'}/>}
                                     className={'btn-icon-small mr-4'}/>
@@ -178,36 +178,36 @@ const Products = ({vendor, ...props}) => {
     ]
 
     const data = useMemo(() => {
-        return products && products.filter(item => !deleted.includes(item._id)).map((product, index) => {
-            const category = categories.find(cat => cat._id === product.category)
+        return services && services.filter(item => !deleted.includes(item._id)).map((service, index) => {
+            const category = categories.find(cat => cat._id === service.category)
             return {
-                key: product?._id,
-                index: product?._id,
+                key: service?._id,
+                index: service?._id,
                 number: '11111',
-                name: product?.name,
-                unitPrice: `$${product?.priceList?.price}`,
-                price: `$${product?.priceList?.cost}`,
-                tax: `${product?.tax}%`,
-                stock: `${product?.priceList?.stock || '-'}`,
-                category: category ? category?.name : product?.category,
+                name: service?.name,
+                unitPrice: `$${service?.priceList?.price}`,
+                price: `$${service?.priceList?.cost}`,
+                tax: `${service?.tax}%`,
+                stock: `${service?.priceList?.stock}`,
+                category: category ? category?.name : service?.category,
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
                             onOk: async () => {
-                                const res = await dispatch?.adminStore?.deleteProduct({storeId, productId: product?._id, token});
+                                const res = await dispatch?.adminStore?.deleteService(service?._id);
                                 if (res) {
-                                    setDeleted(deleted?.concat(product?._id))
+                                    setDeleted(deleted?.concat(service?._id))
                                 }
                             },
                             okText: 'Ok',
-                            title: 'Do you want to delete this product?',
-                            content: 'Are you sure to delete this product? There is no going back!!',
+                            title: 'Do you want to delete this service?',
+                            content: 'Are you sure to delete this service? There is no going back!!',
                         });
                     },
                 },
             }
         })
-    }, [products, categories, deleted])
+    }, [services, categories, deleted])
 
     return (
         <>
@@ -235,21 +235,21 @@ const Products = ({vendor, ...props}) => {
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7'}>
                                     <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
-                                            loading={productsLoading}>Search</Button>
+                                            loading={servicesLoading}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
                     </Form>
                 </Col>
                 <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
-                    <Link href={{pathname: routes.admin.products.add, query: {storeId, storeType}}}>
+                    <Link href={{pathname: routes.admin.services.add, query: {storeId, storeType}}}>
                         <Button
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-secondarey mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center px-0 text-secondarey hover:text-teal-500 text-base'}
                             //disabled={categories.length === 0}
                         >
-                            Add New Product
+                            Add New Service
                         </Button>
                     </Link>
                 </Col>
@@ -257,7 +257,7 @@ const Products = ({vendor, ...props}) => {
             <Row>
                 <Col xs={24}>
                     <Table columns={columns} dataSource={data} scroll={{x: 1100}} pagination={false}
-                           loading={productsLoading && products.length === 0}/>
+                           loading={servicesLoading && services.length === 0}/>
                     {hasMore && (
                         <div ref={loader}>
 
@@ -270,4 +270,4 @@ const Products = ({vendor, ...props}) => {
     )
 }
 
-export default Products;
+export default Services;

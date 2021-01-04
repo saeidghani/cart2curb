@@ -1,31 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Row, Col, Input, Select, Upload, Radio, Button, message} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {PlusOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import ImgCrop from "antd-img-crop";
-import cookie from "cookie";
 
 import Page from "../../../../components/Page";
 import routes from "../../../../constants/routes";
-import withAuth from "../../../../components/hoc/withAuth";
-import userTypes from "../../../../constants/userTypes";
-import {getStore} from "../../../../states";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
-const NewProduct = props => {
+const NewService = props => {
     const [unitType, setUnitType] = useState('quantity');
     const [form] = Form.useForm();
     const [imagesList, setImagesList] = useState([]);
-    const token = useSelector(state => state.vendorAuth.token);
+    const token = useSelector(state => state.adminAuth.token);
     const [categories, setCategories] = useState([])
     const dispatch = useDispatch();
-    const loading = useSelector(state => state.loading.effects.vendorStore.addProduct);
+    const loading = useSelector(state => state.loading.effects.adminStore.addService);
     const router = useRouter()
-
+    const {storeId, storeType} = router.query;
 
     const onChangeUnitType = (e) => {
         setUnitType(e.target.value);
@@ -37,22 +33,22 @@ const NewProduct = props => {
             href: routes.admin.index
         },
         {
-            title: 'Add Product',
+            title: 'Add Service',
         }
     ]
 
-/*    useEffect(() => {
-        dispatch.vendorStore.getCategories({})
-            .then(response => {
-                setCategories(response.data);
-            })
-    }, [])*/
+        useEffect(() => {
+            dispatch.adminStore.getCategories({storeId, token})
+                .then(response => {
+                    setCategories(response.data);
+                })
+        }, [])
 
-    const handleChange = ({ fileList }) => setImagesList(fileList);
+    const handleChange = ({fileList}) => setImagesList(fileList);
 
     const submitHandler = async (values) => {
-        if(imagesList.length === 0) {
-            message.warning('Please Upload some images form your product');
+        if (imagesList.length === 0) {
+            message.warning('Please Upload some images form your service');
             return false;
         }
         const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
@@ -61,6 +57,7 @@ const NewProduct = props => {
             name,
             unitType,
             category,
+            stock,
             tax: Number(tax),
             images,
             priceList: {
@@ -71,17 +68,18 @@ const NewProduct = props => {
             description,
         }
 
-        if(unitType === 'weight') {
+        if (unitType === 'weight') {
             body.weightUnit = values.weightUnit;
             body.weight = Number(values.weight);
         } else {
             body.weight = 0;
             body.weightUnit = 'kg'
         }
-
-        const res = await dispatch.vendorStore.addProduct(body);
-        if(res) {
-            router.push(routes.admin.index)
+        if (storeId && body && token) {
+            const res = await dispatch.adminStore.addService({storeId, body, token});
+            if (res) {
+                router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'service'}});
+            }
         }
     }
 
@@ -90,7 +88,7 @@ const NewProduct = props => {
     }
 
     return (
-        <Page title={false} headTitle={'Add Product'} breadcrumb={breadcrumb}>
+        <Page title={false} headTitle={'Add Service'} breadcrumb={breadcrumb}>
             <Form form={form} layout={'vertical'}
                   initialValues={{
                       unitType: 'quantity',
@@ -105,7 +103,7 @@ const NewProduct = props => {
                             marginTop: 0,
                             marginBottom: 25,
                             color: '#020911',
-                        }}>Add Product</h1>
+                        }}>Add Service</h1>
                     </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'name'} label={'Name'} rules={[
@@ -274,9 +272,11 @@ const NewProduct = props => {
                                     className={'flex upload-list-inline flex-row-reverse justify-end items-stretch flex-wrap-reverse'}
                                     onChange={handleChange}
                                 >
-                                    <div className="pt-2 h-full" style={{ float: 'left'}}>
-                                        <div className={'flex items-center flex-row justify-center border border-dashed border-input px-12 bg-card h-full'} style={{ height: 66}}>
-                                            <PlusOutlined className={'text-2xl text-icon'} />
+                                    <div className="pt-2 h-full" style={{float: 'left'}}>
+                                        <div
+                                            className={'flex items-center flex-row justify-center border border-dashed border-input px-12 bg-card h-full'}
+                                            style={{height: 66}}>
+                                            <PlusOutlined className={'text-2xl text-icon'}/>
                                             <div className={'pl-3 text-cell'}>Upload</div>
                                         </div>
                                     </div>
@@ -291,17 +291,22 @@ const NewProduct = props => {
                                 message: 'This Field is required'
                             }
                         ]}>
-                            <Input.TextArea placeholder={'Description'} autoSize={{ minRows: 4, maxRows: 9}} style={{ resize: 'none' }}/>
+                            <Input.TextArea placeholder={'Description'} autoSize={{minRows: 4, maxRows: 9}}
+                                            style={{resize: 'none'}}/>
                         </Item>
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-6 mt-6'}>
                         <Item>
-                            <Button type="primary" block className={'w-full md:w-32 ml-0 md:ml-5'} htmlType={'submit'} loading={loading}>
+                            <Button type="primary" block className={'w-full md:w-32 ml-0 md:ml-5'} htmlType={'submit'}
+                                    loading={loading}>
                                 Save
                             </Button>
                         </Item>
                         <Item>
-                            <Link href={routes.admin.index}>
+                            <Link href={{
+                                pathname: routes.admin.stores.storeDetails,
+                                query: {tab: 'service', storeId, storeType}
+                            }}>
                                 <Button danger className={'w-full md:w-32'}>Cancel</Button>
                             </Link>
                         </Item>
@@ -312,77 +317,4 @@ const NewProduct = props => {
     )
 }
 
-
-/*export async function getServerSideProps({ req, res, params }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-    let userType = cookies.type;
-
-
-    let categories = [];
-
-    if (!token) {
-        res.writeHead(307, { Location: routes.admin.auth.login });
-        res.end();
-        return {
-            props: {
-                categories,
-            }
-        };
-    }
-
-    if(cookies.type !== 'vendor') {
-        res.writeHead(307, { Location: userTypes[cookies.type].profile });
-        res.end();
-        return {
-            props: {
-                categories,
-            }
-        };
-    }
-
-    try {
-        const store = getStore();
-        const response = await store.dispatch.vendorStore.getServerSideCategories({
-            query: {
-                page_size: 100
-            },
-            options: {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        })
-
-        if(response.length > 0) {
-            categories = response;
-        } else {
-
-            res.writeHead(307, { Location: routes.admin.index });
-            res.end();
-            return {
-                props: {
-                    categories
-                }
-            };
-        }
-    } catch(e) {
-        res.writeHead(307, { Location: routes.admin.index });
-        res.end();
-        return {
-            props: {
-                categories
-            }
-        };
-    }
-
-    return {
-        props: {
-            categories,
-        }
-    }
-}*/
-
-
-export default NewProduct;
+export default NewService;

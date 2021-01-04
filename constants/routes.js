@@ -111,19 +111,29 @@ export default {
             index: '/admin/users'
         },
         products: {
-            index: '/admin/store-details?tab=products',
+            index: '/admin/store-details',
             edit(productId = '[productId]') {
                 return `/admin/products/edit/${productId}`
             },
-            view(number = '[number]') {
-                return `/admin/products/${number}`
+            view(productId = '[productId]') {
+                return `/admin/products/${productId}`
             },
             add: '/admin/products/new'
         },
+        services: {
+            index: '/admin/store-details',
+            edit(serviceId = '[serviceId]') {
+                return `/admin/services/edit/${serviceId}`
+            },
+            view(serviceId = '[serviceId]') {
+                return `/admin/services/${serviceId}`
+            },
+            add: '/admin/services/new'
+        },
         categories: {
             index: '/admin/store-details',
-            edit(number = '[number]') {
-                return `/admin/categories/edit/${number}`
+            edit(categoryId = '[categoryId]') {
+                return `/admin/categories/edit/${categoryId}`
             },
             add: '/admin/categories/new'
         },

@@ -380,48 +380,4 @@ const AddCustomer = props => {
     )
 }
 
-
-/*export async function getServerSideProps({ req, res }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-
-    let profile = {};
-    if (!token) {
-        res.writeHead(307, { Location: routes.auth.login });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
-
-    if(cookies.type !== 'customer') {
-        res.writeHead(307, { Location: userTypes[cookies.type].profile });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
-
-
-    const store = getStore();
-    const response = await store.dispatch.profile.getProfile({
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    if(response) {
-        profile = response;
-    }
-    return {
-        props: {
-            profile
-        }
-    }
-}*/
-
 export default AddCustomer;

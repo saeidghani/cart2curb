@@ -66,7 +66,7 @@ export default class AdminStoreApi extends ApiInstance {
     }
 
     deleteProduct(storeId, productId, options = {}) {
-        return this.put(`admin/stores/${storeId}/products/${productId}`, options);
+        return this.delete(`admin/stores/${storeId}/products/${productId}`, options);
     }
 
     getServices(storeId, query = {}, options = {}) {

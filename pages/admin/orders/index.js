@@ -86,7 +86,7 @@ const Orders = props => {
             title: '#',
             dataIndex: 'number',
             key: 'number',
-            render: number => <span className={`text-cell`}>{number}</span>
+            render: number => <span className={`text-cell`}>ID{number}</span>
         },
         {
             title: 'CX Name',
@@ -134,7 +134,6 @@ const Orders = props => {
         },
     ];
 
-
     const data = useMemo(() => {
         return orders && orders?.map((order, index) => {
             return {
@@ -148,7 +147,7 @@ const Orders = props => {
                 actions: {
                     showMoreHandler: () => setDetailsModal(order?._id),
                 },
-                name: order?.customer ? `${order?.customer?.firstName} ${order?.customer?.lastName}` : order?.guest ? `${order?.guest?.firstName} ${order?.guest?.lastName}` : (order?.firstName && order?.lastName) ? `${order?.firstName} ${order?.lastName}` : '-',
+                name: order?.cxName || '-',
                 data: order?.products?.map((item, i) => {
                     return {
                         key: item?._id,

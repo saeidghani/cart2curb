@@ -112,10 +112,15 @@ const Stores = ({admin, ...props}) => {
             title: "OP",
             dataIndex: 'action',
             key: 'action',
-            render: (_, {storeId}) => {
+            render: (_, {storeId, storeType}) => {
                 return (
                     <div className={'flex flex-row items-center space-x-2'}>
-                        <Link href={{pathname: routes.admin.stores.storeDetails, query: {storeId}}}>
+                        <Link
+                            href={{
+                                pathname: routes.admin.stores.storeDetails,
+                                query: {storeId, storeType}
+                            }}
+                        >
                             <Button
                                 type={'link'}
                                 shape={'circle'}
@@ -123,7 +128,11 @@ const Stores = ({admin, ...props}) => {
                                 className={'btn-icon-small'}
                             />
                         </Link>
-                        <Link href={{pathname: routes.admin.stores.storeDetails, query: {storeId}}}>
+                        <Link
+                            href={{
+                                pathname: routes.admin.stores.index,
+                            }}
+                        >
                             <Button
                                 type={'link'}
                                 shape={'circle'}
@@ -143,9 +152,10 @@ const Stores = ({admin, ...props}) => {
             return {
                 key: index,
                 storeId: el?.store?._id,
+                storeType: el?.store?.storeType,
                 number: '???',
-                CXName: el?.store?.name,
-                store: '???',
+                CXName: el?.vendor?.contactName,
+                store: el?.store?.name,
                 address: `${el?.store?.address?.addressLine1}
                 ${el?.store?.address?.addressLine2}
                 ${el?.store?.address?.city}

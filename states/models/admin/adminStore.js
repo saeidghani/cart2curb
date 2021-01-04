@@ -35,6 +35,7 @@ export const adminStore = {
             data: []
         },
         product: {},
+        store: {},
     },
     reducers: {
         setStores: (state, payload) => {
@@ -84,6 +85,9 @@ export const adminStore = {
         },
         setProduct: (state, payload) => {
             state.product = payload;
+        },
+        setStore: (state, payload) => {
+            state.store = payload;
         }
     },
     effects: dispatch => ({
@@ -182,6 +186,7 @@ export const adminStore = {
             try {
                 const res = await api?.admin?.store?.getStore(storeId, setOptions(rootState?.adminAuth?.token));
                 if(res.data.success) {
+                    this.setStore(res.data.data);
                     return res.data.data
                 } else {
                     message.error('An Error was occurred');

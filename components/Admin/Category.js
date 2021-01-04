@@ -9,8 +9,8 @@ import Loader from "../UI/Loader";
 import store from "../../states";
 import {useRouter} from "next/router";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
 let isIntersecting = true;
 const Categories = props => {
@@ -27,38 +27,42 @@ const Categories = props => {
     const categories = useSelector(state => state.adminStore.categories.data);
     const token = store?.getState()?.adminAuth?.token;
     const router = useRouter();
-    const {storeId} = router.query;
+    const {storeId, storeType} = router.query;
 
     useEffect(() => {
-        dispatch.adminStore.getCategories({storeId, query: {}, token})
-            .then(response => {
-                if(response)
-                    setParentCategory(response.data);
-            })
+        if (storeId && token) {
+            dispatch.adminStore.getCategories({storeId, query: {}, token})
+                .then(response => {
+                    if (response)
+                        setParentCategory(response.data);
+                })
+        }
     }, [storeId, token]);
 
     useEffect(async () => {
-        if(hasMore || page === 1) {
+        if (hasMore || page === 1) {
             const formFields = form.getFieldsValue()
             let query = {
                 page_number: page,
                 page_size: 15,
             }
-            if(formFields.search) {
+            if (formFields.search) {
                 query.search = formFields.search;
             }
-            if(formFields.parent_category && formFields.parent_category !== 'all') {
+            if (formFields.parent_category && formFields.parent_category !== 'all') {
                 query.parent_category = formFields.parent_category;
             }
-            try {
-                const response = await dispatch.adminStore.getCategories({storeId, query, token})
-                if(response.data.length < 15) {
+            if (storeId && token) {
+                try {
+                    const response = await dispatch.adminStore.getCategories({storeId, query, token})
+                    if (response.data.length < 15) {
+                        setHasMore(false);
+                    }
+                } catch (e) {
                     setHasMore(false);
+                    console.log(e);
+                    message.error('An Error was occurred while fetching data')
                 }
-            } catch(e) {
-                setHasMore(false);
-                console.log(e);
-                message.error('An Error was occurred while fetching data')
             }
         }
         isIntersecting = true;
@@ -117,10 +121,13 @@ const Categories = props => {
             render: (actions, row) => {
                 return (
                     <div className={'flex flex-row items-center'}>
-                        <Link href={{pathname: routes.admin.categories.edit(row.key), query: {storeId}}} as={routes.admin.categories.edit(row.number)}>
-                            <Button type={'link'} shape={'circle'} icon={<EditOutlined className={'text-secondarey text-xl'} />} className={'btn-icon-small mr-4'} />
+                        <Link href={{pathname: routes.admin.categories.edit(row.key), query: {storeId, storeType}}}>
+                            <Button type={'link'} shape={'circle'}
+                                    icon={<EditOutlined className={'text-secondarey text-xl'}/>}
+                                    className={'btn-icon-small mr-4'}/>
                         </Link>
-                        <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'} />} onClick={actions.deleteHandler} className={'btn-icon-small'} />
+                        <Button type={'link'} shape={'circle'} icon={<DeleteOutlined className={'text-btn text-xl'}/>}
+                                onClick={actions.deleteHandler} className={'btn-icon-small'}/>
                     </div>
                 )
             },
@@ -132,18 +139,18 @@ const Categories = props => {
     const data = useMemo(() => {
         return categories.filter(item => !deleted.includes(item._id)).map((item, index) => {
             return {
-                key: item._id,
-                index: item._id,
-                title: item.name,
+                key: item?._id,
+                index: item?._id,
+                title: item?.name,
                 number: '1111',
-                description: item.description,
+                description: item?.description,
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
                             onOk: async () => {
-                                const res = await dispatch.adminStore.deleteCategory(item._id);
-                                if(res) {
-                                    setDeleted(deleted.concat(item._id))
+                                const res = await dispatch?.adminStore?.deleteCategory({storeId, categoryId: item?._id, token});
+                                if (res) {
+                                    setDeleted(deleted?.concat(item?._id))
                                 }
                             },
                             okText: 'Ok',
@@ -164,7 +171,7 @@ const Categories = props => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'} />
+                                    <Input placeholder={'Search'}/>
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>
@@ -185,7 +192,8 @@ const Categories = props => {
                             </Col>
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'} loading={categoryLoading} htmlType={'submit'}>Search</Button>
+                                    <Button type={'primary'} size={'lg'} className={'w-32'} loading={categoryLoading}
+                                            htmlType={'submit'}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
@@ -195,7 +203,7 @@ const Categories = props => {
                     <Link href={{pathname: routes.admin.categories.add, query: {storeId}}}>
                         <Button
                             type={'link'}
-                            icon={<PlusCircleOutlined className={'text-info mr-3'} style={{ fontSize: 20 }}/>}
+                            icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
                         >
                             Add New Category
@@ -205,7 +213,7 @@ const Categories = props => {
             </Row>
             <Row>
                 <Col xs={24}>
-                    <Table columns={columns} dataSource={data} pagination={false} scroll={{ x: 990 }} locale={{
+                    <Table columns={columns} dataSource={data} pagination={false} scroll={{x: 990}} locale={{
                         emptyText: 'There is no Category'
                     }} loading={categoryLoading && categories.length === 0}/>
 

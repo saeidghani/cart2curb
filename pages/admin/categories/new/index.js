@@ -5,25 +5,20 @@ import routes from "../../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import store from "../../../../states";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const NewCategory = props => {
     const [form] = Form.useForm();
-    const [parentCategories, setParentCategories] = useState([])
     const dispatch = useDispatch();
-    const loading = useSelector(state => state.loading.effects.vendorStore.addCategory);
-    const parentLoading = useSelector(state => state.loading.effects.vendorStore.getCategories);
+    const loading = useSelector(state => state.loading.effects.adminStore.addCategory);
+    const parentLoading = useSelector(state => state.loading.effects.adminStore.getCategories);
+    const categories = useSelector(state => state?.adminStore?.categories);
+    const token = store?.getState()?.adminAuth?.token;
     const router = useRouter()
-    const {storeId} = router.query;
-
- /*   useEffect(() => {
-        dispatch.vendorStore.getCategories({})
-            .then(response => {
-                setParentCategories(response.data);
-            })
-    }, []);*/
+    const {storeId, storeType} = router.query;
 
     const breadcrumb = [
         {
@@ -40,9 +35,9 @@ const NewCategory = props => {
             name, parent, description
         }
 
-        const res = await dispatch.vendorStore.addCategory(body);
+        const res = await dispatch.adminStore.addCategory({storeId, body, token});
         if(res) {
-            router.push(routes.admin.categories.index)
+            router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'category'}});
         }
     }
 
@@ -76,7 +71,7 @@ const NewCategory = props => {
                         <Item name={'parent'} label={'Parent Category'}>
                             <Select placeholder={'Select Parent Category'} loading={parentLoading}>
                                 <Option value={''}>None</Option>
-                                {parentCategories && parentCategories.map((item, index) => {
+                                {(categories?.data || [])?.map((item, index) => {
                                     return (
                                         <Option value={item._id} key={item._id}>{item.name}</Option>
                                     )

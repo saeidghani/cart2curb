@@ -195,7 +195,7 @@ const Orders = ({vendor, ...props}) => {
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
                             //disabled={categories.length === 0}
                         >
-                            Add New Category
+                            Add New Customer
                         </Button>
                     </Link>
                 </Col>

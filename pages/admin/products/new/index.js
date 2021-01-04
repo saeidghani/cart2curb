@@ -21,7 +21,7 @@ const NewProduct = props => {
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.adminStore.addProduct);
     const router = useRouter()
-    const {storeId} = router.query;
+    const {storeId, storeType} = router.query;
 
     const onChangeUnitType = (e) => {
         setUnitType(e.target.value);
@@ -37,12 +37,12 @@ const NewProduct = props => {
         }
     ]
 
-    /*    useEffect(() => {
-            dispatch.adminStore.getCategories({})
+        useEffect(() => {
+            dispatch.adminStore.getCategories({storeId, token})
                 .then(response => {
                     setCategories(response.data);
                 })
-        }, [])*/
+        }, [])
 
     const handleChange = ({fileList}) => setImagesList(fileList);
 
@@ -57,6 +57,7 @@ const NewProduct = props => {
             name,
             unitType,
             category,
+            stock,
             tax: Number(tax),
             images,
             priceList: {
@@ -74,10 +75,11 @@ const NewProduct = props => {
             body.weight = 0;
             body.weightUnit = 'kg'
         }
-
-        const res = await dispatch.adminStore.addProduct(body);
-        if (res) {
-            router.push(routes.admin.index)
+        if (storeId && body && token) {
+            const res = await dispatch.adminStore.addProduct({storeId, body, token});
+            if (res) {
+                router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'product'}});
+            }
         }
     }
 
@@ -301,7 +303,10 @@ const NewProduct = props => {
                             </Button>
                         </Item>
                         <Item>
-                            <Link href={{pathname: routes.admin.stores.storeDetails, query: {tab: 'product', storeId}}}>
+                            <Link href={{
+                                pathname: routes.admin.stores.storeDetails,
+                                query: {tab: 'product', storeId, storeType}
+                            }}>
                                 <Button danger className={'w-full md:w-32'}>Cancel</Button>
                             </Link>
                         </Item>
@@ -311,78 +316,5 @@ const NewProduct = props => {
         </Page>
     )
 }
-
-
-/*export async function getServerSideProps({ req, res, params }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-    let userType = cookies.type;
-
-
-    let categories = [];
-
-    if (!token) {
-        res.writeHead(307, { Location: routes.admin.auth.login });
-        res.end();
-        return {
-            props: {
-                categories,
-            }
-        };
-    }
-
-    if(cookies.type !== 'admin') {
-        res.writeHead(307, { Location: userTypes[cookies.type].profile });
-        res.end();
-        return {
-            props: {
-                categories,
-            }
-        };
-    }
-
-    try {
-        const store = getStore();
-        const response = await store.dispatch.adminStore.getServerSideCategories({
-            query: {
-                page_size: 100
-            },
-            options: {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        })
-
-        if(response.length > 0) {
-            categories = response;
-        } else {
-
-            res.writeHead(307, { Location: routes.admin.index });
-            res.end();
-            return {
-                props: {
-                    categories
-                }
-            };
-        }
-    } catch(e) {
-        res.writeHead(307, { Location: routes.admin.index });
-        res.end();
-        return {
-            props: {
-                categories
-            }
-        };
-    }
-
-    return {
-        props: {
-            categories,
-        }
-    }
-}*/
-
 
 export default NewProduct;
