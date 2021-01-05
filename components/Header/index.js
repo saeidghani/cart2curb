@@ -23,6 +23,7 @@ const Header = props => {
     const userType = useAuthenticatedUserType()
     const dispatch = useDispatch();
     const token = useSelector(state => state.auth.token);
+    const adminIsLoggedIn = useSelector(state => state.adminAuth?.isLoggedIn);
     const cart = useSelector(state => state.cart.cart);
     const cartChanges = useSelector(state => state.cart.cartChanges);
 
@@ -80,7 +81,7 @@ const Header = props => {
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
                                         </Link>
                                     </>
-                                ): (isAdminPage && !isAuthenticated) ? (
+                                ): (isAdminPage && adminIsLoggedIn) ? (
                                     <>
                                         <Link href={routes.admin.deliveries.index} className={'header__link'}>
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Deliveries</a>
@@ -89,7 +90,7 @@ const Header = props => {
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
                                         </Link>
                                         <Link href={routes.admin.stores.index} className={'header__link text-purple'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Store</a>
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Stores</a>
                                         </Link>
                                         <Link href={routes.admin.users.index} className={'header__link text-purple'}>
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Users</a>

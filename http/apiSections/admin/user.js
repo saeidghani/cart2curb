@@ -48,4 +48,12 @@ export default class AdminUserApi extends ApiInstance {
     editCustomer(customerId, body, options = {}) {
         return this.put(`admin/users/customer/${customerId}`, body, {}, options);
     }
+
+    editCustomerBlock(customerId, body, options = {}) {
+        return this.put(`admin/users/customer/${customerId}/block`, body, {}, options);
+    }
+
+    editCustomerUnBlock(customerId, body, options = {}) {
+        return this.put(`admin/users/customer/${customerId}/unblock`, body, {}, options);
+    }
 }

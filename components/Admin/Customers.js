@@ -3,7 +3,8 @@ import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd
 import {
     FileSearchOutlined,
     PlusCircleOutlined,
-    DeleteOutlined,
+    CheckCircleOutlined,
+    StopOutlined,
     EditOutlined,
     InfoCircleOutlined
 } from '@ant-design/icons';
@@ -15,75 +16,69 @@ import deleteModal from "../../components/Modals/Delete";
 import OrderDetailsModal from "../../components/Modals/OrderDetails";
 import Loader from "../../components/UI/Loader";
 import {getProperty} from "../../helpers";
+import {useRouter} from "next/router";
+import Avatar from "../UI/Avatar";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
 let isIntersecting = true;
-const Orders = ({vendor, ...props}) => {
+const Customers = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [deleted, setDeleted] = useState([]);
+    const [blocked, setBlocked] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const [categories, setCategories] = useState([]);
     const [search, setSearch] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const categoryLoading = useSelector(state => state?.loading?.effects?.admintore?.getCategories);
-    const productsLoading = useSelector(state => state?.loading?.effects?.admintore?.getProducts);
-    const products = useSelector(state => state?.admintore?.products?.data);
+    const customersLoading = useSelector(state => state?.loading?.effects?.adminUser?.getCustomers);
+    const customers = useSelector(state => state?.adminUser?.customers?.data);
+    const token = useSelector(state => state?.adminAuth?.token);
 
-    /* useEffect(async () => {
-         if(hasMore || page === 1) {
-             const formFields = form.getFieldsValue()
-             let body = {
-                 page_number: page,
-                 page_size: 15,
-             }
-             if(formFields.search) {
-                 body.search = formFields.search;
-             }
-             if(formFields.category && formFields.category !== 'all') {
-                 body.category = formFields.category;
-             }
-             try {
-                 const response = await dispatch.admintore.getProducts(body)
-                 if(response.data.length < 15) {
-                     setHasMore(false);
-                 }
-             } catch(e) {
-                 console.log(e);
-                 setHasMore(false);
-                 message.error('An Error was occurred while fetching data')
-             }
-         }
-         isIntersecting = true;
-     }, [page, selectedCategory, search])
+    useEffect(async () => {
+        if (hasMore || page === 1) {
+            const formFields = form.getFieldsValue()
+            let query = {
+                page_number: page,
+                page_size: 15,
+            }
+            if (formFields.search) {
+                query.search = formFields.search;
+            }
+            try {
+                const response = await dispatch.adminUser?.getCustomers(query);
+                if (response.data.length < 15) {
+                    setHasMore(false);
+                }
+            } catch (e) {
+                setHasMore(false);
+                message.error('An Error was occurred while fetching data')
+            }
+        }
+        isIntersecting = true;
+    }, [page, search]);
 
+    useEffect(() => {
+        let isBlocked = [];
+        customers?.forEach(c => {
+            if (c?.isBlocked) isBlocked.push(c?._id);
+        });
+        setBlocked(isBlocked);
+    }, [customers]);
 
-     useEffect(() => {
-         dispatch.admintore.getCategories()
-             .then(response => {
-                 if(response)
-                     setCategories(response.data);
-             })
-     }, [])
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 1
+        };
 
+        const observer = new IntersectionObserver(handleObserver, options);
+        if (loader.current) {
+            observer.observe(loader.current)
+        }
 
-     useEffect(() => {
-         const options = {
-             root: null,
-             rootMargin: "20px",
-             threshold: 1
-         };
-
-         const observer = new IntersectionObserver(handleObserver, options);
-         if (loader.current) {
-             observer.observe(loader.current)
-         }
-
-     }, [loader.current]);*/
+    }, [loader.current]);
 
     const handleObserver = (entities) => {
         const target = entities[0];
@@ -98,75 +93,113 @@ const Orders = ({vendor, ...props}) => {
         setPage(1);
         setHasMore(true);
         setSearch(values.search);
-        setSelectedCategory(values.category);
     }
 
-    const columns = [
+    const columns = useMemo(() => [
+        {
+            title: "",
+            dataIndex: 'avatar',
+            key: 'avatar',
+            render: src => <Avatar src={src} justImage/>
+        },
         {
             title: "#",
             dataIndex: 'number',
             key: 'number',
-            render: data => <span className="text-cell">{data}</span>
+            render: number => <span className="text-cell">{number}</span>
         },
         {
-            title: "CX Name",
+            title: "Customer Name",
             dataIndex: 'CXName',
             key: 'CXName',
-            render: data => <span className="text-cell">{data}</span>
+            render: CXName => <span className="text-cell">{CXName}</span>
         },
         {
-            title: "Date",
-            dataIndex: 'date',
-            key: 'date',
-            render: data => <span className="text-cell">{data}</span>
+            title: "Email",
+            dataIndex: 'email',
+            key: 'email',
+            render: email => <span className="text-cell">{email}</span>
         },
         {
-            title: "Items",
-            dataIndex: 'items',
-            key: 'items',
-            render: data => <span className="text-cell">{data}</span>
+            title: "Phone Number",
+            dataIndex: 'phoneNumber',
+            key: 'phoneNumber',
+            render: phoneNumber => <span className="text-cell">{phoneNumber}</span>
         },
         {
-            title: "Action",
+            title: "Address",
+            dataIndex: 'address',
+            key: 'address',
+            render: address => <span className="text-cell">{address}</span>
+        },
+        {
+            title: "OP",
             dataIndex: 'action',
             key: 'action',
-            render: (actions, row) => {
+            render: (actions, {key}) => {
                 return (
-                    <div className={'flex flex-row items-center'}>
-                        <Button type={'link'} shape={'circle'} icon={<FileSearchOutlined  className={'text-secondarey text-xl'}/>} className={'btn-icon-small'} onClick={actions.deleteHandler} />
+                    <div className={'flex flex-row items-center space-x-3'}>
+                        <Link href={{pathname: routes.admin.customers.edit(key)}}>
+                            <Button
+                                type={'link'}
+                                shape={'circle'}
+                                icon={<EditOutlined className={'text-secondarey text-xl'}/>}
+                                className={'btn-icon-small'}
+                            />
+                        </Link>
+                        {(blocked?.includes(key)) ? <Button
+                            type={'link'}
+                            shape={'circle'}
+                            icon={<CheckCircleOutlined className='text-secondarey text-xl'/>}
+                            className={'btn-icon-small'}
+                            onClick={actions.unBlockHandler}
+                        /> : <Button
+                            type={'link'}
+                            shape={'circle'}
+                            icon={<StopOutlined className='text-secondarey text-xl'/>}
+                            className={'btn-icon-small'}
+                            onClick={actions.blockHandler}
+                        />}
                     </div>
                 )
             },
             width: 140,
         },
-    ]
+    ], [blocked]);
+
+    const setSubstring = (str, lastIndex) => {
+        return `${str.substring(0, lastIndex)} ...`;
+    }
 
     const data = useMemo(() => {
-        return products && products.filter(item => !deleted.includes(item._id)).map((product, index) => {
-            const category = categories.find(cat => cat._id === product.category)
-            return {
-                key: '1',
-                CXName: 'aaa',
-                date: 'aaa',
-                items: 'aaa',
+        return customers?.map((customer, index) => ({
+                key: customer?._id,
+                avatar: customer?.image,
+                CXName: `${customer?.firstName} ${customer?.lastName}`,
+                number: customer?._id,
+                email: customer?.email  || '-',
+                phoneNumber: customer?.phone || '-',
+                address: customer?.addresses?.length > 0 ?
+                 setSubstring(`${customer?.addresses[0]?.addressLine1} ${customer?.addresses[0]?.city} ${customer?.addresses[0]?.state} ${customer?.addresses[0]?.country} ${customer?.addresses[0]?.postalCode}`, 20) :
+                    '-',
                 action: {
-                    deleteHandler: () => {
-                        OrderDetailsModal({
-                            onOk: async () => {
-                                const res = await dispatch.admintore.deleteProduct(product._id);
-                                if(res) {
-                                    setDeleted(deleted.concat(product._id))
-                                }
-                            },
-                            okText: 'Ok',
-                            title: 'Do you want to delete this product?',
-                            content: 'Are you sure to delete this product? There is no going back!!',
-                        });
+                    blockHandler: async () => {
+                        const res = await dispatch.adminUser.editCustomerBlock({customerId: customer?._id, token});
+                        if (res) {
+                            setBlocked(blocked.concat(customer?._id));
+                        }
+                    },
+                    unBlockHandler: async () => {
+                        const res = await dispatch.adminUser.editCustomerUnBlock({customerId: customer?._id, token});
+                        if (res) {
+                            const newBlocked = blocked?.filter(b => b !== customer?._id);
+                            setBlocked(newBlocked);
+                        }
                     },
                 },
-            }
-        })
-    }, [products, categories, deleted])
+            })
+        );
+    }, [customers]);
 
     return (
         <>
@@ -176,24 +209,25 @@ const Orders = ({vendor, ...props}) => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'} />
+                                    <Input placeholder={'Search'}/>
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'} loading={productsLoading}>Search</Button>
+                                    <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
+                                            loading={customersLoading}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
                     </Form>
                 </Col>
                 <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
-                    <Link href={routes.admin.products.add}>
+                    <Link href={routes.admin.customers.add}>
                         <Button
                             type={'link'}
-                            icon={<PlusCircleOutlined className={'text-info mr-3'} style={{ fontSize: 20 }}/>}
+                            icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            //disabled={categories.length === 0}
+                            disabled={customers?.length === 0}
                         >
                             Add New Customer
                         </Button>
@@ -203,7 +237,8 @@ const Orders = ({vendor, ...props}) => {
             <Row>
                 <Col xs={24}>
 
-                    <Table columns={columns} dataSource={data} scroll={{ x: 1100 }} pagination={false} loading={productsLoading && products.length === 0}/>
+                    <Table columns={columns} dataSource={data} scroll={{x: 1100}} pagination={false}
+                           loading={customersLoading && customers?.length === 0}/>
                     {hasMore && (
                         <div ref={loader}>
 
@@ -216,4 +251,4 @@ const Orders = ({vendor, ...props}) => {
     )
 }
 
-export default Orders;
+export default Customers;

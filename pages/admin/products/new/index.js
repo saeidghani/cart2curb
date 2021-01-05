@@ -38,10 +38,12 @@ const NewProduct = props => {
     ]
 
         useEffect(() => {
-            dispatch.adminStore.getCategories({storeId, token})
-                .then(response => {
-                    setCategories(response.data);
-                })
+            if (storeId && token) {
+                dispatch.adminStore.getCategories({storeId, token})
+                    .then(response => {
+                        setCategories(response.data);
+                    })
+            }
         }, [])
 
     const handleChange = ({fileList}) => setImagesList(fileList);
@@ -52,29 +54,19 @@ const NewProduct = props => {
             return false;
         }
         const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
-        const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
+        const {name, category, tax, costPrice, description} = values;
         const body = {
             name,
             unitType,
             category,
-            stock,
             tax: Number(tax),
             images,
             priceList: {
-                price: Number(unitPrice),
                 cost: Number(costPrice),
-                stock: Number(stock)
             },
             description,
         }
 
-        if (unitType === 'weight') {
-            body.weightUnit = values.weightUnit;
-            body.weight = Number(values.weight);
-        } else {
-            body.weight = 0;
-            body.weightUnit = 'kg'
-        }
         if (storeId && body && token) {
             const res = await dispatch.adminStore.addProduct({storeId, body, token});
             if (res) {

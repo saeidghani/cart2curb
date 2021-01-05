@@ -87,7 +87,7 @@ export const adminAuth = {
         const res = await api.post(getUrl('admin/auth/forgotPassword'), body);
         if(res?.data?.success) {
           const msg = 'Forgot Your Password?\n' +
-              'If an account is associated with the email you have entered, you will receive an email containing instructions and a link to reset your password.'
+              'If an view is associated with the email you have entered, you will receive an email containing instructions and a link to reset your password.'
           message.success(msg);
         }
         dispatch?.adminAuth?.destroyResetToken()

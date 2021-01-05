@@ -3,7 +3,7 @@ export default {
         login: '/login',
         forgetPassword: '/login/forget-password',
         register: {
-            index: '/signup',
+            index: '/new',
         },
         resetPassword: {
             index: '/login/reset-password',
@@ -35,7 +35,7 @@ export default {
     },
     profile: {
         index: '/profile',
-        edit: '/profile/edit',
+        edit: '/profile/view',
         changePassword: '/profile/change-password',
         addresses: {
             index: '/profile/addresses',
@@ -56,7 +56,7 @@ export default {
             forgetPassword: '/vendors/login/forget-password',
             resetPassword: '/vendors/login/reset-password',
             register: {
-                index: '/vendors/signup',
+                index: '/vendors/new',
             }
         },
         products: {
@@ -78,9 +78,9 @@ export default {
         },
         orders: '/vendors/orders',
         account: {
-            index: '/vendors/account',
-            changePassword: '/vendors/account/change-password',
-            edit: '/vendors/account/edit'
+            index: '/vendors/view',
+            changePassword: '/vendors/view/change-password',
+            edit: '/vendors/view/view'
         },
         index: '/vendors/dashboard'
     },
@@ -91,10 +91,10 @@ export default {
             resetPassword: '/admin/login/reset-password',
             profile: '/admin/profile',
             register: {
-                index: '/admin/signup',
+                index: '/admin/new',
             },
             account: {
-                index: '/admin/account',
+                index: '/admin/view',
             }
         },
         deliveries: {
@@ -109,6 +109,18 @@ export default {
         },
         users: {
             index: '/admin/users'
+        },
+        customers: {
+            edit(customerId = '[customerId]') {
+                return `/admin/customers/edit/${customerId}`
+            },
+            add: '/admin/customers/new'
+        },
+        vendors: {
+            edit(vendorId = '[vendorId]') {
+                return `/admin/vendors/edit/${vendorId}`
+            },
+            add: '/admin/vendors/new'
         },
         products: {
             index: '/admin/store-details',
@@ -137,8 +149,5 @@ export default {
             },
             add: '/admin/categories/new'
         },
-        vendors: {
-            signup: '/admin/signup'
-        }
     }
 }

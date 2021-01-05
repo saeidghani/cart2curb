@@ -19,10 +19,10 @@ import ImgCrop from "antd-img-crop";
 import Page from '../../../../components/Page';
 import routes from "../../../../constants/routes";
 import userTypes from "../../../../constants/userTypes";
-import {getStore} from "../../../../states";
+import store, {getStore} from "../../../../states";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
 
 function beforeUpload(file) {
@@ -39,48 +39,55 @@ function beforeUpload(file) {
 
 
 const EditCustomer = props => {
-    const loading = useSelector(state => state?.loading?.effects?.profile?.updateProfile);
-    const [imageUrl, setImageUrl] = useState(props?.profile?.image || '')
+    const loading = useSelector(state => state?.loading?.effects?.adminUser?.getCustomer);
+    const [imageUrl, setImageUrl] = useState('')
     const [stream, setStream] = useState("Facebook");
-    const token = useSelector(state => state?.auth?.token);
+    const customer = useSelector(state => state?.adminUser?.customer);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const token = useSelector(state => state?.adminAuth?.token);
     const router = useRouter();
+    const {customerId} = router.query;
 
-    const { profile } = props;
+    useEffect(() => {
+        if (customerId) {
+            dispatch.adminUser?.getCustomer(customerId);
+        }
+    }, [customerId]);
 
-/*    useEffect(() => {
+    useEffect(() => {
         let streamPreference = '',
             streamId = '',
             instagram = '',
             facebook = '';
-        const streamOnIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.streamOn) : -1;
-        const instagramIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'instagram') : -1;
-        const facebookIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'facebook') : -1;
-        if(streamOnIndex > -1) {
-            streamPreference = profile.socialMedias[streamOnIndex].provider;
-            streamId = profile.socialMedias[streamOnIndex].username;
+        const streamOnIndex = customer?.socialMedias ? customer?.socialMedias?.findIndex(item => item?.streamOn) : -1;
+        const instagramIndex = customer?.socialMedias ? customer?.socialMedias?.findIndex(item => item?.provider === 'instagram') : -1;
+        const facebookIndex = customer?.socialMedias ? customer?.socialMedias?.findIndex(item => item?.provider === 'facebook') : -1;
+        if (streamOnIndex > -1) {
+            streamPreference = customer?.socialMedias[streamOnIndex]?.provider;
+            streamId = customer?.socialMedias[streamOnIndex]?.username;
             setStream(streamPreference);
         }
-        if(instagramIndex > -1) {
-            instagram = profile.socialMedias[instagramIndex].username;
+        if (instagramIndex > -1) {
+            instagram = customer?.socialMedias[instagramIndex]?.username;
         }
-        if(facebookIndex > -1) {
-            facebook = profile.socialMedias[facebookIndex].username;
+        if (facebookIndex > -1) {
+            facebook = customer?.socialMedias[facebookIndex]?.username;
         }
+        setImageUrl(customer?.image);
         form.setFieldsValue({
-            firstName: profile.firstName || '',
-            lastName: profile.lastName || '',
-            email: profile.email || '',
-            phone: profile.phone || '',
-            birthdate: profile.birthdate ? moment(profile.birthdate || '') : '',
-            notifyMethod: profile.notifyMethod || undefined,
+            firstName: customer?.firstName || '',
+            lastName: customer?.lastName || '',
+            email: customer?.email || '',
+            phone: customer?.phone || '',
+            birthdate: customer?.birthdate ? moment(customer?.birthdate || '') : '',
+            notifyMethod: customer?.notifyMethod || undefined,
             streamPreference,
             streamId,
             instagram,
             facebook,
         })
-    }, [])*/
+    }, [customer]);
 
     const breadcrumb = [
         {
@@ -103,7 +110,7 @@ const EditCustomer = props => {
 
 
     const submitHandler = async (values) => {
-        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
+        const {notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone} = values;
         let wasStreamSet = false;
         const body = {
             notifyMethod,
@@ -112,37 +119,37 @@ const EditCustomer = props => {
             lastName,
             phone
         }
-        if(imageUrl) {
+        if (imageUrl) {
             body.image = imageUrl
         }
         const socialMedias = [];
-        if(facebook) {
+        if (facebook) {
             socialMedias.push({
                 "username": facebook,
                 "provider": "facebook",
                 "streamOn": streamPreference === 'facebook'
             })
-            if(streamPreference === 'facebook') {
+            if (streamPreference === 'facebook') {
                 wasStreamSet = true;
             }
         }
-        if(facebook) {
+        if (facebook) {
             socialMedias.push({
                 "username": instagram,
                 "provider": "instagram",
                 "streamOn": streamPreference === 'instagram'
             })
-            if(streamPreference === 'instagram') {
+            if (streamPreference === 'instagram') {
                 wasStreamSet = true;
             }
         }
-        if(streamPreference && !wasStreamSet) {
-            if(!streamId) {
+        if (streamPreference && !wasStreamSet) {
+            if (!streamId) {
                 message.error('Please enter your Username');
                 return false;
             }
 
-            if(!wasStreamSet) {
+            if (!wasStreamSet) {
                 socialMedias.push({
                     "username": streamId,
                     "provider": streamPreference,
@@ -152,9 +159,9 @@ const EditCustomer = props => {
         }
         body.socialMedias = socialMedias;
 
-        const res = await dispatch.profile.updateProfile(body)
-        if(res) {
-            router.push(routes.profile.index);
+        const res = await dispatch?.adminUser?.editCustomer({customerId, body, token});
+        if (res) {
+            router.push(routes.admin.users.index);
         }
     }
 
@@ -203,7 +210,7 @@ const EditCustomer = props => {
                                               message: "First name should be more than 3 characters."
                                           }
                                       ]}>
-                                    <Input placeholder="First Name" />
+                                    <Input placeholder="First Name"/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -218,7 +225,7 @@ const EditCustomer = props => {
                                               message: "Last name should be more than 3 characters."
                                           }
                                       ]}>
-                                    <Input placeholder="Last Name" />
+                                    <Input placeholder="Last Name"/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -234,7 +241,7 @@ const EditCustomer = props => {
                                           }
                                       ]}
                                 >
-                                    <Input type='email' placeholder="Email Address" disabled={true} />
+                                    <Input type='email' placeholder="Email Address" disabled={true}/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -249,7 +256,7 @@ const EditCustomer = props => {
                                               message: "Your Entered Phone number is not valid"
                                           }
                                       ]}>
-                                    <Input placeholder="Phone Number" />
+                                    <Input placeholder="Phone Number"/>
                                 </Item>
                             </Col>
 
@@ -276,15 +283,22 @@ const EditCustomer = props => {
                                                 {...uploadProps}
                                             >
                                                 <div className="avatar-uploader">
-                                                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{
+                                                        width: 50,
+                                                        height: 50,
+                                                        borderRadius: 50
+                                                    }}/> : (
                                                         <>
-                                                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                            <div
+                                                                className={'full-rounded text-overline bg-card flex items-center justify-center'}
+                                                                style={{width: 50, height: 50, borderRadius: 50}}>
                                                                 <UserOutlined className={'text-lg'}/>
                                                             </div>
                                                         </>
                                                     )}
                                                 </div>
-                                                <label htmlFor={'avatar'} className="text-info ml-3 cursor-pointer">Upload Image</label>
+                                                <label htmlFor={'avatar'} className="text-info ml-3 cursor-pointer">Upload
+                                                    Image</label>
 
                                             </Upload>
                                         </ImgCrop>
@@ -334,7 +348,8 @@ const EditCustomer = props => {
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
-                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
+                                    <Input
+                                        placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`}/>
                                 </Item>
                             </Col>
 
@@ -347,28 +362,28 @@ const EditCustomer = props => {
 
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'facebook'} label={'Facebook'}>
-                                    <Input placeholder="Facebook Username" />
+                                    <Input placeholder="Facebook Username"/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'instagram'} label={'Instagram'}>
-                                    <Input placeholder="Instagram Username" />
+                                    <Input placeholder="Instagram Username"/>
                                 </Item>
                             </Col>
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-2'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
+                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'}
+                                            loading={loading}>
                                         Save
                                     </Button>
                                 </Item>
                                 <Item>
-                                    <Link href={routes.profile.index}>
+                                    <Link href={routes.admin.users.index}>
                                         <Button danger className={'w-32'}>
                                             Cancel
                                         </Button>
                                     </Link>
-
                                 </Item>
                             </Col>
                         </Row>

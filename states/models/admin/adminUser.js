@@ -1,6 +1,5 @@
 import api from "../../../http/Api";
 import {message} from "antd";
-import store from '../../index';
 
 const setOptions = token => ({
     headers: {
@@ -224,9 +223,9 @@ export const adminUser = {
         },
         async getCustomer(customerId, rootState) {
             try {
-                const res = await api?.admin?.user?.getCustomer(storeId, setOptions(rootState?.adminAuth?.token));
+                const res = await api?.admin?.user?.getCustomer(customerId, setOptions(rootState?.adminAuth?.token));
                 if(res.data.success) {
-                    this.setStore(res.data.data);
+                    this.setCustomer(res.data.data);
                     return res.data.data
                 } else {
                     message.error('An Error was occurred');
@@ -242,6 +241,44 @@ export const adminUser = {
         async editCustomer({customerId, body, token}) {
             try {
                 const res = await api?.admin?.user?.editCustomer(customerId, body, setOptions(token));
+
+                if(res.data.success) {
+                    message.success(' Updated successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response);
+                }
+                message.error('An Error was occurred');
+                return false;
+            }
+        },
+        async editCustomerBlock({customerId, body, token}) {
+            try {
+                const res = await api?.admin?.user?.editCustomerBlock(customerId, body, setOptions(token));
+
+                if(res.data.success) {
+                    message.success(' Updated successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response);
+                }
+                message.error('An Error was occurred');
+                return false;
+            }
+        },
+        async editCustomerUnBlock({customerId, body, token}) {
+            try {
+                const res = await api?.admin?.user?.editCustomerUnBlock(customerId, body, setOptions(token));
 
                 if(res.data.success) {
                     message.success(' Updated successfully!', 5);

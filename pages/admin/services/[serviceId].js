@@ -8,7 +8,7 @@ import NoSSR from "react-no-ssr";
 import DetailItem from "../../../components/UI/DetailItem";
 import Page from "../../../components/Page";
 import routes from "../../../constants/routes";
-import ServiceCarousel from "../../../components/UI/ServiceCarousel";
+import ProductCarousel from "../../../components/UI/ProductCarousel";
 import deleteModal from "../../../components/Modals/Delete";
 import store, {getStore} from "../../../states";
 import {getProperty} from "../../../helpers";
@@ -48,14 +48,13 @@ const ServiceView = props => {
     address.push(profile?.store?.address?.city);
     address.push(profile?.store?.address?.province);
     address.push(profile?.store?.address?.country);*/
-
     return (
         <Page title={'Service'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8}>
-                    <NoSSR>
-                        <ServiceCarousel slides={service?.images}/>
-                    </NoSSR>
+                   {/* <NoSSR>
+                        <ProductCarousel slides={service?.images}/>
+                    </NoSSR>*/}
                 </Col>
                 <Col lg={16} md={12} xs={24}>
                     <Row>
@@ -95,26 +94,16 @@ const ServiceView = props => {
                         <Col xs={24}>
                             <Row gutter={[24, 32]}>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Weight'}
+                                    <DetailItem title={'Total Price'}
                                                 value={service?.weight ? getProperty(service, 'weight', '-', (data) => `${data}${service?.weightUnit}`) : '-'}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Price per Weight'}
-                                                value={getProperty(service?.priceList, 'price', '-', (data) => `$${data}`)}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Tax Rate'}
                                                 value={getProperty(service, 'tax', '-', (data) => `${data}%`)}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Total Price'}
-                                                value={`$${service?.priceList?.price + service?.priceList?.cost}`}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Stock'} value={getProperty(service, 'stock', '-')}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    {/*<DetailItem title={'Store Address'} value={address?.join(", ")}/>*/}
+                                    <DetailItem title={'Store Address'}
+                                                value={getProperty(service?.priceList, 'price', '-', (data) => `$${data}`)}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Cost Price'}

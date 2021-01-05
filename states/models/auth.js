@@ -82,7 +82,7 @@ export const auth = {
                     const errors = e.response.data.errors;
                     const errorCode = errors[0].errorCode;
                     if(errorCode === 'EMAIL_EXISTS') {
-                        message.error('Email already exists, Please login into your account or use forget password')
+                        message.error('Email already exists, Please login into your view or use forget password')
                     } else {
 
                         message.error('An Error was occurred');

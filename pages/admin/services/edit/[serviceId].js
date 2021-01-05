@@ -21,7 +21,6 @@ const EditService = props => {
     const service = useSelector(state => state?.adminStore?.service);
     const [imagesList, setImagesList] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [unitType, setUnitType] = useState('quantity');
     const {serviceId, storeId, storeType} = router.query;
 
     useEffect(() => {
@@ -29,10 +28,6 @@ const EditService = props => {
             dispatch?.adminStore?.getService({storeId, serviceId, token});
         }
     }, [storeId, serviceId, token]);
-
-    const onChangeUnitType = (e) => {
-        setUnitType(e.target.value);
-    }
 
     const breadcrumb = [
         {
@@ -57,21 +52,18 @@ const EditService = props => {
                 setCategories(response?.data);
             })
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         const {
             name,
-            unitType,
-            weight,
-            weightUnit,
             priceList,
             images,
             category,
             tax,
             description
-        } = service;
-        const transformedImageList = images.map((image, index) => {
+        } = service || {};
+        const transformedImageList = images?.map((image, index) => {
             const name = image?.split('/').slice(-1);
             return {
                 url: image,
@@ -82,19 +74,13 @@ const EditService = props => {
         })
         form.setFieldsValue({
             name: name || '',
-            unitType: unitType || '',
-            weight: weight || '',
-            weightUnit: weightUnit || '',
-            unitPrice: priceList?.price || '',
             category: category?._id || '',
             tax: tax || '',
             description: description || '',
             costPrice: priceList?.cost || '',
-            stock: priceList?.stock || '',
             photo: transformedImageList,
         })
         setImagesList(transformedImageList);
-        setUnitType(unitType || 'quantity');
     }, []);
 
     const handleChange = ({fileList}) => setImagesList(fileList);
@@ -160,90 +146,20 @@ const EditService = props => {
                             color: '#020911',
                         }}>Edit Service</h1>
                     </Col>
-                    <Col xs={24} md={12} lg={8}>
-                        <Item name={'name'} label={'Name'} rules={[
-                            {
-                                required: true,
-                                message: 'This Field is required'
-                            }
-                        ]}>
-                            <Input placeholder={'Name'}/>
-                        </Item>
-                    </Col>
-                    <Col xs={24} md={12} lg={8}>
-                        <Item name={'unitType'} label={'Unit Type'} rules={[
-                            {
-                                required: true,
-                                message: 'This Field is required'
-                            }
-                        ]}>
-                            <Radio.Group onChange={onChangeUnitType} className={'flex flex-row items-center'}>
-                                <Radio value={'quantity'} className={'flex-grow radio-info'}>Quantity</Radio>
-                                <Radio value={'weight'} className={'flex-grow radio-info'}>Weight</Radio>
-                            </Radio.Group>
-                        </Item>
-                    </Col>
-                    {unitType === 'quantity' ? (
-                        <Col xs={24} md={12} lg={8}>
-                            <Item name={'unitPrice'} label={'Price per Unit'} rules={[
-                                {
-                                    required: true,
-                                    message: 'This Field is required'
-                                },
-                                {
-                                    pattern: /^[0-9.]+$/,
-                                    message: 'This Field should be number'
-                                }
-                            ]}>
-                                <Input placeholder={'Price per Unit'}/>
-                            </Item>
-                        </Col>
-                    ) : (
-                        <>
+                    <Col xs={24}>
+                        <Row gutter={24}>
                             <Col xs={24} md={12} lg={8}>
-                                <Item name={'weightUnit'} label={'Weight Unit'} rules={[
+                                <Item name={'name'} label={'Name'} rules={[
                                     {
                                         required: true,
                                         message: 'This Field is required'
                                     }
                                 ]}>
-                                    <Select placeholder={'Select Weight Unit'}>
-                                        <Option value={'g'}>g</Option>
-                                        <Option value={'kg'}>kg</Option>
-                                    </Select>
+                                    <Input placeholder={'Name'}/>
                                 </Item>
                             </Col>
-                            <Col xs={24} md={12} lg={8}>
-                                <Row gutter={24}>
-                                    <Col xs={12}>
-                                        <Item name={'weight'} label={'Weight'} rules={[
-                                            {
-                                                required: true,
-                                                message: 'This Field is required'
-                                            }
-                                        ]}>
-                                            <Input placeholder={'Weight'}/>
-                                        </Item>
-                                    </Col>
-                                    <Col xs={12}>
-                                        <Item name={'unitPrice'} label={'Price per Weight'} rules={[
-                                            {
-                                                required: true,
-                                                message: 'This Field is required'
-                                            },
-                                            {
-                                                pattern: /^[0-9.]+$/,
-                                                message: 'This Field should be number'
-                                            }
-                                        ]}>
-                                            <Input placeholder={'Price per Weight'}/>
-                                        </Item>
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </>
-                    )}
-
+                        </Row>
+                    </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'category'} label={'Category'} rules={[
                             {
@@ -294,20 +210,6 @@ const EditService = props => {
                             }
                         ]}>
                             <Input placeholder={'Cost Price'}/>
-                        </Item>
-                    </Col>
-                    <Col xs={24} md={12} lg={8}>
-                        <Item name={'stock'} label={'Stock'} rules={[
-                            {
-                                required: true,
-                                message: 'This Field is required'
-                            },
-                            {
-                                pattern: /^[0-9.]+$/,
-                                message: 'This Field should be number'
-                            }
-                        ]}>
-                            <Input placeholder={'Stock'}/>
                         </Item>
                     </Col>
                     <Col xs={24}>

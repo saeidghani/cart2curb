@@ -37,50 +37,15 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 
-
 const AddCustomer = props => {
-    const loading = useSelector(state => state?.loading?.effects?.profile?.updateProfile);
-    const [imageUrl, setImageUrl] = useState(props?.profile?.image || '')
+    const loading = useSelector(state => state?.loading?.effects?.adminUser?.addCustomer);
+    const [imageUrl, setImageUrl] = useState(props?.profile?.image || '');
     const [stream, setStream] = useState("Facebook");
-    const token = useSelector(state => state?.auth?.token);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const token = useSelector(state => state?.adminAuth?.token);
     const router = useRouter();
-
-    const { profile } = props;
-
-    /*    useEffect(() => {
-            let streamPreference = '',
-                streamId = '',
-                instagram = '',
-                facebook = '';
-            const streamOnIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.streamOn) : -1;
-            const instagramIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'instagram') : -1;
-            const facebookIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'facebook') : -1;
-            if(streamOnIndex > -1) {
-                streamPreference = profile.socialMedias[streamOnIndex].provider;
-                streamId = profile.socialMedias[streamOnIndex].username;
-                setStream(streamPreference);
-            }
-            if(instagramIndex > -1) {
-                instagram = profile.socialMedias[instagramIndex].username;
-            }
-            if(facebookIndex > -1) {
-                facebook = profile.socialMedias[facebookIndex].username;
-            }
-            form.setFieldsValue({
-                firstName: profile.firstName || '',
-                lastName: profile.lastName || '',
-                email: profile.email || '',
-                phone: profile.phone || '',
-                birthdate: profile.birthdate ? moment(profile.birthdate || '') : '',
-                notifyMethod: profile.notifyMethod || undefined,
-                streamPreference,
-                streamId,
-                instagram,
-                facebook,
-            })
-        }, [])*/
+    const {customerId} = router.query;
 
     const breadcrumb = [
         {
@@ -152,9 +117,9 @@ const AddCustomer = props => {
         }
         body.socialMedias = socialMedias;
 
-        const res = await dispatch.profile.updateProfile(body)
+        const res = await dispatch?.adminUser?.addCustomer(body);
         if(res) {
-            router.push(routes.profile.index);
+            router.push(routes.admin.users.index);
         }
     }
 
@@ -363,12 +328,11 @@ const AddCustomer = props => {
                                     </Button>
                                 </Item>
                                 <Item>
-                                    <Link href={routes.profile.index}>
+                                    <Link href={routes.admin.users.index}>
                                         <Button danger className={'w-32'}>
                                             Cancel
                                         </Button>
                                     </Link>
-
                                 </Item>
                             </Col>
                         </Row>

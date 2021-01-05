@@ -239,7 +239,7 @@ export const cart = {
                     const errors = e.response.data?.errors;
                     const errorCode = errors?.[0].errorCode;
                     if(errorCode === 'EMAIL_EXISTS') {
-                        message.error('Email already exists, Please login into your account or use forget password')
+                        message.error('Email already exists, Please login into your view or use forget password')
                     } else if(errorCode === 'EMPTY_CART') {
                         message.error('Your Cart is empty!')
                     } else {

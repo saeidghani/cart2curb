@@ -29,7 +29,7 @@ export const vendorProfile = {
         },
         async updateProfile(body, rootState) {
             try {
-                const res = await api.post('vendor/profile/edit', body)
+                const res = await api.post('vendor/profile/view', body)
                 if(res.data.success) {
                     const resData = res.data;
                     dispatch.profile.setProfile({
