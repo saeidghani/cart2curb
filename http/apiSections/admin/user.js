@@ -29,7 +29,7 @@ export default class AdminUserApi extends ApiInstance {
         return this.get(`admin/users/vendors/pending-count`, query, options);
     }
 
-    addPendingVendor(vendorId, body, {}, options = {}) {
+    addPendingVendor(vendorId, body, options = {}) {
         return this.post(`admin/users/vendors/pending/${vendorId}`, body, { }, options);
     }
 
@@ -37,8 +37,8 @@ export default class AdminUserApi extends ApiInstance {
         return this.get(`admin/users/customer`, query, options);
     }
 
-    addCustomer(body, {}, options = {}) {
-        return this.post(`admin/users/customer`, body, { }, options);
+    addCustomer(body, options = {}) {
+        return this.post(`admin/users/customer`, body, {}, options);
     }
 
     getCustomer(customerId, options = {}) {

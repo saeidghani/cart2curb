@@ -73,8 +73,8 @@ export default class AdminStoreApi extends ApiInstance {
         return this.get(`admin/stores/${storeId}/services`, query, options);
     }
 
-    addService(storeId, body, query = {}, options = {}) {
-        return this.post(`admin/stores/${storeId}/services`, body,{}, options);
+    addService(storeId, body, options = {}) {
+        return this.post(`admin/stores/${storeId}/services`, body, {}, options);
     }
 
     getService(storeId, serviceId, options = {}) {

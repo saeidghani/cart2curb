@@ -165,12 +165,13 @@ export const adminUser = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
-        async addPendingVendor(body, rootState) {
+        async addPendingVendor({vendorId, body, token}) {
+            console.log(body);
             try {
-                const res = await api?.admin?.user?.addPendingVendor(body, setOptions(rootState?.adminAuth?.token))
+                const res = await api?.admin?.user?.addPendingVendor(vendorId, body, setOptions(token))
 
                 if(res.data.success) {
-                    message.success('New Category added successfully!', 5);
+                    message.success('updated successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');
@@ -202,9 +203,10 @@ export const adminUser = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
-        async addCustomer(body, rootState) {
+        async addCustomer({body, token}) {
+            console.log({body, token});
             try {
-                const res = await api?.admin?.user?.addCustomer(body, setOptions(rootState?.adminAuth?.token))
+                const res = await api?.admin?.user?.addCustomer(body, setOptions(token))
 
                 if(res.data.success) {
                     message.success('New Category added successfully!', 5);

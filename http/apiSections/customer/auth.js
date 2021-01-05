@@ -63,7 +63,7 @@ export default class CustomerAuthApi extends ApiInstance {
     /**
      * Customer change password
      * @param currentPassword Customer current password
-     * @param newPassword Customer new selected password
+     * @param newPassword Customer Account selected password
      * @param options
      * @returns {Promise<*>}
      */

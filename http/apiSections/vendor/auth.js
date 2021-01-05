@@ -63,7 +63,7 @@ export default class VendorAuthApi extends ApiInstance {
     /**
      * Vendor change password
      * @param currentPassword Vendor current password
-     * @param newPassword Vendor new selected password
+     * @param newPassword Vendor Account selected password
      * @param options
      * @returns {Promise<*>}
      */

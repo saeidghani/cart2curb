@@ -3,7 +3,7 @@ export default {
         login: '/login',
         forgetPassword: '/login/forget-password',
         register: {
-            index: '/new',
+            index: '/Account',
         },
         resetPassword: {
             index: '/login/reset-password',
@@ -43,7 +43,7 @@ export default {
         },
         payments: {
             index: '/profile/payment-info',
-            new: '/profile/payment-info/new',
+            new: '/profile/payment-info/Account',
         },
         orders: '/profile/orders'
     },
@@ -56,7 +56,7 @@ export default {
             forgetPassword: '/vendors/login/forget-password',
             resetPassword: '/vendors/login/reset-password',
             register: {
-                index: '/vendors/new',
+                index: '/vendors/Account',
             }
         },
         products: {
@@ -67,14 +67,14 @@ export default {
             view(number = '[number]') {
                 return `/vendors/products/${number}`
             },
-            add: '/vendors/products/new'
+            add: '/vendors/products/Account'
         },
         categories: {
             index: '/vendors/dashboard?tab=categories',
             edit(number = '[number]') {
                 return `/vendors/categories/edit/${number}`
             },
-            add: '/vendors/categories/new'
+            add: '/vendors/categories/Account'
         },
         orders: '/vendors/orders',
         account: {
@@ -91,7 +91,7 @@ export default {
             resetPassword: '/admin/login/reset-password',
             profile: '/admin/profile',
             register: {
-                index: '/admin/new',
+                index: '/admin/Account',
             },
             account: {
                 index: '/admin/view',
@@ -120,7 +120,10 @@ export default {
             edit(vendorId = '[vendorId]') {
                 return `/admin/vendors/edit/${vendorId}`
             },
-            add: '/admin/vendors/new'
+            view(vendorId = '[vendorId]') {
+                return `/admin/vendors/view/${vendorId}`
+            },
+            add: '/admin/vendors/add'
         },
         products: {
             index: '/admin/store-details',
@@ -130,7 +133,7 @@ export default {
             view(productId = '[productId]') {
                 return `/admin/products/${productId}`
             },
-            add: '/admin/products/new'
+            add: '/admin/products/Account'
         },
         services: {
             index: '/admin/store-details',
@@ -147,7 +150,7 @@ export default {
             edit(categoryId = '[categoryId]') {
                 return `/admin/categories/edit/${categoryId}`
             },
-            add: '/admin/categories/new'
+            add: '/admin/categories/Account'
         },
     }
 }

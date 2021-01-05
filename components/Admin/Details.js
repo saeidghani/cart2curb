@@ -25,13 +25,7 @@ const Details = props => {
         }
     }, [storeId, isLoggedIn]);
 
-    const address = [store?.address?.addressLine1];
-    if (store?.address?.addressLine2) {
-        address.push(store?.address?.addressLine2);
-    }
-    address.push(store?.address?.city);
-    address.push(store?.address?.province);
-    address.push(store?.address?.country);
+    const address = `${store?.address?.addressLine1}${store?.address?.addressLine2 ? store?.address?.addressLine2 : ''} ${store?.address?.city} ${store?.address?.province} ${store?.address?.country}`;
 
     return (
         <>
@@ -89,7 +83,7 @@ const Details = props => {
                         </Col>
                         <Col xs={24}>
                             <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Description'}
-                                        value={getProperty(store, 'description', '-')}/>
+                                        value={address}/>
                         </Col>
                     </Row>
                 </Col>

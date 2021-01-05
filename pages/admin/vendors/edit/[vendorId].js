@@ -39,12 +39,13 @@ function beforeUpload(file) {
 const EditAccount = props => {
     const [form] = Form.useForm();
     const [fields, setFields] = useState([])
-    const [imageUrl, setImageUrl] = useState(props.fields[0].imageStore)
-    const [avatarUrl, setAvatarUrl] = useState(props.fields[0].image)
-    const [marker, setMarker] = useState(props.marker)
-    const [area, setArea] = useState(props.area);
-    const [province, setProvince] = useState(props.fields[1].province);
-    const token = useSelector(state => state.vendorAuth.token);
+    const [imageUrl, setImageUrl] = useState('')
+    const [avatarUrl, setAvatarUrl] = useState('')
+    const [marker, setMarker] = useState({})
+    const [area, setArea] = useState([]);
+    const [province, setProvince] = useState('');
+    const token = useSelector(state => state?.adminAuth?.token);
+    const vendor = useSelector(state => state?.adminUser?.vendor);
     const [step, setStep] = useState(0)
     const screens = Grid.useBreakpoint();
     const provinces = useProvinces();
@@ -52,32 +53,86 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
+    const {vendorId} = router.query;
 
     useEffect(() => {
+        let area = [];
+        let fields = [];
+        if (vendorId) {
+            dispatch?.adminUser?.getVendor({vendorId});
+        }
+        const markCoords = vendor.store.address.location.coordinates
+        const marker = {
+            position: {
+                lat: markCoords[1],
+                lng: markCoords[0]
+            }
+        }
+        setMarker(marker);
+        const areaCoords = vendor.store.area.coordinates[0];
+        for(let i in areaCoords){
+            const index = area.findIndex(item => item.lat === areaCoords[i][1] && item.lng === areaCoords[i][0]);
+            if(index === -1) {
+                area.push({
+                    lat: areaCoords[i][1],
+                    lng: areaCoords[i][0]
+                })
+            }
+        }
+
+        fields[0] = {
+            email: getProperty(vendor, 'email', ''),
+            phone: getProperty(vendor, 'phone', ''),
+            contactName: getProperty(vendor, 'contactName', ''),
+            openingHour: getProperty(vendor.store, 'openingHour', ''),
+            closingHour: getProperty(vendor.store, 'closingHour', ''),
+            storeType: getProperty(vendor.store, 'storeType', ''),
+            subType: getProperty(vendor.store, 'subType', ''),
+            name: getProperty(vendor.store, 'name', ''),
+            imageStore: getProperty(vendor.store, 'image', ''),
+            image: getProperty(vendor, 'image', ''),
+        }
+
+        fields[1] = {
+            province: getProperty(vendor.store.address, 'province', ''),
+            city: getProperty(vendor.store.address, 'city', ''),
+            addressLine1: getProperty(vendor.store.address, 'addressLine1', ''),
+            addressLine2: getProperty(vendor.store.address, 'addressLine2', ''),
+            postalCode: getProperty(vendor.store.address, 'postalCode', ''),
+            needDriversToGather: getProperty(vendor.store, 'needDriversToGather', ''),
+            description: getProperty(vendor.store, 'description', ''),
+        }
+
+        setImageUrl(fields[0].imageStore);
+        setAvatarUrl(fields[0].image);
+        setArea(area);
+        setProvince(fields[1].province);
+
+        const {email} = vendor || {};
 
         form.setFieldsValue({
-            email: props.fields[0].email,
-            phone: props.fields[0].phone,
-            contactName: props.fields[0].contactName,
-            openingHour: moment(props.fields[0].openingHour),
-            closingHour: moment(props.fields[0].closingHour),
-            storeType: props.fields[0].storeType,
-            subType: props.fields[0].subType,
-            name: props.fields[0].name,
-            province: props.fields[1].province,
-            city: props.fields[1].city,
-            addressLine1: props.fields[1].addressLine1,
-            addressLine2: props.fields[1].addressLine2,
-            postalCode: props.fields[1].postalCode,
-            description: props.fields[1].description,
-            needDriversToGather: props.fields[1].needDriversToGather ? ['true'] : []
+            email: fields[0].email,
+            phone: fields[0].phone,
+            contactName: fields[0].contactName,
+            openingHour: moment(fields[0].openingHour),
+            closingHour: moment(fields[0].closingHour),
+            storeType: fields[0].storeType,
+            subType: fields[0].subType,
+            name: fields[0].name,
+            province: fields[1].province,
+            city: fields[1].city,
+            addressLine1: fields[1].addressLine1,
+            addressLine2: fields[1].addressLine2,
+            postalCode: fields[1].postalCode,
+            description: fields[1].description,
+            needDriversToGather: fields[1].needDriversToGather ? ['true'] : []
         })
     }, [])
 
     const breadcrumb = [
         {
-            title: 'Vendor Profile',
-            href: routes.vendors.account.index,
+            title: 'admin Profile',
+            href: routes.admin.users.index,
         },
         {
             title: 'Add/Edit Info',
@@ -170,21 +225,21 @@ const EditAccount = props => {
             subType: form1.subType,
         }
 
-        const vendor = {
+        const admin = {
             phone: form1.phone,
             contactName: form1.contactName,
             image: avatarUrl,
         }
 
         const body = {
-            vendor,
+            admin,
             store,
         }
 
-        const result = await dispatch.vendorProfile.updateProfile(body);
+        const result = await dispatch.adminUser.editVendor(body);
 
         if(result) {
-            router.push(routes.vendors.account.index);
+            router.push(routes.admin.users.index);
         }
 
     }
@@ -405,7 +460,7 @@ const EditAccount = props => {
                                             Next
                                         </Button>
                                     </Item>
-                                    <Link href={routes.vendors.account.index}>
+                                    <Link href={routes.admin.users.index}>
                                         <Button danger className={'w-32'}>Cancel</Button>
                                     </Link>
                                 </Col>
@@ -561,96 +616,6 @@ const EditAccount = props => {
             </Row>
         </Page>
     )
-}
-
-
-export async function getServerSideProps({ req, res }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-    let userType = cookies.type;
-
-
-    let profile = {};
-    let marker = {};
-    let area = []
-    const fields = [];
-    if (!token) {
-        res.writeHead(307, { Location: routes.vendors.auth.login });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
-
-    if(cookies.type !== 'vendor') {
-        res.writeHead(307, { Location: userTypes[cookies.type].profile });
-        res.end();
-        return {
-            props: {
-                profile
-            }
-        };
-    }
-
-    const store = getStore();
-    const response = await store.dispatch.vendorProfile.getProfile({
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    if(response) {
-        profile = response;
-    }
-    const markCoords = profile.store.address.location.coordinates
-    marker = {
-        position: {
-            lat: markCoords[1],
-            lng: markCoords[0]
-        }
-    }
-    const areaCoords = profile.store.area.coordinates[0];
-    for(let i in areaCoords){
-        const index = area.findIndex(item => item.lat === areaCoords[i][1] && item.lng === areaCoords[i][0]);
-        if(index === -1) {
-            area.push({
-                lat: areaCoords[i][1],
-                lng: areaCoords[i][0]
-            })
-        }
-    }
-    fields[0] = {
-        email: getProperty(profile, 'email', ''),
-        phone: getProperty(profile, 'phone', ''),
-        contactName: getProperty(profile, 'contactName', ''),
-        openingHour: getProperty(profile.store, 'openingHour', ''),
-        closingHour: getProperty(profile.store, 'closingHour', ''),
-        storeType: getProperty(profile.store, 'storeType', ''),
-        subType: getProperty(profile.store, 'subType', ''),
-        name: getProperty(profile.store, 'name', ''),
-        imageStore: getProperty(profile.store, 'image', ''),
-        image: getProperty(profile, 'image', ''),
-    }
-
-    fields[1] = {
-        province: getProperty(profile.store.address, 'province', ''),
-        city: getProperty(profile.store.address, 'city', ''),
-        addressLine1: getProperty(profile.store.address, 'addressLine1', ''),
-        addressLine2: getProperty(profile.store.address, 'addressLine2', ''),
-        postalCode: getProperty(profile.store.address, 'postalCode', ''),
-        needDriversToGather: getProperty(profile.store, 'needDriversToGather', ''),
-        description: getProperty(profile.store, 'description', ''),
-    }
-    return {
-        props: {
-            profile,
-            marker,
-            area,
-            fields
-        }
-    }
 }
 
 export default EditAccount;

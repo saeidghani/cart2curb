@@ -60,8 +60,8 @@ const Vendors = () => {
 
     useEffect(() => {
         let isBlocked = [];
-        vendors?.forEach(c => {
-            if (c?.isBlocked) isBlocked.push(c?._id);
+        vendors?.forEach(({vendor}) => {
+            if (!vendor?.isApproved) isBlocked.push(vendor?._id);
         });
         setBlocked(isBlocked);
     }, [vendors]);
@@ -110,8 +110,8 @@ const Vendors = () => {
         },
         {
             title: "Vendor Name",
-            dataIndex: 'CXName',
-            key: 'CXName',
+            dataIndex: 'name',
+            key: 'name',
             render: CXName => <span className="text-cell">{CXName}</span>
         },
         {
@@ -130,9 +130,17 @@ const Vendors = () => {
             title: "OP",
             dataIndex: 'action',
             key: 'action',
-            render: (actions, {key}) => {
+            render: (actions, {key, storeId}) => {
                 return (
                     <div className={'flex flex-row items-center space-x-3'}>
+                        <Link href={{pathname: routes.admin.vendors.view(key), query: {storeId}}}>
+                            <Button
+                                type={'link'}
+                                shape={'circle'}
+                                icon={<FileSearchOutlined className={'text-secondarey text-xl'}/>}
+                                className={'btn-icon-small'}
+                            />
+                        </Link>
                         <Link href={{pathname: routes.admin.vendors.edit(key)}}>
                             <Button
                                 type={'link'}
@@ -166,25 +174,34 @@ const Vendors = () => {
     }
 
     const data = useMemo(() => {
-        return vendors?.map((vendor, index) => ({
+        return vendors?.map(({vendor, store}) => ({
                 key: vendor?._id,
                 avatar: vendor?.image,
-                CXName: `${vendor?.firstName} ${vendor?.lastName}`,
+                name: `${vendor?.contactName}`,
                 number: vendor?._id,
-                email: vendor?.email  || '-',
+                email: vendor?.email || '-',
                 phoneNumber: vendor?.phone || '-',
                 address: vendor?.addresses?.length > 0 ?
                     setSubstring(`${vendor?.addresses[0]?.addressLine1} ${vendor?.addresses[0]?.city} ${vendor?.addresses[0]?.state} ${vendor?.addresses[0]?.country} ${vendor?.addresses[0]?.postalCode}`, 20) :
                     '-',
+                storeId: store?._id,
                 action: {
                     blockHandler: async () => {
-                        const res = await dispatch.adminUser.editVendorBlock({vendorId: vendor?._id, token});
+                        const res = await dispatch.adminUser.addPendingVendor({
+                            vendorId: vendor?._id,
+                            body: {isApproved: false},
+                            token
+                        });
                         if (res) {
                             setBlocked(blocked.concat(vendor?._id));
                         }
                     },
                     unBlockHandler: async () => {
-                        const res = await dispatch.adminUser.editVendorUnBlock({vendorId: vendor?._id, token});
+                        const res = await dispatch.adminUser.addPendingVendor({
+                            vendorId: vendor?._id,
+                            body: {isApproved: true},
+                            token
+                        });
                         if (res) {
                             const newBlocked = blocked?.filter(b => b !== vendor?._id);
                             setBlocked(newBlocked);

@@ -13,7 +13,6 @@ const {Item} = Form;
 const {Option} = Select;
 
 const NewService = props => {
-    const [unitType, setUnitType] = useState('quantity');
     const [form] = Form.useForm();
     const [imagesList, setImagesList] = useState([]);
     const token = useSelector(state => state.adminAuth.token);
@@ -31,7 +30,7 @@ const NewService = props => {
         {
             title: 'Add Service',
         }
-    ]
+    ];
 
     useEffect(() => {
         if (storeId && token) {
@@ -40,7 +39,7 @@ const NewService = props => {
                     setCategories(response.data);
                 })
         }
-    }, [])
+    }, [storeId && token]);
 
     const handleChange = ({fileList}) => setImagesList(fileList);
 
@@ -49,7 +48,7 @@ const NewService = props => {
             message.warning('Please Upload some images form your service');
             return false;
         }
-        const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
+        const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image?.response?.data?.path}`);
         const {name, category, tax, costPrice, description} = values;
         const body = {
             name,

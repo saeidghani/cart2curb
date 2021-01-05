@@ -38,7 +38,7 @@ const Services = ({vendor, ...props}) => {
     const {storeId, storeType} = router.query;
 
     useEffect(() => {
-        if (token) {
+        if (storeId && token) {
             dispatch.adminStore.getCategories({storeId, query: {}, token})
                 .then(response => {
                     if (response)
@@ -120,12 +120,6 @@ const Services = ({vendor, ...props}) => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
-            title: "Unit/Weight Price",
-            dataIndex: 'unitPrice',
-            key: 'unitPrice',
-            render: data => <span className="text-cell">{data}</span>
-        },
-        {
             title: "Cost Price",
             dataIndex: 'price',
             key: 'price',
@@ -139,13 +133,7 @@ const Services = ({vendor, ...props}) => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
-            title: "Stock",
-            dataIndex: 'stock',
-            key: 'stock',
-            render: data => <span className="text-cell">{data}</span>
-        },
-        {
-            title: "Categories",
+            title: "Parent Category",
             dataIndex: 'category',
             key: 'category',
             render: data => <span className="text-cell">{data}</span>
@@ -178,17 +166,15 @@ const Services = ({vendor, ...props}) => {
     ]
 
     const data = useMemo(() => {
-        return services && services.filter(item => !deleted.includes(item._id)).map((service, index) => {
+        return services?.filter(item => !deleted.includes(item._id)).map((service, index) => {
             const category = categories.find(cat => cat._id === service.category)
             return {
                 key: service?._id,
                 index: service?._id,
                 number: '11111',
                 name: service?.name,
-                unitPrice: `$${service?.priceList?.price}`,
                 price: `$${service?.priceList?.cost}`,
                 tax: `${service?.tax}%`,
-                stock: `${service?.priceList?.stock}`,
                 category: category ? category?.name : service?.category,
                 actions: {
                     deleteHandler: () => {
@@ -207,7 +193,7 @@ const Services = ({vendor, ...props}) => {
                 },
             }
         })
-    }, [services, categories, deleted])
+    }, [services, categories, deleted]);
 
     return (
         <>
@@ -224,7 +210,7 @@ const Services = ({vendor, ...props}) => {
                                 <Item name={'category'} label={'Category'}>
                                     <Select placeholder={'Category'} loading={categoryLoading}>
                                         <Option value={'all'}>All</Option>
-                                        {categories && categories.map(cat => {
+                                        {(categories || [])?.map(cat => {
                                             return (
                                                 <Option key={cat._id} value={cat._id}>{cat.name}</Option>
                                             )

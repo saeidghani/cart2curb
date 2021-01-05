@@ -198,7 +198,7 @@ const Delivery = props => {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please choose an Address or Create new'
+                                            message: 'Please choose an Address or Create Account'
                                         }
                                     ]}
                                 >

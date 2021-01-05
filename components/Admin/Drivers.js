@@ -78,7 +78,7 @@ const admin = ({vendor, ...props}) => {
              threshold: 1
          };
 
-         const observer = new IntersectionObserver(handleObserver, options);
+         const observer = Account IntersectionObserver(handleObserver, options);
          if (loader.current) {
              observer.observe(loader.current)
          }

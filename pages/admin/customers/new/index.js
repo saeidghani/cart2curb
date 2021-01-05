@@ -68,39 +68,33 @@ const AddCustomer = props => {
 
 
     const submitHandler = async (values) => {
-        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
+        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, email, firstName, lastName, phone } = values;
         let wasStreamSet = false;
         const body = {
-            notifyMethod,
-            birthdate: moment(birthdate).format('YYYY-MM-DD'),
             firstName,
             lastName,
-            phone
+            phone,
+            email,
+            address: {
+                country: '',
+                province: '',
+                city: '',
+                addressLine1: '',
+                addressLine2: '',
+                postalCode: '',
+                location: {
+                    type: '',
+                    coordinates: [
+                        1.2,
+                        1.3
+                    ]
+                }
+            }
         }
-        if(imageUrl) {
+     /*   if(imageUrl) {
             body.image = imageUrl
         }
         const socialMedias = [];
-        if(facebook) {
-            socialMedias.push({
-                "username": facebook,
-                "provider": "facebook",
-                "streamOn": streamPreference === 'facebook'
-            })
-            if(streamPreference === 'facebook') {
-                wasStreamSet = true;
-            }
-        }
-        if(facebook) {
-            socialMedias.push({
-                "username": instagram,
-                "provider": "instagram",
-                "streamOn": streamPreference === 'instagram'
-            })
-            if(streamPreference === 'instagram') {
-                wasStreamSet = true;
-            }
-        }
         if(streamPreference && !wasStreamSet) {
             if(!streamId) {
                 message.error('Please enter your Username');
@@ -115,9 +109,9 @@ const AddCustomer = props => {
                 })
             }
         }
-        body.socialMedias = socialMedias;
+        body.socialMedias = socialMedias;*/
 
-        const res = await dispatch?.adminUser?.addCustomer(body);
+        const res = await dispatch?.adminUser?.addCustomer({body, token});
         if(res) {
             router.push(routes.admin.users.index);
         }
@@ -199,7 +193,7 @@ const AddCustomer = props => {
                                           }
                                       ]}
                                 >
-                                    <Input type='email' placeholder="Email Address" disabled={true} />
+                                    <Input type='email' placeholder="Email Address" />
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
