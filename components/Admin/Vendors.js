@@ -141,7 +141,7 @@ const Vendors = () => {
                                 className={'btn-icon-small'}
                             />
                         </Link>
-                        <Link href={{pathname: routes.admin.vendors.edit(key)}}>
+                        <Link href={{pathname: routes.admin.vendors.edit(key), query: {storeId}}}>
                             <Button
                                 type={'link'}
                                 shape={'circle'}

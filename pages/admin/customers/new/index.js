@@ -45,15 +45,19 @@ const AddCustomer = props => {
     const dispatch = useDispatch();
     const token = useSelector(state => state?.adminAuth?.token);
     const router = useRouter();
-    const {customerId} = router.query;
 
     const breadcrumb = [
         {
-            title: "User Profile",
-            href: routes.profile.index
+            title: 'Users',
+            href: routes.admin.users.index
         },
         {
-            title: 'Add/Edit Info'
+            title: 'Customers',
+            href: routes.admin.users.index,
+            query: {tab: 'customer'}
+        },
+        {
+            title: `Add`,
         }
     ]
 
@@ -75,23 +79,10 @@ const AddCustomer = props => {
             lastName,
             phone,
             email,
-            address: {
-                country: '',
-                province: '',
-                city: '',
-                addressLine1: '',
-                addressLine2: '',
-                postalCode: '',
-                location: {
-                    type: '',
-                    coordinates: [
-                        1.2,
-                        1.3
-                    ]
-                }
-            }
+            birthdate: moment(birthdate).format('YYYY-MM-DD'),
+            notifyMethod,
         }
-     /*   if(imageUrl) {
+        if(imageUrl) {
             body.image = imageUrl
         }
         const socialMedias = [];
@@ -109,7 +100,7 @@ const AddCustomer = props => {
                 })
             }
         }
-        body.socialMedias = socialMedias;*/
+        body.socialMedias = socialMedias;
 
         const res = await dispatch?.adminUser?.addCustomer({body, token});
         if(res) {

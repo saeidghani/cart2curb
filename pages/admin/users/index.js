@@ -8,6 +8,7 @@ import Vendors from "../../../components/Admin/Vendors";
 import Drivers from "../../../components/Admin/Drivers";
 import AdminAuth from '../../../components/Admin/AdminAuth';
 import {useDispatch} from "react-redux";
+import routes from "../../../constants/routes";
 
 const {TabPane} = Tabs;
 
@@ -16,7 +17,7 @@ const Users = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const {pathname} = router;
-    const {tab} = router.query;
+    const {tab='customers'} = router.query;
 
     useEffect(() => {
         (async () => {
@@ -32,12 +33,29 @@ const Users = props => {
         </div>
     );
 
+    const capitalize = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
+
+    const breadcrumb = [
+        {
+            title: 'Users',
+            href: routes.admin.stores.index,
+        },
+        {
+            title: `${capitalize(tab)}`,
+            href: routes.admin.users.index,
+            query: {tab}
+        },
+    ];
+
     return (
         <AdminAuth>
-            <Page title={false} headTitle={'Users'} breadcrumb={[{title: 'Users'}]}>
+            <Page title={false} headTitle={'Users'} breadcrumb={breadcrumb}>
                 <Tabs
-                    defaultActiveKey={tab || 'customers'}
-                    activeKey={tab || 'customers'}
+                    defaultActiveKey={tab}
+                    activeKey={tab}
                     onChange={(key) => router.push({pathname, query: {tab: key}})}
                     tabBarExtraContent={ExtraContent}
                 >

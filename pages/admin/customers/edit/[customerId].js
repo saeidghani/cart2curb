@@ -91,11 +91,16 @@ const EditCustomer = props => {
 
     const breadcrumb = [
         {
-            title: "User Profile",
-            href: routes.profile.index
+            title: 'Users',
+            href: routes.admin.users.index
         },
         {
-            title: 'Add/Edit Info'
+            title: 'Customers',
+            href: routes.admin.users.index,
+            query: {tab: 'customer'}
+        },
+        {
+            title: `Add`,
         }
     ]
 

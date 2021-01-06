@@ -60,7 +60,10 @@ const AddVendor = props => {
 
     const breadcrumb = [
         {
-            title: 'Account Info',
+            title: `Vendor Profile`,
+        },
+        {
+            title: `Add Info`,
         }
     ]
 

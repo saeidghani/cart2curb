@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Row, Col, Steps, Form, Input, Select, TimePicker, Upload, Checkbox, Divider, Grid, Button, message} from "antd";
+import ImgCrop from "antd-img-crop";
 import moment from 'moment';
 
 import Page from "../../../../components/Page";
@@ -10,12 +11,8 @@ import PolygonMap from "../../../../components/Map/PolygonMap";
 import {useDispatch, useSelector} from "react-redux";
 import {useCities, useProvinces} from "../../../../hooks/region";
 import {useRouter} from "next/router";
-import cookie from "cookie";
-import {getStore} from "../../../../states";
 import {getProperty, isPointInside} from "../../../../helpers";
 import {PictureOutlined, UserOutlined} from "@ant-design/icons";
-import userTypes from "../../../../constants/userTypes";
-import ImgCrop from "antd-img-crop";
 
 
 const { Step } = Steps;
@@ -45,7 +42,7 @@ const EditAccount = props => {
     const [area, setArea] = useState([]);
     const [province, setProvince] = useState('');
     const token = useSelector(state => state?.adminAuth?.token);
-    const vendor = useSelector(state => state?.adminUser?.vendor);
+    const storeDetails = useSelector(state => state?.adminStore?.store);
     const [step, setStep] = useState(0)
     const screens = Grid.useBreakpoint();
     const provinces = useProvinces();
@@ -53,15 +50,16 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
-    const {vendorId} = router.query;
+    const {storeId} = router.query;
 
     useEffect(() => {
         let area = [];
         let fields = [];
-        if (vendorId) {
-            dispatch?.adminUser?.getVendor({vendorId});
+        if (storeId) {
+            dispatch?.adminStore?.getStore(storeId);
         }
-        const markCoords = vendor.store.address.location.coordinates
+        const {store, vendor} = storeDetails || {};
+        const markCoords = store?.address?.location?.coordinates
         const marker = {
             position: {
                 lat: markCoords[1],
@@ -69,11 +67,11 @@ const EditAccount = props => {
             }
         }
         setMarker(marker);
-        const areaCoords = vendor.store.area.coordinates[0];
+        const areaCoords = store?.area?.coordinates[0];
         for(let i in areaCoords){
-            const index = area.findIndex(item => item.lat === areaCoords[i][1] && item.lng === areaCoords[i][0]);
+            const index = area?.findIndex(item => item?.lat === areaCoords[i][1] && item?.lng === areaCoords[i][0]);
             if(index === -1) {
-                area.push({
+                area?.push({
                     lat: areaCoords[i][1],
                     lng: areaCoords[i][0]
                 })
@@ -84,58 +82,55 @@ const EditAccount = props => {
             email: getProperty(vendor, 'email', ''),
             phone: getProperty(vendor, 'phone', ''),
             contactName: getProperty(vendor, 'contactName', ''),
-            openingHour: getProperty(vendor.store, 'openingHour', ''),
-            closingHour: getProperty(vendor.store, 'closingHour', ''),
-            storeType: getProperty(vendor.store, 'storeType', ''),
-            subType: getProperty(vendor.store, 'subType', ''),
-            name: getProperty(vendor.store, 'name', ''),
-            imageStore: getProperty(vendor.store, 'image', ''),
+            openingHour: getProperty(store, 'openingHour', ''),
+            closingHour: getProperty(store, 'closingHour', ''),
+            storeType: getProperty(store, 'storeType', ''),
+            subType: getProperty(store, 'subType', ''),
+            name: getProperty(store, 'name', ''),
+            imageStore: getProperty(store, 'image', ''),
             image: getProperty(vendor, 'image', ''),
         }
 
         fields[1] = {
-            province: getProperty(vendor.store.address, 'province', ''),
-            city: getProperty(vendor.store.address, 'city', ''),
-            addressLine1: getProperty(vendor.store.address, 'addressLine1', ''),
-            addressLine2: getProperty(vendor.store.address, 'addressLine2', ''),
-            postalCode: getProperty(vendor.store.address, 'postalCode', ''),
-            needDriversToGather: getProperty(vendor.store, 'needDriversToGather', ''),
-            description: getProperty(vendor.store, 'description', ''),
+            province: getProperty(store?.address, 'province', ''),
+            city: getProperty(store?.address, 'city', ''),
+            addressLine1: getProperty(store?.address, 'addressLine1', ''),
+            addressLine2: getProperty(store?.address, 'addressLine2', ''),
+            postalCode: getProperty(store?.address, 'postalCode', ''),
+            needDriversToGather: getProperty(store, 'needDriversToGather', ''),
+            description: getProperty(store, 'description', ''),
         }
 
-        setImageUrl(fields[0].imageStore);
-        setAvatarUrl(fields[0].image);
+        setImageUrl(fields[0]?.imageStore);
+        setAvatarUrl(fields[0]?.image);
         setArea(area);
-        setProvince(fields[1].province);
+        setProvince(fields[1]?.province);
 
-        const {email} = vendor || {};
-
-        form.setFieldsValue({
-            email: fields[0].email,
-            phone: fields[0].phone,
-            contactName: fields[0].contactName,
-            openingHour: moment(fields[0].openingHour),
-            closingHour: moment(fields[0].closingHour),
-            storeType: fields[0].storeType,
-            subType: fields[0].subType,
-            name: fields[0].name,
-            province: fields[1].province,
-            city: fields[1].city,
-            addressLine1: fields[1].addressLine1,
-            addressLine2: fields[1].addressLine2,
-            postalCode: fields[1].postalCode,
-            description: fields[1].description,
-            needDriversToGather: fields[1].needDriversToGather ? ['true'] : []
+        form?.setFieldsValue({
+            email: fields[0]?.email,
+            phone: fields[0]?.phone,
+            contactName: fields[0]?.contactName,
+            openingHour: moment(fields[0]?.openingHour),
+            closingHour: moment(fields[0]?.closingHour),
+            storeType: fields[0]?.storeType,
+            subType: fields[0]?.subType,
+            name: fields[0]?.name,
+            province: fields[1]?.province,
+            city: fields[1]?.city,
+            addressLine1: fields[1]?.addressLine1,
+            addressLine2: fields[1]?.addressLine2,
+            postalCode: fields[1]?.postalCode,
+            description: fields[1]?.description,
+            needDriversToGather: fields[1]?.needDriversToGather ? ['true'] : []
         })
-    }, [])
+    }, [storeId]);
 
     const breadcrumb = [
         {
-            title: 'admin Profile',
-            href: routes.admin.users.index,
+            title: `Vendor Profile`,
         },
         {
-            title: 'Add/Edit Info',
+            title: `Edit Info`,
         }
     ]
 
@@ -287,7 +282,7 @@ const EditAccount = props => {
                                               //     message: "Please enter valid Email Address"
                                               // }
                                           ]}>
-                                        <Input placeholder={'Email Address'} disabled/>
+                                        <Input placeholder={'Email Address'}/>
                                     </Item>
                                 </Col>
                                 <Col xs={24} md={12} lg={8}>

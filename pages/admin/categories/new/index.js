@@ -23,12 +23,18 @@ const NewCategory = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.index
+            href: routes.admin.stores.storeDetails
         },
         {
-            title: 'Add Category',
+            title: 'Categories',
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'category', storeId, storeType}
+        },
+        {
+            title: `Add`,
         }
     ]
+
     const submitHandler = async (values) => {
         const {name, parent, description} = values;
         const body = {

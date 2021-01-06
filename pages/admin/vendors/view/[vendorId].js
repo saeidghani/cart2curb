@@ -48,11 +48,17 @@ const VendorDetails = props => {
         }
     };
 
+    const breadcrumb = [
+        {
+            title: `Vendor Profile`,
+        },
+    ]
+
     const address = `${store?.address?.addressLine1}${store?.address?.addressLine2 ? store?.address?.addressLine2 : ''} ${store?.address?.city} ${store?.address?.province} ${store?.address?.country}`;
 
     return (
         <AdminAuth>
-            <Page>
+            <Page title={false} headTitle={'Vendor Details'} breadcrumb={breadcrumb}>
                 <Col xs={24} className={`flex flex-col`}>
                     <div className="flex items-center justify-between">
                         <h1 className="page__title text-2xl text-type font-medium my-0">Account</h1>

@@ -32,10 +32,15 @@ const EditService = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.index
+            href: routes.admin.stores.storeDetails
         },
         {
-            title: 'Edit Service',
+            title: 'Services',
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'service', storeId, storeType}
+        },
+        {
+            title: 'Edit',
         }
     ]
 

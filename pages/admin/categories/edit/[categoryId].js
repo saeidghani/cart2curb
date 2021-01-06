@@ -37,15 +37,18 @@ const EditCategory = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.index
+            href: routes.admin.stores.storeDetails
         },
         {
-            title: `Edit Category`,
+            title: 'Categories',
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'category', storeId, storeType}
         },
         {
-            title: props?.category?.name
+            title: `Edit`,
         }
     ]
+
     const submitHandler = async (values) => {
 
         const {name, parent, description} = values;

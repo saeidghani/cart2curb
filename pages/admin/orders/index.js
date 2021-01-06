@@ -8,6 +8,7 @@ import Page from "../../../components/Page";
 import AdminAuth from "../../../components/Admin/AdminAuth";
 import OrderDetailsModal from "../../../components/Modals/OrderDetails";
 import Loader from "../../../components/UI/Loader";
+import routes from "../../../constants/routes";
 
 const {Item} = Form;
 
@@ -164,9 +165,16 @@ const Orders = props => {
         })
     }, [orders, loading])
 
+    const breadcrumb = [
+        {
+            title: 'Order',
+            href: routes.admin.orders.index,
+        }
+    ]
+
     return (
         <AdminAuth>
-            <Page title={'Orders'} breadcrumb={[{title: 'Orders'}]}>
+            <Page title={'Orders'} breadcrumb={breadcrumb}>
                 <Row gutter={24} className={'flex items-center pt-2 pb-4'}>
                     <Col lg={18} xs={24}>
                         <Form form={form} layout={'vertical'} onFinish={searchHandler}>

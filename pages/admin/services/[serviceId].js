@@ -30,31 +30,29 @@ const ServiceView = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.index,
+            href: routes.admin.stores.storeDetails
         },
         {
             title: 'Services',
-            href: routes.admin.services.index,
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'service', storeId, serviceId, storeType}
         },
         {
-            title: service?.name
+            title: 'View',
         }
     ]
 
-    /*const address = [profile?.store?.address?.addressLine1];
-    if(profile?.store?.address?.addressLine2) {
-        address.push(profile?.store?.address?.addressLine2);
-    }
-    address.push(profile?.store?.address?.city);
-    address.push(profile?.store?.address?.province);
-    address.push(profile?.store?.address?.country);*/
+    const {store} = service || {};
+
+    const address = `${store?.address?.addressLine1}${store?.address?.addressLine2 ? store?.address?.addressLine2 : ''} ${store?.address?.city} ${store?.address?.province} ${store?.address?.country}`;
+
     return (
         <Page title={'Service'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8}>
-                   {/* <NoSSR>
+                    <NoSSR>
                         <ProductCarousel slides={service?.images}/>
-                    </NoSSR>*/}
+                    </NoSSR>
                 </Col>
                 <Col lg={16} md={12} xs={24}>
                     <Row>
@@ -103,7 +101,7 @@ const ServiceView = props => {
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Store Address'}
-                                                value={getProperty(service?.priceList, 'price', '-', (data) => `$${data}`)}/>
+                                                value={address}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Cost Price'}

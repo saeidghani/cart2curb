@@ -25,12 +25,17 @@ const NewService = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.index
+            href: routes.admin.stores.storeDetails
         },
         {
-            title: 'Add Service',
+            title: 'Services',
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'service', storeId, storeType}
+        },
+        {
+            title: 'Add',
         }
-    ];
+    ]
 
     useEffect(() => {
         if (storeId && token) {

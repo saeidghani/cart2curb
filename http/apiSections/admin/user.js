@@ -5,6 +5,10 @@ export default class AdminUserApi extends ApiInstance {
         super();
     }
 
+    getDrivers(query = {}, options = {}) {
+        return this.get(`admin/users/drivers`, query, options);
+    }
+
     getVendors(query = {}, options = {}) {
         return this.get(`admin/users/vendors`, query, options);
     }

@@ -30,24 +30,21 @@ const ProductView = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.index,
+            href: routes.admin.stores.storeDetails
         },
         {
             title: 'Products',
-            href: routes.admin.products.index,
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'product', storeId, storeType}
         },
         {
-            title: product?.name
+            title: 'View',
         }
     ]
 
-    /*const address = [profile?.store?.address?.addressLine1];
-    if(profile?.store?.address?.addressLine2) {
-        address.push(profile?.store?.address?.addressLine2);
-    }
-    address.push(profile?.store?.address?.city);
-    address.push(profile?.store?.address?.province);
-    address.push(profile?.store?.address?.country);*/
+    const {store} = product || {};
+
+    const address = `${store?.address?.addressLine1}${store?.address?.addressLine2 ? store?.address?.addressLine2 : ''} ${store?.address?.city} ${store?.address?.province} ${store?.address?.country}`;
 
     return (
         <Page title={'Product'} breadcrumb={breadcrumb}>
@@ -114,7 +111,7 @@ const ProductView = props => {
                                     <DetailItem title={'Stock'} value={getProperty(product, 'stock', '-')}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    {/*<DetailItem title={'Store Address'} value={address?.join(", ")}/>*/}
+                                    <DetailItem title={'Store Address'} value={address}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Cost Price'}

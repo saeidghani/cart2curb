@@ -9,6 +9,10 @@ const setOptions = token => ({
 
 export const adminUser = {
     state: {
+        drivers: {
+            metaData: {},
+            data: []
+        },
         vendors: {
             metaData: {},
             data: []
@@ -25,6 +29,15 @@ export const adminUser = {
         customer: {},
     },
     reducers: {
+        setDrivers: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.drivers.data = payload.data;
+            } else {
+                state.drivers.data = [...state.drivers.data, ...payload.data];
+
+            }
+            state.drivers.metaData = payload.metaData;
+        },
         setVendors: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
                 state.vendors.data = payload.data;
@@ -60,6 +73,24 @@ export const adminUser = {
         }
     },
     effects: dispatch => ({
+        async getDrivers(query, rootState) {
+            try {
+                const res = await api?.admin?.user?.getDrivers(query, setOptions(rootState?.adminAuth?.token));
+                const data = res?.data;
+                if(data?.success) {
+                    this?.setDrivers({
+                        data: data?.data,
+                        metaData: data?.metaData
+                    })
+                    return data;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                console.log(e)
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
         async getVendors(query, rootState) {
             try {
                 const res = await api?.admin?.user?.getVendors(query, setOptions(rootState?.adminAuth?.token));

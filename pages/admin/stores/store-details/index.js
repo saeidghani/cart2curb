@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Tabs} from 'antd';
 
 import Page from "../../../../components/Page";
@@ -8,20 +8,37 @@ import Service from "../../../../components/Admin/Service";
 import Category from "../../../../components/Admin/Category";
 import AdminAuth from '../../../../components/Admin/AdminAuth';
 import {useRouter} from "next/router";
+import routes from "../../../../constants/routes";
 
 const {TabPane} = Tabs;
 
 const StoreDetails = props => {
     const router = useRouter();
     const {pathname} = router;
-    const {tab, storeId, storeType} = router.query;
+    const {tab='details', storeId, storeType} = router.query;
+
+    const capitalize = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
+    const breadcrumb = [
+        {
+            title: 'Stores',
+            href: routes.admin.stores.index,
+        },
+        {
+            title: `${capitalize(tab)}`,
+            href: routes.admin.stores.storeDetails,
+            query: {tab, storeId, storeType}
+        },
+    ];
 
     return (
         <AdminAuth>
-            <Page title={false} headTitle={'Store'} breadcrumb={[{title: 'Store'}]}>
+            <Page title={false} headTitle={'Store'} breadcrumb={breadcrumb}>
                 <Tabs
-                    defaultActiveKey={tab || 'details'}
-                    activeKey={tab || 'details'}
+                    defaultActiveKey={tab}
+                    activeKey={tab}
                     onChange={(key) => router.push({pathname, query: {tab: key, storeId, storeType}})}
                 >
                     <TabPane key='details' tab='Details'>

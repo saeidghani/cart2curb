@@ -10,6 +10,7 @@ import Link from "next/link";
 import routes from "../../../constants/routes";
 import Loader from "../../../components/UI/Loader";
 import AdminAuth from "../../../components/Admin/AdminAuth";
+import Page from "../../../components/Page";
 
 const {Item} = Form;
 const {Option} = Select;
@@ -166,40 +167,51 @@ const Stores = ({admin, ...props}) => {
         })
     }, [stores]);
 
+    const breadcrumb = [
+        {
+            title: 'Stores',
+            href: routes.admin.stores.index,
+        }
+    ];
+
     return (
         <AdminAuth>
-            <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
-                <Col lg={18} xs={24}>
-                    <Form form={form} layout={'vertical'} onFinish={searchHandler}>
-                        <Row gutter={24}>
-                            <Col lg={9} xs={24}>
-                                <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
-                                </Item>
-                            </Col>
-                            <Col lg={6} xs={24}>
-                                <Item className={'pt-7'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
-                                            loading={storesLoading}>Search</Button>
-                                </Item>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={24}>
+            <Page title={false} headTitle={'Deliveries'} breadcrumb={breadcrumb}>
+                <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
+                    <Col lg={18} xs={24}>
+                        <Form form={form} layout={'vertical'} onFinish={searchHandler}>
+                            <Row gutter={24}>
+                                <Col lg={9} xs={24}>
+                                    <Item name={'search'} label={'Search'}>
+                                        <Input placeholder={'Search'}/>
+                                    </Item>
+                                </Col>
+                                <Col lg={6} xs={24}>
+                                    <Item className={'pt-7'}>
+                                        <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
+                                                loading={storesLoading}>
+                                            Search
+                                        </Button>
+                                    </Item>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={24}>
 
-                    <Table columns={columns} dataSource={data} scroll={{x: 1100}} pagination={false}
-                           loading={storesLoading && stores.length === 0}/>
-                    {hasMore && (
-                        <div ref={loader}>
+                        <Table columns={columns} dataSource={data} scroll={{x: 1100}} pagination={false}
+                               loading={storesLoading && stores.length === 0}/>
+                        {hasMore && (
+                            <div ref={loader}>
 
-                            <div className="flex w-full items-center justify-center py-6"><Loader/></div>
-                        </div>
-                    )}
-                </Col>
-            </Row>
+                                <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                            </div>
+                        )}
+                    </Col>
+                </Row>
+            </Page>
         </AdminAuth>
     )
 }
