@@ -32,7 +32,8 @@ const EditService = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.stores.storeDetails
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'service', storeId, serviceId, storeType}
         },
         {
             title: 'Services',
@@ -83,8 +84,9 @@ const EditService = props => {
             tax: tax || '',
             description: description || '',
             costPrice: priceList?.cost || '',
+            price: priceList?.price || '',
             photo: transformedImageList,
-        })
+        });
         setImagesList(transformedImageList);
     }, []);
 
@@ -96,7 +98,7 @@ const EditService = props => {
             return false;
         }
         const images = imagesList.map(image => service.images.includes(image.url) ? image.url : `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image?.response?.data?.path}`);
-        const {name, category, tax, costPrice, description} = values;
+        const {name, category, tax, costPrice, price, description} = values;
         const body = {
             name,
             category,
@@ -104,6 +106,7 @@ const EditService = props => {
             images,
             priceList: {
                 cost: Number(costPrice),
+                price: Number(price),
             },
             description,
         }
@@ -204,6 +207,20 @@ const EditService = props => {
                             }
                         ]}>
                             <Input placeholder={'Cost Price'}/>
+                        </Item>
+                    </Col>
+                    <Col xs={24} md={12} lg={8}>
+                        <Item name={'price'} label={'price'} rules={[
+                            {
+                                required: true,
+                                message: 'This Field is required'
+                            },
+                            {
+                                pattern: /^[0-9.]+$/,
+                                message: 'This Field should be number'
+                            }
+                        ]}>
+                            <Input placeholder={'price'}/>
                         </Item>
                     </Col>
                     <Col xs={24}>

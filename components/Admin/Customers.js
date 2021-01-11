@@ -179,8 +179,8 @@ const Customers = () => {
                 number: customer?._id,
                 email: customer?.email  || '-',
                 phoneNumber: customer?.phone || '-',
-                address: customer?.addresses?.length > 0 ?
-                 setSubstring(`${customer?.addresses[0]?.addressLine1} ${customer?.addresses[0]?.city} ${customer?.addresses[0]?.state} ${customer?.addresses[0]?.country} ${customer?.addresses[0]?.postalCode}`, 20) :
+                address: (customer?.addresses?.length > 0 && customer?.addresses[0] !== null) ?
+                 setSubstring(`${customer?.addresses[0]?.addressLine1 || ''} ${customer?.addresses[0]?.city || ''} ${customer?.addresses[0]?.state || ''} ${customer?.addresses[0]?.country || ''} ${customer?.addresses[0]?.postalCode || ''}`, 20) :
                     '-',
                 action: {
                     blockHandler: async () => {

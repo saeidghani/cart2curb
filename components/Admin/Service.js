@@ -167,7 +167,7 @@ const Services = ({vendor, ...props}) => {
 
     const data = useMemo(() => {
         return services?.filter(item => !deleted.includes(item._id)).map((service, index) => {
-            const category = categories.find(cat => cat._id === service.category)
+            const category = categories.find(cat => cat._id === service.category?._id)
             return {
                 key: service?._id,
                 index: service?._id,
@@ -175,12 +175,12 @@ const Services = ({vendor, ...props}) => {
                 name: service?.name,
                 price: `$${service?.priceList?.cost}`,
                 tax: `${service?.tax}%`,
-                category: category ? category?.name : service?.category,
+                category: category ? category?.name : service?.category?.name,
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
                             onOk: async () => {
-                                const res = await dispatch?.adminStore?.deleteService(service?._id);
+                                const res = await dispatch?.adminStore?.deleteService({storeId, serviceId: service?._id, token});
                                 if (res) {
                                     setDeleted(deleted?.concat(service?._id))
                                 }

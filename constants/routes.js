@@ -133,7 +133,7 @@ export default {
             view(productId = '[productId]') {
                 return `/admin/products/${productId}`
             },
-            add: '/admin/products/Account'
+            add: '/admin/products/new'
         },
         services: {
             index: '/admin/store-details',
@@ -150,7 +150,7 @@ export default {
             edit(categoryId = '[categoryId]') {
                 return `/admin/categories/edit/${categoryId}`
             },
-            add: '/admin/categories/Account'
+            add: '/admin/categories/new'
         },
     }
 }

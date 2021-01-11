@@ -37,7 +37,8 @@ const EditCategory = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.stores.storeDetails
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'category', storeId, storeType}
         },
         {
             title: 'Categories',
@@ -113,7 +114,7 @@ const EditCategory = props => {
                         </Item>
                         <Item>
                             <Link
-                                href={{pathname: routes.admin.stores.storeDetails, query: {tab: 'category', storeId}}}>
+                                href={{pathname: routes.admin.stores.storeDetails, query: {...router.query, tab: 'category', storeId}}}>
                                 <Button danger className={'w-full md:w-32'}>Cancel</Button>
                             </Link>
                         </Item>

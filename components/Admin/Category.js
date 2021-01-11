@@ -200,7 +200,7 @@ const Categories = props => {
                     </Form>
                 </Col>
                 <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
-                    <Link href={{pathname: routes.admin.categories.add, query: {storeId}}}>
+                    <Link href={{pathname: routes.admin.categories.add, query: {...router.query, storeId}}}>
                         <Button
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}

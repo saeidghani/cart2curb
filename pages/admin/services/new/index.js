@@ -25,7 +25,8 @@ const NewService = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.stores.storeDetails
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'service', storeId, storeType}
         },
         {
             title: 'Services',
@@ -54,7 +55,7 @@ const NewService = props => {
             return false;
         }
         const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image?.response?.data?.path}`);
-        const {name, category, tax, costPrice, description} = values;
+        const {name, category, tax, costPrice, price, description} = values;
         const body = {
             name,
             category,
@@ -62,6 +63,7 @@ const NewService = props => {
             images,
             priceList: {
                 cost: Number(costPrice),
+                price: Number(price),
             },
             description,
         }
@@ -160,6 +162,20 @@ const NewService = props => {
                             }
                         ]}>
                             <Input placeholder={'Cost Price'}/>
+                        </Item>
+                    </Col>
+                    <Col xs={24} md={12} lg={8}>
+                        <Item name={'price'} label={'price'} rules={[
+                            {
+                                required: true,
+                                message: 'This Field is required'
+                            },
+                            {
+                                pattern: /^[0-9.]+$/,
+                                message: 'This Field should be number'
+                            }
+                        ]}>
+                            <Input placeholder={'price'}/>
                         </Item>
                     </Col>
                     <Col xs={24}>

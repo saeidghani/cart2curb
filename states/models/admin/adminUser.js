@@ -9,10 +9,6 @@ const setOptions = token => ({
 
 export const adminUser = {
     state: {
-        drivers: {
-            metaData: {},
-            data: []
-        },
         vendors: {
             metaData: {},
             data: []
@@ -25,19 +21,14 @@ export const adminUser = {
             metaData: {},
             data: []
         },
+        drivers: {
+            metaData: {},
+            data: []
+        },
         vendor: {},
         customer: {},
     },
     reducers: {
-        setDrivers: (state, payload) => {
-            if(payload?.metaData?.pagination?.pageNumber === 1) {
-                state.drivers.data = payload.data;
-            } else {
-                state.drivers.data = [...state.drivers.data, ...payload.data];
-
-            }
-            state.drivers.metaData = payload.metaData;
-        },
         setVendors: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
                 state.vendors.data = payload.data;
@@ -70,19 +61,28 @@ export const adminUser = {
         },
         setCustomer: (state, payload) => {
             state.customer = payload;
-        }
+        },
+        setDrivers: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.drivers.data = payload.data;
+            } else {
+                state.drivers.data = [...state.drivers.data, ...payload.data];
+            }
+            state.drivers.metaData = payload.metaData;
+        },
     },
     effects: dispatch => ({
         async getDrivers(query, rootState) {
             try {
                 const res = await api?.admin?.user?.getDrivers(query, setOptions(rootState?.adminAuth?.token));
+                console.log(res);
                 const data = res?.data;
                 if(data?.success) {
-                    this?.setDrivers({
+                    dispatch?.adminUser?.setDrivers({
                         data: data?.data,
                         metaData: data?.metaData
                     })
-                    return data;
+                    return res;
                 } else {
                     message.error('An Error was occurred in data fetch')
                 }

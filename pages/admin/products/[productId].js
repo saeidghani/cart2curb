@@ -30,7 +30,8 @@ const ProductView = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.stores.storeDetails
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'product', storeId, storeType}
         },
         {
             title: 'Products',
@@ -42,9 +43,7 @@ const ProductView = props => {
         }
     ]
 
-    const {store} = product || {};
-
-    const address = `${store?.address?.addressLine1}${store?.address?.addressLine2 ? store?.address?.addressLine2 : ''} ${store?.address?.city} ${store?.address?.province} ${store?.address?.country}`;
+    const address = `${product?.store?.address?.addressLine1 || ''}${product?.store?.address?.addressLine2 ? product?.store?.address?.addressLine2 : ''} ${product?.store?.address?.city || ''} ${product?.store?.address?.province || ''} ${product?.store?.address?.country || ''}`;
 
     return (
         <Page title={'Product'} breadcrumb={breadcrumb}>

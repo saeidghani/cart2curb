@@ -113,7 +113,7 @@ const Stores = ({admin, ...props}) => {
             title: "OP",
             dataIndex: 'action',
             key: 'action',
-            render: (_, {storeId, storeType}) => {
+            render: (_, {storeId, vendorId, storeType}) => {
                 return (
                     <div className={'flex flex-row items-center space-x-2'}>
                         <Link
@@ -131,7 +131,7 @@ const Stores = ({admin, ...props}) => {
                         </Link>
                         <Link
                             href={{
-                                pathname: routes.admin.stores.index,
+                                pathname: routes.admin.vendors.edit(vendorId)
                             }}
                         >
                             <Button
@@ -153,6 +153,7 @@ const Stores = ({admin, ...props}) => {
             return {
                 key: index,
                 storeId: el?.store?._id,
+                vendorId: el?.vendor?._id,
                 storeType: el?.store?.storeType,
                 number: '???',
                 CXName: el?.vendor?.contactName,

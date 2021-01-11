@@ -37,7 +37,8 @@ const EditProduct = props => {
     const breadcrumb = [
         {
             title: 'Store',
-            href: routes.admin.stores.storeDetails
+            href: routes.admin.stores.storeDetails,
+            query: {tab: 'product', storeId, storeType}
         },
         {
             title: 'Products',

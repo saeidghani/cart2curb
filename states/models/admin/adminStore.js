@@ -35,6 +35,7 @@ export const adminStore = {
             data: []
         },
         product: {},
+        service: {},
         store: {},
     },
     reducers: {
@@ -88,7 +89,10 @@ export const adminStore = {
         },
         setStore: (state, payload) => {
             state.store = payload;
-        }
+        },
+        setService: (state, payload) => {
+            state.service = payload;
+        },
     },
     effects: dispatch => ({
         async getOrders(query, rootState) {
@@ -421,6 +425,7 @@ export const adminStore = {
             try {
                 const res = await api?.admin?.store?.getService(storeId, serviceId, setOptions(token));
                 if(res.data.success) {
+                    this.setService(res.data.data);
                     return res.data.data
                 } else {
                     message.error('An Error was occurred');
