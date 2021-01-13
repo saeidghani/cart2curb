@@ -39,23 +39,34 @@ const Deliveries = props => {
     const [pendingDeliveries, setPendingDeliveries] = useState([]);
 
     useEffect(() => {
-        let interval;
         if (isLoggedIn) {
             (async () => {
                 const query = {};
                 if (selectedStatus) query.status = selectedStatus;
                 if (selectedDateOrder) query.sort = selectedDateOrder;
                 await dispatch?.adminDelivery?.getDeliveries(query);
+                const res = await api?.admin?.user?.getDrivers({}, setOptions(token));
+                setDrivers(res?.data?.data || []);
+            })();
+        };
+    }, [isLoggedIn]);
+
+    useEffect(() => {
+        let interval;
+        if (isLoggedIn) {
+            (async () => {
+                const query = {};
+                if (selectedStatus) query.status = selectedStatus;
+                if (selectedDateOrder) query.sort = selectedDateOrder;
                 interval = setInterval(async () => {
                     await dispatch?.adminDelivery?.getDeliveries(query);
                 }, 60000);
                 const res = await api?.admin?.user?.getDrivers({}, setOptions(token));
                 setDrivers(res?.data?.data || []);
             })();
-        }
-        ;
+        };
         return () => clearInterval(interval);
-    }, [isLoggedIn]);
+    }, [isLoggedIn, selectedStatus, selectedDateOrder]);
 
     useEffect(() => {
         deliveries?.data?.forEach(delivery => {
