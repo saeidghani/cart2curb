@@ -79,7 +79,7 @@ const Deliveries = props => {
 
     const breadcrumb = [
         {
-            title: 'Order',
+            title: 'Deliveries',
             href: routes.admin.deliveries.index,
         }
     ];
