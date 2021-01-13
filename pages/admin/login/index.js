@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from "react-redux";
 
 import Page from '../../../components/Page';
 import routes from "../../../constants/routes";
-import withoutAuth from "../../../components/hoc/withoutAuth";
 import {useRouter} from "next/router";
 
 const {Item} = Form;
@@ -118,4 +117,4 @@ const Login = props => {
     )
 }
 
-export default withoutAuth(Login, 'admin');
+export default Login;

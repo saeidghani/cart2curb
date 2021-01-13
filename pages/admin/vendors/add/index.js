@@ -11,7 +11,6 @@ import PolygonMap from "../../../../components/Map/PolygonMap";
 import {useDispatch, useSelector} from "react-redux";
 import {useCities, useProvinces} from "../../../../hooks/region";
 import {useRouter} from "next/router";
-import withoutAuth from "../../../../components/hoc/withoutAuth";
 import Submitted from "../../../../components/Submitted";
 import ImgCrop from "antd-img-crop";
 import {isPointInside} from "../../../../helpers";

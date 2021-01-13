@@ -6,7 +6,6 @@ import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import Submitted from "../../../../components/Submitted";
-import withoutAuth from "../../../../components/hoc/withoutAuth";
 
 const { Item } = Form;
 
@@ -120,4 +119,4 @@ const ResetPassword = props => {
     )
 }
 
-export default withoutAuth(ResetPassword, 'admin');
+export default ResetPassword;

@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import Page from '../../../../components/Page';
 import routes from "../../../../constants/routes";
-import withoutAuth from "../../../../components/hoc/withoutAuth";
 
 const { Item } = Form;
 
@@ -77,4 +76,4 @@ const ForgetPassword = props => {
     )
 }
 
-export default withoutAuth(ForgetPassword, 'admin');
+export default ForgetPassword;
