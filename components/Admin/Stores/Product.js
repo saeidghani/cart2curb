@@ -7,14 +7,14 @@ import {
     EditOutlined,
     InfoCircleOutlined
 } from '@ant-design/icons';
-import routes from "../../constants/routes";
+import routes from "../../../constants/routes";
 import Link from "next/link";
-import deleteModal from "../Modals/Delete";
+import deleteModal from "../../Modals/Delete";
 import {useDispatch, useSelector} from "react-redux";
-import Loader from "../UI/Loader";
-import {getProperty} from "../../helpers";
+import Loader from "../../UI/Loader";
+import {getProperty} from "../../../helpers";
 import {useRouter} from "next/router";
-import store from '../../states/index';
+import store from '../../../states';
 
 const {Item} = Form;
 const {Option} = Select;

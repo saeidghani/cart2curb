@@ -11,19 +11,19 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
-import routes from "../../constants/routes";
-import deleteModal from "../../components/Modals/Delete";
-import OrderDetailsModal from "../../components/Modals/OrderDetails";
-import Loader from "../../components/UI/Loader";
-import {getProperty} from "../../helpers";
+import routes from "../../../constants/routes";
+import deleteModal from "../../Modals/Delete";
+import OrderDetailsModal from "../../Modals/OrderDetails";
+import Loader from "../../UI/Loader";
+import {getProperty} from "../../../helpers";
 import {useRouter} from "next/router";
-import Avatar from "../UI/Avatar";
+import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
 const {Option} = Select;
 
 let isIntersecting = true;
-const Customers = () => {
+const Vendors = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -31,8 +31,8 @@ const Customers = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
-    const customersLoading = useSelector(state => state?.loading?.effects?.adminUser?.getCustomers);
-    const customers = useSelector(state => state?.adminUser?.customers?.data);
+    const vendorsLoading = useSelector(state => state?.loading?.effects?.adminUser?.getVendors);
+    const vendors = useSelector(state => state?.adminUser?.vendors?.data);
     const token = useSelector(state => state?.adminAuth?.token);
 
     useEffect(async () => {
@@ -46,7 +46,7 @@ const Customers = () => {
                 query.search = formFields.search;
             }
             try {
-                const response = await dispatch.adminUser?.getCustomers(query);
+                const response = await dispatch.adminUser?.getVendors(query);
                 if (response.data.length < 15) {
                     setHasMore(false);
                 }
@@ -60,11 +60,11 @@ const Customers = () => {
 
     useEffect(() => {
         let isBlocked = [];
-        customers?.forEach(c => {
-            if (c?.isBlocked) isBlocked.push(c?._id);
+        vendors?.forEach(({vendor}) => {
+            if (!vendor?.isApproved) isBlocked.push(vendor?._id);
         });
         setBlocked(isBlocked);
-    }, [customers]);
+    }, [vendors]);
 
     useEffect(() => {
         const options = {
@@ -109,9 +109,9 @@ const Customers = () => {
             render: number => <span className="text-cell">{number}</span>
         },
         {
-            title: "Customer Name",
-            dataIndex: 'CXName',
-            key: 'CXName',
+            title: "Vendor Name",
+            dataIndex: 'name',
+            key: 'name',
             render: CXName => <span className="text-cell">{CXName}</span>
         },
         {
@@ -127,19 +127,21 @@ const Customers = () => {
             render: phoneNumber => <span className="text-cell">{phoneNumber}</span>
         },
         {
-            title: "Address",
-            dataIndex: 'address',
-            key: 'address',
-            render: address => <span className="text-cell">{address}</span>
-        },
-        {
             title: "OP",
             dataIndex: 'action',
             key: 'action',
-            render: (actions, {key}) => {
+            render: (actions, {key, storeId}) => {
                 return (
                     <div className={'flex flex-row items-center space-x-3'}>
-                        <Link href={{pathname: routes.admin.customers.edit(key)}}>
+                        <Link href={{pathname: routes.admin.vendors.view(key), query: {storeId}}}>
+                            <Button
+                                type={'link'}
+                                shape={'circle'}
+                                icon={<FileSearchOutlined className={'text-secondarey text-xl'}/>}
+                                className={'btn-icon-small'}
+                            />
+                        </Link>
+                        <Link href={{pathname: routes.admin.vendors.edit(key), query: {storeId}}}>
                             <Button
                                 type={'link'}
                                 shape={'circle'}
@@ -172,34 +174,43 @@ const Customers = () => {
     }
 
     const data = useMemo(() => {
-        return customers?.map((customer, index) => ({
-                key: customer?._id,
-                avatar: customer?.image,
-                CXName: `${customer?.firstName} ${customer?.lastName}`,
-                number: customer?._id,
-                email: customer?.email  || '-',
-                phoneNumber: customer?.phone || '-',
-                address: (customer?.addresses?.length > 0 && customer?.addresses[0] !== null) ?
-                 setSubstring(`${customer?.addresses[0]?.addressLine1 || ''} ${customer?.addresses[0]?.city || ''} ${customer?.addresses[0]?.state || ''} ${customer?.addresses[0]?.country || ''} ${customer?.addresses[0]?.postalCode || ''}`, 20) :
+        return vendors?.map(({vendor, store}) => ({
+                key: vendor?._id,
+                avatar: vendor?.image,
+                name: `${vendor?.contactName}`,
+                number: vendor?._id,
+                email: vendor?.email || '-',
+                phoneNumber: vendor?.phone || '-',
+                address: vendor?.addresses?.length > 0 ?
+                    setSubstring(`${vendor?.addresses[0]?.addressLine1} ${vendor?.addresses[0]?.city} ${vendor?.addresses[0]?.state} ${vendor?.addresses[0]?.country} ${vendor?.addresses[0]?.postalCode}`, 20) :
                     '-',
+                storeId: store?._id,
                 action: {
                     blockHandler: async () => {
-                        const res = await dispatch.adminUser.editCustomerBlock({customerId: customer?._id, token});
+                        const res = await dispatch.adminUser.addPendingVendor({
+                            vendorId: vendor?._id,
+                            body: {isApproved: false},
+                            token
+                        });
                         if (res) {
-                            setBlocked(blocked.concat(customer?._id));
+                            setBlocked(blocked.concat(vendor?._id));
                         }
                     },
                     unBlockHandler: async () => {
-                        const res = await dispatch.adminUser.editCustomerUnBlock({customerId: customer?._id, token});
+                        const res = await dispatch.adminUser.addPendingVendor({
+                            vendorId: vendor?._id,
+                            body: {isApproved: true},
+                            token
+                        });
                         if (res) {
-                            const newBlocked = blocked?.filter(b => b !== customer?._id);
+                            const newBlocked = blocked?.filter(b => b !== vendor?._id);
                             setBlocked(newBlocked);
                         }
                     },
                 },
             })
         );
-    }, [customers]);
+    }, [vendors]);
 
     return (
         <>
@@ -215,21 +226,21 @@ const Customers = () => {
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7'}>
                                     <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
-                                            loading={customersLoading}>Search</Button>
+                                            loading={vendorsLoading}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
                     </Form>
                 </Col>
                 <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
-                    <Link href={routes.admin.customers.add}>
+                    <Link href={routes.admin.vendors.add}>
                         <Button
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            disabled={customers?.length === 0}
+                            disabled={vendors?.length === 0}
                         >
-                            Add New Customer
+                            Add New Vendor
                         </Button>
                     </Link>
                 </Col>
@@ -238,7 +249,7 @@ const Customers = () => {
                 <Col xs={24}>
 
                     <Table columns={columns} dataSource={data} scroll={{x: 1100}} pagination={false}
-                           loading={customersLoading && customers?.length === 0}/>
+                           loading={vendorsLoading && vendors?.length === 0}/>
                     {hasMore && (
                         <div ref={loader}>
 
@@ -251,4 +262,4 @@ const Customers = () => {
     )
 }
 
-export default Customers;
+export default Vendors;

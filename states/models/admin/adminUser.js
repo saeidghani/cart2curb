@@ -25,8 +25,18 @@ export const adminUser = {
             metaData: {},
             data: []
         },
+        pendingDrivers: {
+            metaData: {},
+            data: []
+        },
+        driversApproved: {
+            metaData: {},
+            data: []
+        },
         vendor: {},
         customer: {},
+        driver: {},
+        pendingDriversCount: '',
     },
     reducers: {
         setVendors: (state, payload) => {
@@ -39,13 +49,7 @@ export const adminUser = {
             state.vendors.metaData = payload.metaData;
         },
         setPendingVendors: (state, payload) => {
-            if(payload?.metaData?.pagination?.pageNumber === 1) {
-                state.pendingVendors.data = payload.data;
-            } else {
-                state.pendingVendors.data = [...state.pendingVendors.data, ...payload.data];
-
-            }
-            state.pendingVendors.metaData = payload.metaData;
+            state.pendingVendors.data = payload.data;
         },
         setCustomers: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
@@ -62,6 +66,9 @@ export const adminUser = {
         setCustomer: (state, payload) => {
             state.customer = payload;
         },
+        setDriver: (state, payload) => {
+            state.driver = payload;
+        },
         setDrivers: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
                 state.drivers.data = payload.data;
@@ -69,6 +76,25 @@ export const adminUser = {
                 state.drivers.data = [...state.drivers.data, ...payload.data];
             }
             state.drivers.metaData = payload.metaData;
+        },
+        setPendingDrivers: (state, payload) => {
+            state.pendingVendors.data = payload.data;
+        },
+        setPendingDriversCount: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.pendingDriversCount.data = payload.data;
+            } else {
+                state.pendingDriversCount.data = [...state.pendingDriversCount.data, ...payload.data];
+            }
+            state.pendingDriversCount.metaData = payload.metaData;
+        },
+        setDriversApproved: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.driversApproved.data = payload.data;
+            } else {
+                state.driversApproved.data = [...state.driversApproved.data, ...payload.data];
+            }
+            state.driversApproved.metaData = payload.metaData;
         },
     },
     effects: dispatch => ({
@@ -89,6 +115,133 @@ export const adminUser = {
             } catch(e) {
                 console.log(e)
                 message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async getPendingDrivers(query, rootState) {
+            try {
+                const res = await api?.admin?.user?.getPendingDrivers(query, setOptions(rootState?.adminAuth?.token));
+                const data = res?.data;
+                if(data?.success) {
+                    dispatch?.adminUser?.setPendingDrivers({
+                        data: data?.data,
+                    })
+                    return res;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                console.log(e)
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async getDriversApproved(query, rootState) {
+            try {
+                const res = await api?.admin?.user?.getDriversApproved(query, setOptions(rootState?.adminAuth?.token));
+                const data = res?.data;
+                if(data?.success) {
+                    dispatch?.adminUser?.setDriversApproved({
+                        data: data?.data,
+                        metaData: data?.metaData
+                    })
+                    return res;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                console.log(e)
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async addDriver({body, token}) {
+            console.log(setOptions(token));
+            try {
+                const res = await api?.admin?.user?.addDriver(body, setOptions(token))
+
+                if(res.data.success) {
+                    message.success('New Category added successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async addPendingDriver({driverId, body, token}) {
+            try {
+                const res = await api?.admin?.user?.addPendingDriver(driverId, body, setOptions(token))
+
+                if(res.data.success) {
+                    message.success('New Category added successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                console.log(e);
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async getDriver(driverId, rootState) {
+            try {
+                const res = await api?.admin?.user?.getDriver(driverId, setOptions(rootState?.adminAuth?.token));
+                if(res.data.success) {
+                    this.setDriver(res.data.data);
+                    return res.data.data
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async getPendingDriversCount(query, rootState) {
+            try {
+                const res = await api?.admin?.user?.getPendingDriversCount(query, setOptions(rootState?.adminAuth?.token));
+                const data = res?.data;
+                if(data?.success) {
+                    return data
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async editDriver({driverId, body, token}) {
+            try {
+                const res = await api?.admin?.user?.editDriver(driverId, body, setOptions(token));
+
+                if(res.data.success) {
+                    message.success(' Updated successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response);
+                }
+                message.error('An Error was occurred');
+                return false;
             }
         },
         async getVendors(query, rootState) {
@@ -197,7 +350,6 @@ export const adminUser = {
             }
         },
         async addPendingVendor({vendorId, body, token}) {
-            console.log(body);
             try {
                 const res = await api?.admin?.user?.addPendingVendor(vendorId, body, setOptions(token))
 
