@@ -48,7 +48,7 @@ export const adminAuth = {
             token: res?.data?.data?.token
           });
           message.success('You Logged in successfully!');
-          return true;
+          return res?.data;
         } else {
           message.error('Username Or Password is wrong', 5);
         }
