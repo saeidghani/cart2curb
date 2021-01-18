@@ -91,7 +91,7 @@ export default {
             resetPassword: '/admin/login/reset-password',
             profile: '/admin/profile',
             register: {
-                index: '/admin/Account',
+                index: '/admin/register',
             },
             account: {
                 index: '/admin/view',
