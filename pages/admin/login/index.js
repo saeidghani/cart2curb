@@ -26,9 +26,10 @@ const Login = props => {
             const res = await dispatch?.adminAuth?.login(body);
             const newPath = getNewPath();
             const {token} = res?.data || {};
+            console.log(token);
             if (token) {
                 await dispatch?.adminProfile?.getProfile({token});
-                //setTimeout(() => window.location.replace(newPath), 1000);
+                setTimeout(() => window.location.replace(newPath), 1000);
             }
         } catch (err) {
 

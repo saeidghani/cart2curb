@@ -20,7 +20,6 @@ export const adminProfile = {
     async getProfile({token}) {
       try {
         const res = await api?.admin?.profile?.getProfile(setOptions(token));
-        console.log(res);
         if(res?.data?.success) {
           this.setProfile(res?.data?.data);
           return res?.data?.data;

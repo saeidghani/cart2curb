@@ -24,12 +24,12 @@ export const cart = {
             try {
                 const res = await api.get('cart', options);
 
-                if(res.data.success) {
+                if(res?.data?.success) {
                     dispatch.cart.setCart({
-                        cart: res.data.data
+                        cart: res?.data?.data
                     })
 
-                    return res.data.data;
+                    return res?.data?.data;
                 }
 
                 return false;
@@ -55,16 +55,16 @@ export const cart = {
 
                 if(res.data.success) {
                     dispatch.cart.setCart({
-                        cart: res.data.data
+                        cart: res?.data?.data
                     })
 
-                    return res.data.data;
+                    return res?.data?.data;
                 }
 
                 return false;
             } catch (e) {
                 if(e.hasOwnProperty('response')) {
-                    console.log(e.response.data);
+                    console.log(e?.response?.data);
                 }
                 console.log(e);
 

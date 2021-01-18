@@ -58,7 +58,7 @@ const AdminHeader = props => {
         <AdminNav />
       </div>
       <div className="hidden md:flex flex-row items-center">
-        {(!pathname.includes('admin/login') || !pathname.includes('admin/register')) ? <>
+        {(pathname.includes('admin/login') || pathname.includes('admin/register')) ? <>
           <LoginRegister />
         </> : <Link href={routes.admin.deliveries.index}>
           <div className="cursor-pointer">
