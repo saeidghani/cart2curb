@@ -41,7 +41,7 @@ const AdminHeader = props => {
       <Link href={routes.admin.auth.login}>
         <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
       </Link>
-      <Link href={routes.admin.auth.register}>
+      <Link href={routes.admin.auth.login}>
         <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
       </Link>
     </>

@@ -84,6 +84,9 @@ export const adminStore = {
             }
             state.orders.metaData = payload.metaData;
         },
+        setOrder: (state, payload) => {
+            state.order = payload;
+        },
         setProduct: (state, payload) => {
             state.product = payload;
         },
@@ -113,8 +116,24 @@ export const adminStore = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
+        async getOrder({orderId, token}) {
+            try {
+                const res = await api?.admin?.store?.getOrder(orderId, setOptions(token));
+                if(res?.data?.success) {
+                    this.setOrder(res?.data?.data);
+                    return res?.data?.data
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
         async getStores(query, rootState) {
-            console.log(query);
             try {
                 const res = await api?.admin?.store?.getStores(query, setOptions(rootState?.adminAuth?.token));
                 const data = res?.data;
