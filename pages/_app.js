@@ -6,9 +6,10 @@ import cookie from 'cookie';
 import '../styles/less/index.less';
 import AppProvider from "../providers/AppProvider";
 import Layout from "../components/Layout";
+import NProgress from "../components/NProgress/index";
 import RouterChanger from "../components/RouteChanger";
 import {getStore} from "../states";
-import Head from "next/head";
+
 
 class MyApp extends App {
     render() {
@@ -18,6 +19,7 @@ class MyApp extends App {
         return (
             <AppProvider authenticated={authenticated} userType={userType}>
                 <RouterChanger/>
+                <NProgress/>
                 <Layout style={{ background: 'white' }} forceLayout={forceLayout} avatar={avatar}>
                     <Component {...pageProps} />
                 </Layout>
