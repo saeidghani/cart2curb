@@ -9,6 +9,7 @@ import AdminUserApi from "./apiSections/admin/user";
 import AdminStoreApi from "./apiSections/admin/store";
 import AdminDeliveryApi from "./apiSections/admin/delivery";
 import AdminProfileApi from "./apiSections/admin/profile";
+import AdminAuthApi from "./apiSections/admin/auth";
 
 export class Api {
     constructor(baseURL = false) {
@@ -26,6 +27,7 @@ export class Api {
             profile: new AdminProfileApi(baseURL),
             store: new AdminStoreApi(baseURL),
             user: new AdminUserApi(baseURL),
+            auth: new AdminAuthApi(baseURL),
             delivery: new AdminDeliveryApi(baseURL),
         }
 
