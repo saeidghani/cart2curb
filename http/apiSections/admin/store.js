@@ -9,6 +9,10 @@ export default class AdminStoreApi extends ApiInstance {
         return this.get(`admin/orders`, query, options);
     }
 
+    getOrder(orderId, options = {}) {
+        return this.get(`admin/orders/${orderId}`, {}, options);
+    }
+
     getStores(query = {}, options = {}) {
         return this.get(`admin/stores`, query, options);
     }

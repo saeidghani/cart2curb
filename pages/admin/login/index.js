@@ -17,21 +17,19 @@ const Login = props => {
 
     const getNewPath = () => router.query.prevPath || routes.admin.deliveries.index;
 
-    useEffect(() => {
-        const newPath = getNewPath();
-        const token =  localStorage.getItem('admin_token');
-        if (token) window.location.replace(newPath);
-    }, []);
-
     const submitHandler = async (values) => {
         const {username, password} = values;
         const body = {
             username, password
         }
         try {
-            await dispatch?.adminAuth?.login(body);
+            const res = await dispatch?.adminAuth?.login(body);
             const newPath = getNewPath();
-            setTimeout(() => window.location.replace(newPath), 1000);
+            const {token} = res?.data || {};
+            if (token) {
+                await dispatch?.adminProfile?.getProfile({token});
+                setTimeout(() => window.location.replace(newPath), 1000);
+            }
         } catch (err) {
 
         }
@@ -104,11 +102,12 @@ const Login = props => {
                             </span>
                         </Link>
                     </div>
-
-                    <div className="flex flex-row text-center items-center justify-center">
-                        <Link href={routes?.admin?.auth?.register?.index}>
-                            <a className="text-info font-medium cursor-pointer text-base">Ask us to host your local
-                                products</a>
+                    <div className="flex space-x-2 text-center items-center justify-center">
+                        <span className="mr-1">Do not have an account?</span>
+                        <Link href={routes?.admin?.auth?.login}>
+                            <a className="text-info font-medium cursor-pointer text-base">
+                                Register
+                            </a>
                         </Link>
                     </div>
                 </Col>

@@ -23,7 +23,9 @@ const Orders = props => {
     const dispatch = useDispatch();
     const loading = useSelector(state => state?.loading?.effects?.adminStore?.getOrders);
     const orders = useSelector(state => state?.adminStore?.orders?.data);
+    const order = useSelector(state => state?.adminStore?.order);
     const isLoggedIn = useSelector(state => state?.adminAuth?.isLoggedIn);
+    const token = useSelector(state => state?.adminAuth?.token);
 
     useEffect(async () => {
         if (hasMore || page === 1) {
@@ -126,8 +128,8 @@ const Orders = props => {
                             date={row.date}
                             cxName={row.name}
                             status={row.status}
-                            data={row.data}
                             total={row.totalPrice}
+                            data={row.data}
                         />
                     </>
                 )
@@ -146,7 +148,10 @@ const Orders = props => {
                 items: order?.items || order?.products?.reduce((initial, item) => initial += item?.quantity, 0) || order?.products?.length,
                 status: order?.status,
                 actions: {
-                    showMoreHandler: () => setDetailsModal(order?._id),
+                    showMoreHandler: async () => {
+                        await dispatch?.adminStore?.getOrder({orderId: order?._id, token});
+                        setDetailsModal(order?._id);
+                    }
                 },
                 name: order?.cxName || '-',
                 data: order?.products?.map((item, i) => {
