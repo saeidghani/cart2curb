@@ -60,7 +60,7 @@ const AdminHeader = props => {
       <div className="hidden md:flex flex-row items-center">
         {(pathname.includes('admin/login') || pathname.includes('admin/register')) ? <>
           <LoginRegister />
-        </> : <Link href={routes.admin.deliveries.index}>
+        </> : <Link href={routes.admin.profile.index}>
           <div className="cursor-pointer">
             <Avatar src={adminImage || ''} justImage />
           </div>

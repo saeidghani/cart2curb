@@ -6,33 +6,33 @@ import {
     CheckCircleOutlined,
     StopOutlined,
     EditOutlined,
-    InfoCircleOutlined
+    InfoCircleOutlined, DeleteOutlined
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
-import routes from "../../constants/routes";
-import deleteModal from "../../components/Modals/Delete";
-import OrderDetailsModal from "../../components/Modals/OrderDetails";
-import Loader from "../../components/UI/Loader";
-import {getProperty} from "../../helpers";
+import routes from "../../../constants/routes";
+import deleteModal from "../../Modals/Delete";
+import OrderDetailsModal from "../../Modals/OrderDetails";
+import Loader from "../../UI/Loader";
+import {getProperty} from "../../../helpers";
 import {useRouter} from "next/router";
-import Avatar from "../UI/Avatar";
+import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
 const {Option} = Select;
 
 let isIntersecting = true;
-const Vendors = () => {
+const Promo = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [blocked, setBlocked] = useState([]);
+    const [deleted, setDeleted] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
-    const vendorsLoading = useSelector(state => state?.loading?.effects?.adminUser?.getVendors);
-    const vendors = useSelector(state => state?.adminUser?.vendors?.data);
+    const promosLoading = useSelector(state => state?.loading?.effects?.adminUser?.getPromos);
+    const promos = useSelector(state => state?.adminProfile?.promos?.data);
     const token = useSelector(state => state?.adminAuth?.token);
 
     useEffect(async () => {
@@ -46,7 +46,7 @@ const Vendors = () => {
                 query.search = formFields.search;
             }
             try {
-                const response = await dispatch.adminUser?.getVendors(query);
+                const response = await dispatch.adminProfile?.getPromos({query, token});
                 if (response.data.length < 15) {
                     setHasMore(false);
                 }
@@ -57,14 +57,6 @@ const Vendors = () => {
         }
         isIntersecting = true;
     }, [page, search]);
-
-    useEffect(() => {
-        let isBlocked = [];
-        vendors?.forEach(({vendor}) => {
-            if (!vendor?.isApproved) isBlocked.push(vendor?._id);
-        });
-        setBlocked(isBlocked);
-    }, [vendors]);
 
     useEffect(() => {
         const options = {
@@ -95,53 +87,33 @@ const Vendors = () => {
         setSearch(values.search);
     }
 
-    const columns = useMemo(() => [
+    const columns = [
         {
-            title: "",
-            dataIndex: 'avatar',
-            key: 'avatar',
-            render: src => <Avatar src={src} justImage/>
-        },
-        {
-            title: "#",
-            dataIndex: 'number',
-            key: 'number',
-            render: number => <span className="text-cell">{number}</span>
-        },
-        {
-            title: "Vendor Name",
+            title: "Promo Code Name",
             dataIndex: 'name',
             key: 'name',
-            render: CXName => <span className="text-cell">{CXName}</span>
+            render: name =>  <span className="text-cell">{name}</span>
         },
         {
-            title: "Email",
-            dataIndex: 'email',
-            key: 'email',
-            render: email => <span className="text-cell">{email}</span>
+            title: "Your Offer",
+            dataIndex: 'off',
+            key: 'off',
+            render: off => <span className="text-cell">{off}</span>
         },
         {
-            title: "Phone Number",
-            dataIndex: 'phoneNumber',
-            key: 'phoneNumber',
-            render: phoneNumber => <span className="text-cell">{phoneNumber}</span>
+            title: "Members used",
+            dataIndex: 'membersUsed',
+            key: 'membersUsed',
+            render: membersUsed => <span className="text-cell">{membersUsed}</span>
         },
         {
             title: "OP",
             dataIndex: 'action',
             key: 'action',
-            render: (actions, {key, storeId}) => {
+            render: (actions, {key, promoId}) => {
                 return (
                     <div className={'flex flex-row items-center space-x-3'}>
-                        <Link href={{pathname: routes.admin.vendors.view(key), query: {storeId}}}>
-                            <Button
-                                type={'link'}
-                                shape={'circle'}
-                                icon={<FileSearchOutlined className={'text-secondarey text-xl'}/>}
-                                className={'btn-icon-small'}
-                            />
-                        </Link>
-                        <Link href={{pathname: routes.admin.vendors.edit(key), query: {storeId}}}>
+                        <Link href={{pathname: routes.admin.promo.edit(promoId)}}>
                             <Button
                                 type={'link'}
                                 shape={'circle'}
@@ -149,68 +121,47 @@ const Vendors = () => {
                                 className={'btn-icon-small'}
                             />
                         </Link>
-                        {(blocked?.includes(key)) ? <Button
+                        <Button
                             type={'link'}
                             shape={'circle'}
-                            icon={<CheckCircleOutlined className='text-secondarey text-xl'/>}
-                            className={'btn-icon-small'}
-                            onClick={actions.unBlockHandler}
-                        /> : <Button
-                            type={'link'}
-                            shape={'circle'}
-                            icon={<StopOutlined className='text-secondarey text-xl'/>}
-                            className={'btn-icon-small'}
-                            onClick={actions.blockHandler}
-                        />}
+                            icon={<DeleteOutlined className={'text-btn text-xl'}/>}
+                            className={'btn-icon-small'} onClick={actions.deleteHandler}
+                        />
                     </div>
                 )
             },
             width: 140,
         },
-    ], [blocked]);
-
-    const setSubstring = (str, lastIndex) => {
-        return `${str.substring(0, lastIndex)} ...`;
-    }
+    ];
 
     const data = useMemo(() => {
-        return vendors?.map(({vendor, store}) => ({
-                key: vendor?._id,
-                avatar: vendor?.image,
-                name: `${vendor?.contactName}`,
-                number: vendor?._id,
-                email: vendor?.email || '-',
-                phoneNumber: vendor?.phone || '-',
-                address: vendor?.addresses?.length > 0 ?
-                    setSubstring(`${vendor?.addresses[0]?.addressLine1} ${vendor?.addresses[0]?.city} ${vendor?.addresses[0]?.state} ${vendor?.addresses[0]?.country} ${vendor?.addresses[0]?.postalCode}`, 20) :
-                    '-',
-                storeId: store?._id,
+        return promos?.filter(p => !deleted.includes(p?._id))?.map((promo) => ({
+                key: promo?._id,
+                promoId: promo?._id,
+                off: promo?.off,
+                name: `${promo?.code}`,
+                membersUsed: `${promo?.membersUsed}`,
                 action: {
-                    blockHandler: async () => {
-                        const res = await dispatch.adminUser.addPendingVendor({
-                            vendorId: vendor?._id,
-                            body: {isApproved: false},
-                            token
+                    deleteHandler: () => {
+                        deleteModal({
+                            onOk: async () => {
+                                const res = await dispatch?.adminProfile?.deletePromo({
+                                    promoId: promo?._id,
+                                    token
+                                });
+                                if (res) {
+                                    setDeleted(deleted?.concat(promo?._id))
+                                }
+                            },
+                            okText: 'Ok',
+                            title: 'Do you want to delete this promo code?',
+                            content: 'Are you sure to delete this promo code? There is no going back!!',
                         });
-                        if (res) {
-                            setBlocked(blocked.concat(vendor?._id));
-                        }
-                    },
-                    unBlockHandler: async () => {
-                        const res = await dispatch.adminUser.addPendingVendor({
-                            vendorId: vendor?._id,
-                            body: {isApproved: true},
-                            token
-                        });
-                        if (res) {
-                            const newBlocked = blocked?.filter(b => b !== vendor?._id);
-                            setBlocked(newBlocked);
-                        }
                     },
                 },
             })
         );
-    }, [vendors]);
+    }, [promos, deleted]);
 
     return (
         <>
@@ -226,30 +177,29 @@ const Vendors = () => {
                             <Col lg={6} xs={24}>
                                 <Item className={'pt-7'}>
                                     <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
-                                            loading={vendorsLoading}>Search</Button>
+                                            loading={promosLoading}>Search</Button>
                                 </Item>
                             </Col>
                         </Row>
                     </Form>
                 </Col>
                 <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
-                    <Link href={routes.admin.vendors.add}>
+                    <Link href={routes.admin.promo.add}>
                         <Button
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            disabled={vendors?.length === 0}
+                            disabled={promos?.length === 0}
                         >
-                            Add New Vendor
+                            Add New Promo Code
                         </Button>
                     </Link>
                 </Col>
             </Row>
             <Row>
                 <Col xs={24}>
-
                     <Table columns={columns} dataSource={data} scroll={{x: 1100}} pagination={false}
-                           loading={vendorsLoading && vendors?.length === 0}/>
+                           loading={promosLoading && promos?.length === 0}/>
                     {hasMore && (
                         <div ref={loader}>
 
@@ -262,4 +212,4 @@ const Vendors = () => {
     )
 }
 
-export default Vendors;
+export default Promo;

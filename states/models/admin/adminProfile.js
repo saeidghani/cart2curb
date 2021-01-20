@@ -9,11 +9,34 @@ const setOptions = token => ({
 
 export const adminProfile = {
   state: {
-    profile: {}
+    profile: {},
+    promo: {},
+    systemConfig: {},
+    promos: {
+      metaData: {},
+      data: []
+    },
   },
   reducers: {
     setProfile: (state, payload) => {
       state.profile = payload;
+    },
+    setPromo: (state, payload) => {
+      if (payload?.length > 0) {
+        state.promo = payload[0];
+      }
+    },
+    setSystemConfig: (state, payload) => {
+      state.systemConfig = payload;
+    },
+    setPromos: (state, payload) => {
+      if(payload?.metaData?.pagination?.pageNumber === 1) {
+        state.promos.data = payload.data;
+      } else {
+        state.promos.data = [...state.promos.data, ...payload.data];
+
+      }
+      state.promos.metaData = payload.metaData;
     },
   },
   effects: dispatch => ({
@@ -31,6 +54,153 @@ export const adminProfile = {
         if(e.hasOwnProperty('response')) {
           message.error('An Error was occurred');
         }
+        return false;
+      }
+    },
+    async editProfile({body, token}) {
+      try {
+        const res = await api?.admin?.profile?.editProfile(body, setOptions(token))
+
+        if(res.data.success) {
+          message.success(' Updated successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          console.log(e.response);
+        }
+        message.error('An Error was occurred');
+        return false;
+      }
+    },
+    async getPromos({query, token}) {
+      try {
+        const res = await api?.admin?.profile?.getPromos(query, setOptions(token));
+        if(res?.data?.success) {
+          this.setPromos({
+            data: res?.data?.data,
+            metaData: res?.data?.metaData
+        });
+          return res?.data?.data;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async getPromo({promoId, token}) {
+      try {
+        const res = await api?.admin?.profile?.getPromo(promoId, setOptions(token));
+        if(res?.data?.success) {
+          this.setPromo(res?.data?.data);
+          return res?.data?.data
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async deletePromo({promoId, token}) {
+      try {
+        const res = await api?.admin?.profile?.deletePromo(promoId, setOptions(token));
+        if(res?.data?.success) {
+          message.success('Deleted Successfully', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async addPromo({ body, token}) {
+      try {
+        const res = await api?.admin?.profile?.addPromo(body, setOptions(token));
+
+        if(res.data.success) {
+          message.success('New Promo added successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        console.log(e);
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async editPromo({promoId, body, token}) {
+      try {
+        const res = await api?.admin?.profile?.editPromo(promoId, body, setOptions(token))
+
+        if(res.data.success) {
+          message.success(' Updated successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          console.log(e.response);
+        }
+        message.error('An Error was occurred');
+        return false;
+      }
+    },
+    async getSystemConfig({token}) {
+      try {
+        const res = await api?.admin?.profile?.getSystemConfig(setOptions(token));
+        if(res?.data?.success) {
+          this.setSystemConfig(res?.data?.data);
+          return res?.data?.data
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async editSystemConfig({body, token}) {
+      try {
+        const res = await api?.admin?.profile?.editSystemConfig(body, setOptions(token));
+
+        if(res?.data?.success) {
+          message.success('Updated successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          console.log(e.response);
+        }
+        message.error('An Error was occurred');
         return false;
       }
     },

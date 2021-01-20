@@ -9,6 +9,34 @@ export default class AdminUserApi extends ApiInstance {
         return this.get(`admin/users/drivers`, query, options);
     }
 
+    addDriver(body, options = {}) {
+        return this.post(`admin/users/drivers`, body, { }, options);
+    }
+
+    getDriver(driverId, options = {}) {
+        return this.get(`admin/users/drivers/${driverId}`, {}, options);
+    }
+
+    editDriver(driverId, body, options = {}) {
+        return this.put(`admin/users/drivers/${driverId}`, body, {}, options);
+    }
+
+    getPendingDrivers(query = {}, options = {}) {
+        return this.get(`admin/users/drivers/pending`, query, options);
+    }
+
+    getPendingDriversCount(query = {}, options = {}) {
+        return this.get(`admin/users/drivers/pending-count`, query, options);
+    }
+
+    getDriversApproved(query = {}, options = {}) {
+        return this.get(`admin/users/drivers/approved`, query, options);
+    }
+
+    addPendingDriver(driverId, body, options = {}) {
+        return this.post(`admin/users/drivers/pending/${driverId}`, body, { }, options);
+    }
+
     getVendors(query = {}, options = {}) {
         return this.get(`admin/users/vendors`, query, options);
     }
@@ -60,4 +88,5 @@ export default class AdminUserApi extends ApiInstance {
     editCustomerUnBlock(customerId, body, options = {}) {
         return this.put(`admin/users/customer/${customerId}/unblock`, body, {}, options);
     }
+
 }

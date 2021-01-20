@@ -2,10 +2,10 @@ import React, {useEffect} from 'react';
 import {Tabs} from 'antd';
 
 import Page from "../../../../components/Page";
-import Details from "../../../../components/Admin/Details";
-import Product from "../../../../components/Admin/Product";
-import Service from "../../../../components/Admin/Service";
-import Category from "../../../../components/Admin/Category";
+import Details from "../../../../components/Admin/Stores/Details";
+import Product from "../../../../components/Admin/Stores/Product";
+import Service from "../../../../components/Admin/Stores/Service";
+import Category from "../../../../components/Admin/Stores/Category";
 import AdminAuth from '../../../../components/Admin/AdminAuth';
 import {useRouter} from "next/router";
 import routes from "../../../../constants/routes";

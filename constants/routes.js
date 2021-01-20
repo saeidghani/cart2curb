@@ -110,6 +110,9 @@ export default {
         users: {
             index: '/admin/users'
         },
+        profile: {
+            index: '/admin/profile',
+        },
         customers: {
             edit(customerId = '[customerId]') {
                 return `/admin/customers/edit/${customerId}`
@@ -123,7 +126,18 @@ export default {
             view(vendorId = '[vendorId]') {
                 return `/admin/vendors/view/${vendorId}`
             },
-            add: '/admin/vendors/add'
+            add: '/admin/vendors/add',
+            pending: '/admin/vendors/pending'
+        },
+        drivers: {
+            edit(driverId = '[driverId]') {
+                return `/admin/drivers/edit/${driverId}`
+            },
+            view(driverId = '[driverId]') {
+                return `/admin/drivers/view/${driverId}`
+            },
+            add: '/admin/drivers/new',
+            pending: '/admin/drivers/pending'
         },
         products: {
             index: '/admin/store-details',
@@ -151,6 +165,12 @@ export default {
                 return `/admin/categories/edit/${categoryId}`
             },
             add: '/admin/categories/new'
+        },
+        promo: {
+            edit(promoId = '[promoId]') {
+                return `/admin/promo-code/edit/${promoId}`
+            },
+            add: '/admin/promo-code/new'
         },
     }
 }

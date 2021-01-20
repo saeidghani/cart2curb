@@ -4,10 +4,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import moment from "moment";
 
-import Page from "../Page";
-import Avatar from "../UI/Avatar";
-import DetailItem from "../UI/DetailItem";
-import {getProperty} from "../../helpers";
+import Page from "../../Page";
+import Avatar from "../../UI/Avatar";
+import DetailItem from "../../UI/DetailItem";
+import {getProperty} from "../../../helpers";
 
 const Details = props => {
     const screens = Grid.useBreakpoint();

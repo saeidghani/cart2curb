@@ -1,23 +1,17 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Row, Col, Input, Form, Table, Select, Button, message} from 'antd';
 import {
-    FileSearchOutlined,
     PlusCircleOutlined,
     CheckCircleOutlined,
     StopOutlined,
     EditOutlined,
-    InfoCircleOutlined
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
-import routes from "../../constants/routes";
-import deleteModal from "../../components/Modals/Delete";
-import OrderDetailsModal from "../../components/Modals/OrderDetails";
-import Loader from "../../components/UI/Loader";
-import {getProperty} from "../../helpers";
-import {useRouter} from "next/router";
-import Avatar from "../UI/Avatar";
+import routes from "../../../constants/routes";
+import Loader from "../../UI/Loader";
+import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
 const {Option} = Select;

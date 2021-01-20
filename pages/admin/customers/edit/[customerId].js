@@ -8,7 +8,6 @@ import {
     Divider,
     Select, Upload, DatePicker, message
 } from 'antd';
-import cookie from "cookie";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import Link from "next/link";
@@ -18,8 +17,6 @@ import ImgCrop from "antd-img-crop";
 
 import Page from '../../../../components/Page';
 import routes from "../../../../constants/routes";
-import userTypes from "../../../../constants/userTypes";
-import store, {getStore} from "../../../../states";
 
 const {Item} = Form;
 const {Option} = Select;
