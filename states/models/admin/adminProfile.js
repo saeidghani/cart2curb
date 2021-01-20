@@ -57,6 +57,25 @@ export const adminProfile = {
         return false;
       }
     },
+    async editProfile({body, token}) {
+      try {
+        const res = await api?.admin?.profile?.editProfile(body, setOptions(token))
+
+        if(res.data.success) {
+          message.success(' Updated successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          console.log(e.response);
+        }
+        message.error('An Error was occurred');
+        return false;
+      }
+    },
     async getPromos({query, token}) {
       try {
         const res = await api?.admin?.profile?.getPromos(query, setOptions(token));

@@ -20,12 +20,12 @@ const PendingDrivers = props => {
   const isLoggedIn = useSelector(state => state?.adminAuth?.isLoggedIn);
   const token = useSelector(state => state?.adminAuth?.token);
   const [pendingDrivers, setPendingDrivers] = useState([]);
+  const [updatedDrivers, setUpdatedDrivers] = useState([]);
 
   useEffect(() => {
     if (isLoggedIn) {
       (async () => {
         const res = await dispatch?.adminUser?.getPendingDrivers();
-        console.log(res);
         setPendingDrivers(res?.data?.data);
       })();
     }
@@ -54,18 +54,20 @@ const PendingDrivers = props => {
   const handleApprove = (driverId) => {
     const body = {isApproved: true};
     dispatch?.adminUser?.addPendingDriver({driverId, body, token});
+    setUpdatedDrivers(updatedDrivers.concat(driverId));
   };
 
   const handleReject = (driverId) => {
     const body = {isApproved: false};
     dispatch?.adminUser?.addPendingDriver({driverId, body, token});
+    setUpdatedDrivers(updatedDrivers.concat(driverId));
   };
 
 
   return (
     <AdminAuth>
       <Page title={false} headTitle={'Pending Vendors'} breadcrumb={breadcrumb}>
-        {(pendingDrivers || [])?.map((driver) =>
+        {(pendingDrivers || [])?.filter(d => !updatedDrivers.includes(d?._id))?.map((driver) =>
           <Card className="mb-4 shadow pr-10">
             <div className="grid grid-cols-4 gap-y-4 mb-4">
               <Avatar src={driver?.image} justImage />

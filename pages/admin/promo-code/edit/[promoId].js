@@ -33,7 +33,7 @@ const New = props => {
     form.setFieldsValue({
       code,
     });
-    setOff(off);
+    setOff(off || 1);
     const usageRate = parseInt((cartsCount / canUseCustomers?.length) * 100, 10) || 0;
     setUsageRate(usageRate);
   }, [promo]);

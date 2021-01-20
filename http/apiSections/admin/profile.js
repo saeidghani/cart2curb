@@ -9,6 +9,10 @@ export default class AdminProfileApi extends ApiInstance {
     return this.get('admin/profile', {}, options);
   }
 
+  editProfile(body, options = {}) {
+    return this.put('admin/profile', body, {}, options);
+  }
+
   getPromos(query = {}, options = {}) {
     return this.get('/promo', query, options);
   }

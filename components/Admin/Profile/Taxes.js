@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Form, Row, Col, Input, Button, message} from 'antd';
 import {useRouter} from "next/router";
 import Link from "next/link";
@@ -16,6 +16,7 @@ const Taxes = props => {
     const token = useSelector(state => state?.adminAuth?.token);
     const systemConfig = useSelector(state => state?.adminProfile?.systemConfig);
     const router = useRouter();
+    const [enableField, setEnableField] = useState('');
     const {editField} = router.query;
 
     useEffect(() => {
@@ -42,7 +43,7 @@ const Taxes = props => {
 
         const res = await dispatch.adminProfile.editSystemConfig({body, token});
         if (res) {
-            router.push({pathname: routes.admin.profile.index, query: {tab: 'taxes'}});
+            setEnableField('');
         }
     }
 
@@ -53,13 +54,13 @@ const Taxes = props => {
     const InputItem = ({name, label}) => (
         <Col xs={24} md={12} lg={10} className="flex items-center space-x-2 w-full">
             <Item name={name} label={label} className="w-full">
-                <Input placeholder={label}
-                       className={name === editField ? 'border border-solid border-red-500' : ''}/>
+                <Input
+                    placeholder={label}
+                    disabled={name !== enableField}
+                    className={name === enableField ? 'border border-solid border-red-500' : ''}
+                />
             </Item>
-            <EditOutlined className={'text-secondarey text-xl'} onClick={() => router.push({
-                pathname: router.pathname,
-                query: {...router.query, editField: name}
-            })}/>
+            <EditOutlined className='text-secondarey text-xl' onClick={() => setEnableField(name)}/>
         </Col>
     );
 
@@ -79,7 +80,7 @@ const Taxes = props => {
             onFinishFailed={checkValidation}>
             <Row gutter={48}>
                 {inputItemInfo.map(({name, label}) => <InputItem name={name} label={label}/>)}
-                {editField && <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-10 mt-6'}>
+                {enableField && <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-10 mt-6'}>
                     <Item>
                         <Button
                             type="primary"

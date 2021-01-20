@@ -58,9 +58,8 @@ export const adminAuth = {
       }
     },
     async logout() {
+      console.log('logout');
       this.logoutSync();
-      await api.admin.auth.logout();
-      return true;
     },
     async register(body) {
       try {

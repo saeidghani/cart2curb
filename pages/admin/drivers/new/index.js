@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Form, Row, Col, Input, Upload, Button, message} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import Link from 'next/link';
+import ImgCrop from 'antd-img-crop';
+import {CloudUploadOutlined, UserOutlined} from '@ant-design/icons';
 
 import Page from '../../../../components/Page';
 import routes from '../../../../constants/routes';
 import {useRouter} from 'next/router';
-import {useDispatch, useSelector} from 'react-redux';
-import Link from 'next/link';
-import ImgCrop from 'antd-img-crop';
-import {CloudUploadOutlined, PictureOutlined, UserOutlined} from '@ant-design/icons';
 import api from "../../../../http/Api";
 
 const {Item} = Form;
@@ -18,7 +18,6 @@ const NewDriver = props => {
     const loading = useSelector(state => state.loading.effects.adminUser.addDriver);
     const token = useSelector(state => state?.adminAuth?.token);
     const router = useRouter();
-    const {driverId} = router.query;
     const [imageUrl, setImageUrl] = useState('');
 
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;

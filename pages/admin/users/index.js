@@ -24,7 +24,7 @@ const Users = props => {
     (async () => {
       if (tab === 'drivers') {
         const res = await dispatch?.adminUser?.getPendingDriversCount();
-        setPendingCount(111);
+        setPendingCount(res?.data?.pending);
       } else if (tab === 'vendors') {
         const res = await dispatch?.adminUser?.getPendingVendorsCount();
         setPendingCount(res?.data?.pending);
