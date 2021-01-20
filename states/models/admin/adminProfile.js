@@ -22,9 +22,7 @@ export const adminProfile = {
       state.profile = payload;
     },
     setPromo: (state, payload) => {
-      if (payload?.length > 0) {
-        state.promo = payload[0];
-      }
+      state.promo = payload;
     },
     setSystemConfig: (state, payload) => {
       state.systemConfig = payload;
