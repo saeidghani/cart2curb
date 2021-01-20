@@ -8,14 +8,14 @@ import Page from '../../../components/Page';
 import AdminAuth from '../../../components/Admin/AdminAuth';
 import Arrangement from '../../../components/Admin/Profile/Arrangement';
 import Edit from '../../../components/Admin/Profile/Edit';
-import PromoCode from '../../../components/Admin/Profile/PromoCode';
+import Promo from '../../../components/Admin/Profile/Promo';
 import Taxes from '../../../components/Admin/Profile/Taxes';
 import Video from '../../../components/Admin/Profile/Video';
 import routes from '../../../constants/routes';
 
 const {TabPane} = Tabs;
 
-const Users = props => {
+const Profile = props => {
   const [pendingCount, setPendingCount] = useState(0);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -46,8 +46,8 @@ const Users = props => {
           <TabPane key='video' tab='Video'>
             <Video />
           </TabPane>
-          <TabPane key='promoCode' tab='PromoCode'>
-            <PromoCode />
+          <TabPane key='promoCode' tab='Promo Code'>
+            <Promo />
           </TabPane>
           <TabPane key='arrangement' tab='Arrangement'>
             <Arrangement />
@@ -61,4 +61,4 @@ const Users = props => {
   );
 };
 
-export default Users;
+export default Profile;

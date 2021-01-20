@@ -16,11 +16,9 @@ const New = props => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.loading.effects.adminStore.addCategory);
   const parentLoading = useSelector(state => state.loading.effects.adminStore.getCategories);
-  const categories = useSelector(state => state?.adminStore?.categories);
   const token = store?.getState()?.adminAuth?.token;
   const router = useRouter();
-  const [offer, setOffer] = useState(1);
-  //const { }          = router.query;
+  const [off, setOff] = useState(1);
 
   const breadcrumb = [
     {
@@ -43,21 +41,21 @@ const New = props => {
   ];
 
   const handleIncrement = () => {
-    if (offer < 100) setOffer(prevState => prevState + 1);
+    if (off < 100) setOff(prevState => prevState + 1);
 
   };
 
   const handleDecrement = () => {
-    if (offer > 0) setOffer(prevState => prevState - 1);
+    if (off > 0) setOff(prevState => prevState - 1);
   };
 
   const submitHandler = async (values) => {
-    const {name, offer} = values;
+    const {code} = values;
     const body = {
-      name, offer
+      code, off
     };
 
-    const res = await dispatch.adminStore.addCategory({body, token});
+    const res = await dispatch.adminProfile.addPromo({body, token});
     if (res) {
       router.push({pathname: routes.admin.profile.index, query: {tab: 'promoCode'}});
     }
@@ -71,7 +69,7 @@ const New = props => {
       <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
         <Row gutter={24}>
           <Col xs={24} md={12} lg={8}>
-            <Item name='name' label='Promo Code Name' rules={[
+            <Item name='code' label='Promo Code Name' rules={[
               {
                 required: true,
                 message: 'Promo Code Name field is required'
@@ -82,7 +80,7 @@ const New = props => {
           </Col>
           <Col xs={24} md={12} lg={16}>
             <Item
-              name='offer'
+              name='off'
               label='Your Offer'
             >
               <div className="flex items-center space-x-2 w-32">
@@ -91,9 +89,9 @@ const New = props => {
                   onClick={handleDecrement}
                 />
                 <Input
-                  name="offer"
-                  value={offer}
-                  onChange={e => setOffer(e.target.value*1)}
+                  name="off"
+                  value={off}
+                  onChange={e => setOff(e.target.value*1)}
                   suffix='%'
                 />
                 <PlusCircleFilled

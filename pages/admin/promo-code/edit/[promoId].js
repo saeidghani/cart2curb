@@ -14,13 +14,29 @@ const {Item} = Form;
 const New = props => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.loading.effects.adminStore.addCategory);
-  const parentLoading = useSelector(state => state.loading.effects.adminStore.getCategories);
-  const categories = useSelector(state => state?.adminStore?.categories);
-  const token = store?.getState()?.adminAuth?.token;
+  const loading = useSelector(state => state.loading.effects.adminProfile?.getPromo);
+  const token = useSelector(state => state?.adminAuth?.token);
+  const promo = useSelector(state => state?.adminProfile?.promo);
   const router = useRouter();
-  const [offer, setOffer] = useState(1);
-  //const { }          = router.query;
+  const [off, setOff] = useState(1);
+  const [usageRate, setUsageRate] = useState(1);
+  const { promoId } = router.query;
+
+  useEffect(() => {
+    if (token) {
+      dispatch?.adminProfile?.getPromo({promoId, token});
+    }
+  }, [token, promoId]);
+
+  useEffect(() => {
+    const {code, off, cartsCount, canUseCustomers} = promo || {};
+    form.setFieldsValue({
+      code,
+    });
+    setOff(off);
+    const usageRate = parseInt((cartsCount / canUseCustomers?.length) * 100, 10) || 0;
+    setUsageRate(usageRate);
+  }, [promo]);
 
   const breadcrumb = [
     {
@@ -43,21 +59,20 @@ const New = props => {
   ];
 
   const handleIncrement = () => {
-    if (offer < 100) setOffer(prevState => prevState + 1);
-
+    if (off < 100) setOff(prevState => prevState + 1);
   };
 
   const handleDecrement = () => {
-    if (offer > 0) setOffer(prevState => prevState - 1);
+    if (off > 0) setOff(prevState => prevState - 1);
   };
 
   const submitHandler = async (values) => {
-    const {name, offer} = values;
+    const {code} = values;
     const body = {
-      name, offer
+      code, off
     };
 
-    const res = await dispatch.adminStore.addCategory({body, token});
+    const res = await dispatch.adminProfile?.editPromo({promoId, body, token});
     if (res) {
       router.push({pathname: routes.admin.profile.index, query: {tab: 'promoCode'}});
     }
@@ -67,11 +82,11 @@ const New = props => {
     message.error(errorInfo.errorFields[0].errors[0], 5);
   };
   return (
-    <Page title={false} headTitle={'Add Category'} breadcrumb={breadcrumb}>
+    <Page title={false} headTitle={'Edit Promo'} breadcrumb={breadcrumb}>
       <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
         <Row gutter={24}>
           <Col xs={24} md={12} lg={8}>
-            <Item name='name' label='Promo Code Name' rules={[
+            <Item name='code' label='Promo Code Name' rules={[
               {
                 required: true,
                 message: 'Promo Code Name field is required'
@@ -82,7 +97,7 @@ const New = props => {
           </Col>
           <Col xs={24} md={12} lg={8}>
             <Item
-              name='offer'
+              name='off'
               label='Your Offer'
             >
               <div className="flex items-center space-x-2 w-32">
@@ -91,9 +106,9 @@ const New = props => {
                   onClick={handleDecrement}
                 />
                 <Input
-                  name="offer"
-                  value={offer}
-                  onChange={e => setOffer(e.target.value * 1)}
+                  name="off"
+                  value={off}
+                  onChange={e => setOff(e.target.value * 1)}
                   suffix='%'
                 />
                 <PlusCircleFilled
@@ -104,9 +119,9 @@ const New = props => {
             </Item>
           </Col>
           <Col xs={24} md={12} lg={8}>
-            <Item name='usage'>
+            <Item name='usageRate'>
               <div className="flex items-center space-x-3">
-                <Progress type="circle" width={82} />
+                <Progress type="circle" width={82} percent={usageRate} />
                 <span className="">Members used from your Promo Code</span>
               </div>
             </Item>
@@ -114,7 +129,7 @@ const New = props => {
           <Col xs={24} className={'flex flex-col md:flex-row-reverse md:mt-10 mt-6'}>
             <Item>
               <Button type="primary" block className={'w-full md:w-32 ml-0 md:ml-5'} htmlType={'submit'}
-                      loading={loading || parentLoading}>
+                      loading={loading}>
                 Save
               </Button>
             </Item>

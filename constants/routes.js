@@ -111,7 +111,7 @@ export default {
             index: '/admin/users'
         },
         profile: {
-            index: '/admin/profile'
+            index: '/admin/profile',
         },
         customers: {
             edit(customerId = '[customerId]') {
@@ -166,9 +166,9 @@ export default {
             },
             add: '/admin/categories/new'
         },
-        promoCode: {
-            edit(promoCode = '[promoCode]') {
-                return `/admin/promo-code/edit/${promoCode}`
+        promo: {
+            edit(promoId = '[promoId]') {
+                return `/admin/promo-code/edit/${promoId}`
             },
             add: '/admin/promo-code/new'
         },
