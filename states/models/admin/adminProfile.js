@@ -16,6 +16,10 @@ export const adminProfile = {
       metaData: {},
       data: []
     },
+    customerMessages: {
+      metaData: {},
+      data: []
+    },
   },
   reducers: {
     setProfile: (state, payload) => {
@@ -35,6 +39,15 @@ export const adminProfile = {
 
       }
       state.promos.metaData = payload.metaData;
+    },
+    setCustomerMessages: (state, payload) => {
+      if(payload?.metaData?.pagination?.pageNumber === 1) {
+        state.customerMessages.data = payload.data;
+      } else {
+        state.customerMessages.data = [...state.customerMessages.data, ...payload.data];
+
+      }
+      state.customerMessages.metaData = payload.metaData;
     },
   },
   effects: dispatch => ({
@@ -205,12 +218,12 @@ export const adminProfile = {
     async getCustomerMessages({query, token}) {
       try {
         const res = await api?.admin?.profile?.getCustomerMessages(query, setOptions(token));
+          return res?.data;
         if(res?.data?.success) {
-          this.setPromos({
+          this.setCustomerMessages({
             data: res?.data?.data,
             metaData: res?.data?.metaData
           });
-          return res?.data?.data;
         } else {
           message.error('An Error was occurred');
           return false;
