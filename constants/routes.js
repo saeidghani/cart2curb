@@ -113,6 +113,9 @@ export default {
         profile: {
             index: '/admin/profile',
         },
+        customerMessages: {
+            index: '/admin/customer-messages',
+        },
         customers: {
             edit(customerId = '[customerId]') {
                 return `/admin/customers/edit/${customerId}`
