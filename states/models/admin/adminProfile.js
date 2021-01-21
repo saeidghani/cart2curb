@@ -202,5 +202,25 @@ export const adminProfile = {
         return false;
       }
     },
+    async getCustomerMessages({query, token}) {
+      try {
+        const res = await api?.admin?.profile?.getCustomerMessages(query, setOptions(token));
+        if(res?.data?.success) {
+          this.setPromos({
+            data: res?.data?.data,
+            metaData: res?.data?.metaData
+          });
+          return res?.data?.data;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
   })
 }

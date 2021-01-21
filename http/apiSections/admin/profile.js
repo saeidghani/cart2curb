@@ -40,4 +40,8 @@ export default class AdminProfileApi extends ApiInstance {
   editSystemConfig(body, options = {}) {
     return this.put(`/system-config`, body, {}, options);
   }
+
+  getCustomerMessages(query = {}, options = {}) {
+    return this.get('/contact-us', query, options);
+  }
 }
