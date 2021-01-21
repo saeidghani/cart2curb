@@ -50,7 +50,7 @@ const AccountInfo = props => {
     const breadcrumb = [
         {
             title: 'Register',
-            href: '/Account'
+            href: '/signup'
         },
         {
             title: "Account Info"

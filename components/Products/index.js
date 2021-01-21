@@ -66,7 +66,7 @@ const Products = ({vendor, ...props}) => {
                 if(response)
                     setCategories(response.data);
             })
-    }, []);
+    }, [])
 
 
     useEffect(() => {

@@ -1,20 +1,10 @@
 import React from 'react';
 
-const DetailItem = ({title, value, icon, ...props}) => {
+const DetailItem = ({ title, value, ...props }) => {
     return (
         <div className="flex flex-col justify-center">
-            <span
-                className={`text-${props.labelColor || 'paragraph'} ${icon ? "ml-6" : ''} text-xs font-medium mb-1`}
-            >
-                {title}
-            </span>
-            <span className={`${icon ? 'flex space-x-2' : ''}`}>
-                {icon && icon}
-                <span
-                    className={`text-${props.valueColor || 'type'} text-xs font-medium ${props.capitalize ? 'capitalize' : ''}`}>
-                    {value}
-                </span>
-            </span>
+            <span className={`text-${props.labelColor || 'paragraph'} text-xs font-medium mb-1`}>{title}</span>
+            <span className={`text-${props.valueColor || 'type'} text-xs font-medium ${props.capitalize ? 'capitalize' : ''}`}>{value}</span>
         </div>
     )
 }

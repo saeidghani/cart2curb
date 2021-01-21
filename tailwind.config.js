@@ -33,9 +33,7 @@ module.exports = {
         cell: '#595959',
         muted: '#727A8B',
         dark: '#020911',
-        faq: '#dddddd',
-        completed: '#14C67B',
-        progress: '#ECA234'
+        faq: '#dddddd'
       },
       spacing: {
         1.5: '0.313rem',

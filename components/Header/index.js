@@ -7,23 +7,23 @@ import MainHeader from './MainHeader';
 import AdminHeader from './AdminHeader';
 
 const Header = props => {
-  const [isAdminPage, setIsAdminPage] = useState(false);
-  const userType = useAuthenticatedUserType();
-  const router = useRouter();
+    const [isAdminPage, setIsAdminPage] = useState(false);
+    const userType = useAuthenticatedUserType();
+    const router = useRouter();
 
-  useEffect(() => {
-    if (router.route.indexOf('/admin') === 0) {
-      setIsAdminPage(true);
-    } else {
-      setIsAdminPage(false);
-    }
-  }, [router, userType]);
+    useEffect(() => {
+        if (router.route.indexOf('/admin') === 0) {
+            setIsAdminPage(true);
+        } else {
+            setIsAdminPage(false);
+        }
+    }, [router, userType]);
 
-  return (
-    <header className={'header layout__section'}>
-      {isAdminPage ? <AdminHeader /> : <MainHeader {...props} />}
-    </header>
-  );
+    return (
+        <header className={'header layout__section'}>
+            {isAdminPage ? <AdminHeader /> : <MainHeader {...props} />}
+        </header>
+    );
 };
 
 export default Header;

@@ -20,7 +20,7 @@ const Page = props => {
                 {props.breadcrumb && props.breadcrumb.map(item => {
                     return item.href ? (
                         <Breadcrumb.Item key={item.title + '-breadcrumb'} className={`text-${props.breadcrumbColor || 'paragraph'}\``}>
-                            <Link href={{pathname: item.href, query: {...item?.query}}}>
+                            <Link href={item.href}>
                                 {item.title}
                             </Link>
                         </Breadcrumb.Item>
