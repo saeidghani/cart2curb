@@ -87,6 +87,25 @@ export const adminProfile = {
         return false;
       }
     },
+    async changePassword({body, token}) {
+      try {
+        const res = await api?.admin?.profile?.changePassword(body, setOptions(token))
+
+        if(res.data.success) {
+          message.success(' Updated successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          console.log(e.response);
+        }
+        message.error('An Error was occurred');
+        return false;
+      }
+    },
     async getPromos({query, token}) {
       try {
         const res = await api?.admin?.profile?.getPromos(query, setOptions(token));
@@ -94,7 +113,7 @@ export const adminProfile = {
           this.setPromos({
             data: res?.data?.data,
             metaData: res?.data?.metaData
-        });
+          });
           return res?.data?.data;
         } else {
           message.error('An Error was occurred');
@@ -218,7 +237,7 @@ export const adminProfile = {
     async getCustomerMessages({query, token}) {
       try {
         const res = await api?.admin?.profile?.getCustomerMessages(query, setOptions(token));
-          return res?.data;
+        return res?.data;
         if(res?.data?.success) {
           this.setCustomerMessages({
             data: res?.data?.data,
@@ -229,6 +248,25 @@ export const adminProfile = {
           return false;
         }
       } catch(e) {
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async addRank({ body, token}) {
+      try {
+        const res = await api?.admin?.profile?.addRank(body, setOptions(token));
+
+        if(res.data.success) {
+          message.success('New Promo added successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        console.log(e);
         if(e.hasOwnProperty('response')) {
           message.error('An Error was occurred');
         }

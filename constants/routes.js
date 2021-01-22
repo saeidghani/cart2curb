@@ -112,6 +112,8 @@ export default {
         },
         profile: {
             index: '/admin/profile',
+            changeEmail: '/admin/profile/change-email',
+            changePassword: '/admin/profile/change-password',
         },
         customerMessages: {
             index: '/admin/customer-messages',
