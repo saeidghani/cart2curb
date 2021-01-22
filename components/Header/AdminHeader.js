@@ -3,10 +3,9 @@ import {Button} from 'antd';
 import Link from 'next/link';
 import {useSelector} from 'react-redux';
 import {useRouter} from 'next/router';
-import {BellTwoTone} from '@ant-design/icons';
+import {BellTwoTone, SettingTwoTone} from '@ant-design/icons';
 
 import routes from '../../constants/routes';
-import Avatar from '../UI/Avatar';
 import './styles.less';
 
 const AdminHeader = props => {
@@ -62,11 +61,14 @@ const AdminHeader = props => {
                     <LoginRegister/>
                 </> : <div className="flex items-center space-x-3">
                     <Link href={routes.admin.customerMessages.index}>
-                        <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF" />
+                        <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF"/>
                     </Link>
                     <Link href={routes.admin.profile.index}>
-                        <div className="cursor-pointer">
-                            <Avatar src={adminImage || ''} justImage/>
+                        <div className="cursor-pointer flex items-center space-x-2">
+                            <SettingTwoTone/>
+                            <span className="text-secondarey">
+                                Profile Setting
+                            </span>
                         </div>
                     </Link>
                 </div>}

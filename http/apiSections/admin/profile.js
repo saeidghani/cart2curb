@@ -13,6 +13,10 @@ export default class AdminProfileApi extends ApiInstance {
     return this.put('admin/profile', body, {}, options);
   }
 
+  changePassword(body, options = {}) {
+    return this.put('admin/auth/changepassword', body, {}, options);
+  }
+
   getPromos(query = {}, options = {}) {
     return this.get('/promo', query, options);
   }
@@ -43,5 +47,9 @@ export default class AdminProfileApi extends ApiInstance {
 
   getCustomerMessages(query = {}, options = {}) {
     return this.get('/contact-us', query, options);
+  }
+
+  addRank(body, options = {}) {
+    return this.post('admin/stores/rank', body, {}, options);
   }
 }

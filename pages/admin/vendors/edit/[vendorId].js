@@ -68,15 +68,15 @@ const EditAccount = props => {
         }
         setMarker(marker);
         const areaCoords = store?.area?.coordinates[0];
-        for(let i in areaCoords){
-            const index = area?.findIndex(item => item?.lat === areaCoords[i][1] && item?.lng === areaCoords[i][0]);
-            if(index === -1) {
-                area?.push({
-                    lat: areaCoords[i][1],
-                    lng: areaCoords[i][0]
-                })
-            }
-        }
+        /*   for(let i in areaCoords){
+               const index = area?.findIndex(item => item?.lat === areaCoords[i][1] && item?.lng === areaCoords[i][0]);
+               if(index === -1) {
+                   area?.push({
+                       lat: areaCoords[i][1],
+                       lng: areaCoords[i][0]
+                   })
+               }
+           }*/
 
         fields[0] = {
             email: getProperty(vendor, 'email', ''),
