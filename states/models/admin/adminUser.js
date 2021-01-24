@@ -158,7 +158,7 @@ export const adminUser = {
                 const res = await api?.admin?.user?.addDriver(body, setOptions(token))
 
                 if(res.data.success) {
-                    message.success('New Category added successfully!', 5);
+                    message.success('New Driver added successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');
@@ -177,7 +177,7 @@ export const adminUser = {
                 const res = await api?.admin?.user?.addPendingDriver(driverId, body, setOptions(token))
 
                 if(res.data.success) {
-                    message.success('New Category added successfully!', 5);
+                    message.success('Updated successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');
@@ -267,7 +267,7 @@ export const adminUser = {
                 const res = await api?.admin?.user?.addVendor(body, setOptions(rootState?.adminAuth?.token))
 
                 if(res.data.success) {
-                    message.success('New Category added successfully!', 5);
+                    message.success('New vendor added successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');
@@ -392,7 +392,7 @@ export const adminUser = {
                 const res = await api?.admin?.user?.addCustomer(body, setOptions(token))
 
                 if(res.data.success) {
-                    message.success('New Category added successfully!', 5);
+                    message.success('New Customer added successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');

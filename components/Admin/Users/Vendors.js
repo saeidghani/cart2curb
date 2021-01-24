@@ -6,17 +6,12 @@ import {
     CheckCircleOutlined,
     StopOutlined,
     EditOutlined,
-    InfoCircleOutlined
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
 import routes from "../../../constants/routes";
-import deleteModal from "../../Modals/Delete";
-import OrderDetailsModal from "../../Modals/OrderDetails";
 import Loader from "../../UI/Loader";
-import {getProperty} from "../../../helpers";
-import {useRouter} from "next/router";
 import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
@@ -193,7 +188,10 @@ const Vendors = () => {
                             token
                         });
                         if (res) {
-                            setBlocked(blocked.concat(vendor?._id));
+                            const blockedVendor = blocked?.find(b => b === vendor?._id);
+                            if (!blockedVendor) {
+                                setBlocked(prevBlocked => prevBlocked.concat(vendor?._id));
+                            }
                         }
                     },
                     unBlockHandler: async () => {
@@ -203,14 +201,17 @@ const Vendors = () => {
                             token
                         });
                         if (res) {
-                            const newBlocked = blocked?.filter(b => b !== vendor?._id);
-                            setBlocked(newBlocked);
+                            const blockedVendor = blocked?.find(b => b === vendor?._id);
+                            if (blockedVendor) {
+                                const newBlocked = blocked?.filter(b => b !== vendor?._id);
+                                setBlocked(newBlocked);
+                            }
                         }
                     },
                 },
             })
         );
-    }, [vendors]);
+    }, [vendors, blocked]);
 
     return (
         <>

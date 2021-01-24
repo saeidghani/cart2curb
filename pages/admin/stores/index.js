@@ -131,7 +131,7 @@ const Stores = ({admin, ...props}) => {
                         </Link>
                         <Link
                             href={{
-                                pathname: routes.admin.vendors.edit(vendorId)
+                                pathname: routes.admin.vendors.edit(vendorId), query: {storeId, editType: 'store'}
                             }}
                         >
                             <Button
@@ -171,7 +171,6 @@ const Stores = ({admin, ...props}) => {
     const breadcrumb = [
         {
             title: 'Stores',
-            href: routes.admin.stores.index,
         }
     ];
 

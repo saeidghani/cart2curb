@@ -18,7 +18,7 @@ const Users = props => {
   const dispatch = useDispatch();
   const router = useRouter();
   const {pathname} = router;
-  const {tab = 'customers'} = router.query;
+  const {tab} = router.query;
 
   useEffect(() => {
     (async () => {
@@ -42,9 +42,8 @@ const Users = props => {
   );
 
   const capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string?.charAt(0)?.toUpperCase() + string?.slice(1);
   };
-
 
   const breadcrumb = [
     {
@@ -52,9 +51,7 @@ const Users = props => {
       href: routes.admin.stores.index
     },
     {
-      title: `${capitalize(tab)}`,
-      href: routes.admin.users.index,
-      query: {tab}
+      title: `${capitalize(tab || 'customers')}`,
     }
   ];
 
@@ -62,8 +59,8 @@ const Users = props => {
     <AdminAuth>
       <Page title={false} headTitle={'Users'} breadcrumb={breadcrumb}>
         <Tabs
-          defaultActiveKey={tab}
-          activeKey={tab}
+          defaultActiveKey={tab || 'customers'}
+          activeKey={tab || 'customers'}
           onChange={(key) => router.push({pathname, query: {tab: key}})}
           tabBarExtraContent={(['drivers', 'vendors'].includes(tab) && pendingCount !== 0) ? ExtraContent : null}
         >

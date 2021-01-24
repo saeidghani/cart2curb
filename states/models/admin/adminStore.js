@@ -1,6 +1,5 @@
 import api from "../../../http/Api";
 import {message} from "antd";
-import store from '../../index';
 
 const setOptions = token => ({
     headers: {

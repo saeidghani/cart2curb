@@ -49,9 +49,9 @@ const ServiceView = props => {
         <Page title={'Service'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8}>
-                    <NoSSR>
+                    {service?.images && <NoSSR>
                         <ProductCarousel slides={service?.images}/>
-                    </NoSSR>
+                    </NoSSR>}
                 </Col>
                 <Col lg={16} md={12} xs={24}>
                     <Row>
