@@ -10,3 +10,4 @@ export { adminStore } from './admin/adminStore';
 export { adminDelivery } from './admin/adminDelivery';
 export { adminUser } from './admin/adminUser';
 export { adminProfile } from './admin/adminProfile';
+export { driverAuth } from './driver/driverAuth';

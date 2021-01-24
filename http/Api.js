@@ -10,6 +10,9 @@ import AdminStoreApi from "./apiSections/admin/store";
 import AdminDeliveryApi from "./apiSections/admin/delivery";
 import AdminProfileApi from "./apiSections/admin/profile";
 import AdminAuthApi from "./apiSections/admin/auth";
+import DriverAuthApi from "./apiSections/driver/auth";
+import DriverProfileApi from "./apiSections/driver/profile";
+import DriverDeliveryApi from "./apiSections/driver/delivery";
 
 export class Api {
     constructor(baseURL = false) {
@@ -29,8 +32,12 @@ export class Api {
             user: new AdminUserApi(baseURL),
             auth: new AdminAuthApi(baseURL),
             delivery: new AdminDeliveryApi(baseURL),
-        }
-
+        },
+        this.driver = {
+            auth: new DriverAuthApi(baseURL),
+            profile: new DriverProfileApi(baseURL),
+            delivery: new DriverDeliveryApi(baseURL),
+        },
         this.cart = new CartApi(baseURL);
     }
 }
