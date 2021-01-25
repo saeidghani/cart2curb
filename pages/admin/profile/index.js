@@ -26,7 +26,6 @@ const Profile = props => {
   const breadcrumb = [
     {
       title: 'Admin',
-      href: routes.admin.stores.index
     },
     {
       title: 'Profile',

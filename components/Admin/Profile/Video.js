@@ -5,7 +5,6 @@ import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
 
 import routes from "../../../constants/routes";
-import {CloudUploadOutlined, UserOutlined} from "@ant-design/icons";
 
 const Video = props => {
     const dispatch = useDispatch();
@@ -21,9 +20,9 @@ const Video = props => {
             name, parent, description
         }
 
-        const res = await dispatch.adminProfile.editCategory({storeId, categoryId, body, token});
+        const res = await dispatch.adminProfile.addVideo({ body, token});
         if (res) {
-            router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'category'}})
+            router.push({pathname: routes.admin.profile.index, query: {tab: 'video'}});
         }
     };
 
@@ -100,7 +99,7 @@ const Video = props => {
                     Save
                 </Button>
                 <Link
-                    href={{pathname: routes.admin.profile.index, query: {tab: 'promoCode'}}}
+                    href={{pathname: routes.admin.profile.index, query: {tab: 'video'}}}
                 >
                     <Button danger className='w-full md:w-32'>Cancel</Button>
                 </Link>

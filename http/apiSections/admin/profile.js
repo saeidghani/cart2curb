@@ -52,4 +52,8 @@ export default class AdminProfileApi extends ApiInstance {
   addRank(body, options = {}) {
     return this.post('admin/stores/rank', body, {}, options);
   }
+
+  addVideo(body, options = {}) {
+    return this.post('/videos', body, {}, options);
+  }
 }

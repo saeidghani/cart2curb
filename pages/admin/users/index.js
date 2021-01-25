@@ -48,7 +48,6 @@ const Users = props => {
   const breadcrumb = [
     {
       title: 'Users',
-      href: routes.admin.stores.index
     },
     {
       title: `${capitalize(tab || 'customers')}`,
