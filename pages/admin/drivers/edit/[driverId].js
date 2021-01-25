@@ -86,7 +86,7 @@ const EditDriver = props => {
     }
     const res = await dispatch.adminUser.editDriver({driverId, body, token});
     if (res) {
-      router.push({pathname: routes.admin.users.index});
+      router.push({pathname: routes.admin.users.index, query: {tab: 'drivers'}});
     }
   };
 
@@ -135,37 +135,33 @@ const EditDriver = props => {
           </Col>
           <Col xs={24}>
             <Item name={'image'} className="">
-              <div className="flex items-center space-x-4">
-                <div className="">Upload Image</div>
+              <div className="flex items-center space-x-3">
+                <div className="w-32">Upload Image</div>
                 <ImgCrop>
                   <Upload
-                    name={'image'}
-                    listType="picture"
-                    className={'upload-list-inline'}
-                    showUploadList={false}
-                    beforeUpload={beforeUpload}
-                    onChange={handleUpload}
-                    {...uploadProps}
+                      name="photo"
+                      listType="picture-card"
+                      className="avatar-uploader-wrapper border-0"
+                      showUploadList={false}
+                      beforeUpload={beforeUpload}
+                      onChange={handleUpload}
+                      {...uploadProps}
                   >
-                    <div className="avatar-uploader-square">
-                      {imageUrl ? <img src={imageUrl} alt="avatar" style={{width: 70, height: 70}} /> : (
-                        (
+                    <div className="avatar-uploader">
+                      {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                           <>
-                            <div
-                              className={'full-rounded text-overline bg-card flex items-center justify-center'}
-                              style={{width: 50, height: 50, borderRadius: 50}}>
+                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
                               <UserOutlined className={'text-lg'}/>
                             </div>
                           </>
-                        )
                       )}
-                      <div className="pt-2 h-full" style={{float: 'left'}}>
-                        <div
+                    </div>
+                    <div className="ml-3 pt-2 h-full" style={{float: 'left'}}>
+                      <div
                           className={'flex items-center justify-center border border-solid border-input px-4 py-2'}
-                        >
-                          <CloudUploadOutlined className={'text-2xl text-icon'} />
-                          <div className={'pl-3 text-cell'}>Upload</div>
-                        </div>
+                      >
+                        <CloudUploadOutlined className={'text-2xl text-icon'} />
+                        <div className={'pl-3 text-cell'}>Upload</div>
                       </div>
                     </div>
                   </Upload>
