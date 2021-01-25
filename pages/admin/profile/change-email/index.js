@@ -21,10 +21,10 @@ const ChangeEmail = props => {
             email
         }
         try {
-            const res = await dispatch?.adminProfile?.editProfile({body, token});
+            /*const res = await dispatch?.adminProfile?.editProfile({body, token});
             if (res) {
                 router.push(routes.admin.profile.index);
-            }
+            }*/
         } catch (err) {
 
         }

@@ -45,7 +45,6 @@ export const adminProfile = {
         state.customerMessages.data = payload.data;
       } else {
         state.customerMessages.data = [...state.customerMessages.data, ...payload.data];
-
       }
       state.customerMessages.metaData = payload.metaData;
     },
@@ -114,10 +113,9 @@ export const adminProfile = {
             data: res?.data?.data,
             metaData: res?.data?.metaData
           });
-          return res?.data?.data;
+          return res?.data;
         } else {
           message.error('An Error was occurred');
-          return false;
         }
       } catch(e) {
         if(e.hasOwnProperty('response')) {
@@ -166,6 +164,25 @@ export const adminProfile = {
 
         if(res.data.success) {
           message.success('New Promo added successfully!', 5);
+          return true;
+        } else {
+          message.error('An Error was occurred');
+          return false;
+        }
+      } catch(e) {
+        console.log(e);
+        if(e.hasOwnProperty('response')) {
+          message.error('An Error was occurred');
+        }
+        return false;
+      }
+    },
+    async addVideo({ body, token}) {
+      try {
+        const res = await api?.admin?.profile?.addVideo(body, setOptions(token));
+
+        if(res.data.success) {
+          message.success('New Video added successfully!', 5);
           return true;
         } else {
           message.error('An Error was occurred');

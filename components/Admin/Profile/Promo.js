@@ -1,28 +1,21 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
 import {
-    FileSearchOutlined,
     PlusCircleOutlined,
-    CheckCircleOutlined,
-    StopOutlined,
     EditOutlined,
-    InfoCircleOutlined, DeleteOutlined
+    DeleteOutlined
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
 import routes from "../../../constants/routes";
 import deleteModal from "../../Modals/Delete";
-import OrderDetailsModal from "../../Modals/OrderDetails";
 import Loader from "../../UI/Loader";
-import {getProperty} from "../../../helpers";
-import {useRouter} from "next/router";
-import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
-const {Option} = Select;
 
 let isIntersecting = true;
+
 const Promo = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
@@ -47,7 +40,7 @@ const Promo = () => {
             }
             try {
                 const response = await dispatch.adminProfile?.getPromos({query, token});
-                if (response.data.length < 15) {
+                if (response?.data?.length < 15) {
                     setHasMore(false);
                 }
             } catch (e) {

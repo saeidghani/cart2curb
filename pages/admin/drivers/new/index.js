@@ -99,7 +99,7 @@ const NewDriver = props => {
         message.error(errorInfo?.errorFields[0]?.errors[0], 5);
     };
     return (
-      <Page title={false} headTitle={'Edit Driver'} breadcrumb={breadcrumb}>
+      <Page title={false} headTitle={'Add Driver'} breadcrumb={breadcrumb}>
           <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
               <Row gutter={24}>
                   <Col xs={24}>
@@ -109,7 +109,7 @@ const NewDriver = props => {
                           marginTop: 0,
                           marginBottom: 25,
                           color: '#020911'
-                      }}>Edit Driver</h1>
+                      }}>Add Driver</h1>
                   </Col>
                   <Col xs={24} md={12} lg={8}>
                       <Item name={'name'} label={'Name'}>
