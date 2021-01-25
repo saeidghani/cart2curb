@@ -26,7 +26,6 @@ const Profile = props => {
   const breadcrumb = [
     {
       title: 'Admin',
-      href: routes.admin.stores.index
     },
     {
       title: 'Profile',
@@ -75,7 +74,7 @@ const Profile = props => {
               defaultActiveKey={tab}
               activeKey={tab}
               onChange={(key) => router.push({pathname, query: {tab: key}})}
-              tabBarExtraContent={ExtraContent}
+              tabBarExtraContent={tab === 'edit' && ExtraContent}
           >
             <TabPane key='edit' tab='Edit'>
               <Edit/>

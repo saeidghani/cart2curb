@@ -64,7 +64,7 @@ const NewDriver = props => {
             strokeWidth: 2,
             format: percent => `${parseFloat(percent.toFixed(2))}%`,
         },
-    };
+    }
 
     const handleUpload = info => {
         console.log(info);
@@ -72,7 +72,7 @@ const NewDriver = props => {
             return;
         }
         if (info.file.status === 'done') {
-            setImageUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info?.file?.response?.data?.path || ''}`);
+            setImageUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
 
@@ -88,18 +88,18 @@ const NewDriver = props => {
         if (imageUrl) {
             body.image = imageUrl;
         }
-        const res = await api?.admin?.user?.addDriver(body, setOptions(token));
-        //const res = await dispatch.adminUser.addDriver({body, token});
+        const res = await dispatch.adminUser.addDriver({body, token});
         if (res) {
-            router.push({pathname: routes.admin.users.index});
+            router.push({pathname: routes.admin.users.index, query: {tab: 'drivers'}});
         }
     };
 
     const checkValidation = (errorInfo) => {
         message.error(errorInfo?.errorFields[0]?.errors[0], 5);
     };
+
     return (
-      <Page title={false} headTitle={'Edit Driver'} breadcrumb={breadcrumb}>
+      <Page title={false} headTitle={'Add Driver'} breadcrumb={breadcrumb}>
           <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
               <Row gutter={24}>
                   <Col xs={24}>
@@ -109,7 +109,7 @@ const NewDriver = props => {
                           marginTop: 0,
                           marginBottom: 25,
                           color: '#020911'
-                      }}>Edit Driver</h1>
+                      }}>Add Driver</h1>
                   </Col>
                   <Col xs={24} md={12} lg={8}>
                       <Item name={'name'} label={'Name'}>
@@ -128,37 +128,33 @@ const NewDriver = props => {
                   </Col>
                   <Col xs={24}>
                       <Item name={'image'} className="">
-                          <div className="flex items-center space-x-4">
-                              <div className="">Upload Image</div>
+                          <div className="flex items-center space-x-3">
+                              <div className="w-32">Upload Image</div>
                               <ImgCrop>
                                   <Upload
-                                    name={'image'}
-                                    listType="picture"
-                                    className={'upload-list-inline'}
-                                    showUploadList={false}
-                                    beforeUpload={beforeUpload}
-                                    onChange={handleUpload}
-                                    {...uploadProps}
+                                      name="photo"
+                                      listType="picture-card"
+                                      className="avatar-uploader-wrapper border-0"
+                                      showUploadList={false}
+                                      beforeUpload={beforeUpload}
+                                      onChange={handleUpload}
+                                      {...uploadProps}
                                   >
-                                      <div className="flex space-x-3">
-                                          {imageUrl ? <img src={imageUrl} alt="avatar" style={{width: 70, height: 70}} /> : (
-                                            (
+                                      <div className="avatar-uploader">
+                                          {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
                                               <>
-                                                  <div
-                                                    className={'full-rounded text-overline bg-card flex items-center justify-center'}
-                                                    style={{width: 50, height: 50, borderRadius: 50}}>
+                                                  <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
                                                       <UserOutlined className={'text-lg'}/>
                                                   </div>
                                               </>
-                                            )
                                           )}
-                                          <div className="pt-2 h-full" style={{float: 'left'}}>
-                                              <div
-                                                className={'flex items-center justify-center border border-solid border-input px-4 py-2'}
-                                              >
-                                                  <CloudUploadOutlined className={'text-2xl text-icon'} />
-                                                  <div className={'pl-3 text-cell'}>Upload</div>
-                                              </div>
+                                      </div>
+                                      <div className="ml-3 pt-2 h-full" style={{float: 'left'}}>
+                                          <div
+                                              className={'flex items-center justify-center border border-solid border-input px-4 py-2'}
+                                          >
+                                              <CloudUploadOutlined className={'text-2xl text-icon'} />
+                                              <div className={'pl-3 text-cell'}>Upload</div>
                                           </div>
                                       </div>
                                   </Upload>

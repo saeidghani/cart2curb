@@ -1,28 +1,21 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
 import {
-    FileSearchOutlined,
     PlusCircleOutlined,
-    CheckCircleOutlined,
-    StopOutlined,
     EditOutlined,
-    InfoCircleOutlined, DeleteOutlined
+    DeleteOutlined
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
 import routes from "../../../constants/routes";
 import deleteModal from "../../Modals/Delete";
-import OrderDetailsModal from "../../Modals/OrderDetails";
 import Loader from "../../UI/Loader";
-import {getProperty} from "../../../helpers";
-import {useRouter} from "next/router";
-import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
-const {Option} = Select;
 
 let isIntersecting = true;
+
 const Promo = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
@@ -47,7 +40,7 @@ const Promo = () => {
             }
             try {
                 const response = await dispatch.adminProfile?.getPromos({query, token});
-                if (response.data.length < 15) {
+                if (response?.data?.length < 15) {
                     setHasMore(false);
                 }
             } catch (e) {
@@ -165,30 +158,13 @@ const Promo = () => {
 
     return (
         <>
-            <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
-                <Col lg={18} xs={24}>
-                    <Form form={form} layout={'vertical'} onFinish={searchHandler}>
-                        <Row gutter={24}>
-                            <Col lg={9} xs={24}>
-                                <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
-                                </Item>
-                            </Col>
-                            <Col lg={6} xs={24}>
-                                <Item className={'pt-7'}>
-                                    <Button type={'primary'} size={'lg'} className={'w-32'} htmlType={'submit'}
-                                            loading={promosLoading}>Search</Button>
-                                </Item>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Col>
-                <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
+            <Row gutter={24} className={'flex items-center pb-4'}>
+                <Col xs={24}>
                     <Link href={routes.admin.promo.add}>
                         <Button
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
-                            className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
+                            className={'flex ml-auto text-info px-0 hover:text-teal-500 text-base'}
                             disabled={promos?.length === 0}
                         >
                             Add New Promo Code

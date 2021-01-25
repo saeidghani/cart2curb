@@ -14,11 +14,9 @@ import {useRouter} from "next/router";
 import {getProperty, isPointInside} from "../../../../helpers";
 import {PictureOutlined, UserOutlined} from "@ant-design/icons";
 
-
-const { Step } = Steps;
-const { Item } = Form;
-const { Option } = Select;
-
+const {Step} = Steps;
+const {Item} = Form;
+const {Option} = Select;
 
 function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -31,7 +29,6 @@ function beforeUpload(file) {
     }
     return isJpgOrPng && isLt2M;
 }
-
 
 const EditAccount = props => {
     const [form] = Form.useForm();
@@ -50,14 +47,18 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
-    const {storeId} = router.query;
+    const {storeId, editType} = router.query;
+
+    useEffect(() => {
+        if (storeId) {
+            dispatch?.adminStore?.getStore(storeId);
+        }
+    }, [storeId]);
 
     useEffect(() => {
         let area = [];
         let fields = [];
-        if (storeId) {
-            dispatch?.adminStore?.getStore(storeId);
-        }
+
         const {store, vendor} = storeDetails || {};
         const markCoords = store?.address?.location?.coordinates
         const marker = {
@@ -105,6 +106,7 @@ const EditAccount = props => {
         setAvatarUrl(fields[0]?.image);
         setArea(area);
         setProvince(fields[1]?.province);
+        console.log(fields[0]);
 
         form?.setFieldsValue({
             email: fields[0]?.email,
@@ -123,11 +125,13 @@ const EditAccount = props => {
             description: fields[1]?.description,
             needDriversToGather: fields[1]?.needDriversToGather ? ['true'] : []
         })
-    }, [storeId]);
+    }, [storeId, storeDetails]);
 
     const breadcrumb = [
         {
-            title: `Vendor Profile`,
+            title: editType === 'store' ? 'store' : 'Vendor Profile',
+            href: editType === 'store' ? routes?.admin?.stores?.index : routes?.admin?.users?.index,
+            query: {tab: editType === 'store' ? '' : 'vendors'}
         },
         {
             title: `Edit Info`,
@@ -155,7 +159,7 @@ const EditAccount = props => {
     };
 
     const addStepHandler = (values, step) => {
-        if(step === 1 && !marker.position.hasOwnProperty('lat')) {
+        if (step === 1 && !marker.position.hasOwnProperty('lat')) {
             message.error('Please Select Your Location on Map')
         } else {
             const newFields = [...fields];
@@ -182,12 +186,12 @@ const EditAccount = props => {
     }
 
     const submitHandler = async () => {
-        if(area.length === 0) {
+        if (area.length === 0) {
             message.error("Please Select Your Service Radius")
             return;
         }
         let isInside = isPointInside([marker.position.lng, marker.position.lat], area.map(point => [point.lng, point.lat]));
-        if(!isInside) {
+        if (!isInside) {
             message.error('Your Store location must be in your service radius');
             return;
         }
@@ -233,14 +237,14 @@ const EditAccount = props => {
 
         const result = await dispatch.adminUser.editVendor(body);
 
-        if(result) {
+        if (result) {
             router.push(routes.admin.users.index);
         }
 
     }
 
     const jumpHandler = (newStep) => {
-        if(newStep <= lastReached) {
+        if (newStep <= lastReached) {
             setStep(newStep);
             scrollToTop();
         }
@@ -250,25 +254,26 @@ const EditAccount = props => {
         const yScroll = window.scrollY;
         window.scrollTo(0, yScroll * 0.9);
 
-        if(window.scrollY > 5) {
+        if (window.scrollY > 5) {
             requestAnimationFrame(scrollToTop);
         }
     }
 
 
     return (
-        <Page title={'Edit Profile'} breadcrumb={breadcrumb}>
+        <Page title={editType === 'store' ? 'Edit Store' : 'Edit Profile'} breadcrumb={breadcrumb}>
             <Row>
-                <Col xs={24} xl={{ span: 14, offset: 5}} lg={{ span: 18, offset: 3}}>
+                <Col xs={24} xl={{span: 14, offset: 5}} lg={{span: 18, offset: 3}}>
                     <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'} onChange={jumpHandler}>
-                        <Step title="Store Info" description="Enter store info." />
-                        <Step title="Store Addresses"  description="Enter store Adresses." />
-                        <Step title="Service Area" description="Select service radius." />
+                        <Step title="Store Info" description="Enter store info."/>
+                        <Step title="Store Addresses" description="Enter store Adresses."/>
+                        <Step title="Service Area" description="Select service radius."/>
                     </Steps>
                 </Col>
                 <Col xs={24} className={'pt-8'}>
                     {step === 0 ? (
-                        <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 0)} onFinishFailed={checkValidation}>
+                        <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 0)}
+                              onFinishFailed={checkValidation}>
                             <Row gutter={24} className={'flex flex-row flex-wrap items-center'}>
                                 <Col xs={24} md={12} lg={8}>
                                     <Item name={'email'} label={'Email Address'}
@@ -332,7 +337,7 @@ const EditAccount = props => {
                                                   required: true,
                                                   message: "Store Close Time field is required"
                                               },
-                                              ({ getFieldValue }) => ({
+                                              ({getFieldValue}) => ({
                                                   validator(rule, value) {
                                                       const openingHour = getFieldValue('openingHour');
                                                       if (!value || !openingHour || value.diff(openingHour) > 0) {
@@ -403,15 +408,20 @@ const EditAccount = props => {
                                                 onChange={(info) => handleChange(info, setImageUrl)}
                                             >
                                                 <div className="avatar-uploader-square">
-                                                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: 70, height: 70 }} /> : (
+                                                    {imageUrl ? <img src={imageUrl} alt="avatar"
+                                                                     style={{width: 70, height: 70}}/> : (
                                                         <>
-                                                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 70, height: 70 }}>
-                                                                <PictureOutlined className={'text-xl'} />
+                                                            <div
+                                                                className={'full-rounded text-overline bg-card flex items-center justify-center'}
+                                                                style={{width: 70, height: 70}}>
+                                                                <PictureOutlined className={'text-xl'}/>
                                                             </div>
                                                         </>
                                                     )}
                                                 </div>
-                                                <label htmlFor={'photo'} className="text-secondarey ml-3 cursor-pointer">Upload Your Store Image</label>
+                                                <label htmlFor={'photo'}
+                                                       className="text-secondarey ml-3 cursor-pointer">Upload Your Store
+                                                    Image</label>
                                             </Upload>
                                         </ImgCrop>
 
@@ -434,15 +444,23 @@ const EditAccount = props => {
                                                 onChange={(info) => handleChange(info, setAvatarUrl)}
                                             >
                                                 <div className="avatar-uploader">
-                                                    {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{ width: 50, height: 50, borderRadius: 50 }} /> : (
+                                                    {avatarUrl ? <img src={avatarUrl} alt="avatar" style={{
+                                                        width: 50,
+                                                        height: 50,
+                                                        borderRadius: 50
+                                                    }}/> : (
                                                         <>
-                                                            <div className={'full-rounded text-overline bg-card flex items-center justify-center'} style={{ width: 50, height: 50, borderRadius: 50}}>
+                                                            <div
+                                                                className={'full-rounded text-overline bg-card flex items-center justify-center'}
+                                                                style={{width: 50, height: 50, borderRadius: 50}}>
                                                                 <UserOutlined className={'text-lg'}/>
                                                             </div>
                                                         </>
                                                     )}
                                                 </div>
-                                                <label htmlFor={'avatar'} className="text-secondarey ml-3 cursor-pointer">Upload Your Profile Image</label>
+                                                <label htmlFor={'avatar'}
+                                                       className="text-secondarey ml-3 cursor-pointer">Upload Your
+                                                    Profile Image</label>
 
                                             </Upload>
                                         </ImgCrop>
@@ -451,18 +469,22 @@ const EditAccount = props => {
 
                                 <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
                                     <Item>
-                                        <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'} >
+                                        <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'}>
                                             Next
                                         </Button>
                                     </Item>
-                                    <Link href={routes.admin.users.index}>
+                                    <Link href={{
+                                        pathname: editType === 'store' ? routes?.admin?.stores?.index : routes?.admin?.users?.index,
+                                        query: {tab: editType === 'store' ? '' : 'vendors'}
+                                    }}>
                                         <Button danger className={'w-32'}>Cancel</Button>
                                     </Link>
                                 </Col>
                             </Row>
                         </Form>
                     ) : step === 1 ? (
-                        <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 1)} onFinishFailed={checkValidation}>
+                        <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 1)}
+                              onFinishFailed={checkValidation}>
                             <Row gutter={24}>
                                 <Col span={24}>
                                     <div className="mb-6">
@@ -526,12 +548,14 @@ const EditAccount = props => {
                                                   message: 'Address Line 1 is required'
                                               }
                                           ]}>
-                                        <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
+                                        <Input.TextArea placeholder={'Address Line 1'}
+                                                        autoSize={{minRows: 1, maxRows: 6}} style={{resize: 'none'}}/>
                                     </Item>
                                 </Col>
                                 <Col span={24}>
                                     <Item name={'addressLine2'} label={'Address Line 2'}>
-                                        <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
+                                        <Input.TextArea placeholder={'Address Line 2'}
+                                                        autoSize={{minRows: 1, maxRows: 6}} style={{resize: 'none'}}/>
                                     </Item>
                                 </Col>
 
@@ -553,14 +577,14 @@ const EditAccount = props => {
 
                                 <Col span={24}>
                                     <Item name={'description'} label={'Store Description'}>
-                                        <Input.TextArea placeholder={'Store Description'} autoSize={{ minRows: 4, maxRows: 9 }} style={{ resize: 'none' }}/>
+                                        <Input.TextArea placeholder={'Store Description'}
+                                                        autoSize={{minRows: 4, maxRows: 9}} style={{resize: 'none'}}/>
                                     </Item>
                                 </Col>
                                 <Col span={24}>
                                     <Item name={'needDriversToGather'}>
-                                        <Checkbox.Group >
+                                        <Checkbox.Group>
                                             <Checkbox value={'true'}>I need driver to gather for us</Checkbox>
-
                                         </Checkbox.Group>
                                     </Item>
                                 </Col>
@@ -571,7 +595,6 @@ const EditAccount = props => {
                                             Next
                                         </Button>
                                     </Item>
-
                                     <Item>
                                         <Button danger className={'w-32'} onClick={prevHandler.bind(this, 1)}>
                                             Prev
@@ -594,7 +617,6 @@ const EditAccount = props => {
                                     clickHandler={addPointToAreaHandler}
                                 />
                             </Col>
-
                             <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
                                 <Button type="primary" block className={'w-32 ml-5'} onClick={submitHandler}>
                                     Save

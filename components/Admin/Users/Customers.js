@@ -171,29 +171,35 @@ const Customers = () => {
                 avatar: customer?.image,
                 CXName: `${customer?.firstName} ${customer?.lastName}`,
                 number: customer?._id,
-                email: customer?.email  || '-',
+                email: customer?.email || '-',
                 phoneNumber: customer?.phone || '-',
                 address: (customer?.addresses?.length > 0 && customer?.addresses[0] !== null) ?
-                 setSubstring(`${customer?.addresses[0]?.addressLine1 || ''} ${customer?.addresses[0]?.city || ''} ${customer?.addresses[0]?.state || ''} ${customer?.addresses[0]?.country || ''} ${customer?.addresses[0]?.postalCode || ''}`, 20) :
+                    setSubstring(`${customer?.addresses[0]?.addressLine1 || ''} ${customer?.addresses[0]?.city || ''} ${customer?.addresses[0]?.state || ''} ${customer?.addresses[0]?.country || ''} ${customer?.addresses[0]?.postalCode || ''}`, 20) :
                     '-',
                 action: {
                     blockHandler: async () => {
                         const res = await dispatch.adminUser.editCustomerBlock({customerId: customer?._id, token});
                         if (res) {
-                            setBlocked(blocked.concat(customer?._id));
+                            const blockedCustomer = blocked?.find(b => b === customer?._id);
+                            if (!blockedCustomer) {
+                                setBlocked(prevBlocked => prevBlocked.concat(customer?._id));
+                            }
                         }
                     },
                     unBlockHandler: async () => {
                         const res = await dispatch.adminUser.editCustomerUnBlock({customerId: customer?._id, token});
                         if (res) {
-                            const newBlocked = blocked?.filter(b => b !== customer?._id);
-                            setBlocked(newBlocked);
+                            const blockedCustomer = blocked?.find(b => b === customer?._id);
+                            if (blockedCustomer) {
+                                const newBlocked = blocked?.filter(b => b !== customer?._id);
+                                setBlocked(newBlocked);
+                            }
                         }
                     },
                 },
             })
         );
-    }, [customers]);
+    }, [customers, blocked]);
 
     return (
         <>

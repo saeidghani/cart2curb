@@ -49,9 +49,9 @@ const ProductView = props => {
         <Page title={'Product'} breadcrumb={breadcrumb}>
             <Row gutter={[24, 24]}>
                 <Col xs={24} md={12} lg={8}>
-                    <NoSSR>
+                    {product?.images && <NoSSR>
                         <ProductCarousel slides={product?.images}/>
-                    </NoSSR>
+                    </NoSSR>}
                 </Col>
                 <Col lg={16} md={12} xs={24}>
                     <Row>
@@ -66,9 +66,16 @@ const ProductView = props => {
                                         <Button type={'text'} className={'text-type text-base font-medium'}
                                                 onClick={deleteModal.bind(this, {
                                                     onOk: async () => {
-                                                        const res = await dispatch?.adminStore?.deleteProduct({storeId, productId, token});
+                                                        const res = await dispatch?.adminStore?.deleteProduct({
+                                                            storeId,
+                                                            productId,
+                                                            token
+                                                        });
                                                         if (res) {
-                                                            router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'product'}});
+                                                            router.push({
+                                                                pathname: routes.admin.stores.storeDetails,
+                                                                query: {storeId, storeType, tab: 'product'}
+                                                            });
                                                         }
                                                     },
                                                     okText: 'Ok',
@@ -79,10 +86,16 @@ const ProductView = props => {
                                             Delete
                                         </Button>
                                         <Link
-                                            href={{pathname: routes.admin.products.edit(productId), query: {storeId, storeType}}}
-                                            as={routes.admin.products.edit(product?._id)}>
-                                            <Button type={'text'}
-                                                    className={'text-info hover:text-teal-500 text-base font-medium'}>Edit</Button>
+                                            href={{
+                                                pathname: routes.admin.products.edit(productId),
+                                                query: {storeId, storeType}
+                                            }}>
+                                            <Button
+                                                type={'text'}
+                                                className={'text-info hover:text-teal-500 text-base font-medium'}
+                                            >
+                                                Edit
+                                            </Button>
                                         </Link>
                                     </Space>
                                 </div>

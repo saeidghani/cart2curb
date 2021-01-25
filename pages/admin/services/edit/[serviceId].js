@@ -143,20 +143,6 @@ const EditService = props => {
                             color: '#020911',
                         }}>Edit Service</h1>
                     </Col>
-                    <Col xs={24}>
-                        <Row gutter={24}>
-                            <Col xs={24} md={12} lg={8}>
-                                <Item name={'name'} label={'Name'} rules={[
-                                    {
-                                        required: true,
-                                        message: 'This Field is required'
-                                    }
-                                ]}>
-                                    <Input placeholder={'Name'}/>
-                                </Item>
-                            </Col>
-                        </Row>
-                    </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'category'} label={'Category'} rules={[
                             {

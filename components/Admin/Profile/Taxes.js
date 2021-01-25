@@ -93,10 +93,7 @@ const Taxes = props => {
                         </Button>
                     </Item>
                     <Item>
-                        <Link
-                            href={{pathname: routes.admin.profile.index, query: {tab: 'taxes'}}}>
-                            <Button danger className={'w-full md:w-32'}>Cancel</Button>
-                        </Link>
+                        <Button danger className={'w-full md:w-32'} onClick={() => setEnableField('')}>Cancel</Button>
                     </Item>
                 </Col>}
             </Row>

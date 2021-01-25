@@ -3,7 +3,7 @@ export default {
         login: '/login',
         forgetPassword: '/login/forget-password',
         register: {
-            index: '/Account',
+            index: '/signup',
         },
         resetPassword: {
             index: '/login/reset-password',
@@ -35,7 +35,7 @@ export default {
     },
     profile: {
         index: '/profile',
-        edit: '/profile/view',
+        edit: '/profile/edit',
         changePassword: '/profile/change-password',
         addresses: {
             index: '/profile/addresses',
@@ -43,7 +43,7 @@ export default {
         },
         payments: {
             index: '/profile/payment-info',
-            new: '/profile/payment-info/Account',
+            new: '/profile/payment-info/new',
         },
         orders: '/profile/orders'
     },
@@ -56,7 +56,7 @@ export default {
             forgetPassword: '/vendors/login/forget-password',
             resetPassword: '/vendors/login/reset-password',
             register: {
-                index: '/vendors/Account',
+                index: '/vendors/signup',
             }
         },
         products: {
@@ -67,20 +67,20 @@ export default {
             view(number = '[number]') {
                 return `/vendors/products/${number}`
             },
-            add: '/vendors/products/Account'
+            add: '/vendors/products/new'
         },
         categories: {
             index: '/vendors/dashboard?tab=categories',
             edit(number = '[number]') {
                 return `/vendors/categories/edit/${number}`
             },
-            add: '/vendors/categories/Account'
+            add: '/vendors/categories/new'
         },
         orders: '/vendors/orders',
         account: {
-            index: '/vendors/view',
-            changePassword: '/vendors/view/change-password',
-            edit: '/vendors/view/view'
+            index: '/vendors/account',
+            changePassword: '/vendors/account/change-password',
+            edit: '/vendors/account/edit'
         },
         index: '/vendors/dashboard'
     },

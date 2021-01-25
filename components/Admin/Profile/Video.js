@@ -1,30 +1,33 @@
 import React, {useState} from 'react';
-import {Button, message, Upload} from 'antd';
+import {Button, message, Upload, Form, Input, Row, Col} from 'antd';
 import {useRouter} from "next/router";
 import Link from "next/link";
+import ImgCrop from "antd-img-crop";
 import {useDispatch, useSelector} from "react-redux";
 
+const {Item} = Form;
+
 import routes from "../../../constants/routes";
-import {CloudUploadOutlined, UserOutlined} from "@ant-design/icons";
 
 const Video = props => {
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.adminProfile.addCategory);
     const token = useSelector(state => state?.adminAuth?.token);
     const router = useRouter();
-    const [imageUrl, setImageUrl] = useState('');
+    const [leftImageUrl, setLeftImageUrl] = useState('');
+    const [rightImageUrl, setRightImageUrl] = useState('');
 
     const submitHandler = async (values) => {
-
+        console.log(values);
         const {name, parent, description} = values;
         const body = {
             name, parent, description
         }
 
-        const res = await dispatch.adminProfile.editCategory({storeId, categoryId, body, token});
+        /*const res = await dispatch.adminProfile.addVideo({body, token});
         if (res) {
-            router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'category'}})
-        }
+            router.push({pathname: routes.admin.profile.index, query: {tab: 'video'}});
+        }*/
     };
 
     function beforeUpload(file) {
@@ -37,23 +40,32 @@ const Video = props => {
             message.error('Image must smaller than 2MB!');
         }
         return isJpgOrPng && isLt2M;
-    };
+    }
 
-    const handleUpload = info => {
-        console.log(info);
+    const handleLeftImgUpload = info => {
         if (info.file.status === 'uploading') {
             return;
         }
         if (info.file.status === 'done') {
-            setImageUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info?.file?.response?.data?.path || ''}`);
+            setLeftImageUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
+        }
+    };
+
+    const handleRightImgUpload = info => {
+        if (info.file.status === 'uploading') {
+            return;
+        }
+        if (info.file.status === 'done') {
+            setRightImageUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
 
     const uploadProps = {
-        action: `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos/`,
+        action: '/v1/files/photos/',
         headers: {
             Authorization: `Bearer ${token}`
         },
+
         progress: {
             strokeColor: {
                 '0%': '#ff4b45',
@@ -62,48 +74,56 @@ const Video = props => {
             strokeWidth: 2,
             format: percent => `${parseFloat(percent.toFixed(2))}%`,
         },
-    };
+    }
 
-    const UploadVideo = () => (<Upload
-        name={'image'}
-        listType="picture"
-        className={'upload-list-inline'}
-        showUploadList={false}
-        beforeUpload={beforeUpload}
-        onChange={handleUpload}
-        {...uploadProps}
-    >
-        <div className="flex space-x-3">
-            {imageUrl ? <img src={imageUrl} alt="avatar" style={{width: 500, height: 500}}/> : <div
+    const UploadVideo = ({imageUrl, onUpload}) => (<ImgCrop>
+        <Upload
+            name="photo"
+            listType="picture-card"
+            className="avatar-uploader-wrapper border-0"
+            showUploadList={false}
+            beforeUpload={beforeUpload}
+            onChange={onUpload}
+            {...uploadProps}
+        >
+            <div className="">
+                {imageUrl && <img src={imageUrl} alt="avatar" style={{width: 580, height: 340}}/>}
+            </div>
+            {!imageUrl && <div
                 className={'full-rounded text-overline bg-card flex items-center justify-center'}
-                style={{width: 500, height: 500}}>
+                style={{width: 580, height: 340}}>
             </div>}
-        </div>
-    </Upload>);
+        </Upload>
+    </ImgCrop>);
 
     return (
-        <div className="py-5">
+        <div className="py-5 flex flex-col" style={{position: 'relative', top: 110, height: 460}}>
             <div className="flex flex-col">
-                <div className="">Upload Image</div>
+                <div className="mb-6 font-bold" style={{position: 'relative', top: '-125px'}}>Upload Your Videos</div>
                 <div className="flex space-x-2 mt-3">
-                    <UploadVideo/>
+                    <UploadVideo imageUrl={leftImageUrl} onUpload={handleLeftImgUpload}/>
+                    <UploadVideo imageUrl={rightImageUrl} onUpload={handleRightImgUpload}/>
                 </div>
             </div>
-            <div className="flex justify-end space-x-2 mt-10">
-                <Button
-                    type="primary"
-                    block
-                    className='w-full md:w-32 ml-0 md:ml-5'
-                    htmlType={'submit'}
-                    loading={loading}
-                >
-                    Save
-                </Button>
-                <Link
-                    href={{pathname: routes.admin.profile.index, query: {tab: 'promoCode'}}}
-                >
-                    <Button danger className='w-full md:w-32'>Cancel</Button>
-                </Link>
+            <div className="flex justify-end space-x-2" style={{position: 'relative', top: 150}}>
+                <Item>
+                    <Button
+                        type="primary"
+                        block
+                        className='w-full md:w-32 ml-0 md:ml-5'
+                        htmlType={'submit'}
+                        loading={loading}
+                    >
+                        Save
+                    </Button>
+                </Item>
+                <Item>
+                    <Link
+                        href={{pathname: routes.admin.profile.index, query: {tab: 'video'}}}
+                    >
+                        <Button danger className='w-full md:w-32'>Cancel</Button>
+                    </Link>
+                </Item>
             </div>
         </div>
     )

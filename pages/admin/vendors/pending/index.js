@@ -43,6 +43,9 @@ const PendingDrivers = props => {
             href: routes.admin.users.index,
             query: {tab: 'vendors'}
         },
+        {
+            title: 'Pending Vendors'
+        }
     ];
 
     const handleApprove = async (vendorId) => {

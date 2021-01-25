@@ -195,8 +195,18 @@ const Drivers = () => {
                 insurance: driver?.license || '-',
                 drivingInsurance: driver?.license || '-',
                 action: {
-                    blockHandler: () => {
-                        setBlockDriverId(driver?._id);
+                    blockHandler: async () => {
+                        const res = await dispatch.adminUser.addPendingDriver({
+                            driverId: driver?._id,
+                            body: {isApproved: false},
+                            token
+                        });
+                        if (res) {
+                            const blockedDriver = blocked?.find(b => b === driver?._id);
+                            if (!blockedDriver) {
+                                setBlocked(prevBlocked => prevBlocked.concat(driver?._id));
+                            }
+                        }
                     },
                     unBlockHandler: async () => {
                         const res = await dispatch.adminUser.addPendingDriver({
@@ -205,14 +215,17 @@ const Drivers = () => {
                             token
                         });
                         if (res) {
-                            const newBlocked = blocked?.filter(b => b !== driver?._id);
-                            setBlocked(newBlocked);
+                            const blockedDriver = blocked?.find(b => b === driver?._id);
+                            if (blockedDriver) {
+                                const newBlocked = blocked?.filter(b => b !== driver?._id);
+                                setBlocked(newBlocked);
+                            }
                         }
                     }
                 }
             })
         );
-    }, [drivers]);
+    }, [drivers, blocked]);
 
     return (
         <>

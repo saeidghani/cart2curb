@@ -15,7 +15,7 @@ const {TabPane} = Tabs;
 const StoreDetails = props => {
     const router = useRouter();
     const {pathname} = router;
-    const {tab='details', storeId, storeType} = router.query;
+    const {tab, storeId, storeType} = router.query;
 
     const capitalize = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -26,19 +26,15 @@ const StoreDetails = props => {
             title: 'Stores',
             href: routes.admin.stores.index,
         },
-        {
-            title: `${capitalize(tab)}`,
-            href: routes.admin.stores.storeDetails,
-            query: {tab, storeId, storeType}
-        },
+        {title: `${capitalize(tab || 'details')}`}
     ];
 
     return (
         <AdminAuth>
             <Page title={false} headTitle={'Store'} breadcrumb={breadcrumb}>
                 <Tabs
-                    defaultActiveKey={tab}
-                    activeKey={tab}
+                    defaultActiveKey={tab || 'details'}
+                    activeKey={tab || 'details'}
                     onChange={(key) => router.push({pathname, query: {tab: key, storeId, storeType}})}
                 >
                     <TabPane key='details' tab='Details'>
