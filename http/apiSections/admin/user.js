@@ -41,7 +41,7 @@ export default class AdminUserApi extends ApiInstance {
         return this.get(`admin/users/vendors`, query, options);
     }
 
-    addVendor(body, {}, options = {}) {
+    addVendor(body, options = {}) {
         return this.post(`admin/users/vendors`, body, { }, options);
     }
 

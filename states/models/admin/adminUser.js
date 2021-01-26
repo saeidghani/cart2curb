@@ -262,10 +262,9 @@ export const adminUser = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
-        async addVendor(body, rootState) {
+        async addVendor({body, token}) {
             try {
-                const res = await api?.admin?.user?.addVendor(body, setOptions(rootState?.adminAuth?.token))
-
+                const res = await api?.admin?.user?.addVendor(body, setOptions(token));
                 if(res.data.success) {
                     message.success('New vendor added successfully!', 5);
                     return true;

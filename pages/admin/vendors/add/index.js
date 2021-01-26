@@ -160,7 +160,7 @@ const AddVendor = props => {
             subType: form1.subType,
         }
 
-        const admin = {
+        const vendor = {
             email: form1.email,
             phone: form1.phone,
             contactName: form1.contactName,
@@ -169,19 +169,17 @@ const AddVendor = props => {
         }
 
         const body = {
-            admin,
+            vendor,
             store,
         }
 
-        const result = await dispatch.adminAuth.register(body);
+        const result = await dispatch.adminUser.addVendor({body, token});
 
         if (result) {
-            setSubmitted(true)
+            //setSubmitted(true)
             scrollToTop();
         }
-
     }
-
 
     const scrollToTop = () => {
         const yScroll = window.scrollY;
