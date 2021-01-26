@@ -9,16 +9,6 @@ const ForgetPassword = props => {
     const dispatch = useDispatch();
     const loading = useSelector(state => state?.loading?.effects?.driverAuth?.forgetPassword);
 
-    const breadcrumb = [
-        {
-            title: "Login",
-            href: '/login'
-        },
-        {
-            title: 'Forgot Password'
-        }
-    ];
-
     const submitHandler = (values) => {
         const { email } = values;
         const body = {
@@ -30,6 +20,7 @@ const ForgetPassword = props => {
     const checkValidation = (errorInfo) => {
         message.error(errorInfo?.errorFields[0]?.errors[0], 5);
     }
+
     return (
         <DriverPage title={'Forgot Password'} breadcrumb={breadcrumb}>
             <Row>

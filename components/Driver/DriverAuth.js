@@ -3,14 +3,14 @@ import {useRouter} from "next/router";
 
 import routes from '../../constants/routes';
 
-const AdminAuth = ({children}) => {
+const DriverAuth = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem('admin_token');
+        const token = localStorage.getItem('driver_token');
         if (token) setIsAuth(true);
-        if (!token) router.push({pathname:routes.admin.auth.login, query: {prevPath: window.location.pathname}});
+        if (!token) router.push({pathname:routes.driver.auth.login, query: {prevPath: window.location.pathname}});
     }, []);
 
     if (!isAuth) return null;
@@ -21,4 +21,4 @@ const AdminAuth = ({children}) => {
     )
 };
 
-export default AdminAuth;
+export default DriverAuth;

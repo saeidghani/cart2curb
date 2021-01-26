@@ -11,15 +11,14 @@ import {
 } from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
-import {useRouter} from "next/router";
 import Link from "next/link";
+import {useRouter} from "next/router";
 
-import DriverPage from '../../../components/DriverPage';
-import {CloudUploadOutlined, UserOutlined, LikeTwoTone} from '@ant-design/icons';
+import DriverPage from '../../../../components/DriverPage';
+import DriverAuth from '../../../../components/Driver/DriverAuth';
+import {CloudUploadOutlined, UserOutlined} from '@ant-design/icons';
 import ImgCrop from "antd-img-crop";
-import {isInAmpMode} from "next/amp";
-import routes from "../../../constants/routes";
-import Success from "../../../components/Driver/Success";
+import routes from "../../../../constants/routes";
 
 const {Item} = Form;
 
@@ -35,15 +34,35 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 
-const Register = props => {
-    const loading = useSelector(state => state?.loading?.effects?.driverAuth?.register);
+const Edit = props => {
+    const loading = useSelector(state => state?.loading?.effects?.driverAuth?.editProfile);
     const [insurancePic, setInsurancePic] = useState('');
     const [licencePic, setLicencePic] = useState('');
     const [imagePic, setImagePic] = useState('');
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const token = useSelector(state => state?.adminAuth?.token);
-    const [submitted, setSubmitted] = useState(false);
+    const token = useSelector(state => state?.driverAuth?.token);
+    const profile = useSelector(state => state?.driverProfile?.profile);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (token) {
+            dispatch?.driverProfile?.getProfile({token});
+        }
+    }, [token]);
+
+    useEffect(() => {
+        const {proofOfInsurance, name, email, phone, birthdate, license, image} = profile || {};
+        form.setFieldsValue({
+            name,
+            email,
+            phone,
+            birthdate: birthdate ? moment(birthdate) : '',
+        });
+        setLicencePic(license);
+        setImagePic(image);
+        setInsurancePic(proofOfInsurance?.length > 0 ? proofOfInsurance[0] : '');
+    }, [profile]);
 
     const handleInsuranceUpload = info => {
         if (info.file.status === 'uploading') {
@@ -92,41 +111,38 @@ const Register = props => {
         const yScroll = window.scrollY;
         window.scrollTo(0, yScroll * 0.9);
 
-        if(window.scrollY > 5) {
+        if (window.scrollY > 5) {
             requestAnimationFrame(scrollToTop);
         }
     };
 
     const submitHandler = async (values) => {
         const {
-            name,
             email,
             phone,
             birthdate,
             acceptAgreement,
-            password
         } = values;
         const body = {
-            name,
             email,
             phone,
             birthdate: birthdate ? moment(birthdate) : '',
             acceptAgreement: !!acceptAgreement,
-            password
         };
         if (insurancePic) body.proofOfInsurance = [insurancePic];
         if (licencePic) body.license = licencePic;
         if (imagePic) body.image = imagePic;
 
-        const res = await dispatch?.driverAuth?.register(body);
-        if (res) {
-            setSubmitted(true)
-            scrollToTop();
-        }
+        const res = await dispatch?.driverProfile?.editProfile({body, token});
     };
 
     const checkValidation = (errorInfo) => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
+    };
+
+    const handleLogout = () => {
+        dispatch?.driverAuth?.logout();
+        router.push(routes.driver.auth.login);
     };
 
     const UploadPhoto = ({imageUrl, text, onUpload, icon}) => (
@@ -156,8 +172,8 @@ const Register = props => {
     );
 
     return (
-        <DriverPage title={submitted ? false : 'Register'}>
-            {submitted ? <Success /> :
+        <DriverAuth>
+            <DriverPage title='Edit'>
                 <Row>
                     <Col span={24}>
                         <Form
@@ -170,7 +186,7 @@ const Register = props => {
                             <Row gutter={24}>
                                 <Col xs={24}>
                                     <Item name={'name'} label={'Name'}>
-                                        <Input placeholder="Name"/>
+                                        <Input placeholder="Name" disabled/>
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
@@ -191,33 +207,6 @@ const Register = props => {
                                               message: 'This Field is required'
                                           }]}>
                                         <DatePicker className={'w-full'}/>
-                                    </Item>
-                                </Col>
-                                <Col xs={24}>
-                                    <Item name={'password'} label={'Password'}>
-                                        <Input placeholder="Password"/>
-                                    </Item>
-                                </Col>
-                                <Col xs={24} className="mb-6">
-                                    <Item name={'password-confirm'}
-                                          label={'Confirm Password'}
-                                          dependencies={['password']}
-                                          hasFeedback
-                                          rules={[
-                                              {
-                                                  required: true,
-                                                  message: 'Please confirm your password!',
-                                              },
-                                              ({getFieldValue}) => ({
-                                                  validator(rule, value) {
-                                                      if (!value || getFieldValue('password') === value) {
-                                                          return Promise.resolve();
-                                                      }
-                                                      return Promise.reject('The two passwords that you entered do not match!');
-                                                  },
-                                              }),
-                                          ]}>
-                                        <Input.Password placeholder="Confirm Password"/>
                                     </Item>
                                 </Col>
                                 <Col xs={24} className="">
@@ -249,32 +238,44 @@ const Register = props => {
                                 </Col>
                                 <Col xs={24}>
                                     <Item name="acceptAgreement" valuePropName="checked">
-                                        <Checkbox className="text-xs mb-10">
+                                        <Checkbox className="text-xs">
                                             I am willing to obtain police record
                                         </Checkbox>
                                     </Item>
                                 </Col>
-                                <Col xs={24} className="">
+                                <Col
+                                    xs={24}
+                                    className="mb-10 text-sm font-medium text-red-500"
+                                    onClick={handleLogout}
+                                >
+                                    Log Out
+                                </Col>
+                                <Col xs={24}>
                                     <Item>
                                         <Button type="primary" block htmlType={'submit'} loading={loading}>
-                                            Submit
+                                            Save Changes
                                         </Button>
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
-                                    <div className="text-sm font-medium flex justify-center">
-                                        <div>Already a Cart2Curb driver?</div>
-                                        <Link href={routes.driver.auth.login}>
-                                            <div className="ml-2 text-blue-600 text-sm font-medium">Login</div>
+                                    <Item>
+                                        <Link href={routes.driver.deliveries.available}>
+                                            <Button
+                                                block
+                                                className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
+                                            >
+                                                Cancel
+                                            </Button>
                                         </Link>
-                                    </div>
+                                    </Item>
                                 </Col>
                             </Row>
                         </Form>
                     </Col>
-                </Row>}
-        </DriverPage>
+                </Row>
+            </DriverPage>
+        </DriverAuth>
     )
 }
 
-export default Register;
+export default Edit;

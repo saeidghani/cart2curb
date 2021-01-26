@@ -184,9 +184,7 @@ export default {
             forgetPassword: '/driver/login/forget-password',
             resetPassword: '/driver/login/reset-password',
             profile: '/driver/profile',
-            register: {
-                index: '/driver/register',
-            },
+            register: '/driver/register',
             account: {
                 index: '/driver/view',
             }

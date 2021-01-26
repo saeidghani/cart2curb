@@ -12,7 +12,6 @@ const {Option} = Select;
 
 const EditCategory = props => {
     const [form] = Form.useForm();
-    const [parentCategories, setParentCategories] = useState([])
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.adminStore.addCategory);
     const parentLoading = useSelector(state => state.loading.effects.adminStore.getCategories);

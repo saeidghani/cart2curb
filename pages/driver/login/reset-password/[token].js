@@ -4,7 +4,7 @@ import {Button, Col, Form, Input, message, Row} from "antd";
 import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import Submitted from "../../../../components/Submitted";
+import Success from "../../../../components/Driver/Success";
 const { Item } = Form;
 
 const ResetPassword = props => {
@@ -14,19 +14,6 @@ const ResetPassword = props => {
     const dispatch = useDispatch()
     const [submitted, setSubmitted] = useState(false);
 
-    const breadcrumb = [
-        {
-            title: "Login",
-            href: routes.driver.auth.login
-        },
-        {
-            title: 'Forgot Password',
-            href: routes.driver.auth.forgetPassword,
-        },
-        {
-            title: 'Reset Password',
-        }
-    ]
     useEffect(() => {
         let token = router.query?.token || undefined;
         if((typeof token === 'string' && token?.length === 0)) {
@@ -51,7 +38,7 @@ const ResetPassword = props => {
     return (
         <DriverPage title={submitted ? false : 'Reset Password'} >
             {submitted ? (
-                <Submitted href={routes.driver.auth.login}/>
+                <Success href={routes.driver.auth.login}/>
             ) : (
                 <Row>
                     <Col xl={{ span: 8, offset: 8}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>

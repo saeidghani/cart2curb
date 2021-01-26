@@ -36,6 +36,7 @@ const Login = props => {
     const checkValidation = (errorInfo) => {
         message.error(errorInfo?.errorFields[0]?.errors[0], 5);
     }
+
     return (
         <DriverPage title={'Login'}>
             <Row>
@@ -103,8 +104,10 @@ const Login = props => {
                     </div>
 
                     <div className="flex flex-row text-center items-center justify-center mt-9">
-                        Do not have an account?
-                        <a className="font-medium cursor-pointer text-base text-blue-500 ml-2">Register</a>
+                        <span>Do not have an account?</span>
+                        <Link href={routes.driver.auth.register}>
+                            <div className="text-secondarey font-medium cursor-pointer text-base ml-2">Register</div>
+                        </Link>
                     </div>
                 </Col>
             </Row>

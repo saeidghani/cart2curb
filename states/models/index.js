@@ -11,3 +11,5 @@ export { adminDelivery } from './admin/adminDelivery';
 export { adminUser } from './admin/adminUser';
 export { adminProfile } from './admin/adminProfile';
 export { driverAuth } from './driver/driverAuth';
+export { driverProfile } from './driver/driverProfile';
+export { driverDelivery } from './driver/driverDelivery';

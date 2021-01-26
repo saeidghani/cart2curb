@@ -58,7 +58,6 @@ export const driverAuth = {
             }
         },
         async logout() {
-            console.log('logout');
             this.logoutSync();
         },
         async register(body) {
