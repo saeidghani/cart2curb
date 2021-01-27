@@ -213,7 +213,6 @@ const AddCustomer = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'avatar'}>
                                     <div className={'flex items-center justify-start mt-4'}>
-
                                         <ImgCrop>
                                             <Upload
                                                 name="photo"

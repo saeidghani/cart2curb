@@ -177,5 +177,31 @@ export default {
             },
             add: '/admin/promo-code/new'
         },
+    },
+    driver: {
+        auth: {
+            login: '/driver/login',
+            forgetPassword: '/driver/login/forget-password',
+            resetPassword: '/driver/login/reset-password',
+            profile: '/driver/profile',
+            register: '/driver/register',
+            account: {
+                index: '/driver/view',
+            }
+        },
+        profile: {
+          index: '/driver/profile',
+          edit: '/driver/profile/edit',
+          changePassword: '/driver/profile/change-password'
+        },
+        deliveries: {
+            available: '/driver/deliveries/available',
+            current: '/driver/deliveries/current',
+        },
+        customerOrders: {
+            view(deliveryId = '[deliveryId]') {
+                return `/driver/customer-orders/${deliveryId}`;
+            }
+        },
     }
 }
