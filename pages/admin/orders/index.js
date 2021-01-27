@@ -83,7 +83,6 @@ const Orders = props => {
         setSearch(values.search);
     }
 
-
     const columns = [
         {
             title: '#',

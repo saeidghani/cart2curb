@@ -37,7 +37,6 @@ export const driverDelivery = {
                 state.historyDeliveries.data = payload.data;
             } else {
                 state.historyDeliveries.data = [...state.historyDeliveries.data, ...payload.data];
-
             }
             state.historyDeliveries.metaData = payload.metaData;
         },

@@ -1,17 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from 'antd';
 import {SoundTwoTone, SoundOutlined, EnvironmentOutlined, CloseOutlined} from '@ant-design/icons';
+import {useDispatch, useSelector} from "react-redux";
 import Timer from 'react-compound-timer';
 import Link from "next/link";
 
+import DriverAuth from '../../../../components/Driver/DriverAuth';
 import DriverPage from '../../../../components/DriverPage';
 import routes from '../../../../constants/routes';
 import Loader from "../../../../components/UI/Loader";
-import {useSelector} from "react-redux";
 
 const Current = () => {
-    const [hasNoDeliveries, setHasNoDeliveries] = useState(false);
-    const availableDeliveriesloading = useSelector(state => state?.loading?.effects?.driverDelivery?.getAvailableDeliveries);
+    const dispatch = useDispatch();
+    const [clickedDeliveries, setClickedDeliveries] = useState([]);
+    const availableDeliveriesLoading = useSelector(state => state?.loading?.effects?.driverDelivery?.getAvailableDeliveries);
+    const token = useSelector(state => state?.driverAuth?.token);
+    const deliveries = useSelector(state => state?.driverDelivery?.getCurrentDeliveries?.data);
+
+    useEffect(() => {
+        if (token) {
+            dispatch?.driverDelivery?.getCurrentDeliveries();
+        }
+    }, [token]);
+
+    const getAddress = (destination) => `${destination?.destinationLine1 || ''}${destination?.destinationLine2 || ''} ${destination?.city || ''} ${destination?.province || ''} ${destination?.country || ''}`;
+
+    const handleComplete = async (deliveryId) => {
+        const body = {
+            complete: true
+        };
+        await dispatch?.driverDelivery?.editDeliveryComplete({deliveryId, body, token});
+        setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+    };
 
     const EmptyDelivery = ({}) => (
         <div className="flex flex-col">
@@ -25,7 +45,7 @@ const Current = () => {
         </div>
     );
 
-    const DeliveryCard = ({}) => (
+    const DeliveryCard = ({_id: deliveryId, products, orderNumber, customerAddress}) => (
         <>
             <div className="text-center"><SoundTwoTone className="text-6xl transform -rotate-45"/></div>
             <div className="text-xs font-normal mt-9 text-paragraph">
@@ -94,17 +114,19 @@ const Current = () => {
                     Destination
                 </div>
                 <div className="font-normal text-sm">
-                    Address Line 2, Address Line 2, City, State, Country, Zip Code
+                    {getAddress(customerAddress)}
                 </div>
             </div>
-            <Link href={routes.driver.customerOrders}>
+            <Link href={routes.driver.customerOrders.view(deliveryId)}>
                 <Button
                     className="w-full mt-16 p-4 text-center border border-current border-solid text-sm font-normal items-center flex justify-center">
                     See Customer Orders
                 </Button>
             </Link>
             <Button
-                className="w-full mt-12 p-4 text-center bg-btn text-sm font-normal items-center flex justify-center text-white">
+                className="w-full mt-12 p-4 text-center bg-btn text-sm font-normal items-center flex justify-center text-white"
+                onClick={() => handleComplete(deliveryId)}
+            >
                 Complete
             </Button>
             <Link href={routes.driver.deliveries.available}>
@@ -118,13 +140,19 @@ const Current = () => {
         </>
     );
 
+    if (deliveries?.length === 0) return <EmptyDelivery/>;
+    if (availableDeliveriesLoading) return <div className="flex justify-center"><Loader/></div>;
+
     return (
-        <DriverPage title="Current Deliveries">
-            <div className="w-full shadow-lg p-8">
-                {hasNoDeliveries ? <EmptyDelivery/> : availableDeliveriesloading ?
-                    <div className="flex justify-center"><Loader/></div> : <DeliveryCard/>}
-            </div>
-        </DriverPage>
+        <DriverAuth>
+            <DriverPage title="Current Deliveries">
+                <div className="w-full shadow-lg p-8">
+                    {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.map(delivery =>
+                        <DeliveryCard {...delivery}/>)}
+                </div>
+            </DriverPage>
+        </DriverAuth>
     );
 }
+
 export default Current;

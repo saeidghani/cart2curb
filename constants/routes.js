@@ -198,6 +198,10 @@ export default {
             available: '/driver/deliveries/available',
             current: '/driver/deliveries/current',
         },
-        customerOrders: '/driver/customer-orders',
+        customerOrders: {
+            view(deliveryId = '[deliveryId]') {
+                return `/driver/customer-orders/${deliveryId}`;
+            }
+        },
     }
 }
