@@ -22,7 +22,7 @@ const ForgetPassword = props => {
     }
 
     return (
-        <DriverPage title={'Forgot Password'} breadcrumb={breadcrumb}>
+        <DriverPage title={'Forgot Password'}>
             <Row>
                 <Col xl={{ span: 8, offset: 8}} lg={{ span: 14, offset: 5}} md={{ span: 14, offset: 5}} sm={{ span: 20, offset: 2}} xs={24}>
                     <Form

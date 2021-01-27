@@ -3,6 +3,12 @@ import {emitter} from "../../../helpers/emitter";
 import routes from "../../../constants/routes";
 import api from '../../../http/Api';
 
+const setOptions = token => ({
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+});
+
 export const driverAuth = {
     state: {
         isLoggedIn: false,
@@ -109,9 +115,9 @@ export const driverAuth = {
                 return false;
             }
         },
-        async changePassword(body) {
+        async changePassword({body, token}) {
             try {
-                const res = await api.driver.auth.changePassword(body);
+                const res = await api.driver.auth.changePassword(body, setOptions(token));
                 if(res?.data?.success) {
                     message.success('Password changed successfully')
                     emitter.emit('change-route', {

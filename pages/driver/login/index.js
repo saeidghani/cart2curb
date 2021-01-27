@@ -63,7 +63,6 @@ const Login = props => {
                                 ]}>
                                     <Input placeholder="Email Address"/>
                                 </Item>
-
                             </Col>
                             <Col xs={24}>
                                 <Item name={'password'} label={'Password'} rules={[
@@ -80,9 +79,9 @@ const Login = props => {
                                 </Item>
                             </Col>
                             <Col xs={24}>
-                            <div className="pt-7.5 pb-16 md:pb-24 text-center">
+                            <div className="pt-2 pb-12 text-center">
                                 <Link href={routes?.driver?.auth?.forgetPassword}>
-                                    <span className="text-label font-medium text-base cursor-pointer text-type">
+                                    <span className="text-paragraph font-medium text-base cursor-pointer text-type">
                                         Forget Password?
                                     </span>
                                 </Link>

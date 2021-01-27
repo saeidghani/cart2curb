@@ -7,7 +7,7 @@ import {
     Col,
     Upload,
     Checkbox,
-    message, DatePicker
+    message, DatePicker, Modal
 } from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
@@ -15,8 +15,9 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 
 import DriverPage from '../../../../components/DriverPage';
+import Loader from '../../../../components/UI/Loader';
 import DriverAuth from '../../../../components/Driver/DriverAuth';
-import {CloudUploadOutlined, UserOutlined} from '@ant-design/icons';
+import {CloudUploadOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
 import ImgCrop from "antd-img-crop";
 import routes from "../../../../constants/routes";
 
@@ -35,10 +36,11 @@ function beforeUpload(file) {
 }
 
 const Edit = props => {
-    const loading = useSelector(state => state?.loading?.effects?.driverAuth?.editProfile);
+    const loading = useSelector(state => state?.loading?.effects?.driverProfile?.getProfile);
     const [insurancePic, setInsurancePic] = useState('');
     const [licencePic, setLicencePic] = useState('');
     const [imagePic, setImagePic] = useState('');
+    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const token = useSelector(state => state?.driverAuth?.token);
@@ -58,6 +60,7 @@ const Edit = props => {
             email,
             phone,
             birthdate: birthdate ? moment(birthdate) : '',
+            acceptAgreement: true
         });
         setLicencePic(license);
         setImagePic(image);
@@ -142,6 +145,7 @@ const Edit = props => {
 
     const handleLogout = () => {
         dispatch?.driverAuth?.logout();
+        setLogoutModalVisible(false);
         router.push(routes.driver.auth.login);
     };
 
@@ -173,106 +177,142 @@ const Edit = props => {
 
     return (
         <DriverAuth>
-            <DriverPage title='Edit'>
-                <Row>
-                    <Col span={24}>
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            className="flex flex-col"
-                            onFinishFailed={checkValidation}
-                            onFinish={submitHandler}
-                        >
-                            <Row gutter={24}>
-                                <Col xs={24}>
-                                    <Item name={'name'} label={'Name'}>
-                                        <Input placeholder="Name" disabled/>
-                                    </Item>
-                                </Col>
-                                <Col xs={24}>
-                                    <Item name={'email'} label={'Email'}>
-                                        <Input placeholder="Email"/>
-                                    </Item>
-                                </Col>
-
-                                <Col xs={24}>
-                                    <Item name={'phone'} label={'Phone Number'}>
-                                        <Input placeholder="+00 00000000"/>
-                                    </Item>
-                                </Col>
-                                <Col xs={24}>
-                                    <Item name={'birthdate'} label={'Birthdate'}
-                                          rules={[{
-                                              required: true,
-                                              message: 'This Field is required'
-                                          }]}>
-                                        <DatePicker className={'w-full'}/>
-                                    </Item>
-                                </Col>
-                                <Col xs={24} className="">
-                                    <Item name="proofOfInsurance">
-                                        <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={insurancePic} text="Upload Proof of Insurance"
-                                                         onUpload={handleInsuranceUpload}
-                                                         icon={<CloudUploadOutlined className={'text-lg'}/>}/>
-                                        </div>
-                                    </Item>
-                                </Col>
-                                <Col xs={24} className="">
-                                    <Item name="license">
-                                        <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={licencePic} text="Upload Driver License Picture"
-                                                         onUpload={handleLicenceUpload}
-                                                         icon={<CloudUploadOutlined className={'text-lg'}/>}/>
-                                        </div>
-                                    </Item>
-                                </Col>
-                                <Col xs={24} className="">
-                                    <Item name="image">
-                                        <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={imagePic} text="Upload Image"
-                                                         onUpload={handleImageUpload}
-                                                         icon={<UserOutlined className={'text-lg'}/>}/>
-                                        </div>
-                                    </Item>
-                                </Col>
-                                <Col xs={24}>
-                                    <Item name="acceptAgreement" valuePropName="checked">
-                                        <Checkbox className="text-xs">
-                                            I am willing to obtain police record
-                                        </Checkbox>
-                                    </Item>
-                                </Col>
-                                <Col
-                                    xs={24}
-                                    className="mb-10 text-sm font-medium text-red-500"
-                                    onClick={handleLogout}
-                                >
-                                    Log Out
-                                </Col>
-                                <Col xs={24}>
-                                    <Item>
-                                        <Button type="primary" block htmlType={'submit'} loading={loading}>
-                                            Save Changes
-                                        </Button>
-                                    </Item>
-                                </Col>
-                                <Col xs={24}>
-                                    <Item>
-                                        <Link href={routes.driver.deliveries.available}>
-                                            <Button
-                                                block
-                                                className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
-                                            >
-                                                Cancel
+            <DriverPage title=''>
+                <Modal
+                    visible={logoutModalVisible}
+                    okText="Yes, Log Out"
+                    cancelText="Cancel"
+                    onOk={handleLogout}
+                    onCancel={() => setLogoutModalVisible(false)}
+                    width={328}
+                >
+                    <div className="flex space-x-3">
+                        <QuestionCircleOutlined style={{color: "#FAAD14", fontSize: 18, marginTop: 2}}/>
+                        <div>
+                            <div className="font-bold">Log Out</div>
+                            <div className="mt-2">Are you sure to log out from your account?</div>
+                        </div>
+                    </div>
+                </Modal>
+                <div className="text-2xl mb-6">Edit Profile</div>
+                {loading ? <div className="flex justify-center"><Loader/></div> :
+                    <Row>
+                        <Col span={24}>
+                            <Form
+                                form={form}
+                                layout="vertical"
+                                className="flex flex-col"
+                                onFinishFailed={checkValidation}
+                                onFinish={submitHandler}
+                            >
+                                <Row gutter={24}>
+                                    <Col xs={24}>
+                                        <Item name={'name'} label={'Name'} rules={[
+                                            {
+                                                required: true,
+                                                message: "Please enter your name"
+                                            }
+                                        ]}>
+                                            <Input placeholder="Name" disabled/>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24}>
+                                        <Item name={'email'} label={'Email'} rules={[
+                                            {
+                                                required: true,
+                                                message: "Please enter your Email Address"
+                                            },
+                                            {
+                                                pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+                                                message: "Please enter valid Email Address"
+                                            }
+                                        ]}>
+                                            <Input placeholder="Email"/>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24}>
+                                        <Item name={'phone'} label={'Phone Number'} rules={[
+                                            {
+                                                required: true,
+                                                message: "Please enter your phone number"
+                                            }
+                                        ]}>
+                                            <Input placeholder="+00 00000000"/>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24}>
+                                        <Item name={'birthdate'} label={'Birthdate'}
+                                              rules={[{
+                                                  required: true,
+                                                  message: 'This Field is required'
+                                              }]}>
+                                            <DatePicker className={'w-full'}/>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24} className="">
+                                        <Item name="proofOfInsurance">
+                                            <div className={'flex items-center justify-start'}>
+                                                <UploadPhoto imageUrl={insurancePic} text="Upload Proof of Insurance"
+                                                             onUpload={handleInsuranceUpload}
+                                                             icon={<CloudUploadOutlined className={'text-lg'}/>}/>
+                                            </div>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24} className="">
+                                        <Item name="license">
+                                            <div className={'flex items-center justify-start'}>
+                                                <UploadPhoto imageUrl={licencePic} text="Upload Driver License Picture"
+                                                             onUpload={handleLicenceUpload}
+                                                             icon={<CloudUploadOutlined className={'text-lg'}/>}/>
+                                            </div>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24} className="">
+                                        <Item name="image">
+                                            <div className={'flex items-center justify-start'}>
+                                                <UploadPhoto imageUrl={imagePic} text="Upload Image"
+                                                             onUpload={handleImageUpload}
+                                                             icon={<UserOutlined className={'text-lg'}/>}/>
+                                            </div>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24}>
+                                        <Item name="acceptAgreement" valuePropName="checked">
+                                            <Checkbox className="text-xs" disabled defaultChecked>
+                                                I am willing to obtain police record
+                                            </Checkbox>
+                                        </Item>
+                                    </Col>
+                                    <Col
+                                        xs={24}
+                                        className="mb-10 text-sm font-medium text-red-500"
+                                        onClick={() => setLogoutModalVisible(true)}
+                                    >
+                                        Log Out
+                                    </Col>
+                                    <Col xs={24}>
+                                        <Item>
+                                            <Button type="primary" block htmlType={'submit'} loading={loading}>
+                                                Save Changes
                                             </Button>
-                                        </Link>
-                                    </Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Col>
-                </Row>
+                                        </Item>
+                                    </Col>
+                                    <Col xs={24}>
+                                        <Item>
+                                            <Link href={routes.driver.profile.index}>
+                                                <Button
+                                                    block
+                                                    className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </Link>
+                                        </Item>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Col>
+                    </Row>}
             </DriverPage>
         </DriverAuth>
     )

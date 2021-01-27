@@ -44,6 +44,7 @@ const Register = props => {
     const dispatch = useDispatch();
     const token = useSelector(state => state?.adminAuth?.token);
     const [submitted, setSubmitted] = useState(false);
+    const [isAcceptedAgreement, setIsAcceptedAgreement] = useState(false);
 
     const handleInsuranceUpload = info => {
         if (info.file.status === 'uploading') {
@@ -92,7 +93,7 @@ const Register = props => {
         const yScroll = window.scrollY;
         window.scrollTo(0, yScroll * 0.9);
 
-        if(window.scrollY > 5) {
+        if (window.scrollY > 5) {
             requestAnimationFrame(scrollToTop);
         }
     };
@@ -118,10 +119,16 @@ const Register = props => {
         if (licencePic) body.license = licencePic;
         if (imagePic) body.image = imagePic;
 
-        const res = await dispatch?.driverAuth?.register(body);
-        if (res) {
-            setSubmitted(true)
-            scrollToTop();
+        const agreement = Boolean(form.getFieldValue('acceptAgreement'));
+        console.log(acceptAgreement);
+        console.log(agreement);
+
+        if (insurancePic && licencePic && imagePic) {
+            const res = await dispatch?.driverAuth?.register(body);
+            if (res) {
+                setSubmitted(true)
+                scrollToTop();
+            }
         }
     };
 
@@ -157,7 +164,7 @@ const Register = props => {
 
     return (
         <DriverPage title={submitted ? false : 'Register'}>
-            {submitted ? <Success /> :
+            {submitted ? <Success/> :
                 <Row>
                     <Col span={24}>
                         <Form
@@ -169,18 +176,37 @@ const Register = props => {
                         >
                             <Row gutter={24}>
                                 <Col xs={24}>
-                                    <Item name={'name'} label={'Name'}>
+                                    <Item name={'name'} label={'Name'} rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter your name"
+                                        }
+                                    ]}>
                                         <Input placeholder="Name"/>
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
-                                    <Item name={'email'} label={'Email'}>
+                                    <Item name={'email'} label={'Email'} rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter your Email Address"
+                                        },
+                                        {
+                                            pattern: /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+                                            message: "Please enter valid Email Address"
+                                        }
+                                    ]}>
                                         <Input placeholder="Email"/>
                                     </Item>
                                 </Col>
 
                                 <Col xs={24}>
-                                    <Item name={'phone'} label={'Phone Number'}>
+                                    <Item name={'phone'} label={'Phone Number'} rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter your phone number"
+                                        }
+                                    ]}>
                                         <Input placeholder="+00 00000000"/>
                                     </Item>
                                 </Col>
@@ -194,7 +220,16 @@ const Register = props => {
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
-                                    <Item name={'password'} label={'Password'}>
+                                    <Item name={'password'} label={'Password'} rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter your password"
+                                        },
+                                        {
+                                            min: 6,
+                                            message: "Password should be at least 6 characters"
+                                        }
+                                    ]}>
                                         <Input placeholder="Password"/>
                                     </Item>
                                 </Col>
@@ -248,15 +283,38 @@ const Register = props => {
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
-                                    <Item name="acceptAgreement" valuePropName="checked">
-                                        <Checkbox className="text-xs mb-10">
+                                    <Item
+                                        name="acceptAgreement"
+                                        valuePropName="checked"
+                                        rules={[{
+                                            required: true,
+                                            message: "Please accept this"
+                                        }]}
+                                    >
+                                        <Checkbox
+                                            className="text-xs mb-10"
+                                            onChange={(val) => {
+                                                if (val?.target?.checked) {
+                                                    setIsAcceptedAgreement(true);
+                                                } else {
+                                                    setIsAcceptedAgreement(false);
+                                                }
+                                            }}
+                                        >
                                             I am willing to obtain police record
                                         </Checkbox>
                                     </Item>
                                 </Col>
                                 <Col xs={24} className="">
                                     <Item>
-                                        <Button type="primary" block htmlType={'submit'} loading={loading}>
+                                        <Button
+                                            type="primary"
+                                            block
+                                            htmlType={'submit'}
+                                            loading={loading}
+                                            disabled={(form.getFieldsError().filter(({errors}) => errors.length).length) ||
+                                            !insurancePic || !licencePic || !imagePic || !isAcceptedAgreement}
+                                        >
                                             Submit
                                         </Button>
                                     </Item>

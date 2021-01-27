@@ -192,11 +192,12 @@ export default {
         profile: {
           index: '/driver/profile',
           edit: '/driver/profile/edit',
-          changePassword: '/driver/profile/changePassword'
+          changePassword: '/driver/profile/change-password'
         },
         deliveries: {
             available: '/driver/deliveries/available',
             current: '/driver/deliveries/current',
         },
+        customerOrders: '/driver/customer-orders',
     }
 }

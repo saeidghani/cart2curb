@@ -9,29 +9,55 @@ const setOptions = token => ({
 
 export const driverDelivery = {
     state: {
-        deliveries: {
+        availableDeliveries: {
+            metaData: {},
+            data: []
+        },
+        historyDeliveries: {
+            metaData: {},
+            data: []
+        },
+        currentDeliveries: {
             metaData: {},
             data: []
         },
     },
     reducers: {
-        setDeliveries: (state, payload) => {
+        setAvailableDeliveries: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
-                state.deliveries.data = payload.data;
+                state.availableDeliveries.data = payload.data;
             } else {
-                state.deliveries.data = [...state.deliveries.data, ...payload.data];
+                state.availableDeliveries.data = [...state.availableDeliveries.data, ...payload.data];
 
             }
-            state.deliveries.metaData = payload.metaData;
+            state.availableDeliveries.metaData = payload.metaData;
+        },
+        setHistoryDeliveries: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.historyDeliveries.data = payload.data;
+            } else {
+                state.historyDeliveries.data = [...state.historyDeliveries.data, ...payload.data];
+
+            }
+            state.historyDeliveries.metaData = payload.metaData;
+        },
+        setCurrentDeliveries: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.currentDeliveries.data = payload.data;
+            } else {
+                state.currentDeliveries.data = [...state.currentDeliveries.data, ...payload.data];
+
+            }
+            state.currentDeliveries.metaData = payload.metaData;
         },
     },
     effects: dispatch => ({
-        async getDeliveries(query, rootState) {
+        async getAvailableDeliveries(query, rootState) {
             try {
-                const res = await api?.driver?.delivery?.getDeliveries(query, setOptions(rootState?.driverAuth?.token));
+                const res = await api?.driver?.delivery?.getAvailableDeliveries(query, setOptions(rootState?.driverAuth?.token));
                 const data = res?.data;
                 if(data?.success) {
-                    this.setDeliveries({
+                    this.setAvailableDeliveries({
                         data: data?.data,
                         metaData: data?.metaData
                     })
@@ -44,9 +70,63 @@ export const driverDelivery = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
-        async editDelivery({deliveryId, body, token}) {
+        async getHistoryDeliveries(query, rootState) {
             try {
-                const res = await api?.driver?.delivery?.editDelivery(deliveryId, body, setOptions(token))
+                const res = await api?.driver?.delivery?.getHistoryDeliveries(query, setOptions(rootState?.driverAuth?.token));
+                const data = res?.data;
+                if(data?.success) {
+                    this.setHistoryDeliveries({
+                        data: data?.data,
+                        metaData: data?.metaData
+                    })
+                    return data;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                console.log(e)
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async getCurrentDeliveries(query, rootState) {
+            try {
+                const res = await api?.driver?.delivery?.getCurrentDeliveries(query, setOptions(rootState?.driverAuth?.token));
+                const data = res?.data;
+                if(data?.success) {
+                    this.setCurrentDeliveries({
+                        data: data?.data,
+                        metaData: data?.metaData
+                    })
+                    return data;
+                } else {
+                    message.error('An Error was occurred in data fetch')
+                }
+            } catch(e) {
+                console.log(e)
+                message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async editDeliveryAvailable({deliveryId, body, token}) {
+            try {
+                const res = await api?.driver?.delivery?.editDeliveryAvailable(deliveryId, body, setOptions(token))
+                if(res.data.success) {
+                    message.success(' Updated successfully!', 5);
+                    return res;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response);
+                }
+                message.error('An Error was occurred');
+                return false;
+            }
+        },
+        async editDeliveryComplete({deliveryId, body, token}) {
+            try {
+                const res = await api?.driver?.delivery?.editDeliveryComplete(deliveryId, body, setOptions(token))
                 if(res.data.success) {
                     message.success(' Updated successfully!', 5);
                     return res;
