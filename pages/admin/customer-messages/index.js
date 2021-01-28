@@ -77,16 +77,16 @@ const CustomerMesseges = props => {
                 <h2 className="font-normal text-2xl mt-8 mb-14">Customers Messages</h2>
                 {messages?.data?.map(msg =>
                     <div className="mb-20">
-                        <div className="flex justify-between mb-7">
-                            <div className="flex w-4/12">
+                        <div className="flex justify-between items-center mb-7">
+                            <div className="flex items-center w-4/12">
                                 <div className="mr-7 text-sm font-normal">Name</div>
                                 <div className="font-bold text-base">{msg?.name}</div>
                             </div>
-                            <div className="flex w-4/12">
+                            <div className="flex items-center w-4/12">
                                 <div className="mr-7 text-sm font-normal">Phone Number</div>
                                 <div className="font-bold text-base">{msg?.phone}</div>
                             </div>
-                            <div className="flex w-4/12">
+                            <div className="flex items-center w-4/12">
                                 <div className="mr-7 text-sm font-normal">Subject</div>
                                 <div className="font-bold text-base">{msg?.subject}</div>
                             </div>

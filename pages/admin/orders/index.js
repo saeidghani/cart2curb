@@ -179,7 +179,8 @@ const Orders = props => {
     return (
         <AdminAuth>
             <Page title={'Orders'} breadcrumb={breadcrumb}>
-                <Row gutter={24} className={'flex items-center pt-2 pb-4'}>
+                <div style={{minHeight: 300}}>
+                    <Row gutter={24} className={'flex items-center pt-2 pb-4'}>
                     <Col lg={18} xs={24}>
                         <Form form={form} layout={'vertical'} onFinish={searchHandler}>
                             <Row gutter={24}>
@@ -198,25 +199,26 @@ const Orders = props => {
                         </Form>
                     </Col>
                 </Row>
-                <Row>
-                    <Col xs={24}>
-                        <Table
-                            columns={columns}
-                            dataSource={data}
-                            scroll={{x: 1100}}
-                            pagination={false}
-                            locale={{
-                                emptyText: 'You have no Order'
-                            }}
-                        />
+                    <Row>
+                        <Col xs={24}>
+                            <Table
+                                columns={columns}
+                                dataSource={data}
+                                scroll={{x: 1100}}
+                                pagination={false}
+                                locale={{
+                                    emptyText: 'You have no Order'
+                                }}
+                            />
 
-                        <div ref={loader}>
-                            {hasMore && (
-                                <div className="flex w-full items-center justify-center py-6"><Loader/></div>
-                            )}
-                        </div>
-                    </Col>
-                </Row>
+                            <div ref={loader}>
+                                {hasMore && (
+                                    <div className="flex w-full items-center justify-center py-6"><Loader/></div>
+                                )}
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
             </Page>
         </AdminAuth>
     )

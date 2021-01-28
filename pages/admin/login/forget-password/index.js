@@ -64,12 +64,6 @@ const ForgetPassword = props => {
                             </Button>
                         </Item>
                     </Form>
-
-                    <div className="flex flex-row text-center items-center justify-center mt-20">
-                        <Link href={routes.auth.register.index}>
-                            <a className="text-info font-medium cursor-pointer text-base">Ask us to host your local products</a>
-                        </Link>
-                    </div>
                 </Col>
             </Row>
         </Page>

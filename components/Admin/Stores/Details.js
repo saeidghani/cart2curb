@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import moment from "moment";
 
-import Page from "../../Page";
 import Avatar from "../../UI/Avatar";
 import DetailItem from "../../UI/DetailItem";
 import {getProperty} from "../../../helpers";
@@ -37,7 +36,8 @@ const Details = props => {
                 <Col xs={18}>
                     <div className="text-2xl">{store?.name}</div>
                     <div className="text-sm mt-2">{store?.address?.country}</div>
-                    <div className="text-sm mt-4" style={{color: '#C1C4C8'}}>{store?.subType}</div>
+                    <div className="text-sm mt-4" style={{color: '#C1C4C8'}}>Type/{store?.storeType}</div>
+                    <div className="text-sm text-muted mt-4">{store?.description}</div>
                 </Col>
             </Row>
 
@@ -82,7 +82,7 @@ const Details = props => {
                                         value={!store?.hasOwnProperty('needDriversToGather') ? '-' : store.needDriversToGather ? 'by Cart2Curb' : 'by Store'}/>
                         </Col>
                         <Col xs={24}>
-                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Description'}
+                            <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Address'}
                                         value={address}/>
                         </Col>
                     </Row>
