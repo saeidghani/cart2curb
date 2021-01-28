@@ -9,13 +9,14 @@ import DriverAuth from '../../../../components/Driver/DriverAuth';
 import DriverPage from '../../../../components/DriverPage';
 import routes from '../../../../constants/routes';
 import Loader from "../../../../components/UI/Loader";
+import moment from "moment";
 
 const Current = () => {
     const dispatch = useDispatch();
     const [clickedDeliveries, setClickedDeliveries] = useState([]);
-    const availableDeliveriesLoading = useSelector(state => state?.loading?.effects?.driverDelivery?.getAvailableDeliveries);
+    const currentDeliveriesLoading = useSelector(state => state?.loading?.effects?.driverDelivery?.getCurrentDeliveries);
     const token = useSelector(state => state?.driverAuth?.token);
-    const deliveries = useSelector(state => state?.driverDelivery?.getCurrentDeliveries?.data);
+    const deliveries = useSelector(state => state?.driverDelivery?.currentDeliveries?.data);
 
     useEffect(() => {
         if (token) {
@@ -29,23 +30,29 @@ const Current = () => {
         const body = {
             complete: true
         };
-        await dispatch?.driverDelivery?.editDeliveryComplete({deliveryId, body, token});
-        setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+        try {
+            await dispatch?.driverDelivery?.editDeliveryComplete({deliveryId, body, token});
+            setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+        } catch (err) {};
     };
 
     const EmptyDelivery = ({}) => (
-        <div className="flex flex-col">
-            <div className="flex justify-center mt-10 space-x-2 text-6xl transform -rotate-45"
-                 style={{color: '#8C8C8C'}}>
-                <SoundOutlined className=""/>
-                <CloseOutlined className="text-3xl pt-5"/>
+        <div style={{minHeight: 400}}>
+            <div className="w-full shadow-lg p-8 mt-8">
+                <div className="flex flex-col">
+                    <div className="flex justify-center mt-10 space-x-2 text-6xl transform -rotate-45"
+                         style={{color: '#8C8C8C'}}>
+                        <SoundOutlined className=""/>
+                        <CloseOutlined className="text-3xl pt-5"/>
+                    </div>
+                    <p className="text-paragraph mt-8 mb-10 px-10 text-center">You dont have any open
+                        deliveries now!</p>
+                </div>
             </div>
-            <p className="text-paragraph mt-8 mb-10 px-10 text-center">You dont have any open
-                deliveries now!</p>
         </div>
     );
 
-    const DeliveryCard = ({_id: deliveryId, products, orderNumber, customerAddress}) => (
+    const DeliveryCard = ({_id: deliveryId, products, orderNumber, acceptedDateByDriver, deliveryTime, deliveryFee, customerAddress, sources}) => (
         <>
             <div className="text-center"><SoundTwoTone className="text-6xl transform -rotate-45"/></div>
             <div className="text-xs font-normal mt-9 text-paragraph">
@@ -53,7 +60,7 @@ const Current = () => {
             </div>
             <div className="text-6xl font-medium text-center">
                 <Timer
-                    initialTime={119000}
+                    initialTime={moment(acceptedDateByDriver).diff(moment(deliveryTime))}
                     direction="backward"
                     //onStart={() => handleSendAgain()}
                     //onResume={() => handleSendAgain()}
@@ -62,9 +69,9 @@ const Current = () => {
                     {({reset, resume, start, getTimerState}) => (
                         <div className="text-center">
                             <span>0<Timer.Hours/>:</span>
-                            <span>0<Timer.Minutes/>:</span>
+                            <span><Timer.Minutes/>:</span>
                             <span><Timer.Seconds/></span>
-                            <div>{getTimerState() === 'STOPPED' && <span>a</span>}</div>
+                            {/*   <div>{getTimerState() === 'STOPPED' && <span></span>}</div>*/}
                         </div>
                     )}
                 </Timer>
@@ -74,8 +81,10 @@ const Current = () => {
                     <div className="text-xs font-normal text-overline">
                         Sources
                     </div>
-                    <div className="font-normal text-sm">
-                        Store #1
+                    <div className="flex flex-col">
+                        {sources?.length > 0 ? sources.map(s => <div className="font-normal text-sm">
+                            {s?.name}
+                        </div>) : '-'}
                     </div>
                 </div>
                 <div className="w-6/12 flex items-center">
@@ -89,7 +98,7 @@ const Current = () => {
                         Start Time
                     </div>
                     <div className="font-normal text-sm">
-                        11:50
+                        {moment(acceptedDateByDriver).format('hh:mm')}
                     </div>
                 </div>
                 <div className="w-6/12">
@@ -97,7 +106,7 @@ const Current = () => {
                         Delivery Fee
                     </div>
                     <div className="font-normal text-sm">
-                        $15
+                        {deliveryFee ? `$${deliveryFee}` : '-'}
                     </div>
                 </div>
             </div>
@@ -140,8 +149,8 @@ const Current = () => {
         </>
     );
 
-    if (deliveries?.length === 0) return <EmptyDelivery/>;
-    if (availableDeliveriesLoading) return <div className="flex justify-center"><Loader/></div>;
+    if (!currentDeliveriesLoading && (deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.length === 0)) return <EmptyDelivery/>;
+    if (currentDeliveriesLoading) return <div className="flex justify-center"><Loader/></div>;
 
     return (
         <DriverAuth>

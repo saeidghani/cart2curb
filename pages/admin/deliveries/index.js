@@ -217,10 +217,10 @@ const Deliveries = props => {
                 <DetailItem labelColor='overline' title='Fee' value={`$ ${deliveryCost}`}
                             icon={<DollarCircleOutlined className="text-lg text-secondarey"/>}/>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end items-end">
                 {status === 'delivered' ?
-                    <span className="text-white bg-completed py-1 px-2">Completed</span> :
-                    <span className="text-white bg-progress py-1 px-2">In progress</span>
+                    <span className="text-white py-1 px-2 mt-10" style={{backgroundColor: '#14C67B'}}>Completed</span> :
+                    <span className="text-white py-1 px-2 mt-10" style={{backgroundColor: '#ECA234'}}>In progress</span>
                 }
             </div>
         </div>

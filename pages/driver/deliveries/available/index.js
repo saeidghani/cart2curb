@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Select} from 'antd';
-import {EnvironmentOutlined} from '@ant-design/icons';
+import {CloseOutlined, EnvironmentOutlined, SoundOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
 import Link from "next/link";
 
 import DriverPage from '../../../../components/DriverPage';
@@ -61,7 +60,7 @@ const Available = () => {
     }
 
     const SortAndFilter = () => (
-        <div className="grid grid-cols-2 gap-x-2 mb-6">
+        <div className="grid grid-cols-2 gap-x-2 mb-6 w-full">
             <div className="">
                 <Select placeholder='Status' className="w-full" value={selectedStatus}
                         onChange={statusVal => handleFilterByStatus(statusVal)}>
@@ -83,20 +82,40 @@ const Available = () => {
         const body = {
             accept: true
         };
-        await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
-        setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+        try {
+            await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
+            setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+        } catch (err) {};
     };
 
     const handleReject = async (deliveryId) => {
         const body = {
             accept: false
         };
-        await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
-        setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+        try {
+            await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
+            setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
+        } catch (err) {};
     };
 
+    const EmptyDelivery = ({}) => (
+        <div style={{minHeight: 400}}>
+            <div className="w-full shadow-lg p-8 mt-8">
+                <div className="flex flex-col">
+                    <div className="flex justify-center mt-10 space-x-2 text-6xl transform -rotate-45"
+                         style={{color: '#8C8C8C'}}>
+                        <SoundOutlined className=""/>
+                        <CloseOutlined className="text-3xl pt-5"/>
+                    </div>
+                    <p className="text-paragraph mt-8 mb-10 px-10 text-center">You dont have any Available
+                        deliveries now!</p>
+                </div>
+            </div>
+        </div>
+    );
+
     const DeliveryNav = ({}) => (
-        <div className="grid grid-cols-2 shadow-lg absolute" style={{top: 630, width: 375}}>
+        <div className="grid grid-cols-2 shadow-lg absolute" style={{top: 645, width: '100%'}}>
             <Link href={routes.driver.deliveries.available}>
                 <div className="text-secondarey text-center p-4" style={{backgroundColor: '#E6F7FF'}}>Available
                     Deliveries
@@ -108,15 +127,18 @@ const Available = () => {
         </div>
     );
 
-    const DeliveryCard = ({deliveryId, destination, sources, deliveryTime}) => (
+    const DeliveryCard = ({deliveryId, destination, sources, deliveryTime, deliveryFee, acceptedDateByDriver}) => (
         <div className="w-full shadow-lg p-8">
             <div className="flex">
                 <div className="w-6/12">
                     <div className="text-xs font-normal text-overline">
                         Sources
                     </div>
-                    {[sources || []].map(s => <div className="font-normal text-sm">
-                    </div>)}
+                    <div className="flex flex-col">
+                        {sources?.length > 0 ? sources.map(s => <div className="font-normal text-sm">
+                            {s?.name}
+                        </div>) : '-'}
+                    </div>
                 </div>
                 <div className="w-6/12 flex items-center">
                     <EnvironmentOutlined className="text-secondarey text-2xl mx-2"/>
@@ -124,20 +146,20 @@ const Available = () => {
                 </div>
             </div>
             <div className="flex mt-7">
-                <div className="w-6/12">
+                {acceptedDateByDriver && <div className="w-6/12">
                     <div className="text-xs font-normal text-overline">
                         Start Time
                     </div>
                     <div className="font-normal text-sm">
-                        11:50
+                        {moment(acceptedDateByDriver).format('hh:mm')}
                     </div>
-                </div>
+                </div>}
                 <div className="w-6/12">
                     <div className="text-xs font-normal text-overline">
                         Delivery Fee
                     </div>
                     <div className="font-normal text-sm">
-                        $15
+                        {deliveryFee ? `$${deliveryFee}` : '-'}
                     </div>
                 </div>
             </div>
@@ -173,18 +195,18 @@ const Available = () => {
         </div>
     );
 
+    if (!availableDeliveriesLoading && (deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length === 0)) return <EmptyDelivery/>;
     if (availableDeliveriesLoading) return <div className="flex justify-center"><Loader/></div>;
 
     return (
         <DriverAuth>
             <DriverPage title="Available Deliveries">
-                <div style={{minHeight: 500}}>
+                <div style={{minHeight: 500}} className="flex flex-col items-center">
                     {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length > 0 &&
                     <>
                         <DeliveryNav/>
                         <SortAndFilter/>
-                    </>
-                    }
+                    </>}
                     {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.map(d =>
                         <DeliveryCard
                             deliveryId={d?._id}

@@ -3,13 +3,21 @@ import {useRouter} from 'next/router';
 
 import DriverPage from '../../../components/DriverPage';
 import DriverAuth from '../../../components/Driver/DriverAuth';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 const CurrentOrders = () => {
-    const currentDeliveries = useSelector(state => state?.driverDelivery?.getCurrentDeliveries?.data);
+    const dispatch = useDispatch();
+    const currentDeliveries = useSelector(state => state?.driverDelivery?.currentDeliveries?.data);
     const router = useRouter();
     const {deliveryId} = router.query;
     const [delivery, setDelivery] = useState({});
+    const token = useSelector(state => state?.driverAuth?.token);
+
+    useEffect(() => {
+        if (token) {
+            dispatch?.driverDelivery?.getCurrentDeliveries();
+        }
+    }, [token]);
 
     useEffect(() => {
         const selectedDelivery = currentDeliveries?.find(d => d?._id === deliveryId);
@@ -31,16 +39,16 @@ const CurrentOrders = () => {
             <DriverPage title="Customer Orders">
                 {(delivery?.products || [])?.map(p =>
                     <div className="w-full bg-muted py-3" style={{backgroundColor: 'rgba(114, 122, 139, 0.05)'}}>
-                        <div className="flex space-x-2 p-4" style={{borderBottom: '1px solid #D9D9D9'}}>
+                        <div className="flex items-center space-x-2 p-4" style={{borderBottom: '1px solid #D9D9D9'}}>
                             <img src={p?.productExtraInfo?.images?.length > 0 ? p?.productExtraInfo?.images[0] : ''} alt=""
                                  width={56}/>
-                            <div className="ml-3">Choice Beef Brisket Chunk</div>
+                            <div className="ml-3">{p?.productExtraInfo?.name}</div>
                         </div>
-                        <DetailInfo title={"Quantity/Weight"} description={p?.quantity || ''} borderLess/>
-                        <DetailInfo title={"Substitutions"} description={p?.subtitution || ''}/>
+                        <DetailInfo title={"Quantity/Weight"} description={p?.quantity || '-'} borderLess/>
+                        <DetailInfo title={"Substitutions"} description={p?.subtitution || '-'}/>
                         <DetailInfo
                             title="Store Address"
-                            description={p?.storeInfo?.address ? getAddress(p?.storeInfo?.address) : ''}
+                            description={p?.storeInfo?.address ? getAddress(p?.storeInfo?.address) : '-'}
                             borderLess
                         />
                     </div>)}
