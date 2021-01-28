@@ -12,7 +12,6 @@ import Link from "next/link";
 import deleteModal from "../../Modals/Delete";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../UI/Loader";
-import {getProperty} from "../../../helpers";
 import {useRouter} from "next/router";
 import store from '../../../states';
 
@@ -188,7 +187,7 @@ const Products = ({vendor, ...props}) => {
                 unitPrice: `$${product?.priceList?.price}`,
                 price: `$${product?.priceList?.cost}`,
                 tax: `${product?.tax}%`,
-                stock: `${product?.priceList?.stock || '-'}`,
+                stock: `${product?.stock || '-'}`,
                 category: category ? category?.name : product?.category,
                 actions: {
                     deleteHandler: () => {

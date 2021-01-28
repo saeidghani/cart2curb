@@ -98,7 +98,7 @@ const Stores = ({admin, ...props}) => {
             render: CXName => <span className="text-cell">{CXName}</span>
         },
         {
-            title: "store",
+            title: "Store",
             dataIndex: 'store',
             key: 'store',
             render: store => <span className="text-cell">{store}</span>

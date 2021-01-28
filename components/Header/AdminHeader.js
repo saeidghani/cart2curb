@@ -57,9 +57,8 @@ const AdminHeader = props => {
                 <AdminNav/>
             </div>
             <div className="hidden md:flex flex-row items-center">
-                {(pathname.includes('admin/login') || pathname.includes('admin/register')) ? <>
-                    <LoginRegister/>
-                </> : <div className="flex items-center space-x-3">
+                {(!pathname.includes('admin/login') && !pathname.includes('admin/register')) &&
+                <div className="flex items-center space-x-3">
                     <Link href={routes.admin.customerMessages.index}>
                         <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF"/>
                     </Link>

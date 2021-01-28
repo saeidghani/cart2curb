@@ -55,6 +55,6 @@ const StoreDetails = props => {
             </Page>
         </AdminAuth>
     )
-}
+};
 
 export default StoreDetails;

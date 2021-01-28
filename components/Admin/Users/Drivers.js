@@ -42,7 +42,7 @@ const Drivers = () => {
             }
             try {
                 const response = await dispatch.adminUser?.getDrivers(query);
-                if (response.data.length < 15) {
+                if (response?.data?.data?.length < 15) {
                     setHasMore(false);
                 }
             } catch (e) {
@@ -137,13 +137,13 @@ const Drivers = () => {
             title: 'Insurance',
             dataIndex: 'insurance',
             key: 'insurance',
-            render: insurance => <span className="text-cell"><img src={insurance} alt=""/></span>
+            render: insurance => <span className="text-cell"><img src={insurance} width={45} alt=""/></span>
         },
         {
             title: 'Driving Insurance',
             dataIndex: 'drivingInsurance',
             key: 'drivingInsurance',
-            render: drivingInsurance => <span className="text-cell"><img src={drivingInsurance} alt=""/></span>
+            render: drivingInsurance => <span className="text-cell"><img src={drivingInsurance} width={45} alt=""/></span>
         },
         {
             title: 'OP',

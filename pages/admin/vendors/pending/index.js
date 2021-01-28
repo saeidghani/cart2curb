@@ -10,21 +10,30 @@ import routes from '../../../../constants/routes';
 import Loader from '../../../../components/UI/Loader';
 import AdminAuth from '../../../../components/Admin/AdminAuth';
 import Avatar from '../../../../components/UI/Avatar';
+import {useRouter} from "next/router";
 
-const PendingDrivers = props => {
+const PendingVendors = props => {
     const dispatch = useDispatch();
     const pendingVendors = useSelector(state => state?.adminUser?.pendingVendors?.data);
     const loadingPendingDrivers = useSelector(state => state?.loading?.effects?.adminDelivery?.getPendingDrivers);
     const isLoggedIn = useSelector(state => state?.adminAuth?.isLoggedIn);
     const token = useSelector(state => state?.adminAuth?.token);
     const [updatedVendors, setUpdatedVendors] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         if (isLoggedIn) {
             dispatch?.adminUser?.getPendingVendors();
-        }
-        ;
+        };
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        const emptyPendingVendors = (pendingVendors || [])?.filter(v => !updatedVendors.includes(v.vendor?._id))?.length === 0;
+        const hasUpdated = updatedVendors?.length > 0;
+        if (hasUpdated && emptyPendingVendors) {
+            router.push({pathname: routes.admin.users.index, query: {tab: 'vendors'}});
+        }
+    }, [pendingVendors, updatedVendors]);
 
     if (loadingPendingDrivers) return (
         <div className="flex items-center justify-center py-10">
@@ -62,9 +71,9 @@ const PendingDrivers = props => {
         try {
             await dispatch?.adminUser?.addPendingVendor({vendorId, body, token});
             setUpdatedVendors(updatedVendors.concat(vendorId));
-        } catch (err) {}
+        } catch (err) {
+        }
     };
-
 
     return (
         <AdminAuth>
@@ -132,4 +141,4 @@ const PendingDrivers = props => {
     );
 };
 
-export default PendingDrivers;
+export default PendingVendors;

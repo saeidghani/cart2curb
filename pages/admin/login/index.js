@@ -102,14 +102,6 @@ const Login = props => {
                             </span>
                         </Link>
                     </div>
-                    <div className="flex space-x-2 text-center items-center justify-center">
-                        <span className="mr-1">Do not have an account?</span>
-                        <Link href={routes?.admin?.auth?.login}>
-                            <a className="text-info font-medium cursor-pointer text-base">
-                                Register
-                            </a>
-                        </Link>
-                    </div>
                 </Col>
             </Row>
         </Page>
