@@ -2,50 +2,22 @@ import React, {Fragment, useEffect, useMemo} from 'react';
 import {Table, Modal, Row, Col} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 
-import DetailItem from "../UI/DetailItem";
+import DetailItem from "../../UI/DetailItem";
 import moment from "moment";
 
-const OrderModal = ({visible, onHide, data, status, total, type}) => {
+const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
     const dispatch = useDispatch();
     const order = useSelector(state => state?.adminStore?.order);
     const loading = useSelector(state => state?.loading?.effects?.adminStore?.getOrder);
+    const token = useSelector(state => state?.adminAuth?.token);
 
     useEffect(() => {
-        dispatch?.adminStore?.getOrder();
-    }, []);
+        if (token && orderId) {
+            dispatch?.adminStore?.getOrder({orderId, token});
+        }
+    }, [token]);
 
-  /*  const data = useMemo(() => {
-        return orders && orders?.map((order, index) => {
-            return {
-                key: order?._id,
-                number: order?.orderNumber || order?._id,
-                index: order?._id,
-                date: moment(order?.date)?.format('MM.DD.YYYY'),
-                totalPrice: order?.products?.reduce((total, item) => total += item?.totalPrice, 0)?.toFixed(2),
-                items: order?.items || order?.products?.reduce((initial, item) => initial += item?.quantity, 0) || order?.products?.length,
-                status: order?.status,
-                actions: {
-                    showMoreHandler: async () => {
-                        await dispatch?.adminStore?.getOrder({orderId: order?._id, token});
-                        setDetailsModal(order?._id);
-                    }
-                },
-                name: order?.cxName || '-',
-                data: order?.products?.map((item, i) => {
-                    return {
-                        key: item?._id,
-                        index: i + 1,
-                        product: item?.name,
-                        subtitution: item?.subtitution ? 'Yes' : 'No',
-                        price: `$${item?.price}`,
-                        tax: `$${item?.tax}`,
-                        quantity: item?.quantity,
-                        total: `$${item?.totalPrice}`
-                    }
-                }),
-            }
-        })
-    }, [orders, loading]);*/
+    const getAddress = (destination) => `${destination?.destinationLine1 || ''}${destination?.destinationLine2 || ''} ${destination?.city || ''} ${destination?.province || ''} ${destination?.country || ''}`;
 
     const productColumns = [
         {
@@ -163,6 +135,46 @@ const OrderModal = ({visible, onHide, data, status, total, type}) => {
         },
     ];
 
+    const productData = useMemo(() => {
+        return (order?.products || [])?.map((p, index) => {
+            return {
+                key: p?._id,
+                index: index + 1,
+                product: p?.name,
+                store: getAddress(p?.store?.address),
+                subtitution: p?.subtitution ? 'Yes' : 'No',
+                quantity: p?.quantity,
+                total: p?.totalPrice,
+            }
+        })
+    }, [order, loading]);
+
+    const serviceData = useMemo(() => {
+        return (order?.products || [])?.map((p, index) => {
+            return {
+                key: p?._id,
+                index: index + 1,
+                service: p?.name,
+                description: p?.description || '',
+                total: p?.totalPrice,
+            }
+        })
+    }, [order, loading]);
+
+    const customData = useMemo(() => {
+        return (order?.products || [])?.map((p, index) => {
+            return {
+                key: p?._id,
+                index: index + 1,
+                product: p?.name,
+                description: p?.description || '',
+                subtitution: p?.subtitution ? 'Yes' : 'No',
+                quantity: p?.quantity,
+                total: p?.totalPrice,
+            }
+        })
+    }, [order, loading]);
+
     return (
         <Modal
             title={'Cart Details'}
@@ -172,74 +184,61 @@ const OrderModal = ({visible, onHide, data, status, total, type}) => {
             width={1100}
             footer={null}
         >
-            <Row gutter={[24, 24]}>
-                <Col xs={24} sm={12} md={6}>
+            <div style={{width: '100%', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, min-max(100px, 1fr)'}}>
+                <DetailItem
+                    title={'Order Number'}
+                    labelColor={'muted'}
+                    valueColor={'dark'}
+                    value={order?.orderNumber}
+                />
+                <DetailItem
+                    title={'CX Name'}
+                    labelColor={'muted'}
+                    valueColor={'dark'}
+                    value={`${order?.firstName || ''} ${order?.lastName || ''}`}
+                />
+                {type !== 'productCart' && <Fragment>
                     <DetailItem
-                        title={'Order Number'}
+                        title={'Email'}
                         labelColor={'muted'}
                         valueColor={'dark'}
-                        value={order?.orderNumber}
+                        value={order?.email || ''}
                     />
-                </Col>
-                <Col xs={24} sm={12} md={6}>
                     <DetailItem
-                        title={'CX Name'}
+                        title={'Address'}
                         labelColor={'muted'}
                         valueColor={'dark'}
-                        value={order?.cxName}
+                        value={order?.address ? getAddress(order?.address) : ''}
                     />
-                </Col>
-                {type !== 'product' && <Fragment>
-                    <Col xs={24} sm={12} md={6}>
-                        <DetailItem
-                            title={'Email'}
-                            labelColor={'muted'}
-                            valueColor={'dark'}
-                            value={order?.email}
-                        />
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <DetailItem
-                            title={'Address'}
-                            labelColor={'muted'}
-                            valueColor={'dark'}
-                            value={order?.address}
-                        />
-                    </Col>
                 </Fragment>}
-                <Col xs={24} sm={12} md={6}>
-                    <DetailItem
-                        title={'Date'}
-                        labelColor={'muted'}
-                        valueColor={'dark'}
-                        value={order?.date}
-                    />
-                </Col>
-                <Col xs={24} sm={12} md={6}>
-                    <DetailItem
-                        title={'Status'}
-                        labelColor={'muted'}
-                        valueColor={'dark'}
-                        value={status}
-                        capitalize={true}
-                    />
-                </Col>
-                <Col xs={24}>
-                    <Table dataSource={data} columns={columns} pagination={false} className={'pt-4'} scroll={{x: 950}}/>
-                </Col>
-                <Col xs={24}>
-                    <div className={'flex flex-row-reverse items-center'}>
-                        <div className="flex flex-col" style={{width: 210, paddingLeft: 7}}>
-                            <h1 className="text-left text-4.5xl text-cell font-medium mb-2 mt-0">${total}</h1>
-                        </div>
-                        <div className="flex items-center justify-end pr-3">
-                            <span className="text-cell">Delivery Cost + Extra</span>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
+                <DetailItem
+                    title={'Date'}
+                    labelColor={'muted'}
+                    valueColor={'dark'}
+                    value={moment(order?.date)?.format('MM.DD.YYYY')}
+                />
+                <DetailItem
+                    title={'Status'}
+                    labelColor={'muted'}
+                    valueColor={'dark'}
+                    capitalize={true}
+                    value={order?.status}
+                />
+            </div>
+            <Table
+                columns={type === 'productCart' ? productColumns : type === 'serviceCart' ? serviceColumns : customColumns}
+                dataSource={type === 'productCart' ? productData : type === 'serviceCart' ? serviceData : customData}
+                pagination={false}
+                className={'pt-4'}
+                scroll={{x: 950}}
+            />
+            <div className='flex justify-end items-center p-4 mt-4'>
+                <div className="flex items-center justify-end pr-3">
+                    <span className="text-cell">{order?.deliveryCost || '_'}</span>
+                </div>
+            </div>
         </Modal>
     )
 }
 
-export default OrderModal;
+export default OrderDetails;
