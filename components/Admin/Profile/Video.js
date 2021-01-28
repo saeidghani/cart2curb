@@ -15,7 +15,7 @@ const Video = props => {
     const loading = useSelector(state => state.loading.effects.adminProfile.addCategory);
     const token = useSelector(state => state?.adminAuth?.token);
     const router = useRouter();
-    const [leftVideoUrl, setLeftVideoUrl] = useState('');
+    const [leftVideoUrl, setLeftVideoUrl] = useState("");
     const [rightVideoUrl, setRightVideoUrl] = useState('');
 
     const submitHandler = async () => {
@@ -26,7 +26,7 @@ const Video = props => {
         };
         const rightVideoBody = {
             url: leftVideoUrl,
-            arrangementNum: 1
+            arrangementNum: 2
         };
 
         const res1 = await dispatch.adminProfile.addVideo({body: leftVideoBody, token});
@@ -37,15 +37,15 @@ const Video = props => {
     };
 
     function beforeUpload(file) {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (isJpgOrPng) {
-            message.error('You can not upload image!');
+        const isValidVideo = file.type === 'bmp' || file.type === 'mp4'|| file.type === 'mkv';
+        if (!isValidVideo) {
+            message.error('Please upload video with format bmp/mp4/mkv');
         }
-        /*const isLt2M = file.size / 1024 / 1024 < 2;
+        const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
-        }*/
-        return !isJpgOrPng;
+            message.error('Video must be smaller than 2MB!');
+        }
+        return isValidVideo && isLt2M;
     }
 
     const handleLeftVideoUpload = info => {

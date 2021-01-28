@@ -7,7 +7,7 @@ const VideoPlayer = props => {
         <div>
             <Player
                 playsInline
-                poster={props.poster}
+                poster={props.poster || ''}
                 src={props.src}
                 height={340}
             >
