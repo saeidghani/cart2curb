@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import Page from "../../../components/Page";
 import AdminAuth from "../../../components/Admin/AdminAuth";
-import OrderDetailsModal from "../../../components/Modals/OrderDetails";
+import OrderDetailsModal from "../../../components/Admin/Orders/OrderDetails";
 import Loader from "../../../components/UI/Loader";
 import routes from "../../../constants/routes";
 
@@ -114,7 +114,6 @@ const Orders = props => {
             key: 'action',
             width: 96,
             render: (actions, row) => {
-
                 return (
                     <>
                         <Button type={'link'} shape="circle"
@@ -124,11 +123,10 @@ const Orders = props => {
                             visible={row.key === detailsModal}
                             onHide={setDetailsModal.bind(this, -1)}
                             orderNumber={row.number}
-                            date={row.date}
-                            cxName={row.name}
+                            orderId={row.key}
                             status={row.status}
                             total={row.totalPrice}
-                            data={row.data}
+                            type={row.type}
                         />
                     </>
                 )
@@ -143,6 +141,7 @@ const Orders = props => {
                 number: order?.orderNumber || order?._id,
                 index: order?._id,
                 date: moment(order?.date)?.format('MM.DD.YYYY'),
+                type: order?.type,
                 totalPrice: order?.products?.reduce((total, item) => total += item?.totalPrice, 0)?.toFixed(2),
                 items: order?.items || order?.products?.reduce((initial, item) => initial += item?.quantity, 0) || order?.products?.length,
                 status: order?.status,
