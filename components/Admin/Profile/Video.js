@@ -1,14 +1,16 @@
-import React, {useState, Fragment} from 'react';
-import {Button, message, Upload, Form, Input, Row, Col} from 'antd';
+import React, {useState} from 'react';
+import {Button, message, Upload, Form} from 'antd';
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import Link from 'next/link';
+import {CloudDownloadOutlined} from '@ant-design/icons';
 
 import VideoPlayer from '../../UI/VideoPlayer';
+import Loader from '../../UI/Loader';
+import routes from "../../../constants/routes";
 
 const {Item} = Form;
 
-import routes from "../../../constants/routes";
 
 const Video = props => {
     const dispatch = useDispatch();
@@ -17,6 +19,8 @@ const Video = props => {
     const router = useRouter();
     const [leftVideoUrl, setLeftVideoUrl] = useState("");
     const [rightVideoUrl, setRightVideoUrl] = useState('');
+    const [leftVideoUploading, setLeftVideoUploading] = useState(false);
+    const [rightVideoUploading, setRightVideoUploading] = useState(false);
 
     const submitHandler = async () => {
 
@@ -37,7 +41,7 @@ const Video = props => {
     };
 
     function beforeUpload(file) {
-        const isValidVideo = file.type === 'bmp' || file.type === 'mp4'|| file.type === 'mkv';
+        const isValidVideo = file.type.includes('bmp') || file.type.includes('mp4') || file.type.includes('mkv');
         if (!isValidVideo) {
             message.error('Please upload video with format bmp/mp4/mkv');
         }
@@ -50,18 +54,22 @@ const Video = props => {
 
     const handleLeftVideoUpload = info => {
         if (info.file.status === 'uploading') {
+            setLeftVideoUploading(true);
             return;
         }
         if (info.file.status === 'done') {
+            setLeftVideoUploading(false);
             setLeftVideoUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
 
     const handleRightVideoUpload = info => {
         if (info.file.status === 'uploading') {
+            setRightVideoUploading(true);
             return;
         }
         if (info.file.status === 'done') {
+            setRightVideoUploading(false);
             setRightVideoUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${info.file.response.data.path}`);
         }
     };
@@ -82,54 +90,61 @@ const Video = props => {
         },
     };
 
-    const UploadVideo = ({videoUrl, onUpload}) => (<Upload
+    const UploadVideo = ({onUpload, type}) => (<Upload
         name="photo"
         listType="picture-card"
-        className="avatar-uploader-wrapper border-0"
+        className="avatar-video-uploader-wrapper border-0"
         showUploadList={false}
         beforeUpload={beforeUpload}
         onChange={onUpload}
         {...uploadProps}
     >
-        <Fragment>
-            {videoUrl ? <VideoPlayer src={videoUrl}/> :
+        <>
+            {((type === 'left' && leftVideoUploading) || type === 'right' && rightVideoUploading) ? <Loader/> :
                 <div
-                    className={'full-rounded text-overline bg-card flex items-center justify-center'}
-                    style={{width: 580, height: 340}}
+                    className={'full-rounded w-full text-overline bg-card flex items-center justify-center'}
+                    style={{height: 227, backgroundColor: '#999'}}
                 >
+                    <CloudDownloadOutlined style={{position: 'absolute', top: '50%', fontSize: 40, color: '#fff'}} />
                 </div>}
-        </Fragment>
+        </>
     </Upload>);
 
     return (
-        <div className="py-5 flex flex-col" style={{position: 'relative', top: 110, height: 460}}>
+        <div className="py-5 flex flex-col">
             <div className="flex flex-col">
-                <div className="mb-6 font-bold" style={{position: 'relative', top: '-125px'}}>Upload Your Videos</div>
-                <div className="flex space-x-2 mt-3">
-                    <UploadVideo videoUrl={leftVideoUrl} onUpload={handleLeftVideoUpload}/>
-                    <UploadVideo videoUrl={rightVideoUrl} onUpload={handleRightVideoUpload}/>
+                <div className="font-bold">Upload Your Videos</div>
+                <div className="grid grid-cols-2 items-start gap-x-2 mt-3">
+                    {leftVideoUrl ? (
+                            <div className="w-full">
+                                <VideoPlayer src={leftVideoUrl}/>
+                            </div>) :
+                        <UploadVideo type="left" onUpload={handleLeftVideoUpload}/>}
+                    {rightVideoUrl ? (
+                            <div className="w-full">
+                                <VideoPlayer src={rightVideoUrl}/>
+                            </div>) :
+                        <UploadVideo type="right" onUpload={handleRightVideoUpload}/>}
                 </div>
             </div>
-            <div className="flex justify-end space-x-2" style={{position: 'relative', top: 150}}>
-                <Item>
-                    <Button
-                        type="primary"
-                        block
-                        className='w-full md:w-32 ml-0 md:ml-5'
-                        htmlType='submit'
-                        loading={loading}
-                        onClick={submitHandler}
-                    >
-                        Save
-                    </Button>
-                </Item>
-                <Item>
-                    <Link
-                        href={{pathname: routes.admin.profile.index, query: {tab: 'video'}}}
-                    >
-                        <Button danger className='w-full md:w-32'>Cancel</Button>
-                    </Link>
-                </Item>
+            <div className="flex justify-end space-x-2 mt-12"
+                 //style={{position: 'relative', top: 450, left: 640}}
+                >
+                <Button
+                    type="primary"
+                    block
+                    className='w-full md:w-32 ml-0 md:ml-5'
+                    htmlType='submit'
+                    loading={loading}
+                    onClick={submitHandler}
+                >
+                    Save
+                </Button>
+                <Link
+                    href={{pathname: routes.admin.profile.index, query: {tab: 'video'}}}
+                >
+                    <Button danger className='w-full md:w-32'>Cancel</Button>
+                </Link>
             </div>
         </div>
     )
