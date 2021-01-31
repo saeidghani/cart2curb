@@ -54,7 +54,6 @@ const MainHeader = props => {
 
   const avatar = props.avatar || '';
   return (
-    <div className={'header layout__section'}>
       <div className="header__content">
         <div className="flex flex-row items-center">
           <Link href={routes.homepage}>
@@ -217,7 +216,6 @@ const MainHeader = props => {
             </div>
           </div>
         </Drawer>
-      </div>
     </div>
   )
 }
