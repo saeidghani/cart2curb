@@ -42,7 +42,7 @@ const Profile = props => {
         <Button
             danger
             type="link"
-            className="px-3"
+            className="px-3 mb-1"
             onClick={() => setLogOutModalVisible(true)}>
           Log Out
         </Button>
