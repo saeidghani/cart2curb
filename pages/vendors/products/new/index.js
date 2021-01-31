@@ -66,8 +66,8 @@ const NewProduct = props => {
             priceList: {
                 price: Number(unitPrice),
                 cost: Number(costPrice),
-                stock: Number(stock)
             },
+            stock: Number(stock),
             description,
         }
 

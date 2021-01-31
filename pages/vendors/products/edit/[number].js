@@ -53,6 +53,7 @@ const EditProduct = props => {
     }, [])
 
     useEffect(() => {
+        console.log(product);
         const {
             name,
             unitType,
@@ -62,6 +63,7 @@ const EditProduct = props => {
             images,
             category,
             tax,
+            stock,
             description
         } = product;
         const transformedImageList = images.map((image, index) => {
@@ -83,7 +85,7 @@ const EditProduct = props => {
             tax: tax || '',
             description: description || '',
             costPrice: priceList.cost || '',
-            stock: priceList.stock || '',
+            stock: stock || '',
             photo: transformedImageList,
         })
         setImagesList(transformedImageList);
@@ -108,8 +110,8 @@ const EditProduct = props => {
             priceList: {
                 price: Number(unitPrice),
                 cost: Number(costPrice),
-                stock: Number(stock)
             },
+            stock: Number(stock),
             description,
         }
 
