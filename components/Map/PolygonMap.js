@@ -8,6 +8,9 @@ import salesman from '../../lib/salesman';
 
 const GoogleMap = ({height, google, clickHandler, area, marker, ...props}) => {
     const [polyPoints, setPolyPoints] = useState(area || []);
+    console.log({area});
+    console.log({marker});
+    console.log({initial: props.initialCenter});
 
     const style = {
         width: '100%',

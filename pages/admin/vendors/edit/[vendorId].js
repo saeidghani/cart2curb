@@ -47,7 +47,7 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
-    const {storeId, editType} = router.query;
+    const {storeId, editType, vendorId} = router.query;
 
     useEffect(() => {
         if (storeId) {
@@ -68,8 +68,8 @@ const EditAccount = props => {
             }
         }
         setMarker(marker);
-        const areaCoords = store?.area?.coordinates[0];
-        /*   for(let i in areaCoords){
+        const areaCoords = store?.area?.coordinates?.length > 0 ? store?.area?.coordinates[0] : [];
+           for(let i in areaCoords){
                const index = area?.findIndex(item => item?.lat === areaCoords[i][1] && item?.lng === areaCoords[i][0]);
                if(index === -1) {
                    area?.push({
@@ -77,7 +77,7 @@ const EditAccount = props => {
                        lng: areaCoords[i][0]
                    })
                }
-           }*/
+           }
 
         fields[0] = {
             email: getProperty(vendor, 'email', ''),
@@ -224,23 +224,25 @@ const EditAccount = props => {
             subType: form1.subType,
         }
 
-        const admin = {
+        const vendor = {
             phone: form1.phone,
             contactName: form1.contactName,
             image: avatarUrl,
         }
 
         const body = {
-            admin,
+            vendor,
             store,
         }
 
-        const result = await dispatch.adminUser.editVendor(body);
+        const result = await dispatch.adminUser.editVendor({vendorId, body, token});
 
         if (result) {
-            router.push(routes.admin.users.index);
+            router.push({
+                pathname: editType === 'store' ? routes?.admin?.stores?.index : routes?.admin?.users?.index,
+                query: {tab: editType === 'store' ? '' : 'vendors'}
+            });
         }
-
     }
 
     const jumpHandler = (newStep) => {
