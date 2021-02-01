@@ -3,7 +3,7 @@ import App from 'next/app';
 
 import cookie from 'cookie';
 
-import '../styles/less/index2.less';
+// import '../styles/less/index2.less';
 import AppProvider from "../providers/AppProvider";
 import Layout from "../components/Layout";
 import RouterChanger from "../components/RouteChanger";
@@ -19,6 +19,10 @@ class MyApp extends App {
         const forceLayout = pageProps.hasOwnProperty('forceLayout') ? pageProps.forceLayout : false;
         return (
             <AppProvider authenticated={authenticated} userType={userType}>
+                <Head>
+                    <link rel="stylesheet" type="text/css" charSet="UTF-8"
+                          href="/styles/main.css"/>
+                </Head>
                 <RouterChanger/>
                 <NProgress/>
                 <Layout style={{ background: 'white' }} forceLayout={forceLayout} avatar={avatar}>
