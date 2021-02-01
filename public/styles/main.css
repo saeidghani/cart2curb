@@ -188974,6 +188974,7 @@ body.video-react-full-window .video-react-fullscreen {
   height: 68px;
   background: url('/images/play.svg') no-repeat center;
   border: none;
+  z-index: 999;
   border-radius: 0;
 }
 
