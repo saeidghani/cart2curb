@@ -34,13 +34,15 @@ const ProductView = props => {
         }
     ]
 
-    const address = [profile.store.address.addressLine1];
-    if(profile.store.address.addressLine2) {
-        address.push(profile.store.address.addressLine2);
+    console.log(product);
+
+    const address = [profile.store?.address?.addressLine1];
+    if(profile.store?.address?.addressLine2) {
+        address.push(profile.store?.address?.addressLine2);
     }
-    address.push(profile.store.address.city);
-    address.push(profile.store.address.province);
-    address.push(profile.store.address.country);
+    address.push(profile.store?.address?.city);
+    address.push(profile.store?.address?.province);
+    address.push(profile.store?.address?.country);
 
     return (
         <Page title={'Product'} breadcrumb={breadcrumb}>
@@ -83,11 +85,13 @@ const ProductView = props => {
                         </Col>
                         <Col xs={24}>
                             <Row gutter={[24, 32]}>
+                                {product.unitType === 'weight' && (
+                                    <Col lg={8} xs={12}>
+                                        <DetailItem title={'Weight'} value={product.weight ? getProperty(product, 'weight', '-', (data) => `${data}${product.weightUnit}`) : '-'}/>
+                                    </Col>
+                                )}
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Weight'} value={product.weight ? getProperty(product, 'weight', '-', (data) => `${data}${product.weightUnit}`) : '-'}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Price per Weight'} value={getProperty(product.priceList, 'price', '-', (data) => `$${data}`)}/>
+                                    <DetailItem title={`Price per ${product.unitType === 'quantity' ? 'Quantity' : 'Weight'}`} value={getProperty(product.priceList, 'price', '-', (data) => `$${data}`)}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Tax Rate'} value={getProperty(product, 'tax', '-', (data) => `${data}%`)}/>
@@ -96,7 +100,7 @@ const ProductView = props => {
                                     <DetailItem title={'Total Price'} value={`$${product.priceList.price + product.priceList.cost}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Stock'} value={getProperty(product.priceList, 'stock', '-')}/>
+                                    <DetailItem title={'Stock'} value={getProperty(product, 'stock', '-')}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Store Address'} value={address.join(", ")}/>

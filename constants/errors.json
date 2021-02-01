@@ -1,0 +1,113 @@
+{
+  "INVALID_ID": {
+    "message": "id is not valid"
+  },
+  "EMAIL_INVALID": {
+    "message": "email is invalid"
+  },
+  "EMAIL_EXISTS": {
+    "message": "email already exists"
+  },
+  "MOBILE_EXISTS": {
+    "message": "phone number already exists"
+  },
+  "CARD_EXISTS": {
+    "message": "card number already exists"
+  },
+  "NOT_APPROVED": {
+    "message": "user not approved yet"
+  },
+  "ACCOUNT_BLOCKED": {
+    "message": "account blocked"
+  },
+  "ACCEPT_AGREEMENT": {
+    "message": "Accept aggrement is not true"
+  },
+  "AGREEMENT_BY_ADMIN": {
+    "message": "Aggrement can not agree by admin"
+  },
+  "RESET_TOKEN_EXPIRED": {
+    "message": "reset token expired"
+  },
+  "INCORRECT_PASSWORD": {
+    "message": "password is incorrect"
+  },
+  "EXTENTION_NOT_SUPPORT": {
+    "message": "File extention not support"
+  },
+  "STATE_INVALID": {
+    "message": "Publish state not valid"
+  },
+  "BAD_REQUEST": {
+    "message": "Bad request"
+  },
+  "UNAUTHORIZED": {
+    "message": "Unauthorized"
+  },
+  "FORBIDDEN": {
+    "message": "You do not have access to this route"
+  },
+  "NOT_FOUND": {
+    "message": "Not found"
+  },
+  "INTERNAL_SERVER_ERROR": {
+    "message": "Internal Server Error"
+  },
+  "RECUSIVE_PARENTING": {
+    "message": "Has recursive parents"
+  },
+  "HAS_CHILDREN": {
+    "message": "Has children"
+  },
+  "CATEGORY_EXISTS": {
+    "message": "Category exist with this name for your products"
+  },
+  "CATEGORY_NOT_EXISTS": {
+    "message": "Category not exist"
+  },
+  "HAS_PRODUCT": {
+    "message": "Has product"
+  },
+  "EMPTY_CART": {
+    "message": "Cart is empty"
+  },
+  "INVALID_PROMO": {
+    "message": "Promo code is invalid"
+  },
+  "NOT_NEAR_STORE": {
+    "message": "Store is not near to you or first selected store"
+  },
+  "PAYMENT_NOT_CONFIRMED": {
+    "message": "Payment was not confirmed"
+  },
+  "UNDER_AGED": {
+    "message": "You are not old enough"
+  },
+  "CAN_NOT_ASSIGN_DELIVERY": {
+    "message": "Delivery is already assigned to someone"
+  },
+  "STORE_OUT_OF_AREA": {
+    "message": "Store location is out of it's supported area"
+  },
+  "CUSTOMER_OUT_OF_AREA": {
+    "message": "Customer location is out of store area"
+  },
+  "MISSING_USER_DATA": {
+    "message": "Please fill your profile info first."
+  },
+  "INVALID_TIME": {
+    "message": "Invalid time"
+  },
+  "SERVICE_PRODUCT_IN_CART": {
+    "message": "Can not have service and product in cart"
+  },
+  "SERVICE_FROM_DIFFERENT_STORES": {
+    "message": "can not have service from different store"
+  },
+  "SERVICE_UNAVAILABLE_IN_LOCATION": {
+    "message": "Service is unavailable in location"
+  },
+  "PROMO_EXISTS": {
+    "message": "Promo exist with this code"
+  }
+}

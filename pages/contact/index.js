@@ -21,8 +21,6 @@ const Contact = props => {
         if(res) {
             antMessage.success('Thanks, We will review your message and get in touch in 48 hours!')
             form.resetFields(['name', 'phone', 'subject', 'message'])
-        } else {
-            antMessage.error('An Error was occurred, please try again later');
         }
     }
 

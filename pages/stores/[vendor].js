@@ -165,13 +165,13 @@ const VendorPage = props => {
                             <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
                                 <Col xs={24} lg={8}>
                                     <Item name={'search'} label={'Search'}>
-                                        <Input placeholder={'Product name'}/>
+                                        <Input allowClear placeholder={'Product name'}/>
                                     </Item>
                                 </Col>
                                 <Col xs={24} lg={8}>
                                     <Item name={'storeType'} label={'Type of Service'}>
                                         <Select placeholder={'Service Type'}>
-                                            <Option value={'service'} disabled={true}>Service</Option>
+                                            <Option value={'service'}>Service</Option>
                                             <Option value={'product'}>Product</Option>
                                         </Select>
                                     </Item>

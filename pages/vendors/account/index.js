@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, Col, Divider, Space, Grid, Row} from "antd";
+import {Button, Col, Divider, Space, Grid, Row, message} from "antd";
 import Link from "next/link";
 
 import Page from "../../../components/Page";
@@ -36,13 +36,13 @@ const Account = props => {
     }, [isAuthenticated])
 
 
-    const address = [profile.store.address.addressLine1];
-    if(profile.store.address.addressLine2) {
-        address.push(profile.store.address.addressLine2);
+    const address = [profile.store?.address?.addressLine1];
+    if(profile.store?.address?.addressLine2) {
+        address.push(profile.store?.address?.addressLine2);
     }
-    address.push(profile.store.address.city);
-    address.push(profile.store.address.province);
-    address.push(profile.store.address.country);
+    address.push(profile.store?.address?.city);
+    address.push(profile.store?.address?.province);
+    address.push(profile.store?.address?.country);
 
     return (
         <Page title={false} headTitle={'Profile'} breadcrumb={[{ title: 'Vendor Profile' }]}>

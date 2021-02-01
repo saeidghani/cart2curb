@@ -1,6 +1,7 @@
-import  { api } from "../../../lib/api";
-import Api from '../../../http/Api';
+import  { getApi } from "../../../lib/api";
 import {message} from "antd";
+
+const api = getApi()
 
 export const vendorProfile = {
     state: {
@@ -24,7 +25,7 @@ export const vendorProfile = {
                     return {};
                 }
             } catch(e) {
-                console.log(e);
+                return {};
             }
         },
         async updateProfile(body, rootState) {
@@ -39,17 +40,6 @@ export const vendorProfile = {
                 message.success('Your Profile Information was updated!');
                 return true;
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-
-                    const errorData = e.response.data;
-                    if(errorData.hasOwnProperty('errors')) {
-                        errorData.errors.map(err => {
-                            message.error(err.message || 'Something went Wrong', 4)
-                        })
-                    }
-                } else {
-                    message.error('Something went Wrong', 5);
-                }
                 return false;
             }
 

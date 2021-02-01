@@ -42,7 +42,6 @@ const Orders = props => {
                 }
             } catch(e) {
                 setHasMore(false);
-                message.error('An Error was occurred while fetching data')
             }
         }
         isIntersecting = true;
@@ -117,12 +116,7 @@ const Orders = props => {
                         <OrderDetailsModal
                             visible={row.key === detailsModal}
                             onHide={setDetailsModal.bind(this, -1)}
-                            orderNumber={row.number}
-                            date={row.date}
-                            cxName={row.name}
-                            status={row.status}
-                            data={row.data}
-                            total={row.totalPrice}
+                            id={row.id}
                         />
                     </>
                 )
@@ -133,31 +127,17 @@ const Orders = props => {
 
     const data = useMemo(() => {
         return orders && orders.map((order, index) => {
-            console.log(order);
             return {
                 key: order._id,
-                index: order._id,
+                id: order._id,
                 number: order.orderNumber || order._id,
                 date: moment(order.date).format('MM.DD.YYYY'),
-                totalPrice: order.products.reduce((total, item) => total += item.totalPrice, 0).toFixed(2),
-                items: order.totalQuantity || order.products.reduce((initial, item) => initial += item.quantity, 0) || order.products.length,
+                items: order.items,
                 status: order.status,
                 actions: {
                     showMoreHandler: () => setDetailsModal(order._id),
                 },
-                name: order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : order.guest ? `${order.guest.firstName} ${order.guest.lastName}` : '-',
-                data: order.products.map((item, i) => {
-                    return {
-                        key: item._id,
-                        index: i + 1,
-                        product: item.name,
-                        subtitution: item.subtitution ? 'Yes' : 'No',
-                        price: `$${item.price}`,
-                        tax: `$${item.tax}`,
-                        quantity: item.quantity,
-                        total: `$${item.totalPrice}`
-                    }
-                }),
+                name: order.cxName || '-',
             }
         })
     }, [orders, loading])
@@ -170,7 +150,7 @@ const Orders = props => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'} />
+                                    <Input allowClear placeholder={'Search'} />
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>

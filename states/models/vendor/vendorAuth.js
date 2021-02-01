@@ -1,7 +1,11 @@
-import {api} from '../../../lib/api';
+import {getApi} from '../../../lib/api';
 import {message} from "antd";
 import {emitter} from "../../../helpers/emitter";
 import routes from "../../../constants/routes";
+import ExceptionHandler from "../../../exception/ExceptionHandler";
+
+const api = getApi(true);
+const exceptionHandler = new ExceptionHandler();
 
 export const vendorAuth = {
     state: {
@@ -46,13 +50,12 @@ export const vendorAuth = {
                     });
                     message.success('You Logged in successfully!');
                     return true;
-                } else {
-                    message.error('Username Or Password is wrong', 5);
                 }
 
+                exceptionHandler.throwError({}, 'Username or password is wrong');
                 return false;
             } catch(e) {
-                message.error('Username Or Password is wrong', 5);
+                exceptionHandler.throwError(e?.response, 'Username or password is wrong');
                 return false;
             }
         },
@@ -68,14 +71,12 @@ export const vendorAuth = {
                 if(data.success) {
                     message.success('Your Request was Sent!');
                     return true;
-                } else {
-                    message.error('Something went wrong', 5);
                 }
+
+                exceptionHandler.throwError();
                 return false;
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong', 5);
-
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
 
@@ -88,8 +89,7 @@ export const vendorAuth = {
                 }
                 dispatch.vendorAuth.destroyResetToken()
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong', 5);
+                exceptionHandler.throwError(e?.response);
             }
         },
         async resetPassword(body) {
@@ -99,13 +99,12 @@ export const vendorAuth = {
                     dispatch.vendorAuth.setResetToken({ token: body.token });
                     message.success('Your Password was changed!');
                     return true;
-                } else {
-                    message.error('Your Token is not valid or expired', 5);
-                    return false;
                 }
+                exceptionHandler.throwError({}, 'Your Token is not valid or expired');
+                return false;
 
             } catch(e) {
-                message.error('Your Token is not valid or expired', 5);
+                exceptionHandler.throwError(e?.response, 'Your Token is not valid or expired');
                 return false;
             }
         },
@@ -120,7 +119,7 @@ export const vendorAuth = {
                     return true;
                 }
             } catch(e) {
-                message.error('Something went wrong', 5);
+                exceptionHandler.throwError(e?.response);
             }
         }
     })

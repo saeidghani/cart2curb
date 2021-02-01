@@ -45,7 +45,7 @@ const Orders = props => {
                 }
             } catch(e) {
                 setHasMore(false);
-                message.error('An Error was occurred while fetching data')
+                message.error('An Error was occurred while fetching data') // @todo: remove this log
             }
         }
         isIntersecting = true;
@@ -120,12 +120,7 @@ const Orders = props => {
                         <OrderDetailsModal
                             visible={row.key === detailsModal}
                             onHide={setDetailsModal.bind(this, -1)}
-                            orderNumber={row.number}
-                            date={row.date}
-                            cxName={row.name}
-                            status={row.status}
-                            data={row.data}
-                            total={row.totalPrice}
+                            id={row.id}
                             isCustomer={true}
                         />
 
@@ -144,10 +139,9 @@ const Orders = props => {
             const status = !deleted.includes(order._id) ? order.status : 'canceled';
             return {
                 key: order._id,
-                index: order._id,
+                id: order._id,
                 number: order.orderNumber || order._id,
                 date: moment(order.date).format('MM.DD.YYYY'),
-                totalPrice: order.totalPrice,
                 status: status,
                 actions: {
                     dangerText: status.toLowerCase() === 'pending' ? 'Delete' : 'Report',
@@ -175,25 +169,9 @@ const Orders = props => {
                         if(res) {
                             setReportModalShow(-1)
                             message.success('Report sent successfully!')
-                        } else {
-                            message.error('An Error was occurred');
                         }
                     }
                 },
-                name: order.customer ? `${order.customer.firstName} ${order.customer.lastName}` : '-',
-                data: order.products.map((item, i) => {
-                    return {
-                        key: item._id,
-                        index: i + 1,
-                        product: item.name,
-                        subtitution: item.subtitution ? 'Yes' : 'No',
-                        price: `$${item.price}`,
-                        tax: `$${item.tax}`,
-                        store: convertAddress(item.store.address),
-                        quantity: item.quantity,
-                        total: `$${item.totalPrice}`
-                    }
-                }),
             }
         })
     }, [orders, loading, deleted])

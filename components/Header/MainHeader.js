@@ -11,6 +11,7 @@ import {useRouter} from "next/router";
 import Avatar from "../UI/Avatar";
 import {useDispatch, useSelector} from "react-redux";
 import userTypes from "../../constants/userTypes";
+import HeaderLink from "./HeaderLink";
 
 const MainHeader = props => {
   const [visible, setVisible] = useState(false);
@@ -58,29 +59,29 @@ const MainHeader = props => {
         <div className="flex flex-row items-center">
           <Link href={routes.homepage}>
             <a>
-              <img src={'/images/Logo.png'} alt={'Cart2Curb'} style={{ height: 48, width: 130}} />
+              <img src={'/images/Logo.svg'} alt={'Cart2Curb'} style={{ height: 48, width: 60}} />
             </a>
           </Link>
           <div className="hidden md:flex items-center">
             {!isAuthRoute.value && (
               <>
-                {isVendorPage ? (
+                {userType === 'vendor' ? (
                   <>
-                    <Link href={routes.vendors.index} className={'header__link text-purple'}>
-                      <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Store</a>
-                    </Link>
-                    <Link href={routes.vendors.orders} className={'header__link'}>
-                      <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
-                    </Link>
+                    <HeaderLink href={routes.vendors.index} hasPadding>
+                      Store
+                    </HeaderLink>
+                    <HeaderLink href={routes.vendors.orders} hasPadding>
+                      Orders
+                    </HeaderLink>
                   </>
                 ): (
                   <>
-                    <Link href={routes.homepage} className={'header__link text-purple'}>
-                      <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Home</a>
-                    </Link>
-                    <Link href={routes.stores.index} className={'header__link'}>
-                      <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Stores</a>
-                    </Link>
+                    <HeaderLink href={routes.homepage} hasPadding>
+                      Home
+                    </HeaderLink>
+                    <HeaderLink href={routes.stores.index} hasPadding>
+                      Stores
+                    </HeaderLink>
                   </>
                 )}
               </>
@@ -139,30 +140,30 @@ const MainHeader = props => {
               <Row gutter={[12, 32]}>
                 {!isAuthRoute.value && (
                   <>
-                    {isVendorPage ? (
+                    {userType ? (
                       <>
                         <Col xs={24}>
-                          <Link href={routes.vendors.index} className={'header__link text-purple'}>
-                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Store</a>
-                          </Link>
+                          <HeaderLink href={routes.vendors.index}>
+                            Store
+                          </HeaderLink>
                         </Col>
                         <Col xs={24}>
-                          <Link href={routes.vendors.orders} className={'header__link'}>
-                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Orders</a>
-                          </Link>
+                          <HeaderLink href={routes.vendors.orders}>
+                            Orders
+                          </HeaderLink>
                         </Col>
                       </>
                     ): (
                       <>
                         <Col xs={24}>
-                          <Link href={routes.homepage} className={'header__link text-purple'}>
-                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Home</a>
-                          </Link>
+                          <HeaderLink href={routes.homepage}>
+                            Home
+                          </HeaderLink>
                         </Col>
                         <Col xs={24}>
-                          <Link href={routes.stores.index} className={'header__link'}>
-                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Stores</a>
-                          </Link>
+                          <HeaderLink href={routes.stores.index}>
+                            Stores
+                          </HeaderLink>
                         </Col>
                       </>
                     )}

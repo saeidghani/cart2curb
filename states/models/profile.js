@@ -1,8 +1,11 @@
-import  { api } from "../../lib/api";
+import  { getApi } from "../../lib/api";
 import Api from '../../http/Api';
 import {message} from "antd";
 import {emitter} from "../../helpers/emitter";
+import ExceptionHandler from "../../exception/ExceptionHandler";
 
+const api = getApi();
+const exceptionHandler = new ExceptionHandler();
 
 export const profile = {
     state: {
@@ -47,7 +50,7 @@ export const profile = {
                     return {};
                 }
             } catch(e) {
-                console.log(e);
+                return {};
             }
         },
         async updateProfile(body) {
@@ -64,14 +67,6 @@ export const profile = {
                 }
                 return false;
             } catch(e) {
-                const errorData = e.response.data;
-                if(errorData.hasOwnProperty('errors')) {
-                    errorData.errors.map(err => {
-                        message.error(err.message || 'Something Went wrong', 4)
-                    })
-                } else {
-                    message.error('Something went wrong', 5);
-                }
                 return false;
             }
 
@@ -88,7 +83,7 @@ export const profile = {
                     return {};
                 }
             } catch(e) {
-                console.log(e);
+                return {};
             }
         },
         async deleteAddress(id) {
@@ -97,13 +92,9 @@ export const profile = {
                 if(res.data.success) {
                     message.success('Address Deleted successfully!', 5);
                     return true;
-                } else {
-                    message.error('Something went wrong');
-                    return false;
                 }
+                return false;
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong');
                 return false;
             }
         },
@@ -119,14 +110,7 @@ export const profile = {
                 message.success('New Address Added!');
                 return true;
             } catch(e) {
-                const errorData = e.response.data;
-                if(errorData.hasOwnProperty('errors')) {
-                    errorData.errors.map(err => {
-                        message.error(err.message || 'Something Went wrong', 4)
-                    })
-                } else {
-                    message.error('Something went wrong', 5);
-                }
+                return false;
             }
         },
         async getPayments(config) {
@@ -142,7 +126,7 @@ export const profile = {
                     return {};
                 }
             } catch(e) {
-                console.log(e);
+                return {};
             }
         },
         async deletePayment(id) {
@@ -153,12 +137,9 @@ export const profile = {
                     message.success('Card Deleted successfully!', 5);
                     return true;
                 } else {
-                    message.error('Something went wrong');
                     return false;
                 }
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong');
                 return false;
             }
         },
@@ -174,14 +155,7 @@ export const profile = {
                 message.success('New Card Added!');
                 return true;
             } catch(e) {
-                const errorData = e.response.data;
-                if(errorData.hasOwnProperty('errors')) {
-                    errorData.errors.map(err => {
-                        message.error(err.message || 'Something Went wrong', 4)
-                    })
-                } else {
-                    message.error('Something went wrong', 5);
-                }
+                return false;
             }
         },
         async getOrders(body, rootState) {
@@ -202,7 +176,25 @@ export const profile = {
                     return false;
                 }
             } catch(e) {
-                console.log(e)
+                return false;
+            }
+        },
+        async getSingleOrder(id, rootState) {
+            try {
+                const res = await Api.customer.profile.singleOrder(id, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.auth.token}`
+                    }
+                });
+                const data = res?.data;
+                if(data?.success) {
+                    return data?.data;
+                }
+                exceptionHandler.throwError();
+                return false;
+            } catch(e) {
+                console.log(e);
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
         },
@@ -213,24 +205,14 @@ export const profile = {
                         Authorization: `Bearer ${rootState.auth.token}`
                     }
                 });
-                if(res.data.success) {
+                if(res?.data?.success) {
                     message.success('Deleted Successfully', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+                exceptionHandler.throwError();
+                return false;
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    const errors = e.response.data.errors;
-                    const errorCode = errors[0].errorCode;
-                    if(errorCode === 'HAS_CHILDREN') {
-                        message.error('You Can\'t Delete this Category because it has children')
-                    } else {
-
-                        message.error('An Error was occurred');
-                    }
-                }
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
         },
@@ -243,11 +225,11 @@ export const profile = {
                 });
                 if(res?.data?.success) {
                     return true;
-                } else {
-                    return false;
                 }
+                exceptionHandler.throwError();
+                return false;
             } catch(e) {
-                console.log(e);
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
         }

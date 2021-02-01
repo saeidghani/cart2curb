@@ -327,7 +327,7 @@ const AddVendor = props => {
                                                       }),
                                                   ]}
                                             >
-                                                <Input.Password placeholder="Password Confirm"/>
+                                                <Input.Password placeholder="Confirm Password"/>
                                             </Item>
                                         </Col>
                                         <Col xs={24}>

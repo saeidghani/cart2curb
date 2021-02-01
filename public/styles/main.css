@@ -31179,23 +31179,6 @@ div.ant-typography-edit-content.ant-typography-rtl {
   justify-content: flex-start;
 }
 
-.video-react .video-react-big-play-button.video-react-big-play-button-center {
-  background-color: transparent;
-  width: 68px;
-  height: 68px;
-  background: url('/images/play.svg') no-repeat center;
-  border: none;
-  border-radius: 0;
-}
-
-.video-react .video-react-big-play-button.video-react-big-play-button-center::before {
-  display: none;
-}
-
-.video-react:hover .video-react-big-play-button.video-react-big-play-button-center {
-  background-color: transparent;
-}
-
 .ant-tabs-tab:hover .ant-tabs-tab-btn {
   color: #38b2ac;
 }
@@ -188982,4 +188965,22 @@ body.video-react-full-window .video-react-fullscreen {
 .video-react video::-webkit-media-text-track-container {
   -webkit-transform: translateY(-30px);
   transform: translateY(-30px);
+}
+
+
+.video-react .video-react-big-play-button.video-react-big-play-button-center {
+  background-color: transparent;
+  width: 68px;
+  height: 68px;
+  background: url('/images/play.svg') no-repeat center;
+  border: none;
+  border-radius: 0;
+}
+
+.video-react .video-react-big-play-button.video-react-big-play-button-center::before {
+  display: none;
+}
+
+.video-react:hover .video-react-big-play-button.video-react-big-play-button-center {
+  background-color: transparent;
 }

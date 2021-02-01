@@ -6,7 +6,6 @@ import Page from "../../../../components/Page";
 import routes from "../../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
-import withAuth from "../../../../components/hoc/withAuth";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
 import userTypes from "../../../../constants/userTypes";
@@ -53,7 +52,6 @@ const EditProduct = props => {
     }, [])
 
     useEffect(() => {
-        console.log(product);
         const {
             name,
             unitType,

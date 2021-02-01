@@ -145,7 +145,6 @@ const CartGuest = props => {
             ...transformedAddress
         })
         if(!res) {
-            message.error('An Error was occurred');
             return false;
         }
         const body = {
@@ -156,8 +155,6 @@ const CartGuest = props => {
         if(finalRes) {
             message.success('Cart Address and Delivery time updated!')
             router.push(routes.cart.guest.invoice);
-        } else {
-            message.error('An Error was occurred')
         }
     }
 
