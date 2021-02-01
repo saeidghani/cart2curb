@@ -35,15 +35,20 @@ const AdminHeader = props => {
         </>
     );
 
-    const LoginRegister = () => (
-        <>
-            <Link href={routes.admin.auth.login}>
-                <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
+    const AdminProfile = () => (
+        <div className="flex items-center space-x-3">
+            <Link href={routes.admin.customerMessages.index}>
+                <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF"/>
             </Link>
-            <Link href={routes.admin.auth.login}>
-                <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
+            <Link href={routes.admin.profile.index}>
+                <div className="cursor-pointer flex items-center space-x-2">
+                    <SettingTwoTone/>
+                    <span className="text-secondarey">
+                        Profile Setting
+                    </span>
+                </div>
             </Link>
-        </>
+        </div>
     );
 
     return (
@@ -57,20 +62,7 @@ const AdminHeader = props => {
                 <AdminNav/>
             </div>
             <div className="hidden md:flex flex-row items-center">
-                {(!pathname.includes('admin/login') && !pathname.includes('admin/register')) &&
-                <div className="flex items-center space-x-3">
-                    <Link href={routes.admin.customerMessages.index}>
-                        <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF"/>
-                    </Link>
-                    <Link href={routes.admin.profile.index}>
-                        <div className="cursor-pointer flex items-center space-x-2">
-                            <SettingTwoTone/>
-                            <span className="text-secondarey">
-                                Profile Setting
-                            </span>
-                        </div>
-                    </Link>
-                </div>}
+                {(!pathname.includes('admin/login') && !pathname.includes('admin/register')) && <AdminProfile/>}
             </div>
         </div>
     );

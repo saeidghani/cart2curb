@@ -37,8 +37,8 @@ const ChangeEmail = props => {
     return (
         <Page title='Change Email Address' breadcrumb={[{title: 'Change Email Address'}]}>
             <Row>
-                <Col xl={{span: 6, offset: 9}} lg={{span: 14, offset: 5}} md={{span: 14, offset: 5}}
-                     sm={{span: 16, offset: 4}} xs={24}>
+                <Col xl={{span: 8, offset: 8}} lg={{span: 14, offset: 5}} md={{span: 14, offset: 5}}
+                     sm={{span: 20, offset: 2}} xs={24}>
                     <Form
                         form={form}
                         layout="vertical"

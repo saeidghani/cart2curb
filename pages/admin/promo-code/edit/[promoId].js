@@ -18,7 +18,7 @@ const New = props => {
   const token = useSelector(state => state?.adminAuth?.token);
   const promo = useSelector(state => state?.adminProfile?.promo);
   const router = useRouter();
-  const [off, setOff] = useState(1);
+  const [off, setOff] = useState(0);
   const [usageRate, setUsageRate] = useState(1);
   const { promoId } = router.query;
 
@@ -81,6 +81,14 @@ const New = props => {
   const checkValidation = (errorInfo) => {
     message.error(errorInfo.errorFields[0].errors[0], 5);
   };
+
+  const handleOff = e => {
+    if (!e.target.value) setOff(0);
+    if (e.target.value * 1 > 0 && e.target.value * 1 < 100) {
+      setOff(e.target.value * 1);
+    }
+  };
+
   return (
     <Page title={false} headTitle={'Edit Promo'} breadcrumb={breadcrumb}>
       <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation}>
@@ -108,7 +116,7 @@ const New = props => {
                 <Input
                   name="off"
                   value={off}
-                  onChange={e => setOff(e.target.value * 1)}
+                  onChange={handleOff}
                   suffix='%'
                 />
                 <PlusCircleFilled

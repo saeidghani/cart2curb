@@ -11,7 +11,6 @@ import routes from "../../../constants/routes";
 import ProductCarousel from "../../../components/UI/ProductCarousel";
 import deleteModal from "../../../components/Modals/Delete";
 import store from "../../../states";
-import {getProperty} from "../../../helpers";
 
 const ServiceView = props => {
     const router = useRouter();

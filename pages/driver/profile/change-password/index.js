@@ -7,10 +7,11 @@ import {
     Col, message
 } from 'antd';
 import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
+import Link from "next/link";
 
 import DriverPage from '../../../../components/DriverPage';
 import DriverAuth from '../../../../components/Driver/DriverAuth';
+import routes from "../../../../constants/routes";
 
 const {Item} = Form;
 
@@ -109,11 +110,11 @@ const EditCustomer = props => {
                                 </Col>
                                 <Col xs={24}>
                                     <Item>
-                                        <Button
+                                        <Link href={routes.driver.profile.index}><Button
                                             className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
                                         >
                                             Cancel
-                                        </Button>
+                                        </Button></Link>
                                     </Item>
                                 </Col>
                             </Row>
