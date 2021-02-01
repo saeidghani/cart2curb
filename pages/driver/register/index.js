@@ -230,7 +230,7 @@ const Register = props => {
                                             message: "Password should be at least 6 characters"
                                         }
                                     ]}>
-                                        <Input placeholder="Password"/>
+                                        <Input.Password placeholder="Password"/>
                                     </Item>
                                 </Col>
                                 <Col xs={24} className="mb-6">

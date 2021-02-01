@@ -63,7 +63,7 @@ const EditProduct = props => {
                 setCategories(response?.data);
             })
         }
-    }, [])
+    }, [storeId, token])
 
     useEffect(() => {
         const {
@@ -101,7 +101,7 @@ const EditProduct = props => {
         })
         setImagesList(transformedImageList);
         setUnitType(unitType || 'quantity');
-    }, []);
+    }, [product]);
 
     const handleChange = ({fileList}) => setImagesList(fileList);
 

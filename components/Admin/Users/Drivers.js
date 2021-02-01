@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, Space, message, Modal} from 'antd';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Row, Col, Input, Form, Table, Button, message, Modal} from 'antd';
 import {
     PlusCircleOutlined,
     CheckCircleOutlined,
@@ -97,8 +97,11 @@ const Drivers = () => {
             token
         });
         if (res) {
-            setBlockDriverId('');
-            setBlocked(blocked.concat(blockDriverId));
+            const blockedDriver = blocked?.find(b => b === blockDriverId);
+            if (!blockedDriver) {
+                setBlockDriverId('');
+                setBlocked(prevBlocked => prevBlocked.concat(blockDriverId));
+            }
         }
     };
 
@@ -196,17 +199,7 @@ const Drivers = () => {
                 drivingInsurance: driver?.license || '-',
                 action: {
                     blockHandler: async () => {
-                        const res = await dispatch.adminUser.addPendingDriver({
-                            driverId: driver?._id,
-                            body: {isApproved: false},
-                            token
-                        });
-                        if (res) {
-                            const blockedDriver = blocked?.find(b => b === driver?._id);
-                            if (!blockedDriver) {
-                                setBlocked(prevBlocked => prevBlocked.concat(driver?._id));
-                            }
-                        }
+                        setBlockDriverId(driver?._id);
                     },
                     unBlockHandler: async () => {
                         const res = await dispatch.adminUser.addPendingDriver({
@@ -268,7 +261,6 @@ const Drivers = () => {
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            disabled={drivers?.length === 0}
                         >
                             Add New Driver
                         </Button>

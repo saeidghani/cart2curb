@@ -239,7 +239,6 @@ const Vendors = () => {
                             type={'link'}
                             icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
                             className={'flex items-center justify-center text-info px-0 hover:text-teal-500 text-base'}
-                            disabled={vendors?.length === 0}
                         >
                             Add New Vendor
                         </Button>
