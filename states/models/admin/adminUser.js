@@ -386,9 +386,8 @@ export const adminUser = {
             }
         },
         async addCustomer({body, token}) {
-            console.log({body, token});
             try {
-                const res = await api?.admin?.user?.addCustomer(body, setOptions(token))
+                const res = await api?.admin?.user?.addCustomer(body, setOptions(token));
 
                 if(res.data.success) {
                     message.success('New Customer added successfully!', 5);
@@ -398,7 +397,10 @@ export const adminUser = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
+                if (e?.response?.data?.errors) {
+                    e?.response?.data?.errors?.map(err => message.error(err?.message || 'An Error was occurred'));
+                    return false;
+                }
                 if(e.hasOwnProperty('response')) {
                     message.error('An Error was occurred');
                 }

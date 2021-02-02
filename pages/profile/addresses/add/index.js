@@ -200,7 +200,7 @@ const AddAddress = props => {
                                           },
                                           ({ getFieldValue }) => ({
                                               validator(_, value) {
-                                                  if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/i.test(value)) {
+                                                  if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(value)) {
                                                       return Promise.resolve();
                                                   }
                                                   return Promise.reject('Please enter valid Postal code');

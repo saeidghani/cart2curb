@@ -73,13 +73,6 @@ const Promo = () => {
         }
     }
 
-    const searchHandler = (values) => {
-        isIntersecting = false;
-        setPage(1);
-        setHasMore(true);
-        setSearch(values.search);
-    }
-
     const columns = [
         {
             title: "Promo Code Name",

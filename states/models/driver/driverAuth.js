@@ -126,6 +126,10 @@ export const driverAuth = {
                     return true;
                 }
             } catch(e) {
+                if (e?.response?.data?.errors) {
+                    e?.response?.data?.errors?.map(err => message.error(err?.message || 'An Error was occurred'));
+                    return false;
+                }
                 message.error('Something went wrong', 5);
             }
         }

@@ -3,7 +3,7 @@ import {Button, Input, Form, Row, Col, message} from 'antd';
 import {  GoogleOutlined, FacebookFilled } from '@ant-design/icons';
 import Link from 'next/link';
 import {useDispatch, useSelector} from "react-redux";
-import DriverPage from '../../../components/DriverPage';
+import DriverPage from '../../../components/Driver/DriverPage';
 import routes from "../../../constants/routes";
 import {useRouter} from "next/router";
 const {Item} = Form;

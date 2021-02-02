@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import DriverPage from '../../../../components/DriverPage';
+import {useDispatch, useSelector} from "react-redux";
 import {Button, Col, Form, Input, message, Row} from "antd";
+
+import DriverPage from '../../../../components/Driver/DriverPage';
 import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
-import {useDispatch, useSelector} from "react-redux";
 import Success from "../../../../components/Driver/Success";
 const { Item } = Form;
 

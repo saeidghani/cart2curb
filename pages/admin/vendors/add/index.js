@@ -165,7 +165,6 @@ const AddVendor = props => {
             phone: form1.phone,
             contactName: form1.contactName,
             image: avatarUrl,
-            password: form1.password
         }
 
         const body = {
@@ -176,8 +175,10 @@ const AddVendor = props => {
         const result = await dispatch.adminUser.addVendor({body, token});
 
         if (result) {
-            //setSubmitted(true)
-            scrollToTop();
+            router.push({
+                pathname: routes?.admin?.users?.index,
+                query: {tab: 'vendors'}
+            });
         }
     }
 
@@ -189,7 +190,6 @@ const AddVendor = props => {
             requestAnimationFrame(scrollToTop);
         }
     }
-
 
     return (
         <AdminAuth>
@@ -212,33 +212,6 @@ const AddVendor = props => {
                                 <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 0)}
                                       onFinishFailed={checkValidation}>
                                     <Row gutter={24} className={'flex flex-row flex-wrap items-center'}>
-                                        <Col lg={8} md={12} xs={24}>
-                                            <Item name={'postalCode'} label={'Postal Code'}
-                                                  rules={[
-                                                      {
-                                                          required: true,
-                                                          message: "Please enter Postal Code."
-                                                      },
-                                                      () => ({
-                                                          validator(rule, value) {
-                                                              const isUppercase = /^[A-Z]/;
-                                                              const isNumber = /^[0-9]+$/;
-                                                              let isValid = true;
-                                                              if (value.length !== 7) isValid = false;
-                                                              if (value[3] !== ' ') isValid = false;
-                                                              if (!isUppercase.test(value[0]) || !isUppercase.test(value[2]) || !isUppercase.test(value[5])) isValid = false;
-                                                              if (!isNumber.test(value[1]) || !isNumber.test(value[4]) || !isNumber.test(value[6])) isValid = false;
-
-                                                              if (isValid) {
-                                                                  return Promise.resolve();
-                                                              }
-                                                              return Promise.reject('Please enter valid postal code');
-                                                          },
-                                                      })
-                                                  ]}>
-                                                <Input placeholder={'Postal Code'}/>
-                                            </Item>
-                                        </Col>
                                         <Col xs={24} md={12} lg={8}>
                                             <Item name={'email'} label={'Email Address'}
                                                   rules={[
@@ -288,50 +261,8 @@ const AddVendor = props => {
                                                 <Input placeholder={'Main Contact Name'}/>
                                             </Item>
                                         </Col>
-
-                                        <Col lg={8} md={12} xs={24}>
-                                            <Item name={'password'}
-                                                  label={'Password'}
-                                                  rules={[
-                                                      {
-                                                          required: true,
-                                                          message: 'Please enter your password!',
-                                                      },
-                                                      {
-                                                          min: 6,
-                                                          message: "Password should be at least 6 character"
-                                                      }
-                                                  ]}
-                                                  hasFeedback
-                                            >
-                                                <Input.Password placeholder="Password"/>
-                                            </Item>
-                                        </Col>
-                                        <Col lg={8} md={12} xs={24}>
-                                            <Item name={'confirmPassword'}
-                                                  label={'Confirm Password'}
-                                                  dependencies={['password']}
-                                                  hasFeedback
-                                                  rules={[
-                                                      {
-                                                          required: true,
-                                                          message: 'Please confirm your password!',
-                                                      },
-                                                      ({getFieldValue}) => ({
-                                                          validator(rule, value) {
-                                                              if (!value || getFieldValue('password') === value) {
-                                                                  return Promise.resolve();
-                                                              }
-                                                              return Promise.reject('The two passwords that you entered do not match!');
-                                                          },
-                                                      }),
-                                                  ]}
-                                            >
-                                                <Input.Password placeholder="Confirm Password"/>
-                                            </Item>
-                                        </Col>
                                         <Col xs={24}>
-                                            <Divider className={'mt-0 mb-6'}/>
+                                            <Divider className={'py-2'}/>
                                         </Col>
                                         <Col lg={8} md={12} xs={24}>
                                             <Item name={'openingHour'} label={'Store Opening Hour'}
@@ -566,7 +497,6 @@ const AddVendor = props => {
                                                                 style={{resize: 'none'}}/>
                                             </Item>
                                         </Col>
-
                                         <Col lg={8} md={12} xs={24}>
                                             <Item name={'postalCode'} label={'Postal Code'}
                                                   rules={[
@@ -574,19 +504,14 @@ const AddVendor = props => {
                                                           required: true,
                                                           message: "Please enter Postal Code."
                                                       },
-                                                      () => ({
-                                                          validator(rule, value) {
-                                                              if (value === '5') {
-                                                                  return Promise.resolve();
-                                                              }
-                                                              return Promise.reject('Please enter valid postal code');
-                                                          },
-                                                      })
+                                                      {
+                                                          pattern: /^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/,
+                                                          message: "Please enter valid Postal Code"
+                                                      }
                                                   ]}>
                                                 <Input placeholder={'Postal Code'}/>
                                             </Item>
                                         </Col>
-
                                         <Col span={24}>
                                             <Item name={'description'} label={'Store Description'}>
                                                 <Input.TextArea placeholder={'Store Description'}

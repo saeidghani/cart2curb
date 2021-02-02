@@ -14,7 +14,7 @@ import moment from "moment";
 import Link from "next/link";
 import {useRouter} from "next/router";
 
-import DriverPage from '../../../../components/DriverPage';
+import DriverPage from '../../../../components/Driver/DriverPage';
 import Loader from '../../../../components/UI/Loader';
 import DriverAuth from '../../../../components/Driver/DriverAuth';
 import {CloudUploadOutlined, QuestionCircleOutlined, UserOutlined} from '@ant-design/icons';
@@ -137,6 +137,9 @@ const Edit = props => {
         if (imagePic) body.image = imagePic;
 
         const res = await dispatch?.driverProfile?.editProfile({body, token});
+        if (res) {
+            router.push(routes.driver.profile.index);
+        }
     };
 
     const checkValidation = (errorInfo) => {
@@ -195,7 +198,7 @@ const Edit = props => {
                     </div>
                 </Modal>
                 <div className="text-2xl mb-6">Edit Profile</div>
-                {loading ? <div className="flex justify-center"><Loader/></div> :
+                {loading ? <div className="flex justify-center" style={{minHeight: 500}}><Loader/></div> :
                     <Row>
                         <Col span={24}>
                             <Form

@@ -109,6 +109,13 @@ const Categories = props => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
+            title: "Parents",
+            dataIndex: 'parents',
+            key: 'parents',
+            width: 200,
+            render: data => <span className="text-cell">{data}</span>
+        },
+        {
             title: "Desc",
             dataIndex: 'description',
             key: 'description',
@@ -134,7 +141,7 @@ const Categories = props => {
             width: 140,
             fixed: 'right',
         },
-    ]
+    ];
 
     const data = useMemo(() => {
         return categories.filter(item => !deleted.includes(item._id)).map((item, index) => {
@@ -144,6 +151,7 @@ const Categories = props => {
                 title: item?.name,
                 number: '1111',
                 description: item?.description,
+                parents: item?.parent?.name || '-',
                 actions: {
                     deleteHandler: () => {
                         deleteModal({
@@ -161,7 +169,7 @@ const Categories = props => {
                 },
             }
         })
-    }, [categories, page, deleted])
+    }, [categories, page, deleted]);
 
     return (
         <>

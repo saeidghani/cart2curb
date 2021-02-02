@@ -63,13 +63,11 @@ const VendorDetails = props => {
                     <div className="flex items-center justify-between">
                         <h1 className="page__title text-2xl text-type font-medium my-0">Account</h1>
                         <div className="actions flex items-center">
-                            <Space size={screens.lg ? 32 : screens.md ? 24 : screens.sm ? 12 : 8}>
-                                <Button type={'text'} className={'text-xs'} danger onClick={blockHandler}>{!isBlocked ? 'Block' : 'Unblock'}</Button>
-                                <Link href={routes.admin.vendors.edit(vendorId)}>
-                                    <Button type={'text'}
-                                            className={'text-info hover:text-teal-500 text-base font-medium'}>Edit</Button>
-                                </Link>
-                            </Space>
+                            <Button type={'text'} className={'text-xs'} danger onClick={blockHandler}>{!isBlocked ? 'Block' : 'Unblock'}</Button>
+                            <Link href={routes.admin.vendors.edit(vendorId)}>
+                                <Button type={'text'}
+                                        className={'text-info hover:text-teal-500 text-base font-medium'}>Edit</Button>
+                            </Link>
                         </div>
                     </div>
                     <Divider/>
@@ -110,15 +108,19 @@ const VendorDetails = props => {
                             </Col>
                             <Col xs={24}>
                                 <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Description'}
-                                            value={address}/>
+                                            value={getProperty(store, 'description', '-')}/>
                             </Col>
                             <Col xs={24} sm={12} lg={6}>
                                 <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Type'}
-                                            value={getProperty(store, 'name', '-')}/>
+                                            value={getProperty(store, 'storeType', '-')}/>
                             </Col>
                             <Col xs={24} sm={12} lg={6}>
                                 <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Sub Type'}
-                                            value={getProperty(store, 'name', '-')}/>
+                                            value={getProperty(store, 'subType', '-')}/>
+                            </Col>
+                            <Col xs={24}>
+                                <DetailItem labelColor={'muted'} valueColor={'dark'} title={'Address'}
+                                            value={address}/>
                             </Col>
                         </Row>
                     </Col>

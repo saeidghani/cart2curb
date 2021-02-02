@@ -173,7 +173,7 @@ export const adminStore = {
                 const res = await api?.admin?.store?.addStoreRank(body, setOptions(rootState?.adminAuth?.token))
 
                 if(res.data.success) {
-                    message.success('New Category added successfully!', 5);
+                    message.success('New Rank added successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');

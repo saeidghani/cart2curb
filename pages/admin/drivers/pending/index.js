@@ -93,11 +93,19 @@ const PendingDrivers = props => {
                         <div className="grid grid-cols-2 gap-x-4 mt-8">
                             <div className="flex flex-col justify-center">
                                 <div className="mb-3">Proof of Insurance</div>
-                                <img src={driver?.proofOfInsurance[0]} alt=""/>
+                                {driver?.proofOfInsurance?.length > 0 && <img
+                                    src={driver?.proofOfInsurance[0]}
+                                    style={{width: 500}}
+                                    alt=""
+                                />}
                             </div>
                             <div className="flex flex-col justify-center">
                                 <div className="mb-3">Driving Licence</div>
-                                <img src={driver?.license} alt=""/>
+                                {driver?.license && <img
+                                    src={driver?.license}
+                                    style={{width: 500}}
+                                    alt=""
+                                />}
                             </div>
                         </div>
                         <div className="flex justify-end space-x-3 mt-5">

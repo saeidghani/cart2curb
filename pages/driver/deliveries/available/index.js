@@ -4,7 +4,7 @@ import {CloseOutlined, EnvironmentOutlined, SoundOutlined} from '@ant-design/ico
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
-import DriverPage from '../../../../components/DriverPage';
+import DriverPage from '../../../../components/Driver/DriverPage';
 import DriverAuth from '../../../../components/Driver/DriverAuth';
 import routes from '../../../../constants/routes';
 import Loader from "../../../../components/UI/Loader";
@@ -85,7 +85,9 @@ const Available = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {};
+        } catch (err) {
+        }
+        ;
     };
 
     const handleReject = async (deliveryId) => {
@@ -95,7 +97,9 @@ const Available = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {};
+        } catch (err) {
+        }
+        ;
     };
 
     const EmptyDelivery = ({}) => (
@@ -114,8 +118,8 @@ const Available = () => {
         </div>
     );
 
-    const DeliveryNav = ({}) => (
-        <div className="grid grid-cols-2 shadow-lg absolute" style={{top: 645, width: '100%'}}>
+    const DeliveryNav = () => (
+        <div className="grid grid-cols-2 shadow-lg" style={{position: 'sticky', bottom: 30, width: '100vw'}}>
             <Link href={routes.driver.deliveries.available}>
                 <div className="text-secondarey text-center p-4" style={{backgroundColor: '#E6F7FF'}}>Available
                     Deliveries
@@ -195,29 +199,34 @@ const Available = () => {
         </div>
     );
 
-    if (!availableDeliveriesLoading && (deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length === 0)) return <EmptyDelivery/>;
-    if (availableDeliveriesLoading) return <div className="flex justify-center"><Loader/></div>;
+    if (availableDeliveriesLoading) return <div className="flex justify-center" style={{minHeight: 500}}><Loader/></div>;
 
     return (
         <DriverAuth>
-            <DriverPage title="Available Deliveries">
-                <div style={{minHeight: 500}} className="flex flex-col items-center">
-                    {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length > 0 &&
-                    <>
-                        <DeliveryNav/>
-                        <SortAndFilter/>
-                    </>}
-                    {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.map(d =>
-                        <DeliveryCard
-                            deliveryId={d?._id}
-                            destination={d?.destination}
-                            sources={d?.sources}
-                            deliveryTime={d?.deliveryTime}
-                        />)}
+            <DriverPage title="Available Deliveries" titleClassName="px-4">
+                <div className="min-h-full flex flex-col items-center px-4">
+                    {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length > 0 ?
+                        <>
+                            <SortAndFilter/>
+                            {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.map(d =>
+                                <DeliveryCard
+                                    deliveryId={d?._id}
+                                    destination={d?.destination}
+                                    sources={d?.sources}
+                                    deliveryTime={d?.deliveryTime}
+                                />)}
+                        </> : availableDeliveriesLoading ? <span></span> : <EmptyDelivery/>}
+                </div>
+                <div className="flex justify-center">
+                    <DeliveryNav/>
                 </div>
             </DriverPage>
         </DriverAuth>
     )
 };
+
+Available.getInitialProps = async () => {
+    return { forceLayout: true }
+}
 
 export default Available;

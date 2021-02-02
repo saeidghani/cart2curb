@@ -9,13 +9,13 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
 
-import DriverPage from '../../../../components/DriverPage';
+import DriverPage from '../../../../components/Driver/DriverPage';
 import DriverAuth from '../../../../components/Driver/DriverAuth';
 import routes from "../../../../constants/routes";
 
 const {Item} = Form;
 
-const EditCustomer = props => {
+const ChangePassword = props => {
     const loading = useSelector(state => state?.loading?.effects?.adminUser?.getCustomer);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -114,7 +114,8 @@ const EditCustomer = props => {
                                             className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
                                         >
                                             Cancel
-                                        </Button></Link>
+                                        </Button>
+                                        </Link>
                                     </Item>
                                 </Col>
                             </Row>
@@ -126,4 +127,4 @@ const EditCustomer = props => {
     )
 }
 
-export default EditCustomer;
+export default ChangePassword;

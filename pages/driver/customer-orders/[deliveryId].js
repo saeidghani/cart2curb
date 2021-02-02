@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from 'next/router';
 
-import DriverPage from '../../../components/DriverPage';
+import DriverPage from '../../../components/Driver/DriverPage';
 import DriverAuth from '../../../components/Driver/DriverAuth';
-import {useDispatch, useSelector} from "react-redux";
 
 const CurrentOrders = () => {
     const dispatch = useDispatch();
