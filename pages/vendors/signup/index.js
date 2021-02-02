@@ -525,12 +525,12 @@ const Register = props => {
                                     <Item name={'postalCode'} label={'Postal Code'}
                                           rules={[
                                               {
-                                                  len: 5,
-                                                  message: 'Postal Code Should be 5 characters',
-                                              },
-                                              {
                                                   required: true,
                                                   message: "Please enter Postal Code."
+                                              },
+                                              {
+                                                  pattern: /^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/,
+                                                  message: "Please enter valid Postal Code"
                                               }
                                           ]}>
                                         <Input placeholder={'Postal Code'}/>

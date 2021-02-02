@@ -267,9 +267,9 @@ const EditAccount = props => {
             <Row>
                 <Col xs={24} xl={{span: 14, offset: 5}} lg={{span: 18, offset: 3}}>
                     <Steps current={step} direction={screens.lg ? 'horizontal' : 'vertical'} onChange={jumpHandler}>
-                        <Step title="Store Info" description="Enter store info."/>
-                        <Step title="Store Addresses" description="Enter store Adresses."/>
-                        <Step title="Service Area" description="Select service radius."/>
+                        <Step title="Store Info" description="Enter store info." onClick={() => setStep(0)}/>
+                        <Step title="Store Addresses" description="Enter store Adresses." onClick={() => setStep(1)}/>
+                        <Step title="Service Area" description="Select service radius." onClick={() => setStep(2)}/>
                     </Steps>
                 </Col>
                 <Col xs={24} className={'pt-8'}>
@@ -568,22 +568,10 @@ const EditAccount = props => {
                                                   required: true,
                                                   message: "Please enter Postal Code."
                                               },
-                                              () => ({
-                                                  validator(rule, value) {
-                                                      const isUppercase = /^[A-Z]/;
-                                                      const isNumber = /^[0-9]+$/;
-                                                      let isValid = true;
-                                                      if (value.length !== 7) isValid = false;
-                                                      if (value[3] !== ' ') isValid = false;
-                                                      if (!isUppercase.test(value[0]) || !isUppercase.test(value[2]) || !isUppercase.test(value[5])) isValid = false;
-                                                      if (!isNumber.test(value[1]) || !isNumber.test(value[4]) || !isNumber.test(value[6])) isValid = false;
-
-                                                      if (isValid) {
-                                                          return Promise.resolve();
-                                                      }
-                                                      return Promise.reject('Please enter valid postal code');
-                                                  },
-                                              })
+                                              {
+                                                  pattern: /^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/,
+                                                  message: "Please enter valid Postal Code"
+                                              }
                                           ]}>
                                         <Input placeholder={'Postal Code'}/>
                                     </Item>
