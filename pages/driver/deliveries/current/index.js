@@ -4,12 +4,12 @@ import {SoundTwoTone, SoundOutlined, EnvironmentOutlined, CloseOutlined} from '@
 import {useDispatch, useSelector} from "react-redux";
 import Timer from 'react-compound-timer';
 import Link from "next/link";
+import moment from "moment";
 
 import DriverAuth from '../../../../components/Driver/DriverAuth';
-import DriverPage from '../../../../components/DriverPage';
+import DriverPage from '../../../../components/Driver/DriverPage';
 import routes from '../../../../constants/routes';
 import Loader from "../../../../components/UI/Loader";
-import moment from "moment";
 
 const Current = () => {
     const dispatch = useDispatch();
@@ -33,7 +33,9 @@ const Current = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryComplete({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {};
+        } catch (err) {
+        }
+        ;
     };
 
     const EmptyDelivery = ({}) => (
@@ -53,7 +55,7 @@ const Current = () => {
     );
 
     const DeliveryCard = ({_id: deliveryId, products, orderNumber, acceptedDateByDriver, deliveryTime, deliveryFee, customerAddress, sources}) => (
-        <>
+        <div className="w-full shadow-lg p-8">
             <div className="text-center"><SoundTwoTone className="text-6xl transform -rotate-45"/></div>
             <div className="text-xs font-normal mt-9 text-paragraph">
                 Delivery Countdown
@@ -62,9 +64,6 @@ const Current = () => {
                 <Timer
                     initialTime={moment(acceptedDateByDriver).diff(moment(deliveryTime))}
                     direction="backward"
-                    //onStart={() => handleSendAgain()}
-                    //onResume={() => handleSendAgain()}
-                    //onReset={() => handleSendAgain()}
                 >
                     {({reset, resume, start, getTimerState}) => (
                         <div className="text-center">
@@ -146,22 +145,43 @@ const Current = () => {
                     Back
                 </Button>
             </Link>
-        </>
+        </div>
     );
 
-    if (!currentDeliveriesLoading && (deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.length === 0)) return <EmptyDelivery/>;
-    if (currentDeliveriesLoading) return <div className="flex justify-center"><Loader/></div>;
+    const DeliveryNav = () => (
+        <div className="grid grid-cols-2 shadow-lg" style={{position: 'sticky', bottom: 30, width: '100vw'}}>
+            <Link href={routes.driver.deliveries.available}>
+                <div className="text-secondarey text-center p-4">
+                    Available Deliveries
+                </div>
+            </Link>
+            <Link href={routes.driver.deliveries.current}>
+                <div className="text-secondarey text-center p-4 bg-white" style={{backgroundColor: '#E6F7FF'}}>Current Delivery</div>
+            </Link>
+        </div>
+    );
+
+    if (currentDeliveriesLoading) return <div className="flex justify-center" style={{minHeight: 500}}><Loader/></div>;
 
     return (
         <DriverAuth>
-            <DriverPage title="Current Deliveries">
-                <div className="w-full shadow-lg p-8">
-                    {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.map(delivery =>
-                        <DeliveryCard {...delivery}/>)}
+            <DriverPage title="Current Deliveries" titleClassName="px-4">
+                <div className="min-h-full flex flex-col items-center px-4">
+                    {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.length > 0 ? <>
+                        {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.map(delivery =>
+                            <DeliveryCard {...delivery}/>)}
+                    </> : currentDeliveriesLoading ? <span></span> : <EmptyDelivery/>}
+                </div>
+                <div className="flex justify-center">
+                    <DeliveryNav/>
                 </div>
             </DriverPage>
         </DriverAuth>
     );
+};
+
+Current.getInitialProps = async () => {
+    return { forceLayout: true };
 }
 
 export default Current;

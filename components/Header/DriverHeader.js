@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import routes from '../../constants/routes';
 import Avatar from '../UI/Avatar';
 import './styles.less';
+import ProfileDropdown from '../Driver/ProfileDropdown';
 
 const DriverHeader = props => {
     const router = useRouter();
@@ -24,13 +25,7 @@ const DriverHeader = props => {
             <div className="">
                 {(pathname.includes('driver/login') || pathname.includes('driver/register')) ? <>
 
-                </> : <div className="flex items-center space-x-3">
-                    <Link href={routes.driver.profile.index}>
-                        <div className="cursor-pointer flex items-center space-x-2">
-                            <Avatar src={profile?.image} justImage/>
-                        </div>
-                    </Link>
-                </div>}
+                </> : <ProfileDropdown name={profile?.name} avatarSrc={profile?.image}/>}
             </div>
         </div>
     );

@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import Link from "next/link";
 
-import DriverPage from '../../../components/DriverPage';
+import DriverPage from '../../../components/Driver/DriverPage';
 import DriverAuth from '../../../components/Driver/DriverAuth';
 import moment from "moment";
 import routes from "../../../constants/routes";
@@ -42,7 +42,7 @@ const Profile = () => {
                         </Link>
                     </div>
                 </div>
-                {loading ? <div className="flex justify-center"><Loader/></div> :
+                {loading ? <div className="flex justify-center" style={{minHeight: 500}}><Loader/></div> :
                 <div className="w-full shadow-lg p-8">
                     <div className="flex items-center">
                         <Avatar shape="square" size={80} icon={<UserOutlined/>} src={image}/>

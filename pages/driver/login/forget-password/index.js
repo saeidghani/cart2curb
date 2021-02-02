@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Col, Form, Input, message, Row} from "antd";
-import DriverPage from '../../../../components/DriverPage';
+import DriverPage from '../../../../components/Driver/DriverPage';
 const { Item } = Form;
 
 const ForgetPassword = props => {

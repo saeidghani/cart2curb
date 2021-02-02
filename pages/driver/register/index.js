@@ -11,13 +11,11 @@ import {
 } from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
-import {useRouter} from "next/router";
 import Link from "next/link";
 
-import DriverPage from '../../../components/DriverPage';
-import {CloudUploadOutlined, UserOutlined, LikeTwoTone} from '@ant-design/icons';
+import DriverPage from '../../../components/Driver/DriverPage';
+import {CloudUploadOutlined, UserOutlined} from '@ant-design/icons';
 import ImgCrop from "antd-img-crop";
-import {isInAmpMode} from "next/amp";
 import routes from "../../../constants/routes";
 import Success from "../../../components/Driver/Success";
 
