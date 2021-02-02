@@ -101,7 +101,7 @@ const ChangePassword = props => {
                                       },
                                   }),
                               ]}>
-                            <Input.Password placeholder="New Password Confirm"/>
+                            <Input.Password placeholder="Confirm New Password"/>
                         </Item>
                         <Item>
                             <Button type="primary" htmlType={'submit'} block loading={loading}>

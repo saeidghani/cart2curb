@@ -1,4 +1,4 @@
-import ApiInstance from "../../instance";
+import ApiInstance from "../../instanceWithException";
 
 export default class VendorStoreApi extends ApiInstance {
     constructor() {
@@ -54,6 +54,10 @@ export default class VendorStoreApi extends ApiInstance {
 
     orders(query = {}, options = {}) {
         return this.get('vendor/store/orders', query, options);
+    }
+
+    singleOrder(id = '', options = {}) {
+        return this.get(`vendor/store/orders/${id}`, {}, options);
     }
 
 }

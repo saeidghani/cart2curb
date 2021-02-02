@@ -140,6 +140,16 @@ export default class CustomerProfileApi extends ApiInstance {
     }
 
     /**
+     * Fetch Customer order details
+     * @returns {Promise<*>}
+     * @param id
+     * @param options
+     */
+    singleOrder(id, options = {}) {
+        return this.get(`customer/profile/orders/${id}`, {}, options)
+    }
+
+    /**
      * Delete Order or cancel it
      * @param id
      * @param options

@@ -27,9 +27,9 @@ const CategoryCard = ({title, changeHandler, storeId, ...props}) => {
                 const response = await dispatch.app.getCategories({storeId, page})
                 if(response) {
                     if (page !== 1) {
-                        setCategories(categories => categories.concat(response.data));
+                        setCategories(categories => categories.concat(response?.data));
                     } else {
-                        setCategories(categories => response.data);
+                        setCategories(categories => response?.data);
                     }
                     if (response.data.length < 30) {
                         setHasMore(false);
@@ -37,7 +37,6 @@ const CategoryCard = ({title, changeHandler, storeId, ...props}) => {
                 }
             } catch(e) {
                 setHasMore(false);
-                message.error('An Error was occurred while fetching data')
             }
         }
         isIntersecting = true;

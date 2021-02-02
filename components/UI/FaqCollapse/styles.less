@@ -22,10 +22,22 @@
 
     &__inner {
         padding: 16px 12px 35px;
-        white-space: pre-wrap;
         opacity: 0;
         transform: translateY(10px);
         transition: all ease 0.5s;
+
+        a {
+            color: #FF6560;
+
+            &:hover {
+                color: #FF4B45;
+            }
+
+            &:focus,
+            &:active {
+                outline: none;
+            }
+        }
     }
 
     &.active &__icon {

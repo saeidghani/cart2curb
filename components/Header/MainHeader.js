@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Badge, Button, Drawer, Row, Col} from 'antd';
 import Link from 'next/link'
-import {BellTwoTone, MenuOutlined, SettingTwoTone} from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 
 import {HeaderLogoIcon, HeaderNotificationIcon} from '../icons';
 import routes from "../../constants/routes";
@@ -11,12 +11,12 @@ import {useRouter} from "next/router";
 import Avatar from "../UI/Avatar";
 import {useDispatch, useSelector} from "react-redux";
 import userTypes from "../../constants/userTypes";
+import HeaderLink from "./HeaderLink";
 
 const MainHeader = props => {
     const [visible, setVisible] = useState(false);
     const [avatarImage, setAvatarImage] = useState('');
     const [isVendorPage, setIsVendorPage] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
     const isAuthenticated = useIsAuthenticated();
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
@@ -28,16 +28,11 @@ const MainHeader = props => {
 
     useEffect(() => {
         dispatch.cart.getClientCart();
-    }, [token, cartChanges]);
+    }, [token, cartChanges])
 
     useEffect(() => {
-        const isAdmin = localStorage.getItem('admin_token');
-        if (isAdmin) setIsAdmin(true);
-    }, []);
-
-    useEffect(() => {
-        if (userType) {
-            if (props.avatar) {
+        if(userType) {
+            if(props.avatar) {
                 setAvatarImage(props.avatar);
             }
         } else {
@@ -47,7 +42,7 @@ const MainHeader = props => {
     }, [userType, props])
 
     useEffect(() => {
-        if (router.route.indexOf('/vendors') === 0) {
+        if(router.route.indexOf('/vendors') === 0) {
             setIsVendorPage(true)
         } else {
             setIsVendorPage(false);
@@ -56,197 +51,172 @@ const MainHeader = props => {
 
     const onCloseDrawer = () => {
         setVisible(false);
-    };
+    }
 
     const avatar = props.avatar || '';
-
-    const AdminProfile = () => (
-        <div className="flex items-center space-x-3 ml-3">
-            <Link href={routes.admin.customerMessages.index}>
-                <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF"/>
-            </Link>
-            <Link href={routes.admin.profile.index}>
-                <div className="cursor-pointer flex items-center space-x-2">
-                    <SettingTwoTone/>
-                    <span className="text-secondarey">
-                 Profile Setting
-            </span>
-                </div>
-            </Link>
-        </div>
-    );
-
     return (
-        <div className={'header layout__section'}>
-            <div className="header__content">
-                <div className="flex flex-row items-center">
-                    <Link href={routes.homepage}>
-                        <a>
-                            <img src={'/images/Logo.png'} alt={'Cart2Curb'} style={{height: 48, width: 130}}/>
-                        </a>
-                    </Link>
-                    <div className="hidden md:flex items-center">
-                        {!isAuthRoute.value && (
-                            <>
-                                {isVendorPage ? (
-                                    <>
-                                        <Link href={routes.vendors.index} className={'header__link text-purple'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Store</a>
-                                        </Link>
-                                        <Link href={routes.vendors.orders} className={'header__link'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Orders</a>
-                                        </Link>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Link href={routes.homepage} className={'header__link text-purple'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Home</a>
-                                        </Link>
-                                        <Link href={routes.stores.index} className={'header__link'}>
-                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium lg:ml-15.5 md:ml-10 sm:ml-8 ml-4'}>Stores</a>
-                                        </Link>
-                                    </>
-                                )}
-                            </>
-                        )}
-                    </div>
-
-                </div>
-                <div className="hidden md:flex flex-row items-center">
-                    {!isVendorPage && (
-                        <Link href={routes.cart.index}>
-                            <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
-                                <HeaderNotificationIcon/>
-                            </Badge>
-                        </Link>
-                    )}
-                    {isAuthenticated ? (
+        <div className="header__content">
+            <div className="flex flex-row items-center">
+                <Link href={routes.homepage}>
+                    <a>
+                        <img src={'/images/logo.svg'} alt={'Cart2Curb'} style={{ height: 48, width: 60}} />
+                    </a>
+                </Link>
+                <div className="hidden md:flex items-center">
+                    {!isAuthRoute.value && (
                         <>
-                            {router.route !== routes.vendors.account.changePassword && (
-                                <Link
-                                    href={userType === 'vendor' ? routes.vendors.account.index : routes.profile.index}>
-                                    <div className="ml-14 cursor-pointer">
-                                        <Avatar src={avatarImage} justImage/>
-                                    </div>
-                                </Link>
+                            {userType === 'vendor' ? (
+                                <>
+                                    <HeaderLink href={routes.vendors.index} hasPadding>
+                                        Store
+                                    </HeaderLink>
+                                    <HeaderLink href={routes.vendors.orders} hasPadding>
+                                        Orders
+                                    </HeaderLink>
+                                </>
+                            ): (
+                                <>
+                                    <HeaderLink href={routes.homepage} hasPadding>
+                                        Home
+                                    </HeaderLink>
+                                    <HeaderLink href={routes.stores.index} hasPadding>
+                                        Stores
+                                    </HeaderLink>
+                                </>
                             )}
                         </>
-                    ) : isAdmin ? <AdminProfile/> : (
-                        <>
-                            <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
-                                <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
-                            </Link>
-                            <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
-                                <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
-                            </Link>
-                        </>
                     )}
-
-                </div>
-                <div className="flex md:hidden">
-                    <Button style={{width: 50, height: 50}} className={'text-type text-xl'} type={'link'}
-                            onClick={() => setVisible(true)}>
-                        <MenuOutlined/>
-                    </Button>
                 </div>
 
-                <Drawer
-                    title="Menu"
-                    placement={'right'}
-                    closable={true}
-                    onClose={onCloseDrawer}
-                    visible={visible}
-                    key={'menu'}
-                    width={340}
-                >
-                    <div className={'h-full w-full flex flex-col'}>
+            </div>
+            <div className="hidden md:flex flex-row items-center">
+                {!isVendorPage && (
+                    <Link href={routes.cart.index}>
+                        <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
+                            <HeaderNotificationIcon />
+                        </Badge>
+                    </Link>
+                )}
+                {isAuthenticated ? (
+                    <>
+                        {router.route !== routes.vendors.account.changePassword && (
+                            <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                <div className="ml-14 cursor-pointer">
+                                    <Avatar src={avatarImage} justImage/>
+                                </div>
+                            </Link>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
+                            <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
+                        </Link>
+                        <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
+                            <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
+                        </Link>
+                    </>
+                )}
 
-                        <div className="w-full flex-grow">
-                            <Row gutter={[12, 32]}>
-                                {!isAuthRoute.value && (
-                                    <>
-                                        {isVendorPage ? (
-                                            <>
-                                                <Col xs={24}>
-                                                    <Link href={routes.vendors.index}
-                                                          className={'header__link text-purple'}>
-                                                        <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Store</a>
-                                                    </Link>
-                                                </Col>
-                                                <Col xs={24}>
-                                                    <Link href={routes.vendors.orders} className={'header__link'}>
-                                                        <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Orders</a>
-                                                    </Link>
-                                                </Col>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Col xs={24}>
-                                                    <Link href={routes.homepage} className={'header__link text-purple'}>
-                                                        <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Home</a>
-                                                    </Link>
-                                                </Col>
-                                                <Col xs={24}>
-                                                    <Link href={routes.stores.index} className={'header__link'}>
-                                                        <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>Stores</a>
-                                                    </Link>
-                                                </Col>
-                                            </>
-                                        )}
-                                    </>
+            </div>
+            <div className="flex md:hidden">
+                <Button style={{ width: 50, height: 50}} className={'text-type text-xl'} type={'link'} onClick={() => setVisible(true)}>
+                    <MenuOutlined />
+                </Button>
+            </div>
+
+            <Drawer
+                title="Menu"
+                placement={'right'}
+                closable={true}
+                onClose={onCloseDrawer}
+                visible={visible}
+                key={'menu'}
+                width={340}
+            >
+                <div className={'h-full w-full flex flex-col'}>
+
+                    <div className="w-full flex-grow">
+                        <Row gutter={[12, 32]}>
+                            {!isAuthRoute.value && (
+                                <>
+                                    {userType ? (
+                                        <>
+                                            <Col xs={24}>
+                                                <HeaderLink href={routes.vendors.index}>
+                                                    Store
+                                                </HeaderLink>
+                                            </Col>
+                                            <Col xs={24}>
+                                                <HeaderLink href={routes.vendors.orders}>
+                                                    Orders
+                                                </HeaderLink>
+                                            </Col>
+                                        </>
+                                    ): (
+                                        <>
+                                            <Col xs={24}>
+                                                <HeaderLink href={routes.homepage}>
+                                                    Home
+                                                </HeaderLink>
+                                            </Col>
+                                            <Col xs={24}>
+                                                <HeaderLink href={routes.stores.index}>
+                                                    Stores
+                                                </HeaderLink>
+                                            </Col>
+                                        </>
+                                    )}
+                                </>
+                            )}
+
+                            <Col xs={24}>
+                                {!isVendorPage && (
+                                    <Link href={routes.cart.index}>
+                                        <div className="flex flex-row items-center justify-between">
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>
+                                                Cart
+                                            </a>
+
+                                            <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
+                                                <HeaderNotificationIcon />
+                                            </Badge>
+                                        </div>
+                                    </Link>
                                 )}
-
-                                <Col xs={24}>
-                                    {!isVendorPage && (
-                                        <Link href={routes.cart.index}>
-                                            <div className="flex flex-row items-center justify-between">
-                                                <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>
-                                                    Cart
-                                                </a>
-
-                                                <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
-                                                    <HeaderNotificationIcon/>
-                                                </Badge>
+                            </Col>
+                        </Row>
+                    </div>
+                    <div className={'w-full'}>
+                        {isAuthenticated ? (
+                            <Row>
+                                {router.route !== routes.vendors.account.changePassword && (
+                                    <Col xs={24}>
+                                        <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                            <div className="cursor-pointer">
+                                                <Avatar src={avatarImage} justImage/>
                                             </div>
                                         </Link>
-                                    )}
+                                    </Col>
+                                )}
+                            </Row>
+                        ) : (
+                            <Row gutter={[12, 12]}>
+                                <Col xs={24}>
+                                    <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
+                                        <Button type={'link'} className={'w-full text-type'}>Login</Button>
+                                    </Link>
+                                </Col>
+                                <Col xs={24}>
+                                    <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
+                                        <Button className={'w-full text-type text-base'}>Register</Button>
+                                    </Link>
                                 </Col>
                             </Row>
-                        </div>
-                        <div className={'w-full'}>
-                            {isAuthenticated ? (
-                                <Row>
-                                    {router.route !== routes.vendors.account.changePassword && (
-                                        <Col xs={24}>
-                                            <Link
-                                                href={userType === 'vendor' ? routes.vendors.account.index : routes.profile.index}>
-                                                <div className="cursor-pointer">
-                                                    <Avatar src={avatarImage} justImage/>
-                                                </div>
-                                            </Link>
-                                        </Col>
-                                    )}
-                                </Row>
-                            ) : (
-                                <Row gutter={[12, 12]}>
-                                    <Col xs={24}>
-                                        <Link
-                                            href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
-                                            <Button type={'link'} className={'w-full text-type'}>Login</Button>
-                                        </Link>
-                                    </Col>
-                                    <Col xs={24}>
-                                        <Link
-                                            href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
-                                            <Button className={'w-full text-type text-base'}>Register</Button>
-                                        </Link>
-                                    </Col>
-                                </Row>
-                            )}
-                        </div>
+                        )}
                     </div>
-                </Drawer>
-            </div>
+                </div>
+            </Drawer>
         </div>
     )
 }

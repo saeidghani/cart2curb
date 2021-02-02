@@ -30,8 +30,6 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
         const res = await dispatch.cart.addToCart(body)
         if(res) {
             message.success('Product added to your cart');
-        } else {
-            message.error('An Error was occurred');
         }
         setLoading(false);
     }

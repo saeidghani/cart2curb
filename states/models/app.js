@@ -1,5 +1,8 @@
 import api from "../../http/Api";
 import {message} from "antd";
+import ExceptionHandler from "../../exception/ExceptionHandler";
+
+const exceptionHandler = new ExceptionHandler();
 
 export const app = {
     state: {
@@ -29,12 +32,10 @@ export const app = {
                 const data = res.data;
                 if(data.success) {
                     dispatch.app.setVideos(data.data);
-                } else {
-                    message.error('An Error was occurred in data fetch')
                 }
+                exceptionHandler.throwError()
             } catch(e) {
-                console.log(e);
-                message.error('An Error was occurred in data fetch from server')
+                exceptionHandler.throwError(e?.response);
             }
         },
         async getStores(query) {
@@ -47,12 +48,10 @@ export const app = {
                         metaData: data.metaData,
                     });
                     return data;
-                } else {
-                    message.error('An Error was occurred in data fetch')
                 }
+                exceptionHandler.throwError()
             } catch(e) {
-                console.log(e);
-                message.error('An Error was occurred in data fetch from server')
+                exceptionHandler.throwError(e?.response);
             }
         },
         async getStore(storeId) {
@@ -63,10 +62,10 @@ export const app = {
                 if(data.success) {
                     return data.data;
                 } else {
-                    return res.status
+                    return false
                 }
             } catch(e) {
-                return e.response.status
+                return false
             }
         },
         async getCategories(body) {
@@ -77,9 +76,11 @@ export const app = {
                 if(data.success) {
                     return data;
                 } else {
+                    exceptionHandler.throwError();
                     return false
                 }
             } catch(e) {
+                exceptionHandler.throwError(e?.response);
                 return false
             }
         },
@@ -91,10 +92,10 @@ export const app = {
                 if(data.success) {
                     return data;
                 } else {
-                    return res.status
+                    return false
                 }
             } catch(e) {
-                return e.response.status
+                return false
             }
         },
         async getProduct(id) {
@@ -106,10 +107,10 @@ export const app = {
                 if(data.success) {
                     return data.data;
                 } else {
-                    return res.status
+                    return false
                 }
             } catch(e) {
-                return e.response.status
+                return false
             }
         },
         async contact(body) {
@@ -118,10 +119,11 @@ export const app = {
                 if(res?.data?.success) {
                     return true;
                 } else {
+                    exceptionHandler.throwError()
                     return false;
                 }
             } catch(e) {
-                console.log(e);
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
         }

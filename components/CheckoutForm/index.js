@@ -58,7 +58,6 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                             onComplete(true);
 
                         } else {
-                            message.error('An Error was occurred, please try again later');
                             setLoading(false);
                             return false;
                         }

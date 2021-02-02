@@ -152,7 +152,7 @@ const Register = props => {
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true'),
+            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true') ? true : false,
             storeType: form1.storeType,
             subType: form1.subType,
         }
@@ -295,7 +295,7 @@ const Register = props => {
                                               }),
                                           ]}
                                     >
-                                        <Input.Password placeholder="Password Confirm" />
+                                        <Input.Password placeholder="Confirm Password" />
                                     </Item>
                                 </Col>
                                 <Col xs={24}>
@@ -309,7 +309,7 @@ const Register = props => {
                                                   message: "Store Open Time field is required"
                                               },
                                           ]}>
-                                        <TimePicker className={'w-full'}/>
+                                        <TimePicker className={'w-full'} format={'HH:mm'}/>
                                     </Item>
                                 </Col>
                                 <Col lg={8} md={12} xs={24}>
@@ -332,7 +332,7 @@ const Register = props => {
                                                   },
                                               }),
                                           ]}>
-                                        <TimePicker className={'w-full'}/>
+                                        <TimePicker className={'w-full'} format={'HH:mm'}/>
                                     </Item>
                                 </Col>
 
@@ -359,7 +359,7 @@ const Register = props => {
                                                   ]}>
                                                 <Select placeholder={'Type/Service'}>
                                                     <Option value={'product'}>Product</Option>
-                                                    <Option value={'service'} disabled>Service</Option>
+                                                    <Option value={'service'}>Service</Option>
                                                 </Select>
                                             </Item>
                                         </Col>

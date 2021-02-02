@@ -163,7 +163,7 @@ const Categories = props => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'} />
+                                    <Input allowClear placeholder={'Search'} />
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>

@@ -29,7 +29,14 @@ export default async function handler(req, res) {
             res.status(200).json(response.data);
         }
     } catch(e) {
-        console.log(e);
-        res.status(e.response.status).json(e.response.data)
+        if(e?.response?.status === 404) {
+            res.status(200).json({
+                success: true,
+                data: [],
+                message: ''
+            });
+        } else {
+            res.status(e.response.status).json(e.response.data)
+        }
     }
 }

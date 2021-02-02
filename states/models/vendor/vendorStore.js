@@ -60,12 +60,9 @@ export const vendorStore = {
                         metaData: data.metaData
                     })
                     return data;
-                } else {
-                    message.error('An Error was occurred in data fetch')
                 }
             } catch(e) {
-                console.log(e)
-                message.error('An Error was occurred in data fetch from the Server')
+                return false;
             }
         },
         async getServerSideCategories({ query, options}) {
@@ -78,7 +75,6 @@ export const vendorStore = {
                     return []
                 }
             } catch(e) {
-                console.log(e)
                 return []
             }
         },
@@ -92,7 +88,6 @@ export const vendorStore = {
                     return false
                 }
             } catch(e) {
-                console.log(e)
                 return false
             }
         },
@@ -107,15 +102,10 @@ export const vendorStore = {
                 if(res.data.success) {
                     message.success('New Category added successfully!', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+                return false;
+
             } catch(e) {
-                console.log(e);
-                if(e.hasOwnProperty('response')) {
-                    message.error('An Error was occurred');
-                }
                 return false;
             }
         },
@@ -130,15 +120,10 @@ export const vendorStore = {
                 if(res.data.success) {
                     message.success('Category info updated successfully!', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+
+                return false;
             } catch(e) {
-                console.log(e);
-                if(e.hasOwnProperty('response')) {
-                    message.error('An Error was occurred');
-                }
                 return false;
             }
         },
@@ -152,23 +137,9 @@ export const vendorStore = {
                 if(res.data.success) {
                     message.success('Deleted Successfully', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+                return false;
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    const errors = e.response.data.errors;
-                    const errorCode = errors[0].errorCode;
-                    if(errorCode === 'HAS_CHILDREN') {
-                        message.error('You Can\'t Delete this Category because it has children')
-                    } else if(errorCode === 'HAS_PRODUCT') {
-                        message.error('You Can\'t Delete this category because it has product')
-                    } else {
-
-                        message.error('An Error was occurred');
-                    }
-                }
                 return false;
             }
         },
@@ -186,11 +157,10 @@ export const vendorStore = {
                         metaData: data.metaData
                     })
                     return data;
-                } else {
-                    message.error('An Error was occurred in data fetch')
                 }
+                return false;
             } catch(e) {
-                message.error('An Error was occurred in data fetch from the Server')
+                return false;
             }
         },
         async deleteProduct(id, rootState) {
@@ -203,12 +173,9 @@ export const vendorStore = {
                 if(res.data.success) {
                     message.success('Deleted Successfully', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+                return false;
             } catch(e) {
-                message.error('An Error was occurred');
                 return false;
             }
         },
@@ -223,14 +190,9 @@ export const vendorStore = {
                 if(res.data.success) {
                     message.success('Product added successfully!', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+                return false;
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    message.error('An Error was occurred');
-                }
                 return false;
             }
         },
@@ -249,9 +211,6 @@ export const vendorStore = {
                     return false
                 }
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    console.log(e.response.data);
-                }
                 return false
             }
         },
@@ -267,15 +226,9 @@ export const vendorStore = {
                 if(res.data.success) {
                     message.success('Product Updated successfully!', 5);
                     return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
                 }
+                return false;
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    console.log(e.response);
-                }
-                message.error('An Error was occurred');
                 return false;
             }
         },
@@ -293,11 +246,26 @@ export const vendorStore = {
                         metaData: data.metaData
                     })
                     return data;
-                } else {
-                    message.error('An Error was occurred in data fetch')
                 }
+                return false;
             } catch(e) {
-                message.error('An Error was occurred in data fetch from the Server')
+                return false;
+            }
+        },
+        async getSingleOrder(id, rootState) {
+            try {
+                const res = await api.vendor.store.singleOrder(id, {
+                    headers: {
+                        Authorization: `Bearer ${rootState.vendorAuth.token}`
+                    }
+                });
+                const data = res?.data;
+                if(data?.success) {
+                    return data?.data;
+                }
+                return false;
+            } catch(e) {
+                return false;
             }
         },
     })

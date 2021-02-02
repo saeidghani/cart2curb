@@ -178,7 +178,6 @@ const Invoices = props => {
             setLoading(false);
             router.push(routes.cart.checkout);
         } else {
-            message.error('An Error was occurred');
             setLoading(false);
         }
     }

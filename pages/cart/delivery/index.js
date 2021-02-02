@@ -119,7 +119,6 @@ const Delivery = props => {
             ...transformedAddress
         })
         if(!res) {
-            message.error('An Error was occurred');
             return false;
         }
         const body = {
@@ -130,8 +129,6 @@ const Delivery = props => {
         if(finalRes) {
             message.success('Cart Address and Delivery time updated!')
             router.push(routes.cart.invoice.index);
-        } else {
-            message.error('An Error was occurred')
         }
     }
 

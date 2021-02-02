@@ -52,8 +52,6 @@ const ProductView = props => {
         if(res) {
             message.success('Product added to your cart');
             setQuantity(1);
-        } else {
-            message.error('An Error was occurred');
         }
     }
 

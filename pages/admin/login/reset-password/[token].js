@@ -86,7 +86,7 @@ const ResetPassword = props => {
                                 <Input.Password placeholder="New Password"/>
                             </Item>
                             <Item name={'password-confirm'}
-                                  label={'New Password Confirm'}
+                                  label={'Confirm New Password'}
                                   dependencies={['password']}
                                   hasFeedback
                                   rules={[
@@ -103,7 +103,7 @@ const ResetPassword = props => {
                                           },
                                       }),
                                   ]}>
-                                <Input.Password placeholder="New Password Confirm"/>
+                                <Input.Password placeholder="Confirm New Password"/>
                             </Item>
                             <Item>
                                 <Button type="primary" htmlType={'submit'} block loading={loading}>

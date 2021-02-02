@@ -3,7 +3,7 @@ import App from 'next/app';
 
 import cookie from 'cookie';
 
-//import '../styles/less/index.less';
+// import '../styles/less/index2.less';
 import AppProvider from "../providers/AppProvider";
 import Layout from "../components/Layout";
 import RouterChanger from "../components/RouteChanger";

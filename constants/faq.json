@@ -1,66 +1,46 @@
 [
   {
-    "question": "How are online orders delivered?",
-    "answer": "Delivery is every day, between 9:30 a.m. and 9 p.m.  \nThese hours will vary by store, as we will need to pick-up from an open location.\n\nItems under 70 lbs will be delivered by a small parcel carrier.\n\nShipments that are over 70 lbs will be delivered to the curb, or more typically the front door of the house or the ground floor lobby of an apartment or condominium building. Shipments will be delivered as an NSR (No Signature Required)."
+    "question": "How do I place an order for shopping or delivery?",
+    "answer": "You can provide us your shopping list, address, delivery time and preferred method of payment via:\n\n· Cart2curb.com - fill out custom order fields or select partner store products directly\n\n· Call or text @ 548-883-CART (2278)\n\n· DM/Message on [Instagram](www.instagram.com/cart2curb) (www.instagram.com/cart2curb) or [Facebook](www.facebook.com/cart2curb) (www.facebook.com/cart2curb)\n\n· [Email us](mailto:sales@cart2curb.com) (sales@cart2curb.com)"
   },
   {
-    "question": "Who is doing the shopping and delivery? ",
-    "answer": "Cart2Curb has a network of verified shoppers who pick, check out, and pack specific items on a customer’s shopping list and then deliver the order directly to the customer. "
+    "question": "How much does it cost?",
+    "answer": "To have Cart2Curb drive to your favourite store, pick and pack your order (while you watch with LiveCart, if you want) always costs only **$10 plus 5%** of the order value (eg. a $100 order would come to $115 with Cart 2 Curb – cheaper than taking a cab, and your time is worth so much more!). Also, unlike the big guys, you always get **the true cost of the goods** when ordering through us. That means all **sale/discount/promotional prices**, a picture of the receipt when your order is completed and **LiveCart is included** with all orders! No surprises or markups and the stores we shop from get paid upfront so you can stay home and support local business!"
   },
   {
-    "question": "Do I need to be home for the delivery?",
-    "answer": "Except for alcohol, all shipments are delivered as NSR if the carrier deems it safe to leave the shipment. In situations where the carrier is unable to do so, they will leave a delivery notice. If you receive a notice, you may arrange another delivery time when you will be available to receive it.  A $10 premium will be added to your bill.\nAlcohol deliveries will require a person over 19 to receive the package, and sign the receipt.  ID will of course be required.  We will not make exceptions for this one."
+    "question": "Where can I shop from and where will you deliver to?",
+    "answer": "We have a list of preferred partner stores here (*link to Places our Customers Recommend on landing page)* and it is constantly growing, however you can shop from almost any store in the Kitchener/Waterloo/Cambridge/Guelph region and we deliver in the same area. Once you’ve placed your order we will confirm your order details and shopper availability so that we can deliver within our 2 hour window. We aim to bring every store to your door!"
   },
   {
-    "question": "What if I do not want my order delivered as No Signature Required?",
-    "answer": "There is currently no ability to “opt-out” of NSR service for all orders, however, if you are having a large item delivered (over 70lbs) and would like the carrier to book an appointment, please contact Customer Service as soon as you receive your order confirmation. They will advise the carrier that an appointment is needed. "
+    "question": "Can I add multiple stops/items from different stores?",
+    "answer": "Yes! Each additional stop/store is $5 and you can add as many as you like (we’ll ensure the distance isn’t too far when we accept your order) to get all your errands done at once!"
   },
   {
-    "question": "How far in advance can I place my order/what is the delivery window? ",
-    "answer": "Orders can be placed up to 7 days prior to delivery designated by the customer at check out. Orders can be scheduled for delivery in as little as 2 hours.\nYou can view available delivery times for your area after building a shopping list and then clicking checkout on the virtual store."
+    "question": "What forms of payment do you accept?",
+    "answer": "We accept credit/debit at the door, Interac e-transfer, secure online credit card payment (invoice to your email), and exact cash (shoppers don’t carry change). We prefer contactless payment but you tell us what works best for you."
   },
   {
-    "question": "What are the delivery rates?",
-    "answer": "It’s always $10 plus 5% of the order value.  If you want to add subsequent stores on the same delivery, $5/store will be added."
+    "question": "What are Cart2Curb’s hours of operation?",
+    "answer": "We will accept orders up to 30 minutes before a store closes, and deliver to homes up to an hour after close. Essentially, if they’re open, we’re still shopping. As well, you can book your shopping out days in advance if you want to secure your preferred delivery time."
   },
   {
-    "question": "Where does Cart2Curb deliver?",
-    "answer": "Cart2Curb will be delivering to addresses within approximately a 20 minute drive time from any store.  When you arrive at the site, you can hit the locate me, or add an address, and you will see a list of all featured stores in your area that you can get delivery from, however this is not an exclusive list. "
+    "question": "Can I make changes to my order once it is placed?",
+    "answer": "Yes! With LiveCart you can make changes throughout the shopping experience by letting your shopper know as they go! Even if you don’t use LiveCart as long as you let us know before we checkout at the store we can likely change your order to suit. Once it’s paid for and on the way to you, you’ll get a picture of the itemized final receipt. You only pay for the items that were available so there’s never any surprises!"
   },
   {
-    "question": "How do I track my package?",
-    "answer": "You will receive a notification once your driver is doing the pickup, as well as when he’s on his way.  If you’re enjoying the livecart experience, you will see the progress in real time, and be able to communicate directly with the driver."
+    "question": "How does LiveCart work?",
+    "answer": "Once we’ve received your order we will ask if you want to watch your shopping with LiveCart (it’s optional but included at no charge!). If you want to participate we will send you a link to join a secure video call using the software of your choosing (Zoom, Google Meet, Skype, FaceTime, etc) and you can hop on/hop off the call at your leisure from your computer or smartphone. The shopper will have earbud headphones in and can be communicated with in real-time to make adjustments to your order, add/substitute items, see the goods on video, check expiry dates or ask questions about any aspect of the shopping as it happens!"
   },
   {
-    "question": "What happens if the product I ordered is unavailable?",
-    "answer": "When an in-stock item becomes unavailable after you have placed an order, you will receive a text/email offering a substitution.  If you do not reply to the substitution email, the item will be left off the order as a default."
+    "question": "What are some safety precautions that Cart2Curb is taking because of COVID-19?",
+    "answer": "Our drivers are always masked for all aspects of the shopping and home delivery. Additionally, we use hand sanitizer upon leaving the store and keep the handling of your goods to a minimum. When we arrive, we have a number of contactless order dropoff and payment methods you can use at your discretion."
   },
   {
-    "question": "Can I change or cancel my order?",
-    "answer": "Life happens.  If you would like to change or cancel your order, please contact Customer Support as soon as possible. We will do everything we can to accommodate your request if your order has not already been processed. "
+    "question": "What do I need to provide to accept alcohol deliveries?",
+    "answer": "You must be 19 or over and official government ID (see [here](https://www.agco.ca/alcohol/legal-drinking-age-and-photo-id) for approved forms of identification) must be presented for all alcohol deliveries and you will be required to sign a receipt for AGCO license purposes."
   },
   {
-    "question": "What happens if I do not place the order within the allocated time window shown in the cart?",
-    "answer": "If the allocated time window has expired, then the next available Express Delivery option will be selected for you."
-  },
-  {
-    "question": "What happens if I place the order outside of regular working hours?",
-    "answer": "When the order is placed outside of regular business hours, the delivery window will not start until the beginning of the next business day."
-  },
-  {
-    "question": "How will I be notified when my order is arriving?",
-    "answer": "Depending on the preference you select, You will receive an email or text when your order is on-route to the provided delivery address."
-  },
-  {
-    "question": "Can I refuse a package if it is damaged?",
-    "answer": "Yes. However, if you have already accepted the package, please call Customer Support at 548-883-2278 within 24 hours of delivery to ensure a prompt exchange."
-  },
-  {
-    "question": "How do I get a copy of my receipt? ",
-    "answer": "We will email a receipt, and/or bill when the order is completed."
-  },
-  {
-    "question": "Are there any delivery restrictions?",
-    "answer": "Cart2Curb delivers within Canada only; Orders / deliveries to select remote locations will need to be placed through Customer Support where shipping rates will be provided prior to order confirmation/completion. Deliveries can only be made to locations with a street address or rural route number with postal code. Deliveries to rural/ remote areas might require additional shipping charges.\n(We cannot deliver to PO boxes)\n\nThe local world is your oyster."
+    "question": "Can I add a tip to my order for the shopper and if so, what is appropriate?",
+    "answer": "Yes! Tipping is at your discretion however we see most customers tip 15-20% on average, depending on the order size and complexity. Your tips go 100% to our amazing personal shoppers and they really appreciate it!"
   }
 ]

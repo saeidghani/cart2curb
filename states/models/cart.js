@@ -1,5 +1,7 @@
-import {api} from '../../lib/api';
+import {getApi} from '../../lib/api';
 import {message} from "antd";
+
+const api = getApi();
 
 export const cart = {
     state: {
@@ -34,11 +36,6 @@ export const cart = {
 
                 return false;
             } catch (e) {
-                if(e.hasOwnProperty('response')) {
-                    console.log(e.response?.data);
-                }
-                console.log(e);
-
                 return false;
             }
         },
@@ -63,11 +60,6 @@ export const cart = {
 
                 return false;
             } catch (e) {
-                if(e.hasOwnProperty('response')) {
-                    console.log(e?.response?.data);
-                }
-                console.log(e);
-
                 return false;
             }
         },
@@ -81,8 +73,7 @@ export const cart = {
 
                 return false;
             } catch(e) {
-                console.log(e);
-                return e;
+                return false;
             }
         },
         async deleteFromCart(id) {
@@ -96,8 +87,7 @@ export const cart = {
                 }
                 return false;
             } catch(e) {
-                console.log(e);
-                return e;
+                return false;
             }
         },
         async updateCart(body) {
@@ -118,8 +108,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
-
                 return false;
             }
         },
@@ -132,8 +120,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
-
                 return false;
             }
         },
@@ -151,8 +137,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
-
                 return false;
             }
         },
@@ -167,11 +151,6 @@ export const cart = {
 
                 return false;
             } catch (e) {
-                if(e.hasOwnProperty('response')) {
-                    console.log(e.response.data);
-                }
-                console.log(e);
-
                 return false;
             }
         },
@@ -184,16 +163,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    const errors = e.response.data.errors;
-                    const errorCode = errors[0].errorCode;
-                    if(errorCode === 'INVALID_PROMO') {
-                        message.error('Promo code is invalid')
-                    } else {
-                        message.error('An Error was occurred');
-                    }
-                }
-
                 return false;
             }
         },
@@ -206,8 +175,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
-
                 return false;
             }
         },
@@ -221,8 +188,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                console.log(e);
-
                 return false;
             }
         },
@@ -235,19 +200,6 @@ export const cart = {
                     return false;
                 }
             } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    const errors = e.response.data?.errors;
-                    const errorCode = errors?.[0].errorCode;
-                    if(errorCode === 'EMAIL_EXISTS') {
-                        message.error('Email already exists, Please login into your account or use forget password')
-                    } else if(errorCode === 'EMPTY_CART') {
-                        message.error('Your Cart is empty!')
-                    } else {
-                        message.error('An Error was occurred');
-                    }
-                }
-
-
                 return false;
             }
         }

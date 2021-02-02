@@ -2,6 +2,9 @@ import React, {useRef, useEffect, useState} from 'react';
 import { DownOutlined } from '@ant-design/icons';
 
 import './styles.less';
+import {Remarkable} from "remarkable";
+
+const md = new Remarkable();
 
 const FaqCollapse = ({question, answer, ...props}) => {
     const [active, setActive] = useState(false);
@@ -36,9 +39,8 @@ const FaqCollapse = ({question, answer, ...props}) => {
                 </span>
             </div>
             <div className="faq-collapse__content" ref={collapse}>
-                <div className="faq-collapse__inner" ref={content}>
-                    <p className={'text-cell text-xs'}>{answer}</p>
-                </div>
+                <div className="faq-collapse__inner whitespace-pre-wrap text-cell text-xs" ref={content}
+                     dangerouslySetInnerHTML={{ __html: md.render(answer) }} />
             </div>
         </div>
     )

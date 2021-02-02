@@ -120,7 +120,7 @@ export default function Home() {
     return (
         <Page title={false} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
             <div className="flex items-center justify-between bg-primary p-4 mb-16">
-                <span className="text-2xl font-bold text-white pl-6">Search By GPS</span>
+                <span className="text-2xl font-bold text-white pl-6">Search Stores Near Me</span>
                 <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>
             </div>
             <div className="flex flex-col">

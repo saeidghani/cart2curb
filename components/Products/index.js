@@ -175,7 +175,7 @@ const Products = ({vendor, ...props}) => {
                 unitPrice: `$${product.priceList.price}`,
                 price: `$${product.priceList.cost}`,
                 tax: `${product.tax}%`,
-                stock: `${product.priceList.stock}`,
+                stock: `${product.stock}`,
                 category: category ? category.name : product.category,
                 actions: {
                     deleteHandler: () => {
@@ -204,7 +204,7 @@ const Products = ({vendor, ...props}) => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'} />
+                                    <Input allowClear placeholder={'Search'} />
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>

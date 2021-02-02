@@ -105,7 +105,7 @@ export const CartIndex = (props) => {
                 }
             }
         } catch(e) {
-            message.error('An Error was occurred while send data')
+            return false;
         }
 
     }

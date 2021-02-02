@@ -1,8 +1,11 @@
-import {api} from '../../lib/api';
-import axios from 'axios';
+import {getApi} from '../../lib/api';
 import {message} from "antd";
 import {emitter} from "../../helpers/emitter";
 import routes from "../../constants/routes";
+import ExceptionHandler from "../../exception/ExceptionHandler";
+
+const api = getApi(true);
+const exceptionHandler = new ExceptionHandler()
 
 export const auth = {
     state: {
@@ -47,13 +50,12 @@ export const auth = {
                     });
                     message.success('You Logged in successfully!');
                     return true;
-                } else {
-                    message.error('Username Or Password is wrong', 5);
                 }
 
+                exceptionHandler.throwError({}, 'Username or password is wrong');
                 return false;
             } catch(e) {
-                message.error('Username Or Password is wrong', 5);
+                exceptionHandler.throwError(e?.response, 'Username or password is wrong');
                 return false;
             }
         },
@@ -70,25 +72,13 @@ export const auth = {
                     dispatch.auth.authenticate({
                         token: data.data.token
                     });
-                    message.success('Your Registration was Complete');
+                    message.success('Your Registration was complete');
                     return data.data.token;
-                } else {
-                    message.error('Something went wrong', 5);
                 }
+                exceptionHandler.throwError();
                 return false;
             } catch(e) {
-
-                if(e.hasOwnProperty('response')) {
-                    const errors = e.response.data.errors;
-                    const errorCode = errors[0].errorCode;
-                    if(errorCode === 'EMAIL_EXISTS') {
-                        message.error('Email already exists, Please login into your account or use forget password')
-                    } else {
-
-                        message.error('An Error was occurred');
-                    }
-                }
-
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
 
@@ -104,16 +94,11 @@ export const auth = {
                     message.success('Your Profile Information was updated!');
                     return true;
                 }
+                exceptionHandler.throwError();
                 return false;
             } catch(e) {
-                const errorData = e.response.data;
-                if(errorData.hasOwnProperty('errors')) {
-                    errorData.errors.map(err => {
-                        message.error(err.message || 'Something Went wrong', 4)
-                    })
-                } else {
-                    message.error('Something went wrong', 5);
-                }
+                exceptionHandler.throwError(e?.response);
+
                 return false;
             }
         },
@@ -125,8 +110,7 @@ export const auth = {
                 }
                 dispatch.auth.destroyResetToken()
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong', 5);
+                exceptionHandler.throwError(e?.response);
             }
         },
         async resetPassword(body) {
@@ -136,13 +120,13 @@ export const auth = {
                     dispatch.auth.setResetToken({ token: body.token });
                     message.success('Your Password was changed!');
                     return true;
-                } else {
-                    message.error('Your Token is not valid or expired', 5);
-                    return false;
                 }
 
+                exceptionHandler.throwError({}, 'Your Token is not valid or expired');
+                return false;
+
             } catch(e) {
-                message.error('Your Token is not valid or expired', 5);
+                exceptionHandler.throwError(e?.response, 'Your Token is not valid or expired');
                 return false;
             }
         },
@@ -157,17 +141,7 @@ export const auth = {
                     return true;
                 }
             } catch(e) {
-
-                if(e.hasOwnProperty('response')) {
-                    const errors = e.response.data.errors;
-                    const errorCode = errors[0].errorCode;
-                    if(errorCode === 'INCORRECT_PASSWORD') {
-                        message.error('Password is incorrect')
-                    } else {
-
-                        message.error('An Error was occurred');
-                    }
-                }
+                exceptionHandler.throwError(e?.response);
                 return false;
             }
         }

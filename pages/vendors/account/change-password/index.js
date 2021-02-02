@@ -86,7 +86,7 @@ const ChangePassword = props => {
 
                         <Item
                             name={'newPasswordConfirm'}
-                            label={'New Password Confirm'}
+                            label={'Confirm New Password'}
                             dependencies={['newPassword']}
                             hasFeedback
                             rules={[
@@ -103,7 +103,7 @@ const ChangePassword = props => {
                                     },
                                 }),
                             ]}>
-                            <Input.Password placeholder='New Password Confirm' />
+                            <Input.Password placeholder='Confirm New Password' />
                         </Item>
                     </Col>
                     <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>

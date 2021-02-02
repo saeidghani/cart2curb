@@ -18,7 +18,7 @@ const DriverHeader = props => {
             <div className="flex flex-row items-center">
                 <Link href={routes.homepage}>
                     <a>
-                        <img src='/images/Logo.png' alt='Cart2Curb' style={{height: 48, width: 130}}/>
+                        <img src='/images/logo.svg' alt='Cart2Curb' style={{height: 48, width: 60}}/>
                     </a>
                 </Link>
             </div>

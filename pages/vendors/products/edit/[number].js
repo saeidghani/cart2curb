@@ -6,7 +6,6 @@ import Page from "../../../../components/Page";
 import routes from "../../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
-import withAuth from "../../../../components/hoc/withAuth";
 import cookie from "cookie";
 import {getStore} from "../../../../states";
 import userTypes from "../../../../constants/userTypes";
@@ -62,6 +61,7 @@ const EditProduct = props => {
             images,
             category,
             tax,
+            stock,
             description
         } = product;
         const transformedImageList = images.map((image, index) => {
@@ -83,7 +83,7 @@ const EditProduct = props => {
             tax: tax || '',
             description: description || '',
             costPrice: priceList.cost || '',
-            stock: priceList.stock || '',
+            stock: stock || '',
             photo: transformedImageList,
         })
         setImagesList(transformedImageList);
@@ -108,8 +108,8 @@ const EditProduct = props => {
             priceList: {
                 price: Number(unitPrice),
                 cost: Number(costPrice),
-                stock: Number(stock)
             },
+            stock: Number(stock),
             description,
         }
 

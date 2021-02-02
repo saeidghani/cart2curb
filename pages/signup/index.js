@@ -193,7 +193,7 @@ const SignUp = props => {
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'password-confirm'}
-                                      label={'Password Confirm'}
+                                      label={'Confirm Password'}
                                       dependencies={['password']}
                                       hasFeedback
                                       rules={[
@@ -211,7 +211,7 @@ const SignUp = props => {
                                           }),
                                       ]}
                                 >
-                                    <Input.Password placeholder="Password Confirm"/>
+                                    <Input.Password placeholder="Confirm Password"/>
                                 </Item>
                             </Col>
 
