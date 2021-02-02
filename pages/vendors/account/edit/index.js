@@ -38,7 +38,6 @@ function beforeUpload(file) {
 
 const EditAccount = props => {
     const [form] = Form.useForm();
-    const [fields, setFields] = useState([])
     const [imageUrl, setImageUrl] = useState(props.fields[0].imageStore)
     const [avatarUrl, setAvatarUrl] = useState(props.fields[0].image)
     const [marker, setMarker] = useState(props.marker)
@@ -70,7 +69,7 @@ const EditAccount = props => {
             addressLine2: props.fields[1].addressLine2,
             postalCode: props.fields[1].postalCode,
             description: props.fields[1].description,
-            needDriversToGather: props.fields[1].needDriversToGather ? ['true'] : []
+            needDriversToGather: props.fields[1].needDriversToGather ? 'true' : 'false'
         })
     }, [])
 
@@ -108,9 +107,6 @@ const EditAccount = props => {
         if(step === 1 && !marker.position.hasOwnProperty('lat')) {
             message.error('Please Select Your Location on Map')
         } else {
-            const newFields = [...fields];
-            newFields[step] = values;
-            setFields(newFields)
             setLastReached(step + 1);
             setStep(step + 1);
             scrollToTop();
@@ -118,7 +114,6 @@ const EditAccount = props => {
     }
 
     const prevHandler = (step) => {
-        form.setFieldsValue(fields[step - 1]);
         setStep(step - 1);
         scrollToTop();
     }
@@ -141,14 +136,15 @@ const EditAccount = props => {
             message.error('Your Store location must be in your service radius');
             return;
         }
-        const [form1, form2] = fields;
+        const formFields = form.getFieldsValue(true)
+        console.log(formFields);
         const address = {
             country: 'Canada',
-            province: form2.province,
-            city: form2.city,
-            addressLine1: form2.addressLine1,
-            addressLine2: form2.addressLine2,
-            postalCode: form2.postalCode,
+            province: formFields.province,
+            city: formFields.city,
+            addressLine1: formFields.addressLine1,
+            addressLine2: formFields.addressLine2,
+            postalCode: formFields.postalCode,
             location: {
                 type: 'Point',
                 coordinates: [marker.position.lng, marker.position.lat]
@@ -156,23 +152,23 @@ const EditAccount = props => {
         }
         const store = {
             address,
-            description: form2.description,
-            openingHour: form1.openingHour.toISOString(),
-            closingHour: form1.closingHour.toISOString(),
-            name: form1.name,
+            description: formFields.description,
+            openingHour: formFields.openingHour.toISOString(),
+            closingHour: formFields.closingHour.toISOString(),
+            name: formFields.name,
             area: {
                 type: 'Polygon',
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true'),
-            storeType: form1.storeType,
-            subType: form1.subType,
+            needDriversToGather: formFields.needDriversToGather && formFields.needDriversToGather.includes('true') ? true : false,
+            storeType: formFields.storeType,
+            subType: formFields.subType,
         }
 
         const vendor = {
-            phone: form1.phone,
-            contactName: form1.contactName,
+            phone: formFields.phone,
+            contactName: formFields.contactName,
             image: avatarUrl,
         }
 
@@ -315,7 +311,7 @@ const EditAccount = props => {
                                                           message: "Type field is required"
                                                       },
                                                   ]}>
-                                                <Select placeholder={'Type/Service'}>
+                                                <Select placeholder={'Type/Service'} disabled={true}>
                                                     <Option value={'product'}>Product</Option>
                                                     <Option value={'service'}>Service</Option>
                                                 </Select>
@@ -412,20 +408,6 @@ const EditAccount = props => {
                     ) : step === 1 ? (
                         <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 1)} onFinishFailed={checkValidation}>
                             <Row gutter={24}>
-                                <Col span={24}>
-                                    <div className="mb-6">
-                                        <GoogleMap
-                                            height={670}
-                                            initialCenter={{
-                                                lat: 40.781305,
-                                                lng: -73.9666857
-                                            }}
-                                            marker={marker}
-                                            clickHandler={changeMarkerPosition}
-                                        />
-                                    </div>
-                                </Col>
-
                                 <Col lg={8} md={12} xs={24}>
                                     <Item
                                         name={'province'}
@@ -436,6 +418,11 @@ const EditAccount = props => {
                                         }]}
                                     >
                                         <Select
+                                            showSearch
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
                                             placeholder={'Select'}
                                             onChange={setProvince}
                                         >
@@ -456,6 +443,11 @@ const EditAccount = props => {
                                               }
                                           ]}>
                                         <Select
+                                            showSearch
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
                                             placeholder={province ? 'Select' : 'Select Province first'}
                                         >
                                             {cities.map(city => {
@@ -487,13 +479,17 @@ const EditAccount = props => {
                                     <Item name={'postalCode'} label={'Postal Code'}
                                           rules={[
                                               {
-                                                  len: 5,
-                                                  message: 'Postal Code Should be 5 characters',
-                                              },
-                                              {
                                                   required: true,
                                                   message: "Please enter Postal Code."
-                                              }
+                                              },
+                                              ({ getFieldValue }) => ({
+                                                  validator(_, value) {
+                                                      if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/i.test(value)) {
+                                                          return Promise.resolve();
+                                                      }
+                                                      return Promise.reject('Please enter valid Postal code');
+                                                  },
+                                              }),
                                           ]}>
                                         <Input placeholder={'Postal Code'}/>
                                     </Item>
@@ -505,15 +501,30 @@ const EditAccount = props => {
                                     </Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Item name={'needDriversToGather'}>
-                                        <Checkbox.Group >
-                                            <Checkbox value={'true'}>I need driver to gather for us</Checkbox>
-
-                                        </Checkbox.Group>
+                                    <Item name={'needDriversToGather'} label={'Need driver to gather'}>
+                                        <Select
+                                            placeholder={'Select'}
+                                        >
+                                            <Option value={'false'}>Store employee will gather the goods when an order comes in, and place by the door.</Option>
+                                            <Option value={'true'}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
+                                        </Select>
                                     </Item>
                                 </Col>
+                                <Col span={24}>
+                                    <div className="mb-6">
+                                        <GoogleMap
+                                            height={670}
+                                            initialCenter={marker.position || {
+                                                lat: 40.781305,
+                                                lng: -73.9666857
+                                            }}
+                                            marker={marker}
+                                            clickHandler={changeMarkerPosition}
+                                        />
+                                    </div>
+                                </Col>
 
-                                <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
+                                <Col xs={24} className={'flex flex-row-reverse md:mt-0 mt-6'}>
                                     <Item>
                                         <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'}>
                                             Next
@@ -533,7 +544,7 @@ const EditAccount = props => {
                             <Col xs={24}>
                                 <PolygonMap
                                     height={670}
-                                    initialCenter={{
+                                    initialCenter={marker.position || {
                                         lat: 40.781305,
                                         lng: -73.9666857
                                     }}
@@ -593,60 +604,72 @@ export async function getServerSideProps({ req, res }) {
         };
     }
 
-    const store = getStore();
-    const response = await store.dispatch.vendorProfile.getProfile({
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    if(response) {
-        profile = response;
-    }
-    const markCoords = profile.store.address.location.coordinates
-    marker = {
-        position: {
-            lat: markCoords[1],
-            lng: markCoords[0]
-        }
-    }
-    const areaCoords = profile.store.area.coordinates[0];
-    for(let i in areaCoords){
-        const index = area.findIndex(item => item.lat === areaCoords[i][1] && item.lng === areaCoords[i][0]);
-        if(index === -1) {
-            area.push({
-                lat: areaCoords[i][1],
-                lng: areaCoords[i][0]
-            })
-        }
-    }
-    fields[0] = {
-        email: getProperty(profile, 'email', ''),
-        phone: getProperty(profile, 'phone', ''),
-        contactName: getProperty(profile, 'contactName', ''),
-        openingHour: getProperty(profile.store, 'openingHour', ''),
-        closingHour: getProperty(profile.store, 'closingHour', ''),
-        storeType: getProperty(profile.store, 'storeType', ''),
-        subType: getProperty(profile.store, 'subType', ''),
-        name: getProperty(profile.store, 'name', ''),
-        imageStore: getProperty(profile.store, 'image', ''),
-        image: getProperty(profile, 'image', ''),
-    }
+    try {
 
-    fields[1] = {
-        province: getProperty(profile.store.address, 'province', ''),
-        city: getProperty(profile.store.address, 'city', ''),
-        addressLine1: getProperty(profile.store.address, 'addressLine1', ''),
-        addressLine2: getProperty(profile.store.address, 'addressLine2', ''),
-        postalCode: getProperty(profile.store.address, 'postalCode', ''),
-        needDriversToGather: getProperty(profile.store, 'needDriversToGather', ''),
-        description: getProperty(profile.store, 'description', ''),
-    }
-    return {
-        props: {
-            profile,
-            marker,
-            area,
-            fields
+        const store = getStore();
+        const response = await store.dispatch.vendorProfile.getProfile({
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if(response) {
+            profile = response;
+        }
+        const markCoords = profile.store.address.location.coordinates
+        marker = {
+            position: {
+                lat: markCoords[1],
+                lng: markCoords[0]
+            }
+        }
+        const areaCoords = profile.store.area.coordinates[0];
+        for(let i in areaCoords){
+            const index = area.findIndex(item => item.lat === areaCoords[i][1] && item.lng === areaCoords[i][0]);
+            if(index === -1) {
+                area.push({
+                    lat: areaCoords[i][1],
+                    lng: areaCoords[i][0]
+                })
+            }
+        }
+        fields[0] = {
+            email: getProperty(profile, 'email', ''),
+            phone: getProperty(profile, 'phone', ''),
+            contactName: getProperty(profile, 'contactName', ''),
+            openingHour: getProperty(profile.store, 'openingHour', ''),
+            closingHour: getProperty(profile.store, 'closingHour', ''),
+            storeType: getProperty(profile.store, 'storeType', ''),
+            subType: getProperty(profile.store, 'subType', ''),
+            name: getProperty(profile.store, 'name', ''),
+            imageStore: getProperty(profile.store, 'image', ''),
+            image: getProperty(profile, 'image', ''),
+        }
+
+        fields[1] = {
+            province: getProperty(profile.store.address, 'province', ''),
+            city: getProperty(profile.store.address, 'city', ''),
+            addressLine1: getProperty(profile.store.address, 'addressLine1', ''),
+            addressLine2: getProperty(profile.store.address, 'addressLine2', ''),
+            postalCode: getProperty(profile.store.address, 'postalCode', ''),
+            needDriversToGather: getProperty(profile.store, 'needDriversToGather', ''),
+            description: getProperty(profile.store, 'description', ''),
+        }
+        return {
+            props: {
+                profile,
+                marker,
+                area,
+                fields
+            }
+        }
+    } catch(e) {
+        return {
+            props: {
+                profile,
+                marker,
+                area,
+                fields
+            }
         }
     }
 }

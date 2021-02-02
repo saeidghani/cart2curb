@@ -152,7 +152,7 @@ const Register = props => {
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true') ? true : false,
+            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather === 'true' ? true : false,
             storeType: form1.storeType,
             subType: form1.subType,
         }
@@ -450,20 +450,6 @@ const Register = props => {
                     ) : step === 1 ? (
                         <Form layout={'vertical'} form={form} onFinish={(values) => addStepHandler(values, 1)} onFinishFailed={checkValidation}>
                             <Row gutter={24}>
-                                <Col span={24}>
-                                    <div className="mb-6">
-                                        <GoogleMap
-                                            height={670}
-                                            initialCenter={{
-                                                lat: 40.781305,
-                                                lng: -73.9666857
-                                            }}
-                                            marker={marker}
-                                            clickHandler={changeMarkerPosition}
-                                        />
-                                    </div>
-                                </Col>
-
                                 <Col lg={8} md={12} xs={24}>
                                     <Item
                                         name={'province'}
@@ -474,6 +460,11 @@ const Register = props => {
                                         }]}
                                     >
                                         <Select
+                                            showSearch
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
                                             placeholder={'Select'}
                                             onChange={setProvince}
                                         >
@@ -494,6 +485,11 @@ const Register = props => {
                                               }
                                           ]}>
                                         <Select
+                                            showSearch
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
                                             placeholder={province ? 'Select' : 'Select Province first'}
                                         >
                                             {cities.map(city => {
@@ -525,13 +521,17 @@ const Register = props => {
                                     <Item name={'postalCode'} label={'Postal Code'}
                                           rules={[
                                               {
-                                                  len: 5,
-                                                  message: 'Postal Code Should be 5 characters',
-                                              },
-                                              {
                                                   required: true,
                                                   message: "Please enter Postal Code."
-                                              }
+                                              },
+                                              ({ getFieldValue }) => ({
+                                                  validator(_, value) {
+                                                      if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/i.test(value)) {
+                                                          return Promise.resolve();
+                                                      }
+                                                      return Promise.reject('Please enter valid Postal code');
+                                                  },
+                                              }),
                                           ]}>
                                         <Input placeholder={'Postal Code'}/>
                                     </Item>
@@ -543,15 +543,31 @@ const Register = props => {
                                     </Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Item name={'needDriversToGather'}>
-                                        <Checkbox.Group >
-                                            <Checkbox value={'true'}>I need driver to gather for us</Checkbox>
-
-                                        </Checkbox.Group>
+                                    <Item name={'needDriversToGather'} label={'Need driver to gather'} initialValue={'false'}>
+                                        <Select
+                                            placeholder={'Select'}
+                                        >
+                                            <Option value={'false'}>Store employee will gather the goods when an order comes in, and place by the door.</Option>
+                                            <Option value={'true'}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
+                                        </Select>
                                     </Item>
                                 </Col>
+                                <Col span={24}>
+                                    <div className="mb-6">
+                                        <GoogleMap
+                                            height={670}
+                                            initialCenter={{
+                                                lat: 40.781305,
+                                                lng: -73.9666857
+                                            }}
+                                            marker={marker}
+                                            clickHandler={changeMarkerPosition}
+                                        />
+                                    </div>
+                                </Col>
 
-                                <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
+
+                                <Col xs={24} className={'flex flex-row-reverse md:mt-0 mt-6'}>
                                     <Item>
                                         <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'}>
                                             Next
@@ -571,7 +587,7 @@ const Register = props => {
                             <Col xs={24}>
                                 <PolygonMap
                                     height={670}
-                                    initialCenter={{
+                                    initialCenter={marker.position || {
                                         lat: 40.781305,
                                         lng: -73.9666857
                                     }}

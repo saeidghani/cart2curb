@@ -26,10 +26,9 @@ const EditCategory = props => {
         dispatch.vendorStore.getCategories({})
             .then(response => {
                 setParentCategories(response.data);
-
                 form.setFieldsValue({
                     name: props.category.name,
-                    parent: props.category.parent,
+                    parent: props.category.parent._id,
                     description: props.category.description || ''
                 })
             })

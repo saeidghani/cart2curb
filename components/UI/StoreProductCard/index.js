@@ -43,7 +43,7 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
                             <PictureOutlined  />
                         </div>
                     ) : (
-                        <img src={imageProduct} alt="shop name" style={{ height: '100%', objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
+                        <img src={imageProduct} alt="shop name" className={'border border-solid border-gray'} style={{ height: '100%', objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
                     )}
                 </div>
             </div>
