@@ -45,8 +45,6 @@ const Categories = props => {
                 }
             } catch(e) {
                 setHasMore(false);
-                console.log(e);
-                message.error('An Error was occurred while fetching data')
             }
         }
         isIntersecting = true;
@@ -114,7 +112,6 @@ const Categories = props => {
             dataIndex: 'actions',
             key: 'actions',
             render: (actions, row) => {
-                console.log(row);
                 return (
                     <div className={'flex flex-row items-center'}>
                         <Link href={routes.vendors.categories.edit()} as={routes.vendors.categories.edit(row.index)}>
@@ -172,7 +169,7 @@ const Categories = props => {
                                         {parentCategory && (
                                             <>
                                                 <Option value={'all'}>All</Option>
-                                                {parentCategory.map(cat => {
+                                                {parentCategory.filter(cat => !deleted.includes(cat._id)).map(cat => {
                                                     return (
                                                     <Option key={cat._id} value={cat._id}>{cat.name}</Option>
                                                     )

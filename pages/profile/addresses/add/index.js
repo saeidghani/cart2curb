@@ -134,6 +134,11 @@ const AddAddress = props => {
                                           message: 'Please select Province'
                                       }]}>
                                     <Select
+                                        showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
                                         placeholder={'Select'}
                                         onChange={setProvince}
                                     >
@@ -154,6 +159,11 @@ const AddAddress = props => {
                                           }
                                       ]}>
                                     <Select
+                                        showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
                                         placeholder={province ? 'Select' : 'Select Province first'}
                                     >
                                         {cities.map(city => {
@@ -185,13 +195,17 @@ const AddAddress = props => {
                                 <Item name={'postalCode'} label={'Postal Code'}
                                       rules={[
                                           {
-                                              len: 5,
-                                              message: 'Postal Code Should be 5 characters',
-                                          },
-                                          {
                                               required: true,
                                               message: "Please enter Postal Code."
-                                          }
+                                          },
+                                          ({ getFieldValue }) => ({
+                                              validator(_, value) {
+                                                  if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/i.test(value)) {
+                                                      return Promise.resolve();
+                                                  }
+                                                  return Promise.reject('Please enter valid Postal code');
+                                              },
+                                          }),
                                       ]}>
                                     <Input placeholder={'Postal Code'}/>
                                 </Item>
