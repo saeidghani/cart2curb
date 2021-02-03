@@ -3,61 +3,42 @@ import ApiInstance from "../../instanceWithException";
 export default class CustomCardApi extends ApiInstance {
     constructor() {
         super();
-
-        this.methods = {
-            profile: {
-                get: this.profile,
-                update: this.updateProfile,
-            },
-        }
     }
 
-    categories(query = {}, options = {}) {
-        return this.get('vendor/store/categories', query, options)
+    getCard(query = {}, options = {}) {
+        return this.get('custom-cart', query, options)
     }
 
-    addCategory(body, options = {}) {
-        return this.post('vendor/store/categories', body, {}, options)
+    createCard(body, options = {}) {
+        return this.post('custom-cart', body, {}, options)
     }
 
-    singleCategory(id, options = {}) {
-        return this.get(`vendor/store/categories/${id}`, {}, options);
+    deleteCart(id, options = {}) {
+        return this.delete(`custom-cart/${id}`, options);
     }
 
-    editCategory(id, body, options = {}) {
-        return this.put(`vendor/store/categories/${id}`, body, {}, options);
+    addToCart(id, body, options = {}) {
+        return this.post(`custom-cart/${id}/products`, body, {}, options)
     }
 
-    deleteCategory(id, options = {}) {
-        return this.delete(`vendor/store/categories/${id}`, options);
+    updateProduct(id, productId, body, options = {}) {
+        return this.put(`custom-cart/${id}/products/${productId}`, body, {}, options)
     }
 
-    products(query = {}, options = {}) {
-        return this.get('vendor/store/products', query, options);
+    deleteProduct(id, productId, options = {}) {
+        return this.delete(`custom-cart/${id}/products/${productId}`, options);
     }
 
-    addProduct(body, options = {}) {
-        return this.post('vendor/store/products', body, {}, options)
+
+    addNote(id, body, options = {}) {
+        return this.put(`custom-cart/${id}/note`, body, {}, options)
     }
 
-    singleProduct(id, options = {}) {
-        return this.get(`vendor/store/products/${id}`,{}, options)
+    addAddress(id, body, options = {}) {
+        return this.put(`custom-cart/${id}/address`, body, {}, options)
     }
 
-    editProduct(id, body, options = {}) {
-        return this.put(`vendor/store/products/${id}`, body, {}, options);
+    updateDeliveryTime(id, body, options = {}) {
+        return this.put(`custom-cart/${id}/deliverytime`, body, {}, options)
     }
-
-    deleteProduct(id, options = {}) {
-        return this.delete(`vendor/store/products/${id}`, options);
-    }
-
-    orders(query = {}, options = {}) {
-        return this.get('vendor/store/orders', query, options);
-    }
-
-    singleOrder(id = '', options = {}) {
-        return this.get(`vendor/store/orders/${id}`, {}, options);
-    }
-
 }
