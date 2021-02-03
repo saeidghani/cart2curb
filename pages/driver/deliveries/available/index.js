@@ -3,12 +3,13 @@ import {Button, Select} from 'antd';
 import {CloseOutlined, EnvironmentOutlined, SoundOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
+import moment from "moment";
 
 import DriverPage from '../../../../components/Driver/DriverPage';
 import DriverAuth from '../../../../components/Driver/DriverAuth';
 import routes from '../../../../constants/routes';
 import Loader from "../../../../components/UI/Loader";
-import moment from "moment";
+import {convertAddress} from '../../../../helpers';
 
 const {Option} = Select;
 
@@ -30,30 +31,10 @@ const Available = () => {
     useEffect(() => {
     }, [deliveries]);
 
-    const getDestination = (destination) => {
-        return `${destination?.addressLine1}${destination?.addressLine2 ? destination?.addressLine2 : ''} ${destination?.city} ${destination?.province} ${destination?.country}`;
-    };
-
-    const statuses = [
-        {name: 'all', value: ''},
-        {name: 'not assigned', value: 'notAssigned'},
-        {name: 'pending', value: 'pending'},
-        {name: 'accepted', value: 'accepted'},
-        {name: 'delivered', value: 'delivered'},
-    ];
-
     const dateOptions = [
         {name: 'newest', value: '-createdAt'},
         {name: 'oldest', value: '+createdAt'},
     ];
-
-    const handleFilterByStatus = async (status) => {
-        setSelectedStatus(status);
-        const query = {};
-        if (selectedDateOrder) query.sort = selectedDateOrder;
-        if (status) query.status = status;
-        await dispatch?.driverDelivery?.getAvailableDeliveries(query);
-    };
 
     const handleSortByOrder = async (dateOrder) => {
         setSelectedDateOrder(dateOrder);
@@ -70,9 +51,7 @@ const Available = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {
-        }
-        ;
+        } catch (err) {};
     };
 
     const handleReject = async (deliveryId) => {
@@ -82,9 +61,7 @@ const Available = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {
-        }
-        ;
+        } catch (err) {};
     };
 
     const EmptyDelivery = ({}) => (
@@ -116,14 +93,8 @@ const Available = () => {
         </div>
     );
 
-    const SortAndFilter = () => (
+    const SortByDate = () => (
         <div className="grid grid-cols-2 gap-x-2 mb-2 w-full">
-            <div className="">
-                <Select placeholder='Status' className="w-full" value={selectedStatus}
-                        onChange={statusVal => handleFilterByStatus(statusVal)}>
-                    {statuses?.map(status => <Option value={status?.value}>{status?.name}</Option>)}
-                </Select>
-            </div>
             <div className="">
                 <Select placeholder='Date' className="w-full" value={selectedDateOrder}
                         onChange={dateOrderVal => handleSortByOrder(dateOrderVal)}>
@@ -182,7 +153,7 @@ const Available = () => {
                     Destination
                 </div>
                 <div className="font-normal text-sm">
-                    {getDestination(destination)}
+                    {convertAddress(destination)}
                 </div>
             </div>
             <Button
@@ -209,7 +180,7 @@ const Available = () => {
                 <div className="min-h-full flex flex-col space-y-4 items-center px-4">
                     {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length > 0 ?
                         <>
-                            <SortAndFilter/>
+                            <SortByDate/>
                             {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.map(d =>
                                 <DeliveryCard
                                     deliveryId={d?._id}

@@ -18,6 +18,7 @@ import routes from "../../../constants/routes";
 import Loader from "../../../components/UI/Loader";
 import AdminAuth from "../../../components/Admin/AdminAuth";
 import api from "../../../http/Api";
+import {convertAddress} from '../../../helpers';
 
 const setOptions = token => ({
     headers: {
@@ -77,10 +78,6 @@ const Deliveries = props => {
     }, [deliveries]);
 
     const {Option} = Select;
-
-    const getDestination = (destination) => {
-        return `${destination?.addressLine1}${destination?.addressLine2 ? destination?.addressLine2 : ''} ${destination?.city} ${destination?.province} ${destination?.country}`;
-    };
 
     if (loadingDelivery) return (
         <div className="flex items-center justify-center py-10">
@@ -173,7 +170,7 @@ const Deliveries = props => {
                             icon={<HourglassOutlined className="text-lg text-secondarey"/>}/>
             </div>
             <DetailItem labelColor='overline' title='Destination'
-                        value={getDestination(destination)}
+                        value={convertAddress(destination)}
                         icon={<EnvironmentOutlined className="text-lg text-secondarey"/>}/>
         </div>
     )

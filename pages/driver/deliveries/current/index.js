@@ -10,6 +10,7 @@ import DriverAuth from '../../../../components/Driver/DriverAuth';
 import DriverPage from '../../../../components/Driver/DriverPage';
 import routes from '../../../../constants/routes';
 import Loader from "../../../../components/UI/Loader";
+import {convertAddress} from '../../../../helpers';
 
 const Current = () => {
     const dispatch = useDispatch();
@@ -23,8 +24,6 @@ const Current = () => {
             dispatch?.driverDelivery?.getCurrentDeliveries();
         }
     }, [token]);
-
-    const getAddress = (destination) => `${destination?.destinationLine1 || ''}${destination?.destinationLine2 || ''} ${destination?.city || ''} ${destination?.province || ''} ${destination?.country || ''}`;
 
     const handleComplete = async (deliveryId) => {
         const body = {
@@ -60,13 +59,16 @@ const Current = () => {
             <div className="text-xs font-normal mt-9 text-paragraph">
                 Delivery Countdown
             </div>
+            <div className="text-xs font-normal mt-2 text-btn">
+                Missed Delivery Time
+            </div>
             <div className="text-6xl font-medium text-center">
                 <Timer
-                    initialTime={moment(acceptedDateByDriver).diff(moment(deliveryTime))}
-                    direction="backward"
+                    initialTime={Math.abs(moment().diff(moment(deliveryTime)))}
+                    direction={moment().diff(moment(deliveryTime)) > 0 ? "forward" : "backward"}
                 >
                     {({reset, resume, start, getTimerState}) => (
-                        <div className="text-center">
+                        <div className={moment().diff(moment(deliveryTime)) > 0 ? 'text-center text-btn' : "text-center"}>
                             <span>0<Timer.Hours/>:</span>
                             <span><Timer.Minutes/>:</span>
                             <span><Timer.Seconds/></span>
@@ -114,7 +116,7 @@ const Current = () => {
                     Scheduled Delivery Time
                 </div>
                 <div className="font-normal text-sm">
-                    02.05.2020 | 12:30 - 13:30
+                    {`${moment(deliveryTime).format('YYYY-MM-DD')} | ${moment(deliveryTime).format('hh:mm')}`}
                 </div>
             </div>
             <div className="mt-7">
@@ -122,7 +124,7 @@ const Current = () => {
                     Destination
                 </div>
                 <div className="font-normal text-sm">
-                    {getAddress(customerAddress)}
+                    {convertAddress(customerAddress)}
                 </div>
             </div>
             <Link href={routes.driver.customerOrders.view(deliveryId)}>
@@ -149,14 +151,15 @@ const Current = () => {
     );
 
     const DeliveryNav = () => (
-        <div className="grid grid-cols-2 shadow-lg" style={{position: 'sticky', bottom: 30, width: '100vw'}}>
+        <div className="grid grid-cols-2 shadow-lg mb-10" style={{position: 'sticky', bottom: 30, width: '100vw'}}>
             <Link href={routes.driver.deliveries.available}>
-                <div className="text-secondarey text-center p-4">
+                <div className="text-secondarey text-center p-4 bg-white">
                     Available Deliveries
                 </div>
             </Link>
             <Link href={routes.driver.deliveries.current}>
-                <div className="text-secondarey text-center p-4 bg-white" style={{backgroundColor: '#E6F7FF'}}>Current Delivery</div>
+                <div className="text-secondarey text-center p-4" style={{backgroundColor: '#E6F7FF'}}>Current Delivery
+                </div>
             </Link>
         </div>
     );
@@ -181,7 +184,7 @@ const Current = () => {
 };
 
 Current.getInitialProps = async () => {
-    return { forceLayout: true };
+    return {forceLayout: true};
 }
 
 export default Current;

@@ -4,6 +4,7 @@ import {useRouter} from 'next/router';
 
 import DriverPage from '../../../components/Driver/DriverPage';
 import DriverAuth from '../../../components/Driver/DriverAuth';
+import {convertAddress} from '../../../helpers';
 
 const CurrentOrders = () => {
     const dispatch = useDispatch();
@@ -24,7 +25,13 @@ const CurrentOrders = () => {
         setDelivery(selectedDelivery);
     }, [currentDeliveries]);
 
-    const getAddress = (destination) => `${destination?.destinationLine1 || ''}${destination?.destinationLine2 || ''} ${destination?.city || ''} ${destination?.province || ''} ${destination?.country || ''}`;
+    const getAddress = (address) => {
+        return `${address?.addressLine1 ? `${address?.addressLine1},` : ''} 
+                ${address?.addressLine2 ? `${address?.addressLine2},` : ''}
+                ${address?.city ? `${address?.city},` : ''}
+                ${address?.province ? `${address?.province},` : ''}
+                ${address?.country ? `${address?.country},` : ''}`;
+    };
 
     const DetailInfo = ({title, description, borderLess}) => (
         <div className={`grid grid-cols-5 gap-x-1 ${borderLess ? 'px-4 pt-4' : 'p-4'}`}
@@ -48,7 +55,7 @@ const CurrentOrders = () => {
                         <DetailInfo title={"Substitutions"} description={p?.subtitution || '-'}/>
                         <DetailInfo
                             title="Store Address"
-                            description={p?.storeInfo?.address ? getAddress(p?.storeInfo?.address) : '-'}
+                            description={p?.storeInfo?.address ? convertAddress(p?.storeInfo?.address) : '-'}
                             borderLess
                         />
                     </div>)}
