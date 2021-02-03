@@ -10,6 +10,7 @@ import RouterChanger from "../components/RouteChanger";
 import {getStore} from "../states";
 import Head from "next/head";
 import NProgress from "../components/NProgress/index";
+import MessageHandler from "../components/MessageHandler";
 //import '../styles/less/index2.less';
 
 class MyApp extends App {
@@ -24,6 +25,7 @@ class MyApp extends App {
                           href="/styles/main.css"/>
                 </Head>
                 <RouterChanger/>
+                <MessageHandler/>
                 <NProgress/>
                 <Layout style={{ background: 'white' }} forceLayout={forceLayout} avatar={avatar}>
                     <Component {...pageProps} />

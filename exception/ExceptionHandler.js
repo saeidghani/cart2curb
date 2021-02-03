@@ -1,5 +1,5 @@
 import errors from '../constants/errors.json';
-import { message } from 'antd';
+import { emitter } from "../helpers/emitter";
 
 export const DEFAULT_HTTP_ERROR = 'An Error was occurred, Please try again'
 
@@ -24,7 +24,10 @@ export default class ExceptionHandler {
 
     message(text = DEFAULT_HTTP_ERROR) {
         try {
-            message.error(text);
+            emitter.emit('show-message', {
+                type: 'error',
+                text
+            })
         } catch(e) {
             return false;
         }
