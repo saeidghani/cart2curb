@@ -185,7 +185,7 @@ const Services = ({vendor, ...props}) => {
                                     setDeleted(deleted?.concat(service?._id))
                                 }
                             },
-                            okText: 'Ok',
+                            okText: 'OK',
                             title: 'Do you want to delete this service?',
                             content: 'Are you sure to delete this service? There is no going back!!',
                         });

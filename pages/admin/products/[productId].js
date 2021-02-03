@@ -78,7 +78,7 @@ const ProductView = props => {
                                                             });
                                                         }
                                                     },
-                                                    okText: 'Ok',
+                                                    okText: 'OK',
                                                     title: 'Do you want to delete this product?',
                                                     content: 'Are you sure to delete this product? There is no going back!!',
                                                 })}

@@ -139,7 +139,7 @@ const Promo = () => {
                                     setDeleted(deleted?.concat(promo?._id))
                                 }
                             },
-                            okText: 'Ok',
+                            okText: 'OK',
                             title: 'Do you want to delete this promo code?',
                             content: 'Are you sure to delete this promo code? There is no going back!!',
                         });

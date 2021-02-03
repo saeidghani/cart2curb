@@ -161,7 +161,7 @@ const Categories = props => {
                                     setDeleted(deleted?.concat(item?._id))
                                 }
                             },
-                            okText: 'Ok',
+                            okText: 'OK',
                             title: 'Do you want to delete this Category?',
                             content: 'Are you sure to delete this category? There is no going back!!',
                         });

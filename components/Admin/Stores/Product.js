@@ -198,7 +198,7 @@ const Products = ({vendor, ...props}) => {
                                     setDeleted(deleted?.concat(product?._id))
                                 }
                             },
-                            okText: 'Ok',
+                            okText: 'OK',
                             title: 'Do you want to delete this product?',
                             content: 'Are you sure to delete this product? There is no going back!!',
                         });

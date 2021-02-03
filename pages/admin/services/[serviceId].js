@@ -70,7 +70,7 @@ const ServiceView = props => {
                                                             router.push({pathname: routes.admin.stores.storeDetails, query: {storeId, storeType, tab: 'service'}});
                                                         }
                                                     },
-                                                    okText: 'Ok',
+                                                    okText: 'OK',
                                                     title: 'Do you want to delete this service?',
                                                     content: 'Are you sure to delete this service? There is no going back!!',
                                                 })}
