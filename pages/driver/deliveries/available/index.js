@@ -30,6 +30,10 @@ const Available = () => {
     useEffect(() => {
     }, [deliveries]);
 
+    const getDestination = (destination) => {
+        return `${destination?.addressLine1}${destination?.addressLine2 ? destination?.addressLine2 : ''} ${destination?.city} ${destination?.province} ${destination?.country}`;
+    };
+
     const statuses = [
         {name: 'all', value: ''},
         {name: 'not assigned', value: 'notAssigned'},
@@ -58,25 +62,6 @@ const Available = () => {
         query.sort = dateOrder;
         await dispatch?.driverDelivery?.getAvailableDeliveries(query);
     }
-
-    const SortAndFilter = () => (
-        <div className="grid grid-cols-2 gap-x-2 mb-6 w-full">
-            <div className="">
-                <Select placeholder='Status' className="w-full" value={selectedStatus}
-                        onChange={statusVal => handleFilterByStatus(statusVal)}>
-                    {statuses?.map(status => <Option value={status?.value}>{status?.name}</Option>)}
-                </Select>
-            </div>
-            <div className="">
-                <Select placeholder='Date' className="w-full" value={selectedDateOrder}
-                        onChange={dateOrderVal => handleSortByOrder(dateOrderVal)}>
-                    {dateOptions?.map(date => <Option value={date?.value}>{date?.name}</Option>)}
-                </Select>
-            </div>
-        </div>
-    );
-
-    const getAddress = (destination) => `${destination?.destinationLine1 || ''}${destination?.destinationLine2 || ''} ${destination?.city || ''} ${destination?.province || ''} ${destination?.country || ''}`;
 
     const handleSubmit = async (deliveryId) => {
         const body = {
@@ -131,6 +116,23 @@ const Available = () => {
         </div>
     );
 
+    const SortAndFilter = () => (
+        <div className="grid grid-cols-2 gap-x-2 mb-2 w-full">
+            <div className="">
+                <Select placeholder='Status' className="w-full" value={selectedStatus}
+                        onChange={statusVal => handleFilterByStatus(statusVal)}>
+                    {statuses?.map(status => <Option value={status?.value}>{status?.name}</Option>)}
+                </Select>
+            </div>
+            <div className="">
+                <Select placeholder='Date' className="w-full" value={selectedDateOrder}
+                        onChange={dateOrderVal => handleSortByOrder(dateOrderVal)}>
+                    {dateOptions?.map(date => <Option value={date?.value}>{date?.name}</Option>)}
+                </Select>
+            </div>
+        </div>
+    );
+
     const DeliveryCard = ({deliveryId, destination, sources, deliveryTime, deliveryFee, acceptedDateByDriver}) => (
         <div className="w-full shadow-lg p-8">
             <div className="flex">
@@ -180,7 +182,7 @@ const Available = () => {
                     Destination
                 </div>
                 <div className="font-normal text-sm">
-                    {getAddress(destination)}
+                    {getDestination(destination)}
                 </div>
             </div>
             <Button
@@ -204,7 +206,7 @@ const Available = () => {
     return (
         <DriverAuth>
             <DriverPage title="Available Deliveries" titleClassName="px-4">
-                <div className="min-h-full flex flex-col items-center px-4">
+                <div className="min-h-full flex flex-col space-y-4 items-center px-4">
                     {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length > 0 ?
                         <>
                             <SortAndFilter/>
@@ -214,6 +216,7 @@ const Available = () => {
                                     destination={d?.destination}
                                     sources={d?.sources}
                                     deliveryTime={d?.deliveryTime}
+                                    deliveryFee={d?.deliveryFee}
                                 />)}
                         </> : availableDeliveriesLoading ? <span></span> : <EmptyDelivery/>}
                 </div>

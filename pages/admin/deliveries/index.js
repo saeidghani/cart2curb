@@ -80,7 +80,7 @@ const Deliveries = props => {
 
     const getDestination = (destination) => {
         return `${destination?.addressLine1}${destination?.addressLine2 ? destination?.addressLine2 : ''} ${destination?.city} ${destination?.province} ${destination?.country}`;
-    }
+    };
 
     if (loadingDelivery) return (
         <div className="flex items-center justify-center py-10">

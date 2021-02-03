@@ -2,17 +2,29 @@ import React, {useState, useEffect} from 'react';
 import {useRouter} from "next/router";
 
 import routes from '../../constants/routes';
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 
 const DriverAuth = ({children}) => {
-    const token = useSelector(state => state?.driverAuth?.token);
     const [isAuth, setIsAuth] = useState(false);
+    const token = useSelector(state => state?.driverAuth?.token);
+    const dispatch = useDispatch();
     const router = useRouter();
 
     useEffect(() => {
-        if (token) setIsAuth(true);
-        if (!token) router.push({pathname:routes.driver.auth.login, query: {prevPath: window.location.pathname}});
+        const token = localStorage.getItem('driver_token');
+        if (token) {
+            setIsAuth(true);
+            dispatch?.driverAuth?.authenticate({token});
+        } else {
+            router.push({pathname:routes.driver.auth.login, query: {prevPath: window.location.pathname}});
+        }
     }, []);
+
+    useEffect(() => {
+        if (token) {
+            dispatch?.driverProfile?.getProfile({token});
+        }
+    }, [token])
 
     if (!isAuth) return null;
     return (
