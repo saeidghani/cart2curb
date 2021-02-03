@@ -6,8 +6,9 @@
     &__header {
         min-height: 40px;
         line-height: 24px;
-        padding: 8px 12px;
+        padding: 10px;
         cursor: pointer;
+        font-size: 1rem;
     }
 
     &__icon {
@@ -21,10 +22,14 @@
     }
 
     &__inner {
-        padding: 16px 12px 35px;
+        padding: 10px 10px 0;
         opacity: 0;
         transform: translateY(10px);
         transition: all ease 0.5s;
+
+        strong {
+            font-style: italic;
+        }
 
         a {
             color: #FF6560;

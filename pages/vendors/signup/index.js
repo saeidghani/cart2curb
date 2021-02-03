@@ -543,7 +543,7 @@ const Register = props => {
                                     </Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Item name={'needDriversToGather'} label={'Need driver to gather'} initialValue={'false'}>
+                                    <Item name={'needDriversToGather'} label={'Who will be picking out the goods from the store:'} initialValue={'false'}>
                                         <Select
                                             placeholder={'Select'}
                                         >

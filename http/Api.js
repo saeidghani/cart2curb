@@ -13,6 +13,7 @@ import AdminAuthApi from "./apiSections/admin/auth";
 import DriverAuthApi from "./apiSections/driver/auth";
 import DriverProfileApi from "./apiSections/driver/profile";
 import DriverDeliveryApi from "./apiSections/driver/delivery";
+import CustomCardApi from "./apiSections/vendor/customCard";
 
 export class Api {
     constructor(baseURL = false) {
@@ -24,7 +25,8 @@ export class Api {
         this.vendor = {
             auth: new VendorAuthApi(baseURL),
             profile: new VendorProfileApi(baseURL),
-            store: new VendorStoreApi(baseURL)
+            store: new VendorStoreApi(baseURL),
+            customCart: new CustomCardApi(baseURL)
         }
         this.admin = {
             profile: new AdminProfileApi(baseURL),

@@ -1,13 +1,36 @@
 .faq {
     padding-bottom: 26px;
 
+    &__title {
+        position: relative;
+        margin-bottom: 30px;
+
+        &::before {
+            content: '';
+            position: absolute;
+            background-color: #ff4b45;
+            bottom: -10px;
+            width: 60px;
+            height: 5px;
+            border-radius: 400px;
+            left: 0;
+        }
+
+        &--centered {
+            &::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    }
+
     &__visual {
         position: relative;
         text-align: right;
         padding-left: 0;
 
         @media (min-width: 768px) {
-            padding-left: 120px;
+            padding-left: 80px;
         }
 
         &::before {

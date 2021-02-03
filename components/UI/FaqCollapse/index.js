@@ -33,13 +33,13 @@ const FaqCollapse = ({question, answer, ...props}) => {
     return (
         <div className={classes.join(" ")}>
             <div className="faq-collapse__header flex justify-between" ref={header} onClick={toggleCollapse}>
-                <span className="text-type">{question}</span>
+                <span className="text-cell">{question}</span>
                 <span className="text-faq">
                     <DownOutlined className={'faq-collapse__icon'}/>
                 </span>
             </div>
             <div className="faq-collapse__content" ref={collapse}>
-                <div className="faq-collapse__inner whitespace-pre-wrap text-cell text-xs" ref={content}
+                <div className="faq-collapse__inner whitespace-pre-wrap text-type text-xs" ref={content}
                      dangerouslySetInnerHTML={{ __html: md.render(answer) }} />
             </div>
         </div>
