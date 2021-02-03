@@ -42,7 +42,7 @@ const ProductCarousel = ({slides, ...props}) => {
                             return (
                                 <Slide key={item + index} index={index} onClick={changeSlideHandler.bind(this, index)} >
                                     <div className="w-full h-full" style={{ padding: '0 6px'}}>
-                                        <ImageWithZoom src={item} className={' border border-overline'} style={{ backgroundPosition: 'center' }} />
+                                        <ImageWithZoom src={item} className={' border border-solid border-overline'} style={{ backgroundPosition: 'center' }} />
                                     </div>
                                 </Slide>
                             )
@@ -66,7 +66,7 @@ const ProductCarousel = ({slides, ...props}) => {
                             return (
                                 <Slide key={item + index + 'dots'} index={index} onClick={changeSlideHandler.bind(this, index)}>
                                     <div className="w-full h-full" style={{ padding: '0 6px'}}>
-                                        <Image src={item} className={' border border-overline'}/>
+                                        <Image src={item} className={' border border-solid border-overline'}/>
                                     </div>
                                 </Slide>
                             )

@@ -75,23 +75,16 @@ const ProductView = props => {
                         </Col>
                         <Col xs={24}>
                             <Row gutter={[24, 24]}>
+                                {product?.unitType === 'weight' && (
+                                    <Col lg={8} xs={12}>
+                                        <DetailItem title={'Weight'} value={`${product.weight} ${product.weightUnit}`}/>
+                                    </Col>
+                                )}
                                 <Col lg={8} xs={12}>
-                                    <DetailItem title={'Weight'} value={`${product.weight} ${product.weightUnit}`}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Price per Weight'} value={`$${product.priceList.price}`}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Tax Rate'} value={`${product.tax}%`}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Total Price'} value={`$${total}`}/>
+                                    <DetailItem title={`Price`} value={`$${product.priceList.price}`}/>
                                 </Col>
                                 <Col lg={8} xs={12}>
                                     <DetailItem title={'Store'} value={storeProfile.name || '-'}/>
-                                </Col>
-                                <Col lg={8} xs={12}>
-                                    <DetailItem title={'Cost Price'} value={`$${product.priceList.cost}`}/>
                                 </Col>
                                 <Col xs={24}>
                                     <div className="pt-11 flex flex-col lg:flex-row items-start lg:items-center justify-between">

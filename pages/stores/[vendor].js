@@ -8,6 +8,7 @@ import StoreProductCard from "../../components/UI/StoreProductCard";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../components/UI/Loader";
 import {InfoCircleOutlined, ShopOutlined} from "@ant-design/icons";
+import { StickyContainer, Sticky } from 'react-sticky';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -122,7 +123,6 @@ const VendorPage = props => {
         setProducts([]);
         setHasMore(true);
         setSearch(values.search);
-        setType(values.storeType);
         setPage(1);
     }
 
@@ -135,8 +135,31 @@ const VendorPage = props => {
     address.push(vendor.address.country);
 
     return (
-        <Page title={'Vendor Details Page'} breadcrumb={breadcrumb}>
+        <Page title={false} breadcrumb={breadcrumb}>
+            <div className={'pb-8 without-padding'}>
+                <Row className={'bg-card flex items-center pt-12 pb-6 layout__section'}>
+                    <Col xs={24}>
+                        <Form form={form} layout={'vertical'} onFinish={searchHandler} className={'pl-4 lg:pl-0'}>
+                            <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
+                                <Col xs={24} lg={16}>
+                                    <Item name={'search'} label={'Search'}>
+                                        <Input allowClear placeholder={'Product name'}/>
+                                    </Item>
+                                </Col>
+                                <Col xs={24} lg={3} style={{ flexBasis: 125}}>
+                                    <Item>
+                                        <Button type={'primary'} className={'w-full lg:w-32 mt-7.5'} htmlType={'submit'}>Search</Button>
+                                    </Item>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Col>
+                </Row>
+            </div>
             <Row gutter={[24, 24]}>
+                <Col xs={24}>
+                    <h1 className="page__title text-2xl text-type mb-2 font-medium mt-0">Vendor Detail Page</h1>
+                </Col>
                 <Col xs={24} md={8} lg={6}>
                     <div style={{ position: 'relative', paddingTop: '100%'}}>
                         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
@@ -152,47 +175,19 @@ const VendorPage = props => {
                 </Col>
                 <Col xs={24} md={16} lg={18} className={'flex flex-col'}>
                     <h1 className={'text-type text-2xl mb-2 mt-0'}>{vendor.name}</h1>
-                    <span className="text-type mb-4 text-sm">{address.join(", ")}</span>
-                    <span className="text-overline md:mb-12 mb-8 text-sm capitalize">{vendor.storeType}</span>
+                    <span className="text-type mb-12 text-sm">{address.join(", ")}</span>
                     <p className="mb-8 mt-0 text-muted text-xs">{vendor.description}</p>
                 </Col>
             </Row>
 
-            <div className={'pt-16 pb-15 without-padding'}>
-                <Row className={'bg-card flex items-center pt-12 pb-6 layout__section'}>
-                    <Col xs={24}>
-                        <Form form={form} layout={'vertical'} onFinish={searchHandler}>
-                            <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
-                                <Col xs={24} lg={8}>
-                                    <Item name={'search'} label={'Search'}>
-                                        <Input allowClear placeholder={'Product name'}/>
-                                    </Item>
-                                </Col>
-                                <Col xs={24} lg={8}>
-                                    <Item name={'storeType'} label={'Type of Service'}>
-                                        <Select placeholder={'Service Type'}>
-                                            <Option value={'service'}>Service</Option>
-                                            <Option value={'product'}>Product</Option>
-                                        </Select>
-                                    </Item>
-                                </Col>
-                                <Col xs={24} lg={3} style={{ flexBasis: 125}}>
-                                    <Item>
-                                        <Button type={'primary'} className={'w-full lg:w-32 mt-7.5'} htmlType={'submit'}>Search</Button>
-                                    </Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Col>
-                </Row>
-            </div>
             <Row gutter={24}>
                 <Col xs={24}>
-                    <h2 className="text-2xl text-type font-medium mt-0 mb-11">Results</h2>
+                    <h2 className="text-2xl text-type font-medium mt-6 mb-12">Results</h2>
                 </Col>
-                <Col xs={24} md={8} lg={6}>
-                    <div className="mb-8 md:mb-0">
+                <Col xs={24} md={8} lg={6} className={'flex items-stretch'} >
+                    <div className="mb-8 md:mb-0 flex-grow">
                         <CategoryCard title={'Subcategories'} storeId={vendor._id} changeHandler={selectCategoryHandler}/>
+                        <span/>
                     </div>
                 </Col>
                 <Col xs={24} md={16} lg={18}>

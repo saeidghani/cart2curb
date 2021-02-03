@@ -15,13 +15,15 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
     }
     return (
         <div className="flex flex-col h-full">
-            {hasError ? (
-                <div className="bg-card flex items-center justify-center text-4xl text-gray" style={{ maxHeight: 288, minHeight: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }}>
-                    <ShopOutlined />
-                </div>
-            ) : (
-                <img src={imageURL} alt="shop name" style={{ maxHeight: 288, minHeight: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }} onError={changeToPlaceholder}/>
-            )}
+            <Link href={routes.stores.single(props._id)} as={routes.stores.single(props._id)}>
+                {hasError ? (
+                    <div className="bg-card flex items-center justify-center text-4xl text-gray cursor-pointer" style={{ maxHeight: 288, minHeight: 288, objectFit: 'cover', width: '100%', borderRadius: 2 }}>
+                        <ShopOutlined />
+                    </div>
+                ) : (
+                    <img src={imageURL} alt={name} style={{ maxHeight: 288, minHeight: 288, objectFit: 'cover', width: '100%', borderRadius: 2, cursor: 'pointer' }} onError={changeToPlaceholder}/>
+                )}
+            </Link>
             <div className="flex flex-col mt-4">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-base text-paragraph font-medium">{name}</span>

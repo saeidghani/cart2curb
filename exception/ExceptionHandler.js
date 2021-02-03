@@ -14,8 +14,9 @@ export default class ExceptionHandler {
         const err = response?.data?.errors || [];
         for (let i in err) {
             const code = err[i].errorCode;
+            const defaultMessage = err[i].message
 
-            this.message(errors[code].message);
+            this.message(defaultMessage || errors[code].message);
         }
 
         return false;
