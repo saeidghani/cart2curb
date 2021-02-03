@@ -47,6 +47,7 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
+    const [needDrivers, setNeedDrivers] = useState();
     const {storeId, editType, vendorId} = router.query;
 
     useEffect(() => {
@@ -66,7 +67,7 @@ const EditAccount = props => {
                 lat: markCoords[1],
                 lng: markCoords[0]
             }
-        }
+        };
         setMarker(marker);
         const areaCoords = store?.area?.coordinates?.length > 0 ? store?.area?.coordinates[0] : [];
            for(let i in areaCoords){
@@ -77,7 +78,7 @@ const EditAccount = props => {
                        lng: areaCoords[i][0]
                    })
                }
-           }
+           };
 
         fields[0] = {
             email: getProperty(vendor, 'email', ''),
@@ -98,15 +99,14 @@ const EditAccount = props => {
             addressLine1: getProperty(store?.address, 'addressLine1', ''),
             addressLine2: getProperty(store?.address, 'addressLine2', ''),
             postalCode: getProperty(store?.address, 'postalCode', ''),
-            needDriversToGather: getProperty(store, 'needDriversToGather', ''),
             description: getProperty(store, 'description', ''),
         }
 
+        setNeedDrivers(getProperty(store, 'needDriversToGather', ''));
         setImageUrl(fields[0]?.imageStore);
         setAvatarUrl(fields[0]?.image);
         setArea(area);
         setProvince(fields[1]?.province);
-        console.log(fields[0]);
 
         form?.setFieldsValue({
             email: fields[0]?.email,
@@ -219,7 +219,7 @@ const EditAccount = props => {
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true'),
+            needDriversToGather: Boolean(needDrivers),
             storeType: form1.storeType,
             subType: form1.subType,
         }
@@ -585,9 +585,13 @@ const EditAccount = props => {
                                 </Col>
                                 <Col span={24}>
                                     <Item name={'needDriversToGather'}>
-                                        <Checkbox.Group>
-                                            <Checkbox value={'true'}>I need driver to gather for us</Checkbox>
-                                        </Checkbox.Group>
+                                        <Item name='needDriversToGather'>
+                                            <div className="mb-2">Who will be picking out the goods from the store:</div>
+                                            <Select placeholder="Select Option..." onChange={setNeedDrivers} value={needDrivers}>
+                                                <Option value={true}>Store employee will gather the goods when an order comes in, and place by the door</Option>
+                                                <Option value={false}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
+                                            </Select>
+                                        </Item>
                                     </Item>
                                 </Col>
 

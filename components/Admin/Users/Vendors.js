@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
+import {Row, Col, Input, Form, Table, Select, Button, Space, message, Modal} from 'antd';
 import {
     FileSearchOutlined,
     PlusCircleOutlined,
     CheckCircleOutlined,
     StopOutlined,
-    EditOutlined,
+    EditOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
@@ -22,6 +22,7 @@ const Vendors = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [blockVendorId, setBlockVendorId] = useState('');
     const [blocked, setBlocked] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -88,7 +89,22 @@ const Vendors = () => {
         setPage(1);
         setHasMore(true);
         setSearch(values.search);
-    }
+    };
+
+    const handleBlockOK = async () => {
+        const res = await dispatch.adminUser.addPendingVendor({
+            vendorId: blockVendorId,
+            body: {isApproved: false},
+            token
+        });
+        if (res) {
+            const blockedVendor = blocked?.find(b => b === blockVendorId);
+            if (!blockedVendor) {
+                setBlockVendorId('');
+                setBlocked(prevBlocked => prevBlocked.concat(blockVendorId));
+            }
+        }
+    };
 
     const columns = useMemo(() => [
         {
@@ -182,17 +198,7 @@ const Vendors = () => {
                 storeId: store?._id,
                 action: {
                     blockHandler: async () => {
-                        const res = await dispatch.adminUser.addPendingVendor({
-                            vendorId: vendor?._id,
-                            body: {isApproved: false},
-                            token
-                        });
-                        if (res) {
-                            const blockedVendor = blocked?.find(b => b === vendor?._id);
-                            if (!blockedVendor) {
-                                setBlocked(prevBlocked => prevBlocked.concat(vendor?._id));
-                            }
-                        }
+                        setBlockVendorId(vendor?._id);
                     },
                     unBlockHandler: async () => {
                         const res = await dispatch.adminUser.addPendingVendor({
@@ -215,6 +221,21 @@ const Vendors = () => {
 
     return (
         <>
+            <Modal
+                visible={blockVendorId}
+                okText="yes, block"
+                cancelText="No"
+                onOk={handleBlockOK}
+                onCancel={() => setBlockVendorId('')}
+            >
+                <div className="flex space-x-3">
+                    <QuestionCircleOutlined style={{color: "#FAAD14", fontSize: 18, marginTop: 2}}/>
+                    <div>
+                        <div className="font-bold">Block User</div>
+                        <div className="mt-2">Are you sure to block this user?</div>
+                    </div>
+                </div>
+            </Modal>
             <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
                 <Col lg={18} xs={24}>
                     <Form form={form} layout={'vertical'} onFinish={searchHandler}>

@@ -10,7 +10,7 @@ import RouterChanger from "../components/RouteChanger";
 import {getStore} from "../states";
 import Head from "next/head";
 import NProgress from "../components/NProgress/index";
-//import '../styles/less/index2.less';
+import '../styles/less/index2.less';
 
 class MyApp extends App {
     render() {

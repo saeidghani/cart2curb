@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, message} from 'antd';
+import {Row, Col, Input, Form, Table, Select, Button, message, Modal} from 'antd';
 import {
     PlusCircleOutlined,
     CheckCircleOutlined,
     StopOutlined,
-    EditOutlined,
+    EditOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
@@ -21,6 +21,7 @@ const Customers = () => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [blockCustomerId, setBlockCustomerId] = useState('');
     const [blocked, setBlocked] = useState([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -87,7 +88,18 @@ const Customers = () => {
         setPage(1);
         setHasMore(true);
         setSearch(values.search);
-    }
+    };
+
+    const handleBlockOK = async () => {
+        const res = await dispatch.adminUser.editCustomerBlock({customerId: blockCustomerId, token});
+        if (res) {
+            const blockedCustomer = blocked?.find(b => b === blockCustomerId);
+            if (!blockedCustomer) {
+                setBlockCustomerId('');
+                setBlocked(prevBlocked => prevBlocked.concat(blockCustomerId));
+            }
+        }
+    };
 
     const columns = useMemo(() => [
         {
@@ -178,13 +190,7 @@ const Customers = () => {
                     '-',
                 action: {
                     blockHandler: async () => {
-                        const res = await dispatch.adminUser.editCustomerBlock({customerId: customer?._id, token});
-                        if (res) {
-                            const blockedCustomer = blocked?.find(b => b === customer?._id);
-                            if (!blockedCustomer) {
-                                setBlocked(prevBlocked => prevBlocked.concat(customer?._id));
-                            }
-                        }
+                        setBlockCustomerId(customer?._id);
                     },
                     unBlockHandler: async () => {
                         const res = await dispatch.adminUser.editCustomerUnBlock({customerId: customer?._id, token});
@@ -203,6 +209,21 @@ const Customers = () => {
 
     return (
         <>
+            <Modal
+                visible={blockCustomerId}
+                okText="yes, block"
+                cancelText="No"
+                onOk={handleBlockOK}
+                onCancel={() => setBlockCustomerId('')}
+            >
+                <div className="flex space-x-3">
+                    <QuestionCircleOutlined style={{color: "#FAAD14", fontSize: 18, marginTop: 2}}/>
+                    <div>
+                        <div className="font-bold">Block User</div>
+                        <div className="mt-2">Are you sure to block this user?</div>
+                    </div>
+                </div>
+            </Modal>
             <Row gutter={24} className={'flex items-center pt-6 pb-4'}>
                 <Col lg={18} xs={24}>
                     <Form form={form} layout={'vertical'} onFinish={searchHandler}>

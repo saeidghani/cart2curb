@@ -55,6 +55,7 @@ const AddVendor = props => {
     const router = useRouter();
     const [submitted, setSubmitted] = useState(false);
     const [lastReached, setLastReached] = useState(0);
+    const [needDrivers, setNeedDrivers] = useState();
     const loading = useSelector(state => state.loading.effects.adminAuth.register);
 
     const breadcrumb = [
@@ -122,6 +123,7 @@ const AddVendor = props => {
     }
 
     const submitHandler = async () => {
+        console.log(needDrivers);
         if (area.length === 0) {
             message.error("Please Select Your Service Radius")
             return;
@@ -132,6 +134,7 @@ const AddVendor = props => {
             return;
         }
         const [form1, form2] = fields;
+
         const address = {
             country: 'Canada',
             province: form2.province,
@@ -155,23 +158,21 @@ const AddVendor = props => {
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: form2.needDriversToGather && form2.needDriversToGather.includes('true'),
+            needDriversToGather: Boolean(needDrivers),
             storeType: form1.storeType,
             subType: form1.subType,
-        }
-
+        };
         const vendor = {
             email: form1.email,
             phone: form1.phone,
             contactName: form1.contactName,
             image: avatarUrl,
-        }
+        };
 
         const body = {
             vendor,
             store,
-        }
-
+        };
         const result = await dispatch.adminUser.addVendor({body, token});
 
         if (result) {
@@ -520,14 +521,14 @@ const AddVendor = props => {
                                             </Item>
                                         </Col>
                                         <Col span={24}>
-                                            <Item name={'needDriversToGather'}>
-                                                <Checkbox.Group>
-                                                    <Checkbox value={'true'}>I need driver to gather for us</Checkbox>
-
-                                                </Checkbox.Group>
+                                            <Item name='needDriversToGather'>
+                                                <div className="mb-2">Who will be picking out the goods from the store:</div>
+                                                <Select placeholder="Select Option..." onChange={setNeedDrivers} value={needDrivers}>
+                                                    <Option value={true}>Store employee will gather the goods when an order comes in, and place by the door</Option>
+                                                    <Option value={false}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
+                                                </Select>
                                             </Item>
                                         </Col>
-
                                         <Col span={24}>
                                             <div className="mb-6">
                                                 <GoogleMap
