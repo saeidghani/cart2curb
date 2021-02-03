@@ -13,7 +13,7 @@ const FAQ = props => {
                 <Col xs={24} md={12} className={'order-last md:order-first'}>
                     <Row gutter={[24, 24]}>
                         <Col xs={24}>
-                            <h1 className={'text-type text-2xl font-medium mt-0 mb-4'}>FAQs</h1>
+                            <h1 className={'faq__title text-type text-2xl font-semibold mt-0 mb-4'}>FAQs</h1>
                         </Col>
                         {Array.from(faqQuestions).map((item, index) => {
                             return (

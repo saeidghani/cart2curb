@@ -23,12 +23,10 @@ export default class ExceptionHandler {
     }
 
     message(text = DEFAULT_HTTP_ERROR) {
-        if(document && message) {
-            try {
-                message.error(text);
-            } catch(e) {
-                return false;
-            }
+        try {
+            message.error(text);
+        } catch(e) {
+            return false;
         }
     }
 }

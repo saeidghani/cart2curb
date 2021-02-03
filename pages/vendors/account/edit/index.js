@@ -501,7 +501,7 @@ const EditAccount = props => {
                                     </Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Item name={'needDriversToGather'} label={'Need driver to gather'}>
+                                    <Item name={'needDriversToGather'} label={'Who will be picking out the goods from the store:'}>
                                         <Select
                                             placeholder={'Select'}
                                         >
