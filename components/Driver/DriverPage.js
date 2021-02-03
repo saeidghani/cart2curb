@@ -3,7 +3,7 @@ import Head from "next/head";
 
 const DriverPage = props => {
     return (
-        <div className="page md:pb-15 pb-12">
+        <div className={props.pageClassName ? `${props.pageClassName} page` : "page pb-12"}>
             <Head>
                 <title>{props.headTitle || props.title ? `${props.headTitle || props.title} - ` : ''}{process.env.NEXT_PUBLIC_APP_TITLE}</title>
             </Head>

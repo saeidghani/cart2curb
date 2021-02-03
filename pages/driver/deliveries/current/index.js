@@ -151,7 +151,7 @@ const Current = () => {
     );
 
     const DeliveryNav = () => (
-        <div className="grid grid-cols-2 shadow-lg mb-10" style={{position: 'sticky', bottom: 30, width: '100vw'}}>
+        <div className="grid grid-cols-2 shadow-lg mb-10 w-full h-full">
             <Link href={routes.driver.deliveries.available}>
                 <div className="text-secondarey text-center p-4 bg-white">
                     Available Deliveries
@@ -168,14 +168,14 @@ const Current = () => {
 
     return (
         <DriverAuth>
-            <DriverPage title="Current Deliveries" titleClassName="px-4">
+            <DriverPage title="Current Deliveries" titleClassName="px-4" pageClassName="pb-4">
                 <div className="min-h-full flex flex-col items-center px-4">
                     {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.length > 0 ? <>
                         {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.map(delivery =>
                             <DeliveryCard {...delivery}/>)}
                     </> : currentDeliveriesLoading ? <span></span> : <EmptyDelivery/>}
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center" style={{position: 'sticky', bottom: 0, width: '100vw', height: 54}}>
                     <DeliveryNav/>
                 </div>
             </DriverPage>

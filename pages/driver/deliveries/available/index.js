@@ -51,7 +51,9 @@ const Available = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {};
+        } catch (err) {
+        }
+        ;
     };
 
     const handleReject = async (deliveryId) => {
@@ -61,7 +63,9 @@ const Available = () => {
         try {
             await dispatch?.driverDelivery?.editDeliveryAvailable({deliveryId, body, token});
             setClickedDeliveries(prevDeliveries => [...prevDeliveries, deliveryId]);
-        } catch (err) {};
+        } catch (err) {
+        }
+        ;
     };
 
     const EmptyDelivery = ({}) => (
@@ -81,7 +85,7 @@ const Available = () => {
     );
 
     const DeliveryNav = () => (
-        <div className="grid grid-cols-2 shadow-lg" style={{position: 'sticky', bottom: 30, width: '100vw'}}>
+        <div className="grid grid-cols-2 shadow-lg w-full h-full">
             <Link href={routes.driver.deliveries.available}>
                 <div className="text-secondarey text-center p-4" style={{backgroundColor: '#E6F7FF'}}>Available
                     Deliveries
@@ -172,11 +176,12 @@ const Available = () => {
         </div>
     );
 
-    if (availableDeliveriesLoading) return <div className="flex justify-center" style={{minHeight: 500}}><Loader/></div>;
+    if (availableDeliveriesLoading) return <div className="flex justify-center" style={{minHeight: 500}}><Loader/>
+    </div>;
 
     return (
         <DriverAuth>
-            <DriverPage title="Available Deliveries" titleClassName="px-4">
+            <DriverPage title="Available Deliveries" titleClassName="px-4" pageClassName="pb-4">
                 <div className="min-h-full flex flex-col space-y-4 items-center px-4">
                     {deliveries?.filter(d => !clickedDeliveries?.includes(d?._id))?.length > 0 ?
                         <>
@@ -189,9 +194,11 @@ const Available = () => {
                                     deliveryTime={d?.deliveryTime}
                                     deliveryFee={d?.deliveryFee}
                                 />)}
-                        </> : availableDeliveriesLoading ? <span></span> : <EmptyDelivery/>}
+                        </> : availableDeliveriesLoading ? <span></span> : <>
+                            <EmptyDelivery/>
+                        </>}
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center" style={{position: 'sticky', bottom: 0, width: '100vw', height: 54}}>
                     <DeliveryNav/>
                 </div>
             </DriverPage>
@@ -200,7 +207,7 @@ const Available = () => {
 };
 
 Available.getInitialProps = async () => {
-    return { forceLayout: true }
+    return {forceLayout: true}
 }
 
 export default Available;
