@@ -26,7 +26,7 @@ const Footer = props => {
             </div>
             <div className="pt-13 pb-20 border-t border-paragraph flex flex-row justify-between items-center">
                 <span className="col-span-1  text-xs"> 2021 Cart2Curb Copyright </span>
-                <img src="/images/logo-footer.svg" alt="logo" className="cursor-pointer" style={{ width: 60, height: 48 }} />
+                <img src="/images/logo-footer.png" alt="logo" className="cursor-pointer" style={{ width: 60, height: 48 }} />
             </div>
         </footer>
     )

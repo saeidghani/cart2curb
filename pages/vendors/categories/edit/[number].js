@@ -28,7 +28,7 @@ const EditCategory = props => {
                 setParentCategories(response.data);
                 form.setFieldsValue({
                     name: props.category.name,
-                    parent: props.category.parent._id,
+                    parent: !props.category.parent ? undefined : props.category.parent.hasOwnProperty('_id') ? props.category.parent._id : props.category.parent,
                     description: props.category.description || ''
                 })
             })
