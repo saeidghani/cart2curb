@@ -155,7 +155,10 @@ const Arrangement = props => {
                             key={s?.store?._id}
                             value={`${s?.store?.name}+${s?.store?._id}`}
                         >
-                            {s?.store?.name}
+                            <div className="flex space-x-2">
+                                <img src={s?.store?.image} className="w-10" alt=""/>
+                                <span>{s?.store?.name}</span>
+                            </div>
                         </Option>)}
                 </Select>
             </div>
