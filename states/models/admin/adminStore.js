@@ -17,7 +17,7 @@ export const adminStore = {
             metaData: {},
             data: []
         },
-        storesRank: {
+        rankedStores: {
             metaData: {},
             data: []
         },
@@ -46,6 +46,15 @@ export const adminStore = {
 
             }
             state.stores.metaData = payload.metaData;
+        },
+        setRankedStores: (state, payload) => {
+            if(payload?.metaData?.pagination?.pageNumber === 1) {
+                state.rankedStores.data = payload.data;
+            } else {
+                state.rankedStores.data = [...state.rankedStores.data, ...payload.data];
+
+            }
+            state.rankedStores.metaData = payload.metaData;
         },
         setCategories: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
@@ -155,7 +164,7 @@ export const adminStore = {
                 const res = await api?.admin?.store?.getStoresRank(query, setOptions(rootState?.adminAuth?.token));
                 const data = res?.data;
                 if(data?.success) {
-                    dispatch?.adminStore?.setStoresRank({
+                    dispatch?.adminStore?.setRankedStores({
                         data: data?.data,
                         metaData: data?.metaData
                     })

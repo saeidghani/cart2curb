@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import {Form, Row, Col, Input, Button, message, Select, Table} from 'antd';
+import React, {useState, useEffect} from 'react';
+import {Button, Select} from 'antd';
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
-import {CloudUploadOutlined, EditOutlined, FileSearchOutlined, UserOutlined} from '@ant-design/icons';
 
 import routes from "../../../../constants/routes";
+import {convertAddress} from "../../../../helpers";
 import DraggableTable from './DraggableTable';
 
 const {Option} = Select;
@@ -16,14 +16,61 @@ const Arrangement = props => {
     const token = useSelector(state => state?.adminAuth?.token);
     const allStores = useSelector(state => state?.adminStore?.stores?.data);
     const router = useRouter();
+    const [rankedStores, setRankedStores] = useState([]);
     const [selectedStores, setSelectedStores] = useState([]);
     const [data, setData] = useState([]);
 
-    useEffect(() => {
+    useEffect(async() => {
         if (token) {
             dispatch?.adminStore?.getStores('');
+            try {
+                const res = await dispatch?.adminStore?.getStoresRank('');
+                setRankedStores(res?.data);
+            } catch (err) {};
         }
     }, [token]);
+
+    useEffect(() => {
+        const prevRankedStores = rankedStores?.map((s, index) => ({
+            key: index,
+            storeId: s?.store?._id,
+            vendorId: s?.vendor?._id,
+            storeType: s?.store?.storeType,
+            number: '???',
+            CXName: s?.vendor?.contactName,
+            store: s?.store?.name,
+            img: s?.store?.image,
+            address: convertAddress(s?.store?.address)
+        }));
+        const prevRankedStoreIds = prevRankedStores?.map(s => s?.storeId);
+        setSelectedStores(prevRankedStoreIds);
+    }, [rankedStores]);
+
+    useEffect(() => {
+        const stores = allStores?.filter(s => selectedStores.includes(s?.store?._id))?.map((el, index) => {
+            return {
+                key: index,
+                storeId: el?.store?._id,
+                vendorId: el?.vendor?._id,
+                storeType: el?.store?.storeType,
+                number: '???',
+                CXName: el?.vendor?.contactName,
+                store: el?.store?.name,
+                img: el?.store?.image,
+                address: convertAddress(el?.store?.address)
+            }
+        });
+        const arrangedStores = [];
+        stores?.forEach(s => {
+            const index = data.findIndex(item => item?.storeId === s?.storeId);
+            if (index === -1) {
+                arrangedStores.push(s);
+            } else {
+                arrangedStores.splice(index, 0, s);
+            }
+        });
+        setData(arrangedStores);
+    }, [selectedStores]);
 
     const columns = [
         {
@@ -82,39 +129,9 @@ const Arrangement = props => {
         },
     ];
 
-    useEffect(() => {
-        const stores = allStores?.filter(s => selectedStores.includes(s?.store?._id))?.map((el, index) => {
-            return {
-                key: index,
-                storeId: el?.store?._id,
-                vendorId: el?.vendor?._id,
-                storeType: el?.store?.storeType,
-                number: '???',
-                CXName: el?.vendor?.contactName,
-                store: el?.store?.name,
-                img: el?.store?.image,
-                address: `${el?.store?.address?.addressLine1}
-                ${el?.store?.address?.addressLine2}
-                ${el?.store?.address?.city}
-                ${el?.store?.address?.province}
-                ${el?.store?.address?.country}
-                ${el?.store?.address?.postalCode}`
-            }
-        });
-        const arrangedStores = [];
-        stores?.forEach(s => {
-            const index = data.findIndex(item => item?.storeId === s?.storeId);
-            if (index === -1) {
-                arrangedStores.push(s);
-            } else {
-                arrangedStores.splice(index, 0, s);
-            }
-        });
-        setData(arrangedStores);
-    }, [selectedStores]);
-
     const handleSave = () => {
         const body = data?.map((el, index) => ({_id: el?.storeId, rank: index + 1}));
+        console.log(body);
         dispatch?.adminProfile?.addRank({body, token});
     };
 
@@ -123,19 +140,20 @@ const Arrangement = props => {
             <div className="w-48 mb-8">
                 <div className="mb-2">Search</div>
                 <Select
+                    showSearch
                     className="w-full"
                     placeholder='Search'
                     loading={loading}
                     onChange={(val) => {
                         if (!selectedStores.includes(val)) {
-                            setSelectedStores(selectedStores.concat(val))
+                            setSelectedStores(selectedStores.concat(val.split('+')[1]));
                         }
                     }}
                 >
                     {allStores?.map(s =>
                         <Option
                             key={s?.store?._id}
-                            value={s?.store?._id}
+                            value={`${s?.store?.name}+${s?.store?._id}`}
                         >
                             {s?.store?.name}
                         </Option>)}
