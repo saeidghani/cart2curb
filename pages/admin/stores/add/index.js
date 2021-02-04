@@ -38,7 +38,7 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 
-const AddVendor = props => {
+const AddStore = props => {
     const [form] = Form.useForm();
     const [fields, setFields] = useState([])
     const [imageUrl, setImageUrl] = useState('')
@@ -60,10 +60,11 @@ const AddVendor = props => {
 
     const breadcrumb = [
         {
-            title: `Vendor Profile`,
+            title: `Stores`,
+            href: routes.admin.stores.index
         },
         {
-            title: `Add Info`,
+            title: `Add Store`,
         }
     ]
 
@@ -176,7 +177,7 @@ const AddVendor = props => {
 
         if (result) {
             router.push({
-                pathname: routes?.admin?.users?.index,
+                pathname: routes.admin.stores.index,
                 query: {tab: 'vendors'}
             });
         }
@@ -189,7 +190,7 @@ const AddVendor = props => {
         if (window.scrollY > 5) {
             requestAnimationFrame(scrollToTop);
         }
-    }
+    };
 
     const onChangePostal = (e) => {
         form.setFieldsValue({
@@ -199,7 +200,7 @@ const AddVendor = props => {
 
     return (
         <AdminAuth>
-            <Page title={submitted ? false : 'Account Info'} breadcrumb={submitted ? [] : breadcrumb}>
+            <Page title={submitted ? false : 'Add Store'} breadcrumb={submitted ? [] : breadcrumb}>
                 {submitted ? (
                     <Submitted href={routes.admin.auth.login}
                                content={'Thanks for submitting, we will review your application and get in touch in 48 hours!'}/>
@@ -426,7 +427,7 @@ const AddVendor = props => {
 
                                         <Col xs={24} className={'flex justify-end md:mt-16 mt-6'}>
                                             <Item>
-                                                <Link href={{pathname: routes.admin.users.index, query: {tab: 'vendors'}}}>
+                                                <Link href={{pathname: routes.admin.stores.index, query: {tab: 'vendors'}}}>
                                                     <Button danger className={'w-full md:w-32'}>Cancel</Button>
                                                 </Link>
                                             </Item>
@@ -606,4 +607,4 @@ const AddVendor = props => {
     )
 }
 
-export default AddVendor;
+export default AddStore;

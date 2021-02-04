@@ -185,11 +185,11 @@ const Vendors = () => {
     }
 
     const data = useMemo(() => {
-        return vendors?.map(({vendor, store}) => ({
+        return vendors?.map(({vendorNumber, vendor, store}) => ({
                 key: vendor?._id,
                 avatar: vendor?.image,
                 name: `${vendor?.contactName}`,
-                number: vendor?._id,
+                number: vendorNumber,
                 email: vendor?.email || '-',
                 phoneNumber: vendor?.phone || '-',
                 address: vendor?.addresses?.length > 0 ?

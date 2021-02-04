@@ -99,14 +99,6 @@ const Promo = () => {
             render: (actions, {key, promoId}) => {
                 return (
                     <div className={'flex flex-row items-center space-x-3'}>
-                        <Link href={{pathname: routes.admin.promo.edit(promoId)}}>
-                            <Button
-                                type={'link'}
-                                shape={'circle'}
-                                icon={<EditOutlined className={'text-secondarey text-xl'}/>}
-                                className={'btn-icon-small'}
-                            />
-                        </Link>
                         <Button
                             type={'link'}
                             shape={'circle'}
@@ -124,7 +116,7 @@ const Promo = () => {
         return promos?.filter(p => !deleted.includes(p?._id))?.map((promo) => ({
                 key: promo?._id,
                 promoId: promo?._id,
-                off: promo?.off,
+                off: promo?.off ? `${promo?.off} %` : promo?.discount ? `${promo?.discount} $` : '-',
                 name: `${promo?.code}`,
                 membersUsed: `${promo?.membersUsed}`,
                 action: {

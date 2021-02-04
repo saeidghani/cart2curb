@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Badge, Button, Drawer, Row, Col} from 'antd';
 import Link from 'next/link'
-import { MenuOutlined } from '@ant-design/icons';
+import {BellTwoTone, MenuOutlined, SettingTwoTone} from '@ant-design/icons';
 
 import {HeaderLogoIcon, HeaderNotificationIcon} from '../icons';
 import routes from "../../constants/routes";
@@ -17,6 +17,7 @@ const MainHeader = props => {
     const [visible, setVisible] = useState(false);
     const [avatarImage, setAvatarImage] = useState('');
     const [isVendorPage, setIsVendorPage] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const isAuthenticated = useIsAuthenticated();
     const isAuthRoute = useIsAuthRoute();
     const router = useRouter();
@@ -27,22 +28,31 @@ const MainHeader = props => {
     const cartChanges = useSelector(state => state.cart.cartChanges);
 
     useEffect(() => {
-        dispatch.cart.getClientCart();
-    }, [token, cartChanges])
+        const adminToken = localStorage.getItem('admin_token');
+        if (adminToken) {
+            setIsAdmin(true);
+        } else {
+            setIsAdmin(false);
+        }
+    }, []);
 
     useEffect(() => {
-        if(userType) {
-            if(props.avatar) {
+        dispatch.cart.getClientCart();
+    }, [token, cartChanges]);
+
+    useEffect(() => {
+        if (userType) {
+            if (props.avatar) {
                 setAvatarImage(props.avatar);
             }
         } else {
             setAvatarImage('');
         }
 
-    }, [userType, props])
+    }, [userType, props]);
 
     useEffect(() => {
-        if(router.route.indexOf('/vendors') === 0) {
+        if (router.route.indexOf('/vendors') === 0) {
             setIsVendorPage(true)
         } else {
             setIsVendorPage(false);
@@ -54,12 +64,29 @@ const MainHeader = props => {
     }
 
     const avatar = props.avatar || '';
+
+    const AdminProfile = () => (
+        <div className="flex items-center space-x-3">
+            <Link href={routes.admin.customerMessages.index}>
+                <BellTwoTone style={{fontSize: 18}} twoToneColor="#1890FF"/>
+            </Link>
+            <Link href={routes.admin.profile.index}>
+                <div className="cursor-pointer flex items-center space-x-2">
+                    <SettingTwoTone/>
+                    <span className="text-secondarey">
+                        Profile Setting
+                    </span>
+                </div>
+            </Link>
+        </div>
+    );
+
     return (
         <div className="header__content">
             <div className="flex flex-row items-center">
                 <Link href={routes.homepage}>
                     <a>
-                        <img src={'/images/logo.png'} alt={'Cart2Curb'} style={{ height: 48, width: 60}} />
+                        <img src={'/images/logo.png'} alt={'Cart2Curb'} style={{height: 48, width: 60}}/>
                     </a>
                 </Link>
                 <div className="hidden md:flex items-center">
@@ -74,7 +101,7 @@ const MainHeader = props => {
                                         Orders
                                     </HeaderLink>
                                 </>
-                            ): (
+                            ) : (
                                 <>
                                     <HeaderLink href={routes.homepage} hasPadding>
                                         Home
@@ -90,24 +117,24 @@ const MainHeader = props => {
 
             </div>
             <div className="hidden md:flex flex-row items-center">
-                {!isVendorPage && (
+                {(!isVendorPage && !isAdmin) && (
                     <Link href={routes.cart.index}>
                         <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
-                            <HeaderNotificationIcon />
+                            <HeaderNotificationIcon/>
                         </Badge>
                     </Link>
                 )}
                 {isAuthenticated ? (
                     <>
                         {router.route !== routes.vendors.account.changePassword && (
-                            <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                            <Link href={userType === 'vendor' ? routes.vendors.account.index : routes.profile.index}>
                                 <div className="ml-14 cursor-pointer">
                                     <Avatar src={avatarImage} justImage/>
                                 </div>
                             </Link>
                         )}
                     </>
-                ) : (
+                ) : isAdmin ? <AdminProfile/> : (
                     <>
                         <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
                             <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
@@ -120,8 +147,9 @@ const MainHeader = props => {
 
             </div>
             <div className="flex md:hidden">
-                <Button style={{ width: 50, height: 50}} className={'text-type text-xl'} type={'link'} onClick={() => setVisible(true)}>
-                    <MenuOutlined />
+                <Button style={{width: 50, height: 50}} className={'text-type text-xl'} type={'link'}
+                        onClick={() => setVisible(true)}>
+                    <MenuOutlined/>
                 </Button>
             </div>
 
@@ -153,7 +181,7 @@ const MainHeader = props => {
                                                 </HeaderLink>
                                             </Col>
                                         </>
-                                    ): (
+                                    ) : (
                                         <>
                                             <Col xs={24}>
                                                 <HeaderLink href={routes.homepage}>
@@ -179,7 +207,7 @@ const MainHeader = props => {
                                             </a>
 
                                             <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
-                                                <HeaderNotificationIcon />
+                                                <HeaderNotificationIcon/>
                                             </Badge>
                                         </div>
                                     </Link>
@@ -192,7 +220,8 @@ const MainHeader = props => {
                             <Row>
                                 {router.route !== routes.vendors.account.changePassword && (
                                     <Col xs={24}>
-                                        <Link href={userType==='vendor' ? routes.vendors.account.index : routes.profile.index}>
+                                        <Link
+                                            href={userType === 'vendor' ? routes.vendors.account.index : routes.profile.index}>
                                             <div className="cursor-pointer">
                                                 <Avatar src={avatarImage} justImage/>
                                             </div>
@@ -208,7 +237,8 @@ const MainHeader = props => {
                                     </Link>
                                 </Col>
                                 <Col xs={24}>
-                                    <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
+                                    <Link
+                                        href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
                                         <Button className={'w-full text-type text-base'}>Register</Button>
                                     </Link>
                                 </Col>

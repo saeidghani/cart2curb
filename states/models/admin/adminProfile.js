@@ -16,6 +16,10 @@ export const adminProfile = {
             metaData: {},
             data: []
         },
+        videos: {
+            metaData: {},
+            data: []
+        },
         customerMessages: {
             metaData: {},
             data: []
@@ -39,6 +43,15 @@ export const adminProfile = {
 
             }
             state.promos.metaData = payload.metaData;
+        },
+        setVideos: (state, payload) => {
+            if (payload?.metaData?.pagination?.pageNumber === 1) {;
+                state.videos.data = payload.data;
+            } else {
+                state.videos.data = [...state.videos.data, ...payload.data];
+
+            }
+            state.videos.metaData = payload.metaData;
         },
         setCustomerMessages: (state, payload) => {
             if (payload?.metaData?.pagination?.pageNumber === 1) {
@@ -177,6 +190,22 @@ export const adminProfile = {
                 }
             } catch (e) {
                 console.log(e);
+                if (e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async getVideos({token}) {
+            try {
+                const res = await api?.admin?.profile?.getVideos({}, setOptions(token));
+                if (res?.data?.success) {
+                    return res?.data;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch (e) {
                 if (e.hasOwnProperty('response')) {
                     message.error('An Error was occurred');
                 }

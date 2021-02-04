@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, message, Upload, Form} from 'antd';
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,6 +21,26 @@ const Video = props => {
     const [rightVideoUrl, setRightVideoUrl] = useState('');
     const [leftVideoUploading, setLeftVideoUploading] = useState(false);
     const [rightVideoUploading, setRightVideoUploading] = useState(false);
+    const [prevVideosUploading, setPrevVideosUploading] = useState(false);
+    const [videos, setVideos] = useState([]);
+
+    useEffect(async () => {
+        if (token) {
+            try {
+                setPrevVideosUploading(true);
+                const res = await dispatch?.adminProfile?.getVideos({token});
+                setVideos(res?.data);
+                setPrevVideosUploading(false);
+            } catch(err) {
+                setPrevVideosUploading(false);
+            }
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (videos?.length > 0) setLeftVideoUrl(videos[0]?.url);
+        if (videos?.length > 1) setRightVideoUrl(videos[1]?.url);
+    }, [videos]);
 
     const submitHandler = async () => {
 
@@ -45,16 +65,21 @@ const Video = props => {
         if (!isValidVideo) {
             message.error('Please upload video with format bmp/mp4/mkv');
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error('Video must be smaller than 2MB!');
+        const isLt30M = file.size / 1024 / 1024 < 30;
+        if (!isLt30M) {
+            message.error('Video must be smaller than 30MB!');
         }
-        return isValidVideo && isLt2M;
+        return isValidVideo && isLt30M;
     }
 
     const handleLeftVideoUpload = info => {
         if (info.file.status === 'uploading') {
             setLeftVideoUploading(true);
+            return;
+        }
+        if (info.file.status === 'error') {
+            setLeftVideoUploading(false);
+            message.error('Please try again');
             return;
         }
         if (info.file.status === 'done') {
@@ -66,6 +91,11 @@ const Video = props => {
     const handleRightVideoUpload = info => {
         if (info.file.status === 'uploading') {
             setRightVideoUploading(true);
+            return;
+        }
+        if (info.file.status === 'error') {
+            setRightVideoUploading(false);
+            message.error('Please try again');
             return;
         }
         if (info.file.status === 'done') {
@@ -99,15 +129,13 @@ const Video = props => {
         onChange={onUpload}
         {...uploadProps}
     >
-        <>
-            {((type === 'left' && leftVideoUploading) || type === 'right' && rightVideoUploading) ? <Loader/> :
-                <div
-                    className={'full-rounded w-full text-overline bg-card flex items-center justify-center'}
-                    style={{height: 227, backgroundColor: '#999'}}
-                >
-                    <CloudDownloadOutlined style={{position: 'absolute', top: '50%', fontSize: 40, color: '#fff'}} />
-                </div>}
-        </>
+        <Button
+            className={'text-overline bg-card flex items-center justify-center hover:text-button'}
+            loading={(type === 'left' && leftVideoUploading) || (type === 'right' && rightVideoUploading)}
+        >
+            <CloudDownloadOutlined style={{fontSize: 30}}/>
+            <span>Upload Video</span>
+        </Button>
     </Upload>);
 
     return (
@@ -115,21 +143,22 @@ const Video = props => {
             <div className="flex flex-col">
                 <div className="font-bold">Upload Your Videos</div>
                 <div className="grid grid-cols-2 items-start gap-x-2 mt-3">
-                    {leftVideoUrl ? (
-                            <div className="w-full">
-                                <VideoPlayer src={leftVideoUrl}/>
-                            </div>) :
-                        <UploadVideo type="left" onUpload={handleLeftVideoUpload}/>}
-                    {rightVideoUrl ? (
-                            <div className="w-full">
-                                <VideoPlayer src={rightVideoUrl}/>
-                            </div>) :
-                        <UploadVideo type="right" onUpload={handleRightVideoUpload}/>}
+                    <div className="flex flex-col">
+                        <div className="w-full" style={{minHeight: videos?.length > 0 ? 250 : 10}}>
+                            {prevVideosUploading ? <div className="flex justify-center items-center"><Loader/></div> : videos?.length > 0 && <VideoPlayer src={leftVideoUrl}/>}
+                        </div>
+                        <UploadVideo type="left" onUpload={handleLeftVideoUpload}/></div>
+                    <div className="flex flex-col">
+                        <div className="w-full" style={{minHeight: videos?.length > 0 ? 250 : 10}}>
+                            {prevVideosUploading ? <div className="flex justify-center"><Loader/></div> : videos?.length > 1 && <VideoPlayer src={rightVideoUrl}/>}
+                        </div>
+                        <UploadVideo type="right" onUpload={handleRightVideoUpload}/>
+                    </div>
                 </div>
             </div>
-            <div className="flex justify-end space-x-2 mt-12"
-                 //style={{position: 'relative', top: 450, left: 640}}
-                >
+            <div className="flex justify-end space-x-2 mt-8"
+                //style={{position: 'relative', top: 450, left: 640}}
+            >
                 <Button
                     type="primary"
                     block

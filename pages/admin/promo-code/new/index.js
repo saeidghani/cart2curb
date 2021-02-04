@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Row, Col, Input, Button, message} from 'antd';
+import {Form, Row, Col, Input, Button, message, Radio } from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import Link from 'next/link';
+
 import {useRouter} from 'next/router';
 import {MinusCircleFilled, PlusCircleFilled} from '@ant-design/icons';
 
@@ -19,6 +20,7 @@ const New = props => {
     const token = store?.getState()?.adminAuth?.token;
     const router = useRouter();
     const [off, setOff] = useState(0);
+    const [offType, setOffType] = useState('');
 
     const breadcrumb = [
         {
@@ -42,7 +44,6 @@ const New = props => {
 
     const handleIncrement = () => {
         if (off < 100) setOff(prevState => prevState + 1);
-
     };
 
     const handleDecrement = () => {
@@ -52,8 +53,10 @@ const New = props => {
     const submitHandler = async (values) => {
         const {code} = values;
         const body = {
-            code, off
+            code
         };
+        if (offType === 'percent') body.off = off;
+        if (offType === 'dollar') body.discount = off;
 
         const res = await dispatch.adminProfile.addPromo({body, token});
         if (res) {
@@ -86,7 +89,18 @@ const New = props => {
                             <Input placeholder='Promo Code Name'/>
                         </Item>
                     </Col>
-                    <Col xs={24} md={12} lg={16}>
+                    <Col xs={24} md={12} lg={8}>
+                        <Item
+                            name='off'
+                            label='Your Offer'
+                        >
+                            <Radio.Group onChange={(e) => setOffType(e.target.value)} value={offType} defaultValue='dollar'>
+                                <Radio value="percent">Percent</Radio>
+                                <Radio value="dollar">Dollar</Radio>
+                            </Radio.Group>
+                        </Item>
+                    </Col>
+                    <Col xs={24} md={12} lg={8}>
                         <Item
                             name='off'
                             label='Your Offer'
@@ -100,7 +114,7 @@ const New = props => {
                                     name="off"
                                     value={off}
                                     onChange={handleOff}
-                                    suffix='%'
+                                    suffix={offType === 'percent' ? '%' : '$'}
                                 />
                                 <PlusCircleFilled
                                     style={{color: '#1890FF', fontSize: 20}}

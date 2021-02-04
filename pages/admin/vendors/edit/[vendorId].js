@@ -259,8 +259,13 @@ const EditAccount = props => {
         if (window.scrollY > 5) {
             requestAnimationFrame(scrollToTop);
         }
-    }
+    };
 
+    const onChangePostal = (e) => {
+        form.setFieldsValue({
+            postalCode: e.target.value.toUpperCase(),
+        })
+    };
 
     return (
         <Page title={editType === 'store' ? 'Edit Store' : 'Edit Profile'} breadcrumb={breadcrumb}>
@@ -329,7 +334,7 @@ const EditAccount = props => {
                                                   message: "Store Open Time field is required"
                                               },
                                           ]}>
-                                        <TimePicker className={'w-full'}/>
+                                        <TimePicker className={'w-full'} format='HH:mm'/>
                                     </Item>
                                 </Col>
                                 <Col lg={8} md={12} xs={24}>
@@ -349,7 +354,7 @@ const EditAccount = props => {
                                                   },
                                               }),
                                           ]}>
-                                        <TimePicker className={'w-full'}/>
+                                        <TimePicker className={'w-full'} format='HH:mm'/>
                                     </Item>
                                 </Col>
 
@@ -512,6 +517,7 @@ const EditAccount = props => {
                                         }]}
                                     >
                                         <Select
+                                            showSearch
                                             placeholder={'Select'}
                                             onChange={setProvince}
                                         >
@@ -532,6 +538,7 @@ const EditAccount = props => {
                                               }
                                           ]}>
                                         <Select
+                                            showSearch
                                             placeholder={province ? 'Select' : 'Select Province first'}
                                         >
                                             {cities.map(city => {
@@ -573,7 +580,7 @@ const EditAccount = props => {
                                                   message: "Please enter valid Postal Code"
                                               }
                                           ]}>
-                                        <Input placeholder={'Postal Code'}/>
+                                        <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                     </Item>
                                 </Col>
 
@@ -584,17 +591,19 @@ const EditAccount = props => {
                                     </Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Item name={'needDriversToGather'}>
-                                        <Item name='needDriversToGather'>
-                                            <div className="mb-2">Who will be picking out the goods from the store:</div>
-                                            <Select placeholder="Select Option..." onChange={setNeedDrivers} value={needDrivers}>
-                                                <Option value={true}>Store employee will gather the goods when an order comes in, and place by the door</Option>
-                                                <Option value={false}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
-                                            </Select>
-                                        </Item>
+                                    <Item name='needDriversToGather' rules={[
+                                        {
+                                            required: true,
+                                            message: "This field is required"
+                                        }
+                                    ]}>
+                                        <div className="mb-2">Who will be picking out the goods from the store:</div>
+                                        <Select placeholder="Select Option..." onChange={setNeedDrivers} value={needDrivers}>
+                                            <Option value={false}>Store employee will gather the goods when an order comes in, and place by the door</Option>
+                                            <Option value={true}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
+                                        </Select>
                                     </Item>
                                 </Col>
-
                                 <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
                                     <Item>
                                         <Button type="primary" block className={'w-32 ml-5'} htmlType={'submit'}>

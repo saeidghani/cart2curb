@@ -182,7 +182,7 @@ const Customers = () => {
                 key: customer?._id,
                 avatar: customer?.image,
                 CXName: `${customer?.firstName} ${customer?.lastName}`,
-                number: customer?._id,
+                number: customer?.customerNumber,
                 email: customer?.email || '-',
                 phoneNumber: customer?.phone || '-',
                 address: (customer?.addresses?.length > 0 && customer?.addresses[0] !== null) ?

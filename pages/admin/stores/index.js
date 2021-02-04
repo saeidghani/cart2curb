@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Row, Col, Input, Form, Table, Select, Button, message} from 'antd';
 import {
     FileSearchOutlined,
-    EditOutlined,
+    EditOutlined, PlusCircleOutlined,
 } from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Link from "next/link";
@@ -155,7 +155,7 @@ const Stores = ({admin, ...props}) => {
                 storeId: el?.store?._id,
                 vendorId: el?.vendor?._id,
                 storeType: el?.store?.storeType,
-                number: '???',
+                number: el?.store?.storeNumber || '-',
                 CXName: el?.vendor?.contactName,
                 store: el?.store?.name,
                 address: `${el?.store?.address?.addressLine1}
@@ -196,6 +196,17 @@ const Stores = ({admin, ...props}) => {
                                 </Col>
                             </Row>
                         </Form>
+                    </Col>
+                    <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
+                        <Link href={{pathname: routes.admin.stores.add}}>
+                            <Button
+                                type={'link'}
+                                icon={<PlusCircleOutlined className={'text-info mr-3'} style={{fontSize: 20}}/>}
+                                className={'flex items-center justify-center px-0 text-info hover:text-teal-500 text-base'}
+                            >
+                                Add New Store
+                            </Button>
+                        </Link>
                     </Col>
                 </Row>
                 <Row>

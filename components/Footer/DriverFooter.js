@@ -16,7 +16,6 @@ const Footer = props => {
                 <Link href={routes.faq}>
                     <span className="text-base cursor-pointer" style={{color: '#CAD5E9'}}> FAQ(s) </span>
                 </Link>
-                <span className="text-base" style={{color: '#CAD5E9'}}> Report Page </span>
                 <Link href={routes.vendors.auth.login}>
                     <span className="text-base cursor-pointer" style={{color: '#CAD5E9'}}> Ask Us to Host Your Local Products </span>
                 </Link>

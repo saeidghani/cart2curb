@@ -105,7 +105,8 @@ export default {
         },
         stores: {
             index: '/admin/stores',
-            storeDetails: '/admin/stores/store-details'
+            storeDetails: '/admin/stores/store-details',
+            add: '/admin/stores/add'
         },
         users: {
             index: '/admin/users'
