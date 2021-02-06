@@ -76,7 +76,6 @@ export async function getServerSideProps({ req, res, query }) {
         };
 
     } catch(e) {
-        console.log(e);
         return {
             props: {
                 profile,

@@ -2,28 +2,51 @@ import React, {useState, useMemo, useEffect} from 'react';
 import {Button, Input, Table, Checkbox, InputNumber, Row, Col, Form, Select, message} from 'antd';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 
-import Page from "../../components/Page";
+import Page from "../../../components/Page";
 import cookie from "cookie";
-import routes from "../../constants/routes";
-import {getStore} from "../../states";
+import routes from "../../../constants/routes";
+import {getStore} from "../../../states";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
-import {useAuth} from "../../providers/AuthProvider";
+import {useAuth} from "../../../providers/AuthProvider";
+import withAuth from "../../../components/hoc/withAuth";
 
 const { Item } = Form;
 const { Option } = Select;
 
-export const CartIndex = (props) => {
-    const { cart, stores } = props;
+export const CustomCart = (props) => {
     const [form] = Form.useForm()
     const [products, setProducts] = useState([])
     const [deleted, setDeleted] = useState([]);
-    const [total, setTotal] = useState(cart.hasOwnProperty('totalPrice') ? cart.totalPrice : 0);
+    const [total, setTotal] = useState(0);
+    const [store, setStore] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(-1);
-    const loading = useSelector(state => state.loading.effects.cart.updateCart);
+    const loading = useSelector(state => state.loading.effects.customCart.updateCart);
+    const cartId = useSelector(state => state.customCart.cartId);
+    const cart = useSelector(state => state.customCart.cart);
     const dispatch = useDispatch();
     const router = useRouter()
     const auth = useAuth()
+
+    const getStore = async (id) => {
+        const res = await dispatch.app.getStore(id);
+        if(res) {
+            setStore(res);
+        }
+    }
+
+    useEffect(() => {
+        if(cartId && !store && cart?.stores?.length > 0) {
+            getStore(cart?.stores?.[0])
+        }
+    }, [store, cart, cartId])
+
+    useEffect(() => {
+        if(!cartId) {
+            message.error('Please create new Order first!')
+            router.push(routes.vendors.orders.index);
+        }
+    }, [cartId])
 
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
@@ -37,9 +60,6 @@ export const CartIndex = (props) => {
             const transformedProducts = cart.products.map(product => {
                 return {
                     _id: product._id,
-                    subtituted: !!product.subtitution,
-                    subtitution: !product.subtitution ? undefined : ['I need exact item', 'Do substitute'].includes(product.subtitution) ? product.subtitution : 'Do substitute',
-                    subtitutionDesc: !['I need exact item', 'Do substitute'].includes(product.subtitution) ? product.subtitution : null,
                     quantity: product.quantity,
                     tax: (product.tax * product.price * product.quantity / 100).toFixed(2),
                     price: product.price,
@@ -66,17 +86,8 @@ export const CartIndex = (props) => {
         setProducts(newProducts);
     }
 
-    const changeSubtitution = (value, index, key) => {
-        const newProducts = [...products];
-        newProducts[index] = {
-            ...newProducts[index],
-            [key]: value,
-        }
-        setProducts(newProducts);
-    }
-
     const submitHandler = async (values) => {
-        const transformedProducts = []
+        const transformedProducts = {}
         const body = {
             note: values.notes || '',
         }
@@ -85,24 +96,18 @@ export const CartIndex = (props) => {
                 const product = products[i];
                 const quantity = product.quantity;
                 const _id = product._id;
-                const subtitution = !product.subtituted ? null : product.subtitution === 'I need exact item' ? product.subtitution : product.subtitutionDesc ? product.subtitutionDesc : product.subtitution || 'I need exact item'
 
-                transformedProducts.push({
-                    _id,
-                    quantity,
-                    subtitution
-                })
+                transformedProducts[_id] = {
+                    quantity
+                }
             }
         }
         body.products = transformedProducts;
         try {
-            const result = await dispatch.cart.updateCart(body);
+            const result = await dispatch.customCart.updateCart(body);
             if(result) {
-                if(auth.isAuthenticated && auth.userType === 'customer') {
-                    router.push(routes.cart.delivery)
-                } else {
-                    router.push(routes.cart.guest.index);
-                }
+                await dispatch.customCart.getCart(cartId)
+                router.push(routes.vendors.customCart.delivery);
             }
         } catch(e) {
             return false;
@@ -119,23 +124,14 @@ export const CartIndex = (props) => {
             title: '#',
             dataIndex: 'index',
             key: 'index',
-            render: data => <span className="text-cell">{data + 1}</span>
+            render: data => <span className="text-cell">{data + 1}</span>,
+            colSpan: 1,
         },
         {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
             render: data => <span className="text-cell">{data}</span>
-        },
-        {
-            title: 'Substitution',
-            dataIndex: 'subtitution',
-            key: 'subtitution',
-            render: (data, row) => {
-                return (
-                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtituted')} checked={products[row.index]?.subtituted}>{products[row.index]?.subtituted ? "Yes" : "No"}</Checkbox>
-                )
-            }
         },
         {
             title: 'Price',
@@ -202,19 +198,19 @@ export const CartIndex = (props) => {
                     key: product._id,
                     index: index,
                     product: product.name,
-                    subtitution: !!product.subtitution,
                     price: `$${product.price}`,
                     tax: `$${tax}`,
-                    store: stores.find(store => store._id === product.store)?.name,
+                    store: store?.name || '-',
                     quantity: product.quantity,
                     total: `$${totalPrice}`,
                     deleteHandler: async () => {
                         setDeleteLoading(product._id);
-                        const res = await dispatch.cart.deleteFromCart(product._id);
+                        const res = await dispatch.customCart.deleteFromCart(product._id);
                         if(res) {
+                            await dispatch.customCart.getCart(res);
                             changeQuantity(0, index);
                             message.success('Products deleted successfully!')
-                            setDeleted([...deleted, product._id])
+                            setDeleted(deleted => [...deleted, product._id])
                         }
                         setDeleteLoading(-1);
                     }
@@ -222,15 +218,17 @@ export const CartIndex = (props) => {
             })
         }
         return [];
-    }, [cart, products, stores, deleted]);
+    }, [cart, products, store, deleted]);
 
     return (
         <Page title="Cart" breadcrumb={[{ title: 'Cart'}]}>
             <div className="mt-2">
-                <Table columns={columns}
-                       dataSource={data}
-                       pagination={false}
-                       scroll={{ x: 1100 }}
+
+                <Table
+                    columns={columns}
+                    scroll={{ x: 1100 }}
+                    dataSource={data}
+                    pagination={false}
                 />
             </div>
             <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
@@ -246,31 +244,6 @@ export const CartIndex = (props) => {
                 notes: cart.note
             }}>
                 <Row gutter={24}>
-                    {products.filter(product => !deleted.includes(product._id)).map((product, key) => {
-                        if(product.subtituted) {
-                            return (
-                                <>
-                                    <Col lg={8} md={12} xs={24}>
-                                        <Item name={`subtitution-${key + 1}`} label={`Item #${key + 1} Substitution`}>
-                                            <Select placeholder={'I need exact item (Do not substitute)'} onChange={value => changeSubtitution(value, key, 'subtitution')} defaultValue={product.subtitution}>
-                                                <Option value={'I need exact item'}>I need exact item (Do not substitute)</Option>
-                                                <Option value={'Do substitute'}>Do substitute</Option>
-                                            </Select>
-                                        </Item>
-                                    </Col>
-                                    {product.subtitution === 'Do substitute' && (
-                                        <Col lg={16} md={12} xs={24}>
-                                            <Item name={`subtitution-${key + 1}-desc`} label={'Your Substitution'}>
-                                                <Input placeholder={'I need exact item (Do not substitute)'} defaultValue={product.subtitutionDesc} onChange={e => changeSubtitution(e.target.value, key, 'subtitutionDesc')}/>
-                                            </Item>
-                                        </Col>
-                                    )}
-
-                                </>
-                            )
-                        }
-                    })}
-
                     <Col xs={24}>
                         <Item name={'notes'} label={'Notes'}>
                             <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} />
@@ -278,7 +251,7 @@ export const CartIndex = (props) => {
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
                         <Item>
-                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0 || cart.products?.length === deleted.length}>Next</Button>
+                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0}>Next</Button>
                         </Item>
                     </Col>
                 </Row>
@@ -287,75 +260,4 @@ export const CartIndex = (props) => {
     );
 };
 
-export async function getServerSideProps({ req, res }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let token = cookies.token
-    let userType = cookies.type;
-
-    let authenticated = !!token;
-    let cart = {}
-    let stores = [];
-    if (userType && !['customer', 'vendor'].includes(userType)) {
-        res.writeHead(307, { Location: routes.auth.login });
-        res.end();
-        return {
-            props: {
-                authenticated,
-                cart,
-                stores,
-            }
-        };
-    }
-    const store = getStore();
-    try {
-        let response;
-        if(token && userType === 'customer') {
-            response = await store.dispatch.cart.getCart({
-                headers: {
-                    ...req.headers,
-                    Authorization: `Bearer ${token}`
-                }
-            });
-        } else {
-            response = await store.dispatch.cart.getCart({
-                headers: {
-                    ...req.headers
-                }
-            });
-        }
-
-        if(response) {
-            cart = response;
-
-            if(cart.hasOwnProperty('stores')) {
-                for(let i in cart.stores) {
-                    const storeId = cart.stores[i];
-                    const storeResponse = await store.dispatch.app.getStore(storeId);
-                    if(storeResponse) {
-                        stores.push(storeResponse);
-                    }
-                }
-            }
-        }
-    } catch(e) {
-        return {
-            props: {
-                authenticated,
-                cart,
-                stores,
-            }
-        }
-    }
-
-    return {
-        props: {
-            authenticated,
-            cart,
-            stores,
-        }
-    };
-
-}
-
-export default CartIndex;
+export default withAuth(CustomCart, 'vendor');

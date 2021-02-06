@@ -47,7 +47,6 @@ export default function Home() {
                     setHasMore(false);
                 }
             } catch(e) {
-                console.log(e);
                 setHasMore(false);
                 message.error('An Error was occurred while fetching data')
             }

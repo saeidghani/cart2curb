@@ -2,12 +2,15 @@ import React, {useState, useMemo, useRef, useEffect} from 'react';
 import {Button, Col, Form, Input, message, Row, Table} from "antd";
 
 import Page from "../../../components/Page";
-import {FileSearchOutlined} from "@ant-design/icons";
+import {FileSearchOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import OrderDetailsModal from "../../../components/Modals/OrderDetails";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../../components/UI/Loader";
 import withAuth from "../../../components/hoc/withAuth";
 import moment from "moment";
+import Link from "next/link";
+import routes from "../../../constants/routes";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 
@@ -19,6 +22,7 @@ const Orders = props => {
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const router = useRouter()
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading.effects.vendorStore.getOrders);
     const orders = useSelector(state => state.vendorStore.orders.data);
@@ -77,6 +81,16 @@ const Orders = props => {
         setSearch(values.search);
     }
 
+    const createNewCustomCart = async () => {
+        try {
+            const id = await dispatch.customCart.createCart()
+            if(id) {
+                router.push(routes.vendors.orders.new);
+            }
+        } catch(e) {
+            return false;
+        }
+    }
 
     const columns = [
         {
@@ -160,6 +174,17 @@ const Orders = props => {
                             </Col>
                         </Row>
                     </Form>
+                </Col>
+
+                <Col lg={6} xs={24} className={'flex flex-row-reverse'}>
+                    <Button
+                        type={'link'}
+                        onClick={createNewCustomCart}
+                        icon={<PlusCircleOutlined className={'text-secondarey mr-3'} style={{ fontSize: 20 }}/>}
+                        className={'flex items-center justify-center text-secondarey px-0 hover:text-blue-600 text-base'}
+                    >
+                        Add New Order
+                    </Button>
                 </Col>
             </Row>
             <Row>

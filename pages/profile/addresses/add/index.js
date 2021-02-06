@@ -115,6 +115,12 @@ const AddAddress = props => {
         }
     }
 
+    const onChangePostal = (e) => {
+        form.setFieldsValue({
+            postalCode: e.target.value.toUpperCase(),
+        })
+    }
+
     return (
         <Page title={'Add New Address'} breadcrumb={breadcrumb}>
             <Row>
@@ -207,7 +213,7 @@ const AddAddress = props => {
                                               },
                                           }),
                                       ]}>
-                                    <Input placeholder={'Postal Code'}/>
+                                    <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                 </Item>
                             </Col>
 

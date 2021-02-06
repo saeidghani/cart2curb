@@ -1,5 +1,4 @@
 import {getApi} from '../../lib/api';
-import {message} from "antd";
 
 const api = getApi();
 

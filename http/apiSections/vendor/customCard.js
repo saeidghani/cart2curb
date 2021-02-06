@@ -5,11 +5,11 @@ export default class CustomCardApi extends ApiInstance {
         super();
     }
 
-    getCard(query = {}, options = {}) {
+    getCart(query = {}, options = {}) {
         return this.get('custom-cart', query, options)
     }
 
-    createCard(body, options = {}) {
+    createCart(body = {}, options = {}) {
         return this.post('custom-cart', body, {}, options)
     }
 
@@ -37,8 +37,15 @@ export default class CustomCardApi extends ApiInstance {
     addAddress(id, body, options = {}) {
         return this.put(`custom-cart/${id}/address`, body, {}, options)
     }
+    addCustomerInfo(id, body, options = {}) {
+        return this.put(`custom-cart/${id}/customer-info`, body, {}, options)
+    }
 
     updateDeliveryTime(id, body, options = {}) {
         return this.put(`custom-cart/${id}/deliverytime`, body, {}, options)
+    }
+
+    submit(id, options = {}) {
+        return this.put(`custom-cart/${id}/submit`, {}, {}, options)
     }
 }
