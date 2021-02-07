@@ -340,9 +340,11 @@ export async function getServerSideProps({ req, res }) {
         }
     } catch(e) {
         return {
-            authenticated,
-            cart,
-            stores,
+            props: {
+                authenticated,
+                cart,
+                stores,
+            }
         }
     }
 

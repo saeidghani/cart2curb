@@ -145,6 +145,13 @@ const Delivery = props => {
     }
 
 
+    const onChangePostal = (e) => {
+        form.setFieldsValue({
+            postalCode: e.target.value.toUpperCase(),
+        })
+    }
+
+
     return (
         <Page title={'Delivery Time & Checkout'} breadcrumb={breadcrumb}>
             <Row>
@@ -313,7 +320,7 @@ const Delivery = props => {
                                                       },
                                                   }),
                                               ]}>
-                                            <Input placeholder={'Postal Code'}/>
+                                            <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                         </Item>
                                     </Col>
 

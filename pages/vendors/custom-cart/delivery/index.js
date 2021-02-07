@@ -8,76 +8,58 @@ import {
     Divider,
     Select, DatePicker, message, TimePicker
 } from 'antd';
-
-import Page from '../../../components/Page';
-import GoogleMap from "../../../components/Map";
-import {useCities, useProvinces} from "../../../hooks/region";
-import routes from "../../../constants/routes";
 import Link from "next/link";
 import moment from "moment";
-import cookie from "cookie";
-import {getStore} from "../../../states";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
+
+import Page from '../../../../components/Page';
+import GoogleMap from "../../../../components/Map";
+import {useCities, useProvinces} from "../../../../hooks/region";
+import routes from "../../../../constants/routes";
+import withAuth from "../../../../components/hoc/withAuth";
 
 const { Item } = Form;
 const { Option } = Select;
 
-const CartGuest = props => {
+const CustomCartDelivery = props => {
     const [form] = Form.useForm();
+    const [isValid, setIsValid] = useState(false)
     const [province, setProvince] = useState('');
     const [marker, setMarker] = useState({ position: {}})
     const provinces = useProvinces();
     const cities = useCities(province);
-    const [stream, setStream] = useState("Facebook")
     const dispatch = useDispatch();
     const router = useRouter()
-    const { cart } = props;
-    console.log(cart);
+    const cart = useSelector(state => state.customCart.cart);
+    const cartId = useSelector(state => state.customCart.cartId);
+
+
+    useEffect(() => {
+        if(!isValid) {
+            if(!cartId) {
+                message.error('Please create new Order first!')
+                router.push(routes.vendors.orders.index);
+            } else {
+                if(cart?.products?.length === 0) {
+                    message.error('Please add some products to cart first!')
+                    router.push(routes.vendors.orders.new);
+                } else {
+                    setIsValid(true)
+                }
+            }
+        }
+    }, [cartId])
 
     const breadcrumb = [
         {
             title: 'Cart',
-            href: '/cart'
+            href: routes.vendors.customCart.index
         },
         {
-            title: 'Guest'
+            title: "User Profile"
         }
     ]
-
-    useEffect(() => {
-        if(cart.guest) {
-            const { firstName, lastName, birthdate, phone, email } = cart.guest;
-            form.setFieldsValue({
-                firstName,
-                lastName,
-                birthdate: moment(birthdate || ''),
-                phone,
-                email,
-                date: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
-                time: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
-            })
-            if(cart.guest.hasOwnProperty('socialMedias')) {
-                form.setFieldsValue({
-                    streamPreference: cart.guest.socialMedias.provider,
-                    streamId: cart.guest.socialMedias.username
-                })
-            }
-        }
-        if(cart.address) {
-            const { province, city, addressLine1, addressLine2, postalCode, location } = cart.address;
-            form.setFieldsValue({
-                province, city, addressLine1, addressLine2, postalCode
-            })
-            setMarker({
-                position: {
-                    lat: location.coordinates[1],
-                    lng: location.coordinates[0],
-                }
-            })
-        }
-
-    }, [cart])
 
     const changeMarkerPosition = (e, map, position) => {
         const newPosition = {
@@ -97,32 +79,18 @@ const CartGuest = props => {
         }
         const {date, time} = values;
         const deliveryTime = date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
-        const fromTime = moment(props.deliveryTimes.from);
-        const toTime = moment(props.deliveryTimes.to);
-        if(deliveryTime.diff(fromTime) < 0 || deliveryTime.diff(toTime) > 0) {
-            message.error(`Delivery time should be between ${fromTime.format('MM.DD.YYYY - HH:mm')} and ${toTime.format('MM.DD.YYYY - HH:mm')}`)
-            return false;
-        }
 
-        const { firstName, lastName, email, phone, streamPreference, streamId, birthdate } = values;
-        const guestBody = {
+        const { firstName, lastName, email, phone } = values;
+        const customerInfo = {
             firstName,
             lastName,
             email,
             phone,
-            birthdate: birthdate.format('YYYY-MM-DD'),
-        }
-        if(streamPreference && streamId) {
-            guestBody.socialMedias = {
-                username: streamId,
-                provider: streamPreference,
-                streamOn: true,
-            }
         }
 
-        const guestInfoRes = await dispatch.cart.guestInfo(guestBody);
+        const customerInfoRes = await dispatch.customCart.addCustomerInfo(customerInfo);
 
-        if(!guestInfoRes) {
+        if(!customerInfoRes) {
             return false;
         }
 
@@ -141,20 +109,26 @@ const CartGuest = props => {
             }
         }
 
-        const res = await dispatch.cart.checkAddress({
-            ...transformedAddress
-        })
+        const res = await dispatch.customCart.addAddress(transformedAddress)
+
         if(!res) {
             return false;
         }
-        const body = {
-            time: deliveryTime,
-            address: transformedAddress
+
+
+        const deliveryRes = await dispatch.customCart.updateDeliveryTime({
+            time: deliveryTime
+        });
+
+        if(!deliveryRes) {
+            return false;
         }
-        const finalRes = await dispatch.cart.updateDelivery(body);
+
+        const finalRes = await dispatch.customCart.submit();
+
         if(finalRes) {
-            message.success('Cart Address and Delivery time updated!')
-            router.push(routes.cart.guest.invoice);
+            message.success('Order submitted successfully!')
+            router.push(routes.vendors.orders.index);
         }
     }
 
@@ -163,22 +137,20 @@ const CartGuest = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
-    const disabledDate = (current) => {
-
-        const fromTime = moment(props.deliveryTimes.from);
-        const toTime = moment(props.deliveryTimes.to);
-        return current && (current.diff(fromTime) < 0 || current.diff(toTime) > 0);
-    }
-
-
     const onChangePostal = (e) => {
         form.setFieldsValue({
             postalCode: e.target.value.toUpperCase(),
         })
     }
 
+    const disabledDate = (current) => {
+        const now = moment().startOf('day');
+        return current && (current.diff(now) < 0);
+    }
+
+
     return (
-        <Page title={'Guest Cart'} breadcrumb={breadcrumb}>
+        <Page title={'User Profile'} breadcrumb={breadcrumb}>
             <Row>
                 <Col span={24}>
                     <Form
@@ -262,37 +234,6 @@ const CartGuest = props => {
                             </Col>
 
 
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamPreference'} label={'Messaging Platform'}>
-                                    <Select
-                                        placeholder={'Select'}
-                                        onChange={setStream}
-                                    >
-                                        <Option value={'facebook'}>Facebook</Option>
-                                        <Option value={'instagram'}>Instagram</Option>
-                                        <Option value={'zoom'}>Zoom</Option>
-                                        <Option value={'skype'}>Skype</Option>
-                                        <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'slack'}>Slack</Option>
-                                    </Select>
-                                </Item>
-                            </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
-                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
-                                </Item>
-                            </Col>
-
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthdate'} label={'Birthdate'}
-                                      rules={[{
-                                          required: true,
-                                          message: "Birthdate Field is required"
-                                      }]}>
-                                    <DatePicker className={'w-full'}/>
-                                </Item>
-                            </Col>
-
                             <div className="w-full px-3">
                                 <Divider className={'mt-6 mb-8'}/>
                             </div>
@@ -311,7 +252,7 @@ const CartGuest = props => {
                                         }
                                     ]}
                                 >
-                                    <DatePicker className={'w-full'} disabledDate={disabledDate} />
+                                    <DatePicker className={'w-full'} disabledDate={disabledDate}/>
                                 </Item>
                             </Col>
 
@@ -445,7 +386,7 @@ const CartGuest = props => {
                                     </Button>
                                 </Item>
                                 <Item>
-                                    <Link href={routes.cart.index}>
+                                    <Link href={routes.vendors.customCart.index}>
                                         <Button danger className={'w-32'}>
                                             Prev
                                         </Button>
@@ -462,90 +403,4 @@ const CartGuest = props => {
     )
 }
 
-
-export async function getServerSideProps({ req, res }) {
-
-    let cookies = cookie.parse(req.headers.cookie || '');
-    let userType = cookies.type;
-
-    let cart = {}
-    let deliveryTimes = {}
-    if(userType) {
-        if(userType === 'customer') {
-            res.writeHead(307, { Location: routes.cart.delivery });
-            res.end();
-            return {
-                props: {
-                    deliveryTimes,
-                    cart,
-                }
-            };
-        } else if(userType !== 'vendor') {
-            res.writeHead(307, { Location: routes.auth.login });
-            res.end();
-            return {
-                props: {
-                    deliveryTimes,
-                    cart,
-                }
-            };
-        }
-    }
-    const store = getStore();
-
-    try {
-        const response = await store.dispatch.cart.getCart({
-            headers: {
-                ...req.headers
-            }
-        });
-        const deliveryTimesRes = await store.dispatch.cart.getDeliveryTime({
-            headers: {
-                ...req.headers
-            }
-        });
-
-        if(response) {
-            cart = response;
-            if(!cart.products || cart.products?.length === 0) {
-                res.writeHead(307, { Location: routes.cart.index });
-                res.end();
-                return {
-                    props: {
-                        cart,
-                        deliveryTimes
-                    }
-                };
-            } else {
-                if(deliveryTimesRes){
-                    deliveryTimes = deliveryTimesRes;
-                } else {
-                    res.writeHead(307, { Location: routes.cart.index });
-                    res.end();
-                    return {
-                        props: {
-                            cart,
-                            deliveryTimes
-                        }
-                    };
-                }
-                return {
-                    props: {
-                        cart,
-                        deliveryTimes
-                    }
-                };
-            }
-        }
-    } catch(e) {
-        console.log(e);
-        return {
-            props: {
-                cart,
-                deliveryTimes
-            }
-        }
-    }
-}
-
-export default CartGuest;
+export default withAuth(CustomCartDelivery, 'vendor');

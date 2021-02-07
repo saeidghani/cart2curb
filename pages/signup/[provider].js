@@ -104,6 +104,11 @@ const SignUp = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+    const onChangePostal = (e) => {
+        form.setFieldsValue({
+            postalCode: e.target.value.toUpperCase(),
+        })
+    }
 
     return completeStep ? (
         <AccountInfo/>
@@ -321,7 +326,7 @@ const SignUp = props => {
                                               },
                                           }),
                                       ]}>
-                                    <Input placeholder={'Postal Code'}/>
+                                    <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                 </Item>
                             </Col>
 

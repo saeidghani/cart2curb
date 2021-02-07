@@ -72,3 +72,10 @@ export function isPointInside(point, vs) {
 
     return inside;
 };
+
+export function isCustomCartRoute(path) {
+    if([routes.vendors.orders.new, routes.vendors.customCart.index, routes.vendors.customCart.delivery].includes(path)) {
+        return true;
+    }
+    return false;
+}

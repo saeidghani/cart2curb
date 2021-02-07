@@ -39,8 +39,10 @@ export default class StoreApi extends ApiInstance {
         return this.get(`product/${productId}`)
     }
 
-    videos() {
-        return this.get('videos')
+    videos(count = 2) {
+        return this.get(`videos`, {
+            page_size: count,
+        })
     }
 
     contact(body) {
