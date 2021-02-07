@@ -12,7 +12,6 @@ import Link from "next/link";
 import routes from "../../../constants/routes";
 import Loader from "../../UI/Loader";
 import Avatar from "../../UI/Avatar";
-import '../../../styles/less/custom.less';
 
 const {Item} = Form;
 const {Option} = Select;

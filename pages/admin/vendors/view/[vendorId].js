@@ -12,7 +12,6 @@ import DetailItem from "../../../../components/UI/DetailItem";
 import AdminAuth from "../../../../components/Admin/AdminAuth";
 import {getProperty} from "../../../../helpers";
 import routes from "../../../../constants/routes";
-import '../../../../styles/less/custom.less';
 
 const VendorDetails = props => {
     const screens = Grid.useBreakpoint();
