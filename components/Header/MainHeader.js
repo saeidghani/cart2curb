@@ -98,13 +98,13 @@ const MainHeader = props => {
             <div className="hidden md:flex flex-row items-center">
                 {!isVendorPage ? (
                     <Link href={routes.cart.index}>
-                        <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
+                        <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer'}>
                             <HeaderNotificationIcon />
                         </Badge>
                     </Link>
                 ) : isCustomCart ? (
                     <Link href={routes.vendors.customCart.index}>
-                        <Badge count={customCart.totalQuantity || 0} className={'cursor-pointer'}>
+                        <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer'}>
                             <HeaderNotificationIcon />
                         </Badge>
                     </Link>
@@ -190,7 +190,7 @@ const MainHeader = props => {
                                                 Cart
                                             </a>
 
-                                            <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
+                                            <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer'}>
                                                 <HeaderNotificationIcon />
                                             </Badge>
                                         </div>
@@ -202,7 +202,7 @@ const MainHeader = props => {
                                                 Cart
                                             </a>
 
-                                            <Badge count={customCart.totalQuantity || 0} className={'cursor-pointer'}>
+                                            <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer'}>
                                                 <HeaderNotificationIcon />
                                             </Badge>
                                         </div>

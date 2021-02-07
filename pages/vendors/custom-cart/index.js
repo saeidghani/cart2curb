@@ -56,8 +56,8 @@ export const CustomCart = (props) => {
     }, [cart, products])
 
     useEffect(() => {
-        if(cart.hasOwnProperty('products')) {
-            const transformedProducts = cart.products.map(product => {
+        if(cart?.hasOwnProperty('products')) {
+            const transformedProducts = cart?.products?.map(product => {
                 return {
                     _id: product._id,
                     quantity: product.quantity,
@@ -74,7 +74,7 @@ export const CustomCart = (props) => {
     const changeQuantity = (value, index) => {
         const newProducts = [...products];
         const price = value * newProducts[index].price
-        const tax = (cart.products[index].tax * price / 100).toFixed(2)
+        const tax = (cart?.products[index].tax * price / 100).toFixed(2)
         const totalPrice = (Number(price) + Number(tax)).toFixed(2)
         newProducts[index] = {
             ...newProducts[index],
@@ -87,6 +87,10 @@ export const CustomCart = (props) => {
     }
 
     const submitHandler = async (values) => {
+        if(!cart?.products || cart?.products?.length === 0) {
+            message.error('Please add some products to cart first!')
+            return false;
+        }
         const transformedProducts = {}
         const body = {
             note: values.notes || '',
@@ -185,8 +189,8 @@ export const CustomCart = (props) => {
     ];
 
     const data = useMemo(() => {
-        if(cart.hasOwnProperty('products')) {
-            return cart.products.filter(product => !deleted.includes(product._id)).map((product, index) => {
+        if(cart?.hasOwnProperty('products')) {
+            return cart?.products?.filter(product => !deleted.includes(product._id))?.map((product, index) => {
                 let totalPrice = product.totalPrice;
                 let tax = product.tax * product.price * product.quantity / 100
 
@@ -223,13 +227,21 @@ export const CustomCart = (props) => {
     return (
         <Page title="Cart" breadcrumb={[{ title: 'Cart'}]}>
             <div className="mt-2">
-
-                <Table
-                    columns={columns}
-                    scroll={{ x: 1100 }}
-                    dataSource={data}
-                    pagination={false}
-                />
+                {data.length > 0 ? (
+                    <Table
+                        columns={columns}
+                        scroll={{ x: 1100 }}
+                        dataSource={data || []}
+                        pagination={false}
+                    />
+                ) : (
+                    <Table
+                        columns={columns}
+                        scroll={{ x: 1100 }}
+                        dataSource={[]}
+                        pagination={false}
+                    />
+                )}
             </div>
             <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
                 {cart?.products?.filter(product => !deleted.includes(product._id)).length > 0 && (
@@ -241,7 +253,7 @@ export const CustomCart = (props) => {
             </div>
 
             <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation} initialValues={{
-                notes: cart.note
+                notes: cart?.note
             }}>
                 <Row gutter={24}>
                     <Col xs={24}>
@@ -251,7 +263,7 @@ export const CustomCart = (props) => {
                     </Col>
                     <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
                         <Item>
-                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0}>Next</Button>
+                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading}>Next</Button>
                         </Item>
                     </Col>
                 </Row>

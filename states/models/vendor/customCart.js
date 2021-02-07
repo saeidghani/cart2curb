@@ -36,7 +36,10 @@ export const customCart = {
                         if(id) {
                             cart = res?.data?.data.find(cart => cart._id === id);
                             dispatch.customCart.setCart({
-                                cart: cart,
+                                cart: cart || {
+                                    products: [],
+                                    totalQuantity: 0
+                                },
                                 _id: id,
                             })
                         } else  {
