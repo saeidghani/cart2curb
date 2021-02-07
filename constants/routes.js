@@ -76,13 +76,20 @@ export default {
             },
             add: '/vendors/categories/new'
         },
-        orders: '/vendors/orders',
+        orders: {
+            index: '/vendors/orders',
+            new: '/vendors/orders/new'
+        },
         account: {
             index: '/vendors/account',
             changePassword: '/vendors/account/change-password',
             edit: '/vendors/account/edit'
         },
-        index: '/vendors/dashboard'
+        index: '/vendors/dashboard',
+        customCart: {
+            index: '/vendors/custom-cart',
+            delivery: '/vendors/custom-cart/delivery',
+        }
     },
     admin: {
         auth: {

@@ -189,6 +189,11 @@ const Register = props => {
         }
     }
 
+    const onChangePostal = (e) => {
+        form.setFieldsValue({
+            postalCode: e.target.value.toUpperCase(),
+        })
+    }
 
     return (
         <Page title={submitted ? false : 'Register'} breadcrumb={submitted ? [] : breadcrumb}>
@@ -359,7 +364,7 @@ const Register = props => {
                                                   ]}>
                                                 <Select placeholder={'Type/Service'}>
                                                     <Option value={'product'}>Product</Option>
-                                                    <Option value={'service'}>Service</Option>
+                                                    <Option value={'service'} disabled>Service</Option>
                                                 </Select>
                                             </Item>
                                         </Col>
@@ -533,7 +538,7 @@ const Register = props => {
                                                   },
                                               })
                                           ]}>
-                                        <Input placeholder={'Postal Code'}/>
+                                        <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                     </Item>
                                 </Col>
 

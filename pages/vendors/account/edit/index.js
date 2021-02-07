@@ -199,6 +199,11 @@ const EditAccount = props => {
         }
     }
 
+    const onChangePostal = (e) => {
+        form.setFieldsValue({
+            postalCode: e.target.value.toUpperCase(),
+        })
+    }
 
     return (
         <Page title={'Edit Profile'} breadcrumb={breadcrumb}>
@@ -313,7 +318,7 @@ const EditAccount = props => {
                                                   ]}>
                                                 <Select placeholder={'Type/Service'} disabled={true}>
                                                     <Option value={'product'}>Product</Option>
-                                                    <Option value={'service'}>Service</Option>
+                                                    <Option value={'service'} disabled>Service</Option>
                                                 </Select>
                                             </Item>
                                         </Col>
@@ -491,7 +496,7 @@ const EditAccount = props => {
                                                   },
                                               }),
                                           ]}>
-                                        <Input placeholder={'Postal Code'}/>
+                                        <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                     </Item>
                                 </Col>
 

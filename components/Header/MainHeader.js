@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Badge, Button, Drawer, Row, Col} from 'antd';
 import Link from 'next/link'
 import {BellTwoTone, MenuOutlined, SettingTwoTone} from '@ant-design/icons';
@@ -12,6 +12,7 @@ import Avatar from "../UI/Avatar";
 import {useDispatch, useSelector} from "react-redux";
 import userTypes from "../../constants/userTypes";
 import HeaderLink from "./HeaderLink";
+import {isCustomCartRoute} from "../../helpers";
 
 const MainHeader = props => {
     const [visible, setVisible] = useState(false);
@@ -25,6 +26,7 @@ const MainHeader = props => {
     const dispatch = useDispatch();
     const token = useSelector(state => state.auth.token);
     const cart = useSelector(state => state.cart.cart);
+    const customCart = useSelector(state => state.customCart.cart)
     const cartChanges = useSelector(state => state.cart.cartChanges);
 
     useEffect(() => {
@@ -58,6 +60,10 @@ const MainHeader = props => {
             setIsVendorPage(false);
         }
     }, [router, userType])
+
+    const isCustomCart = useMemo(() => {
+        return isCustomCartRoute(router.route);
+    }, [router.route])
 
     const onCloseDrawer = () => {
         setVisible(false);
@@ -97,7 +103,7 @@ const MainHeader = props => {
                                     <HeaderLink href={routes.vendors.index} hasPadding>
                                         Store
                                     </HeaderLink>
-                                    <HeaderLink href={routes.vendors.orders} hasPadding>
+                                    <HeaderLink href={routes.vendors.orders.index} hasPadding>
                                         Orders
                                     </HeaderLink>
                                 </>
@@ -117,13 +123,19 @@ const MainHeader = props => {
 
             </div>
             <div className="hidden md:flex flex-row items-center">
-                {(!isVendorPage && !isAdmin) && (
+                {(!isVendorPage && !isAdmin) ? (
                     <Link href={routes.cart.index}>
-                        <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
-                            <HeaderNotificationIcon/>
+                        <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer'}>
+                            <HeaderNotificationIcon />
                         </Badge>
                     </Link>
-                )}
+                ) : isCustomCart ? (
+                    <Link href={routes.vendors.customCart.index}>
+                        <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer'}>
+                            <HeaderNotificationIcon />
+                        </Badge>
+                    </Link>
+                ) : null}
                 {isAuthenticated ? (
                     <>
                         {router.route !== routes.vendors.account.changePassword && (
@@ -176,7 +188,7 @@ const MainHeader = props => {
                                                 </HeaderLink>
                                             </Col>
                                             <Col xs={24}>
-                                                <HeaderLink href={routes.vendors.orders}>
+                                                <HeaderLink href={routes.vendors.orders.index}>
                                                     Orders
                                                 </HeaderLink>
                                             </Col>
@@ -199,19 +211,30 @@ const MainHeader = props => {
                             )}
 
                             <Col xs={24}>
-                                {!isVendorPage && (
+                                {!isVendorPage ? (
                                     <Link href={routes.cart.index}>
                                         <div className="flex flex-row items-center justify-between">
                                             <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>
                                                 Cart
                                             </a>
-
-                                            <Badge count={cart.totalQuantity || 0} className={'cursor-pointer'}>
-                                                <HeaderNotificationIcon/>
+                                            <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer'}>
+                                                <HeaderNotificationIcon />
                                             </Badge>
                                         </div>
                                     </Link>
-                                )}
+                                ) : isCustomCart ? (
+                                    <Link href={routes.vendors.customCart.index}>
+                                        <div className="flex flex-row items-center justify-between">
+                                            <a className={'text-header hover:text-red-500 cursor-pointer font-medium'}>
+                                                Cart
+                                            </a>
+
+                                            <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer'}>
+                                                <HeaderNotificationIcon />
+                                            </Badge>
+                                        </div>
+                                    </Link>
+                                ) : null}
                             </Col>
                         </Row>
                     </div>
