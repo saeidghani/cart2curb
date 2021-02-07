@@ -223,16 +223,17 @@ const Drivers = () => {
     return (
         <>
             <Modal
+                className="block-modal"
                 visible={blockDriverId}
-                okText="yes, block"
+                okText="Yes, Block"
                 cancelText="No"
                 onOk={handleBlockOK}
                 onCancel={() => setBlockDriverId('')}
             >
                 <div className="flex space-x-3">
-                    <QuestionCircleOutlined style={{color: "#FAAD14", fontSize: 18, marginTop: 2}}/>
+                    <QuestionCircleOutlined style={{color: "#FAAD14", fontSize: 18, marginTop: 4}}/>
                     <div>
-                        <div className="font-bold">Block User</div>
+                        <div className="font-bold" style={{fontSize: 16}}>Block User</div>
                         <div className="mt-2">Are you sure to block this user?</div>
                     </div>
                 </div>

@@ -47,7 +47,6 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
-    const [needDrivers, setNeedDrivers] = useState();
     const {storeId, editType, vendorId} = router.query;
 
     useEffect(() => {
@@ -219,7 +218,7 @@ const EditAccount = props => {
                 coordinates: [area.map(point => [point.lng, point.lat]).concat([[area[0].lng, area[0].lat]])],
             },
             image: imageUrl,
-            needDriversToGather: Boolean(needDrivers),
+            needDriversToGather: form2.needDriversToGather,
             storeType: form1.storeType,
             subType: form1.subType,
         }
@@ -591,14 +590,16 @@ const EditAccount = props => {
                                     </Item>
                                 </Col>
                                 <Col span={24}>
-                                    <Item name='needDriversToGather' rules={[
-                                        {
-                                            required: true,
-                                            message: "This field is required"
-                                        }
-                                    ]}>
-                                        <div className="mb-2">Who will be picking out the goods from the store:</div>
-                                        <Select placeholder="Select Option..." onChange={setNeedDrivers} value={needDrivers}>
+                                    <Item
+                                        name='needDriversToGather'
+                                        label="Who will be picking out the goods from the store:"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: "This field is required"
+                                            }
+                                        ]}>
+                                        <Select placeholder="Select Option...">
                                             <Option value={false}>Store employee will gather the goods when an order comes in, and place by the door</Option>
                                             <Option value={true}>Cart2Curb driver will be required to pick out the goods, and checkout.(discount will be given at the register)</Option>
                                         </Select>

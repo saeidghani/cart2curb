@@ -217,7 +217,6 @@ export const adminProfile = {
                 const res = await api?.admin?.profile?.addVideo(body, setOptions(token));
 
                 if (res.data.success) {
-                    message.success('New Video added successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');

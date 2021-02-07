@@ -56,6 +56,7 @@ const Video = props => {
         const res1 = await dispatch.adminProfile.addVideo({body: leftVideoBody, token});
         const res2 = await dispatch.adminProfile.addVideo({body: rightVideoBody, token});
         if (res1 && res2) {
+            message.success('New Videos added successfully!', 5);
             router.push({pathname: routes.admin.profile.index, query: {tab: 'video'}});
         }
     };

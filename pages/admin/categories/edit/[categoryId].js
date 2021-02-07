@@ -24,10 +24,10 @@ const EditCategory = props => {
         if (storeId && categoryId) {
             const currentCategory = categories?.data?.find(c => c?._id === categoryId);
             const {name, parent, description = ''} = currentCategory || {};
-            const parentCategory = categories?.data?.find(c => c?._id === parent)?._id || '';
+            //const parentCategory = categories?.data?.find(c => c?._id === parent)?._id || '';
             form.setFieldsValue({
                 name,
-                parent: parentCategory,
+                parent: parent?._id,
                 description
             })
         }
