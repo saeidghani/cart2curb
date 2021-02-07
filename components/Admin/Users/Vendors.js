@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, Space, message, Modal} from 'antd';
+import {Row, Col, Input, Form, Table, Select, Button, message, Modal} from 'antd';
 import {
     FileSearchOutlined,
     PlusCircleOutlined,
@@ -13,6 +13,7 @@ import Link from "next/link";
 import routes from "../../../constants/routes";
 import Loader from "../../UI/Loader";
 import Avatar from "../../UI/Avatar";
+import '../../../styles/less/custom.less';
 
 const {Item} = Form;
 const {Option} = Select;

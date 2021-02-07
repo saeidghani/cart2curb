@@ -8,6 +8,7 @@ import {CloudDownloadOutlined} from '@ant-design/icons';
 import VideoPlayer from '../../UI/VideoPlayer';
 import Loader from '../../UI/Loader';
 import routes from "../../../constants/routes";
+import '../../../styles/less/custom.less';
 
 const {Item} = Form;
 

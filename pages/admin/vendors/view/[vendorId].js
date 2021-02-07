@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import moment from "moment";
 import Link from "next/link";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 import Page from "../../../../components/Page";
 import Avatar from "../../../../components/UI/Avatar";
@@ -11,7 +12,7 @@ import DetailItem from "../../../../components/UI/DetailItem";
 import AdminAuth from "../../../../components/Admin/AdminAuth";
 import {getProperty} from "../../../../helpers";
 import routes from "../../../../constants/routes";
-import {QuestionCircleOutlined} from "@ant-design/icons";
+import '../../../../styles/less/custom.less';
 
 const VendorDetails = props => {
     const screens = Grid.useBreakpoint();
