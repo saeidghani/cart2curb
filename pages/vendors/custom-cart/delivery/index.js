@@ -143,6 +143,12 @@ const CustomCartDelivery = props => {
         })
     }
 
+    const disabledDate = (current) => {
+        const now = moment().startOf('day');
+        return current && (current.diff(now) < 0);
+    }
+
+
     return (
         <Page title={'User Profile'} breadcrumb={breadcrumb}>
             <Row>
@@ -246,7 +252,7 @@ const CustomCartDelivery = props => {
                                         }
                                     ]}
                                 >
-                                    <DatePicker className={'w-full'}/>
+                                    <DatePicker className={'w-full'} disabledDate={disabledDate}/>
                                 </Item>
                             </Col>
 
