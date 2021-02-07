@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Row, Col, Input, Button, message, Radio } from 'antd';
+import {Form, Row, Col, Input, Button, message, Radio} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 import Link from 'next/link';
 
@@ -20,7 +20,7 @@ const New = props => {
     const token = store?.getState()?.adminAuth?.token;
     const router = useRouter();
     const [off, setOff] = useState(0);
-    const [offType, setOffType] = useState('');
+    const [offType, setOffType] = useState('dollar');
 
     const breadcrumb = [
         {
@@ -43,7 +43,8 @@ const New = props => {
     ];
 
     const handleIncrement = () => {
-        if (off < 100) setOff(prevState => prevState + 1);
+        if (offType === 'percent' && off < 100) setOff(prevState => prevState + 1);
+        if (offType === 'dollar') setOff(prevState => prevState + 1);
     };
 
     const handleDecrement = () => {
@@ -70,8 +71,15 @@ const New = props => {
 
     const handleOff = e => {
         if (!e.target.value) setOff(0);
-        if (e.target.value * 1 > 0 && e.target.value * 1 < 100) {
-            setOff(e.target.value * 1);
+        if (offType === 'percent') {
+            if (e.target.value * 1 > 0 && e.target.value * 1 < 100) {
+                setOff(e.target.value * 1);
+            }
+        }
+        if (offType === 'dollar') {
+            if (e.target.value * 1 > 0) {
+                setOff(e.target.value * 1);
+            }
         }
     };
 
@@ -91,10 +99,17 @@ const New = props => {
                     </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item
-                            name='off'
+                            name='offType'
                             label='Your Offer'
                         >
-                            <Radio.Group onChange={(e) => setOffType(e.target.value)} value={offType} defaultValue='dollar'>
+                            <Radio.Group
+                                onChange={(e) => {
+                                    setOffType(e.target.value);
+                                    setOff(0);
+                                }}
+                                value={offType}
+                                defaultValue='dollar'
+                            >
                                 <Radio value="percent">Percent</Radio>
                                 <Radio value="dollar">Dollar</Radio>
                             </Radio.Group>

@@ -98,10 +98,10 @@ const EditAccount = props => {
             addressLine1: getProperty(store?.address, 'addressLine1', ''),
             addressLine2: getProperty(store?.address, 'addressLine2', ''),
             postalCode: getProperty(store?.address, 'postalCode', ''),
+            needDriversToGather: getProperty(store, 'needDriversToGather', ''),
             description: getProperty(store, 'description', ''),
         }
 
-        setNeedDrivers(getProperty(store, 'needDriversToGather', ''));
         setImageUrl(fields[0]?.imageStore);
         setAvatarUrl(fields[0]?.image);
         setArea(area);
