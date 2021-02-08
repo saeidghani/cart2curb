@@ -14,6 +14,7 @@ import withoutAuth from "../../../components/hoc/withoutAuth";
 import Submitted from "../../../components/Submitted";
 import ImgCrop from "antd-img-crop";
 import {isPointInside} from "../../../helpers";
+import {defaultMapLocation} from "../../../constants";
 
 
 const { Step } = Steps;
@@ -561,10 +562,7 @@ const Register = props => {
                                     <div className="mb-6">
                                         <GoogleMap
                                             height={670}
-                                            initialCenter={{
-                                                lat: 40.781305,
-                                                lng: -73.9666857
-                                            }}
+                                            initialCenter={defaultMapLocation}
                                             marker={marker}
                                             clickHandler={changeMarkerPosition}
                                         />
@@ -592,10 +590,7 @@ const Register = props => {
                             <Col xs={24}>
                                 <PolygonMap
                                     height={670}
-                                    initialCenter={marker.position || {
-                                        lat: 40.781305,
-                                        lng: -73.9666857
-                                    }}
+                                    initialCenter={marker.position || defaultMapLocation}
                                     area={area}
                                     marker={marker}
                                     clickHandler={addPointToAreaHandler}

@@ -13,14 +13,14 @@ const Contact = props => {
     const dispatch = useDispatch();
 
     const submitHandler = async (values) => {
-        const { name, phone, subject, message } = values;
+        const { name, phone, email, message } = values;
         const body = {
-            name, phone, subject, message
+            name, phone, email, message
         }
         const res = await dispatch.app.contact(body)
         if(res) {
             antMessage.success('Thanks, We will review your message and get in touch in 48 hours!')
-            form.resetFields(['name', 'phone', 'subject', 'message'])
+            form.resetFields(['name', 'phone', 'email', 'message'])
         }
     }
 
@@ -65,13 +65,13 @@ const Contact = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'subject'} label={'Subject'} rules={[
+                                <Item name={'email'} label={'E-Mail address'} rules={[
                                     {
                                         required: true,
-                                        message: "Subject is required",
+                                        message: "E-Mail is required",
                                     }
                                 ]}>
-                                    <Input placeholder={'Subject'} />
+                                    <Input placeholder={'E-Mail address'} />
                                 </Item>
                             </Col>
                             <Col xs={24}>

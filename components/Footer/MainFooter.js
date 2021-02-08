@@ -14,14 +14,17 @@ const Footer = props => {
                     <span className="col-span-1 text-base cursor-pointer"> FAQ(s) </span>
                 </Link>
 
-                <Link href={routes.vendors.auth.login}>
-                    <span className="col-span-2 text-base cursor-pointer"> Ask Us to Host Your Local Products </span>
+                <Link href={routes.vendors.auth.register.index}>
+                    <span className="col-span-2 text-base cursor-pointer">Ask Us to Host Your Local Products</span>
                 </Link>
 
                 <Link href={routes.about}>
                     <span className="col-span-1 text-base cursor-pointer">About Us</span>
                 </Link>
-                <Link href={routes.driver.auth.login}><span className="col-span-2 text-base cursor-pointer"> Drive For Us </span></Link>
+                <Link href={routes.vendors.auth.login}>
+                    <span className="col-span-1 text-base cursor-pointer">Vendor Login </span>
+                </Link>
+                <Link href={routes.driver.auth.login}><span className="col-span-2 text-base cursor-pointer">Drive For Us</span></Link>
             </div>
             <div className="pt-13 pb-20 border-t border-paragraph flex flex-row justify-between items-center">
                 <span className="col-span-1  text-xs"> 2021 Cart2Curb Copyright </span>

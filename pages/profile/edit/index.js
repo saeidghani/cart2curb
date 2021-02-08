@@ -41,7 +41,7 @@ function beforeUpload(file) {
 const AccountEdit = props => {
     const loading = useSelector(state => state.loading.effects.profile.updateProfile);
     const [imageUrl, setImageUrl] = useState(props.profile.image || '')
-    const [stream, setStream] = useState("Facebook")
+    const [stream, setStream] = useState("Google Meet")
     const token = useSelector(state => state.auth.token);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -51,34 +51,22 @@ const AccountEdit = props => {
 
     useEffect(() => {
         let streamPreference = '',
-            streamId = '',
-            instagram = '',
-            facebook = '';
+            streamId = '';
         const streamOnIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.streamOn) : -1;
-        const instagramIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'instagram') : -1;
-        const facebookIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.provider === 'facebook') : -1;
         if(streamOnIndex > -1) {
             streamPreference = profile.socialMedias[streamOnIndex].provider;
             streamId = profile.socialMedias[streamOnIndex].username;
             setStream(streamPreference);
-        }
-        if(instagramIndex > -1) {
-            instagram = profile.socialMedias[instagramIndex].username;
-        }
-        if(facebookIndex > -1) {
-            facebook = profile.socialMedias[facebookIndex].username;
         }
         form.setFieldsValue({
             firstName: profile.firstName || '',
             lastName: profile.lastName || '',
             email: profile.email || '',
             phone: profile.phone || '',
-            birthdate: profile.birthdate ? moment(profile.birthdate || '') : '',
+            birthdate: profile.birthdate ? moment(profile.birthdate) : '',
             notifyMethod: profile.notifyMethod || undefined,
             streamPreference,
             streamId,
-            instagram,
-            facebook,
         })
     }, [])
     const breadcrumb = [
@@ -102,11 +90,11 @@ const AccountEdit = props => {
 
 
     const submitHandler = async (values) => {
-        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram, firstName, lastName, phone } = values;
+        const { notifyMethod, birthdate, streamPreference, streamId, firstName, lastName, phone } = values;
         let wasStreamSet = false;
         const body = {
             notifyMethod,
-            birthdate: moment(birthdate).format('YYYY-MM-DD'),
+            birthdate: birthdate ? moment(birthdate).format('YYYY-MM-DD') : undefined,
             firstName,
             lastName,
             phone
@@ -115,26 +103,6 @@ const AccountEdit = props => {
             body.image = imageUrl
         }
         const socialMedias = [];
-        if(facebook) {
-            socialMedias.push({
-                "username": facebook,
-                "provider": "facebook",
-                "streamOn": streamPreference === 'facebook'
-            })
-            if(streamPreference === 'facebook') {
-                wasStreamSet = true;
-            }
-        }
-        if(facebook) {
-            socialMedias.push({
-                "username": instagram,
-                "provider": "instagram",
-                "streamOn": streamPreference === 'instagram'
-            })
-            if(streamPreference === 'instagram') {
-                wasStreamSet = true;
-            }
-        }
         if(streamPreference && !wasStreamSet) {
             if(!streamId) {
                 message.error('Please enter your Username');
@@ -177,6 +145,9 @@ const AccountEdit = props => {
         },
     }
 
+    const changeStream = (value, row) => {
+        setStream(row.children)
+    }
 
     return (
         <Page title={'Account Edit'} breadcrumb={breadcrumb}>
@@ -198,8 +169,8 @@ const AccountEdit = props => {
                                               message: "Please enter you first name"
                                           },
                                           {
-                                              min: 3,
-                                              message: "First name should be more than 3 characters."
+                                              min: 1,
+                                              message: "First name should be more than 1 characters."
                                           }
                                       ]}>
                                     <Input placeholder="First Name" />
@@ -213,8 +184,8 @@ const AccountEdit = props => {
                                               message: "Please enter you last name"
                                           },
                                           {
-                                              min: 3,
-                                              message: "Last name should be more than 3 characters."
+                                              min: 1,
+                                              message: "Last name should be more than 1 characters."
                                           }
                                       ]}>
                                     <Input placeholder="Last Name" />
@@ -300,16 +271,12 @@ const AccountEdit = props => {
                                             }]}
                                     >
                                         <Option value={'sms'}>Text Message to Phone Number</Option>
-                                        <Option value={'email'}>Send a mail to Email Address</Option>
+                                        <Option value={'email'}>Send an Email</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthdate'} label={'Birthdate'}
-                                    rules={[{
-                                        required: true,
-                                        message: 'This Field is required'
-                                    }]}>
+                                <Item name={'birthdate'} label={'Birthdate (Required for alcohol/tobacco deliveries)'}>
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
@@ -317,43 +284,23 @@ const AccountEdit = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item
                                     name={'streamPreference'}
-                                    label={'Stream Preference'}>
+                                    label={'LiveCart Viewing Preference'}>
                                     <Select
                                         placeholder={'Select'}
-                                        onChange={setStream}
+                                        onChange={changeStream}
                                     >
-                                        <Option value={'facebook'}>Facebook</Option>
-                                        <Option value={'instagram'}>Instagram</Option>
                                         <Option value={'zoom'}>Zoom</Option>
+                                        <Option value={'googleMeet'}>Google Meet</Option>
                                         <Option value={'skype'}>Skype</Option>
-                                        <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'slack'}>Slack</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
-                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
+                                    <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
 
-                            <Col xs={24}>
-                                <Divider className={'my-2'}/>
-                            </Col>
-                            <Col xs={24}>
-                                <h3 className={'font-medium text-base mb-6 mt-6'}>Social Integration</h3>
-                            </Col>
-
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook'} label={'Facebook'}>
-                                    <Input placeholder="Facebook Username" />
-                                </Item>
-                            </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram'} label={'Instagram'}>
-                                    <Input placeholder="Instagram Username" />
-                                </Item>
-                            </Col>
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-2'}>
                                 <Item>

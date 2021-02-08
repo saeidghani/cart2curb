@@ -16,6 +16,7 @@ import cookie from "cookie";
 import {useAuth} from "../../providers/AuthProvider";
 import {useRouter} from "next/router";
 import userTypes from "../../constants/userTypes";
+import {streamPreferences} from "../../constants";
 
 
 const antIcon = <LoadingOutlined style={{ fontSize: 36 }} spin />;
@@ -87,11 +88,11 @@ const profile = props => {
                     </Col>
                     <Col xs={24} sm={12} lg={6}>
                         <DetailItem
-                            title={'Stream Preference'}
+                            title={'LiveCart Viewing Preference'}
                             value={getProperty(profile, 'socialMedias', '-', (data) => {
                                 let stream = data.find(item => item.streamOn === true);
                                 if(stream) {
-                                    return stream.provider
+                                    return streamPreferences[stream.provider] || '-'
                                 } else {
                                     return '-'
                                 }

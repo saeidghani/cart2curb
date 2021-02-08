@@ -5,6 +5,7 @@ import {Button, Col, Form, Input, message, Row, Space} from "antd";
 import routes from "../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import withAuth from "../../../components/hoc/withAuth";
+import Link from "next/link";
 
 const { Item } = Form;
 
@@ -120,9 +121,11 @@ const ChangePassword = props => {
                                     <Button type="primary" className={'w-full md:w-32 md:ml-5 mb-4 md:mb-0'} htmlType={'submit'} loading={loading}>
                                         Save
                                     </Button>
-                                    <Button danger className={'w-full md:w-32 '}>
-                                        Cancel
-                                    </Button>
+                                    <Link href={routes.profile.index}>
+                                        <Button danger className={'w-full md:w-32'}>
+                                            Cancel
+                                        </Button>
+                                    </Link>
                                 </div>
                             </Col>
                         </Row>
