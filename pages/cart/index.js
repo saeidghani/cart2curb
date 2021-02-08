@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect} from 'react';
-import {Button, Input, Table, Checkbox, InputNumber, Row, Col, Form, Select, message} from 'antd';
+import {Button, Input, Radio, Table, Checkbox, InputNumber, Row, Col, Form, Select, message} from 'antd';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import Page from "../../components/Page";
@@ -13,17 +13,35 @@ import {useAuth} from "../../providers/AuthProvider";
 const { Item } = Form;
 const { Option } = Select;
 
+
+const _expandedRowKeys = new Set();
+
+const defaultSubstitutionOptions = [
+    'I need this exact item',
+    'Substitute at equal or lesser value',
+    'I need this no matter what'
+]
+
+const substitutionOptions = [
+    'I need this exact item',
+    'Substitute at equal or lesser value',
+    'I need this no matter what',
+    'I explained that in the note'
+]
+
 export const CartIndex = (props) => {
     const { cart, stores } = props;
     const [form] = Form.useForm()
     const [products, setProducts] = useState([])
     const [deleted, setDeleted] = useState([]);
+    const [expandedRows, setExpandedRows] = useState([]);
     const [total, setTotal] = useState(cart.hasOwnProperty('totalPrice') ? cart.totalPrice : 0);
     const [deleteLoading, setDeleteLoading] = useState(-1);
     const loading = useSelector(state => state.loading.effects.cart.updateCart);
     const dispatch = useDispatch();
     const router = useRouter()
     const auth = useAuth()
+
 
     useEffect(() => {
         if(cart.hasOwnProperty('totalPrice')) {
@@ -37,15 +55,20 @@ export const CartIndex = (props) => {
             const transformedProducts = cart.products.map(product => {
                 return {
                     _id: product._id,
-                    subtituted: !!product.subtitution,
-                    subtitution: !product.subtitution ? undefined : ['I need exact item', 'Do substitute'].includes(product.subtitution) ? product.subtitution : 'Do substitute',
-                    subtitutionDesc: !['I need exact item', 'Do substitute'].includes(product.subtitution) ? product.subtitution : null,
+                    subtitution: !product.subtitution ? undefined : defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : 'I explained that in the note',
+                    subtitutionDesc: !defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : null,
                     quantity: product.quantity,
                     tax: (product.tax * product.price * product.quantity / 100).toFixed(2),
                     price: product.price,
                     totalPrice: product.totalPrice
                 }
             })
+            setExpandedRows(transformedProducts.map((_, i) => {
+                return {
+                    ..._,
+                    index: i,
+                }
+            }).filter(_ => !!_.subtitution).map(_ => _.index));
             setProducts(transformedProducts);
         }
 
@@ -66,13 +89,33 @@ export const CartIndex = (props) => {
         setProducts(newProducts);
     }
 
-    const changeSubtitution = (value, index, key) => {
+    const changeSubtitution = (value, index, key, changeState = true) => {
         const newProducts = [...products];
         newProducts[index] = {
             ...newProducts[index],
-            [key]: value,
+            [key]: !value ? undefined : typeof value === 'boolean' ? defaultSubstitutionOptions[0] : value,
         }
+        if(changeState) {
+            _expandedRowKeys.has(index)
+                ? _expandedRowKeys.delete(index)
+                : _expandedRowKeys.add(index);
+
+            setExpandedRows(Array.from(_expandedRowKeys.values()));
+        }
+
         setProducts(newProducts);
+    }
+
+    const deleteItem = (id, index) => {
+        setDeleted(deleted =>[...deleted, id])
+        setProducts(oldProducts => {
+            return oldProducts.filter((_, i) => i !== index);
+        })
+
+        if(_expandedRowKeys.has(index)) {
+            _expandedRowKeys.delete(index)
+            setExpandedRows(Array.from(_expandedRowKeys.values()));
+        }
     }
 
     const submitHandler = async (values) => {
@@ -85,7 +128,7 @@ export const CartIndex = (props) => {
                 const product = products[i];
                 const quantity = product.quantity;
                 const _id = product._id;
-                const subtitution = !product.subtituted ? null : product.subtitution === 'I need exact item' ? product.subtitution : product.subtitutionDesc ? product.subtitutionDesc : product.subtitution || 'I need exact item'
+                const subtitution = !product.subtitution ? null : defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : product.subtitutionDesc ? product.subtitutionDesc : product.subtitution || 'I need exact item'
 
                 transformedProducts.push({
                     _id,
@@ -110,10 +153,6 @@ export const CartIndex = (props) => {
 
     }
 
-    const checkValidation = (errorInfo) => {
-        message.error(errorInfo.errorFields[0].errors[0], 5);
-    }
-
     const columns = [
         {
             title: '#',
@@ -133,7 +172,7 @@ export const CartIndex = (props) => {
             key: 'subtitution',
             render: (data, row) => {
                 return (
-                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtituted')} checked={products[row.index]?.subtituted}>{products[row.index]?.subtituted ? "Yes" : "No"}</Checkbox>
+                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtitution')} checked={products[row.index]?.subtitution}>{products[row.index]?.subtitution ? "Yes" : "No"}</Checkbox>
                 )
             }
         },
@@ -191,6 +230,7 @@ export const CartIndex = (props) => {
     const data = useMemo(() => {
         if(cart.hasOwnProperty('products')) {
             return cart.products.filter(product => !deleted.includes(product._id)).map((product, index) => {
+                console.log(product);
                 let totalPrice = product.totalPrice;
                 let tax = product.tax * product.price * product.quantity / 100
 
@@ -214,7 +254,7 @@ export const CartIndex = (props) => {
                         if(res) {
                             changeQuantity(0, index);
                             message.success('Products deleted successfully!')
-                            setDeleted([...deleted, product._id])
+                            deleteItem(product._id, index);
                         }
                         setDeleteLoading(-1);
                     }
@@ -231,58 +271,44 @@ export const CartIndex = (props) => {
                        dataSource={data}
                        pagination={false}
                        scroll={{ x: 1100 }}
+                       rowKey={'index'}
+                       expandable={{
+                           expandIcon: () => null,
+                           expandedRowKeys: expandedRows,
+                           expandIconColumnIndex: 2,
+                           expandedRowRender(row, index) {
+                               const product = products.filter(product => !deleted.includes(product._id))[index];
+
+                               return (
+                                   <div className={'flex flex-col items-stretch'}>
+                                       <div className={`flex items-center justify-between cart-substitution pt-3 ${product.subtitution === 'I explained that in the note' ? 'pb-5' : 'pb-3'}`}>
+                                           <span className={'text-cell text-sm'}>Item #{index + 1} Substitution</span>
+                                           <Radio.Group options={substitutionOptions} onChange={e => changeSubtitution(e.target.value, index, 'subtitution', false)} value={product.subtitution} />
+                                       </div>
+                                       {product.subtitution === 'I explained that in the note' && (
+                                           <div className="flex flex-col items-stretch">
+                                               <label htmlFor={`substitution-${index}`} className={'text-label text-sm pb-2'}>Notes</label>
+                                               <Input.TextArea
+                                                   onChange={e => changeSubtitution(e.target.value, index, 'subtitutionDesc', false)}
+                                                   placeholder={'Notes'}
+                                                   id={`substitution-${index}`}
+                                                   autoSize={{ minRows: 5, maxRows: 8 }}
+                                                   style={{ resize: 'none' }} />
+                                           </div>
+                                       )}
+                                   </div>
+                               )
+                           }
+                       }}
                 />
             </div>
-            <div className={'flex flex-row-reverse items-start pt-6 pb-8'}>
-                {cart?.products?.filter(product => !deleted.includes(product._id)).length > 0 && (
-                    <div className="flex flex-col" style={{ width: 210, paddingLeft: 10 }}>
-                        <h1 className="text-left text-4.5xl text-paragraph font-medium mb-2 mt-0">${total}</h1>
-                        <span className="text-xs text-header">+ ${cart.serviceFee} Service Fee</span>
-                    </div>
-                )}
-            </div>
-
-            <Form form={form} layout={'vertical'} onFinish={submitHandler} onFinishFailed={checkValidation} initialValues={{
-                notes: cart.note
-            }}>
-                <Row gutter={24}>
-                    {products.filter(product => !deleted.includes(product._id)).map((product, key) => {
-                        if(product.subtituted) {
-                            return (
-                                <>
-                                    <Col lg={8} md={12} xs={24}>
-                                        <Item name={`subtitution-${key + 1}`} label={`Item #${key + 1} Substitution`}>
-                                            <Select placeholder={'I need exact item (Do not substitute)'} onChange={value => changeSubtitution(value, key, 'subtitution')} defaultValue={product.subtitution}>
-                                                <Option value={'I need exact item'}>I need exact item (Do not substitute)</Option>
-                                                <Option value={'Do substitute'}>Do substitute</Option>
-                                            </Select>
-                                        </Item>
-                                    </Col>
-                                    {product.subtitution === 'Do substitute' && (
-                                        <Col lg={16} md={12} xs={24}>
-                                            <Item name={`subtitution-${key + 1}-desc`} label={'Your Substitution'}>
-                                                <Input placeholder={'I need exact item (Do not substitute)'} defaultValue={product.subtitutionDesc} onChange={e => changeSubtitution(e.target.value, key, 'subtitutionDesc')}/>
-                                            </Item>
-                                        </Col>
-                                    )}
-
-                                </>
-                            )
-                        }
-                    })}
-
-                    <Col xs={24}>
-                        <Item name={'notes'} label={'Notes'}>
-                            <Input.TextArea placeholder="Notes" style={{ resize: 'none' }} autoSize={{ minRows: 5, maxRows: 8 }} />
-                        </Item>
-                    </Col>
-                    <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
-                        <Item>
-                            <Button type={'primary'} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0 || cart.products?.length === deleted.length}>Next</Button>
-                        </Item>
-                    </Col>
-                </Row>
-            </Form>
+            <Row gutter={24}>
+                <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
+                    <Item>
+                        <Button type={'primary'} onClick={submitHandler} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0 || cart.products?.length === deleted.length}>Next</Button>
+                    </Item>
+                </Col>
+            </Row>
         </Page>
     );
 };
