@@ -172,7 +172,7 @@ export const CartIndex = (props) => {
             key: 'subtitution',
             render: (data, row) => {
                 return (
-                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtitution')} checked={products[row.index]?.subtitution}>{products[row.index]?.subtitution ? "Yes" : "No"}</Checkbox>
+                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtitution')} checked={products[row.index]?.subtitution}>Yes</Checkbox>
                 )
             }
         },
