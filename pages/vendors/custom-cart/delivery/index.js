@@ -18,6 +18,7 @@ import GoogleMap from "../../../../components/Map";
 import {useCities, useProvinces} from "../../../../hooks/region";
 import routes from "../../../../constants/routes";
 import withAuth from "../../../../components/hoc/withAuth";
+import {defaultMapLocation} from "../../../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -171,8 +172,8 @@ const CustomCartDelivery = props => {
                                             message: "Please enter you first name"
                                         },
                                         {
-                                            min: 3,
-                                            message: "First name should be more than 3 characters."
+                                            min: 1,
+                                            message: "First name should be more than 1 characters."
                                         }
                                     ]}>
                                     <Input placeholder="First Name"/>
@@ -188,8 +189,8 @@ const CustomCartDelivery = props => {
                                             message: "Please enter you last name"
                                         },
                                         {
-                                            min: 3,
-                                            message: "Last name should be more than 3 characters."
+                                            min: 1,
+                                            message: "Last name should be more than 1 characters."
                                         }
                                     ]}
                                 >
@@ -369,10 +370,7 @@ const CustomCartDelivery = props => {
                                 <div className="mb-8 mt-6">
                                     <GoogleMap
                                         height={670}
-                                        initialCenter={{
-                                            lat: 40.781305,
-                                            lng: -73.9666857
-                                        }}
+                                        initialCenter={defaultMapLocation}
                                         marker={marker}
                                         clickHandler={changeMarkerPosition}
                                     />

@@ -19,6 +19,7 @@ import cookie from "cookie";
 import {getStore} from "../../../states";
 import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
+import {defaultMapLocation} from "../../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -33,7 +34,6 @@ const CartGuest = props => {
     const dispatch = useDispatch();
     const router = useRouter()
     const { cart } = props;
-    console.log(cart);
 
     const breadcrumb = [
         {
@@ -110,7 +110,7 @@ const CartGuest = props => {
             lastName,
             email,
             phone,
-            birthdate: birthdate.format('YYYY-MM-DD'),
+            birthdate: birthdate ? birthdate.format('YYYY-MM-DD') : undefined,
         }
         if(streamPreference && streamId) {
             guestBody.socialMedias = {
@@ -199,8 +199,8 @@ const CartGuest = props => {
                                             message: "Please enter you first name"
                                         },
                                         {
-                                            min: 3,
-                                            message: "First name should be more than 3 characters."
+                                            min: 1,
+                                            message: "First name should be more than 1 characters."
                                         }
                                     ]}>
                                     <Input placeholder="First Name"/>
@@ -216,8 +216,8 @@ const CartGuest = props => {
                                             message: "Please enter you last name"
                                         },
                                         {
-                                            min: 3,
-                                            message: "Last name should be more than 3 characters."
+                                            min: 1,
+                                            message: "Last name should be more than 1 characters."
                                         }
                                     ]}
                                 >
@@ -284,11 +284,7 @@ const CartGuest = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthdate'} label={'Birthdate'}
-                                      rules={[{
-                                          required: true,
-                                          message: "Birthdate Field is required"
-                                      }]}>
+                                <Item name={'birthdate'} label={'Birthdate'}>
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
@@ -428,10 +424,7 @@ const CartGuest = props => {
                                 <div className="mb-8 mt-6">
                                     <GoogleMap
                                         height={670}
-                                        initialCenter={{
-                                            lat: 40.781305,
-                                            lng: -73.9666857
-                                        }}
+                                        initialCenter={defaultMapLocation}
                                         marker={marker}
                                         clickHandler={changeMarkerPosition}
                                     />

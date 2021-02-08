@@ -39,13 +39,12 @@ function beforeUpload(file) {
 
 const AccountInfo = props => {
     const [imageUrl, setImageUrl] = useState('')
-    const [stream, setStream] = useState("Facebook")
+    const [stream, setStream] = useState("Google Meet")
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.profile.updateProfile);
     const token = useSelector(state => state.auth.token);
     const dispatch = useDispatch()
     const router = useRouter()
-
 
     const breadcrumb = [
         {
@@ -87,11 +86,11 @@ const AccountInfo = props => {
     };
 
     const submitHandler = async (values) => {
-        const { notifyMethod, birthdate, streamPreference, streamId, facebook, instagram } = values;
+        const { notifyMethod, birthdate, streamPreference, streamId } = values;
         let wasStreamSet = false;
         const body = {
             notifyMethod,
-            birthdate: moment(birthdate).format('YYYY-MM-DD'),
+            birthdate: birthdate ? moment(birthdate).format('YYYY-MM-DD') : undefined,
         }
 
         if(imageUrl) {
@@ -99,26 +98,7 @@ const AccountInfo = props => {
         }
 
         const socialMedias = [];
-        if(facebook) {
-            socialMedias.push({
-                "username": facebook,
-                "provider": "facebook",
-                "streamOn": streamPreference === 'facebook'
-            })
-            if(streamPreference === 'facebook') {
-                wasStreamSet = true;
-            }
-        }
-        if(facebook) {
-            socialMedias.push({
-                "username": instagram,
-                "provider": "instagram",
-                "streamOn": streamPreference === 'instagram'
-            })
-            if(streamPreference === 'instagram') {
-                wasStreamSet = true;
-            }
-        }
+
         if(streamPreference && !wasStreamSet) {
             if(!streamId) {
                 message.error('Please enter your Username');
@@ -144,6 +124,10 @@ const AccountInfo = props => {
 
     const checkValidation = (errorInfo) => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
+    }
+
+    const changeStream = (value, row) => {
+        setStream(row.children)
     }
 
     return (
@@ -198,58 +182,45 @@ const AccountInfo = props => {
                                         placeholder={'Select'}
                                     >
                                         <Option value={'sms'}>Text Message to Phone Number</Option>
-                                        <Option value={'email'}>Send a mail to Email Address</Option>
+                                        <Option value={'email'}>Send an Email</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthdate'} label={'Birthdate'}
-                                    rules={[{
-                                        required: true,
-                                        message: "This Field is required"
-                                    }]}>
+                                <Item name={'birthdate'} label={'Birthdate (Required for alcohol/tobacco deliveries)'}>
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamPreference'} label={'Stream Preference'}>
+                                <Item name={'streamPreference'} label={'LiveCart Viewing Preference'}>
                                     <Select
                                         placeholder={'Select'}
-                                        onChange={setStream}
+                                        onChange={changeStream}
+                                        rules={[{
+                                            required: true,
+                                            message: "This Field is required"
+                                        }]}
                                     >
-                                        <Option value={'facebook'}>Facebook</Option>
-                                        <Option value={'instagram'}>Instagram</Option>
                                         <Option value={'zoom'}>Zoom</Option>
+                                        <Option value={'googleMeet'}>Google Meet</Option>
                                         <Option value={'skype'}>Skype</Option>
-                                        <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'slack'}>Slack</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
-                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
+                                <Item
+                                    name={'streamId'}
+                                    label={<span className="capitalize">{`${stream} ID`}</span>}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    }]}
+                                >
+                                    <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
 
-                            <Col xs={24}>
-                                <Divider className={'mt-2 mb-8'}/>
-                            </Col>
-                            <Col xs={24}>
-                                <h3 className={'font-medium text-base pb-6'}>Social Integration</h3>
-                            </Col>
-
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook'} label={'Facebook'}>
-                                    <Input placeholder="Facebook Username" />
-                                </Item>
-                            </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram'} label={'Instagram'}>
-                                    <Input placeholder="Instagram Username" />
-                                </Item>
-                            </Col>
                             <Col xs={24} className={'flex md:flex-row flex-col-reverse items-stretch md:items-center justify-center md:justify-end'}>
                                 <Item>
                                     <Link href={routes.profile.index}>

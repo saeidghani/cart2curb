@@ -20,16 +20,14 @@ import cookie from "cookie";
 import {getStore} from "../../../../states";
 import withAuth from "../../../../components/hoc/withAuth";
 import {useCities, useProvinces} from "../../../../hooks/region";
+import {defaultMapLocation} from "../../../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const AddAddress = props => {
     const [marker, setMarker] = useState({ position: {}})
-    const [center, setCenter] = useState({
-        lat: 40.781305,
-        lng: -73.9666857
-    })
+    const [center, setCenter] = useState(defaultMapLocation)
     const [province, setProvince] = useState('');
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.profile.addAddress)
@@ -235,6 +233,7 @@ const AddAddress = props => {
                                 <div className="mb-6">
                                     <GoogleMap
                                         height={670}
+                                        initialCenter={defaultMapLocation}
                                         center={center}
                                         marker={marker}
                                         clickHandler={changeMarkerPosition}

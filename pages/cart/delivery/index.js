@@ -22,6 +22,7 @@ import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import moment from "moment";
+import {defaultMapLocation} from "../../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -329,10 +330,7 @@ const Delivery = props => {
                                         <div className="mb-8 lg:mb-12 mt-6">
                                             <GoogleMap
                                                 height={670}
-                                                initialCenter={{
-                                                    lat: 40.781305,
-                                                    lng: -73.9666857
-                                                }}
+                                                initialCenter={defaultMapLocation}
                                                 marker={marker}
                                                 clickHandler={changeMarkerPosition}
                                             />

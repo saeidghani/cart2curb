@@ -11,12 +11,13 @@ import withoutAuth from "../../components/hoc/withoutAuth";
 
 const { Item } = Form;
 
+let popup;
+
 const Login = props => {
     const [form] = Form.useForm();
     const loading = useSelector(state => state.loading.effects.auth.login);
     const dispatch = useDispatch();
     const { setAuthenticated, setUserType } = useAuth();
-
 
     const submitHandler = async (values) => {
         const { username, password } = values;
@@ -34,6 +35,20 @@ const Login = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+    const openLoginWindow = (provider) => {
+        const height = window?.innerHeight || 900;
+        const width = window?.innerWidth || 500;
+        popup = window?.open(provider === 'google' ? '/v1/customer/auth/google' : '/v1/customer/auth/facebook', '_blank', ``)
+        popup.document.addEventListener('error', (e) => {
+            console.log('error', e);
+        })
+        popup.document.addEventListener('load', (e) => {
+            console.log('load', e);
+        })
+        popup.document.addEventListener('loadeddata', (e) => {
+            console.log('loadeddata', e);
+        })
+    }
 
     return (
         <Page title={'Login'} breadcrumb={[{ title: 'Login' }]}>
@@ -90,30 +105,28 @@ const Login = props => {
                     </div>
 
                     <div className="mb-16 flex flex-col lg:flex-row w-full">
-                        <Link href={'/v1/customer/auth/google'}>
                             <Button
                                 size="large"
                                 style={{ height: '50px' }}
                                 className="flex flex-row-reverse text-center justify-center lg:pl-6 lg:pr-3 items-center text-14px border border-secondary flex-1 mb-4 lg:mb-0 mr-0 lg:mr-3"
                                 icon={<GoogleIcon />}
+                                onClick={openLoginWindow.bind(this, 'google')}
                             >
                                 <span className="pr-7">
                                     Continue With
                                 </span>
                             </Button>
-                        </Link>
-                        <Link href={'/v1/customer/auth/facebook'}>
                             <Button
                                 size="large"
                                 style={{ height: '50px' }}
                                 className="flex flex-row-reverse text-center justify-center lg:pl-6 lg:pr-3 items-center text-14px border border-secondary flex-1"
                                 icon={<FacebookIcon />}
+                                onClick={openLoginWindow.bind(this, 'facebook')}
                             >
                                 <span className="pr-7">
                                     Continue With
                                 </span>
                             </Button>
-                        </Link>
                     </div>
 
                     <div className="flex flex-row text-center items-center justify-center">
