@@ -32,6 +32,7 @@ export const app = {
                 const data = res.data;
                 if(data.success) {
                     dispatch.app.setVideos(data.data);
+                    return true;
                 }
                 exceptionHandler.throwError()
             } catch(e) {
