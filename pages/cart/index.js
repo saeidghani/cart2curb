@@ -289,6 +289,7 @@ export const CartIndex = (props) => {
                                            <div className="flex flex-col items-stretch">
                                                <label htmlFor={`substitution-${index}`} className={'text-label text-sm pb-2'}>Notes</label>
                                                <Input.TextArea
+                                                   value={product.subtitutionDesc}
                                                    onChange={e => changeSubtitution(e.target.value, index, 'subtitutionDesc', false)}
                                                    placeholder={'Notes'}
                                                    id={`substitution-${index}`}

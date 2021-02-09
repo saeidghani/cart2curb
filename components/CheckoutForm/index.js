@@ -126,8 +126,8 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                             message: 'First Name is required',
                         },
                         {
-                            min: 3,
-                            message: "First Name should be at least 3 characters"
+                            min: 1,
+                            message: "First Name should be at least 1 characters"
                         }
                     ]}>
                         <Input placeholder="First Name" />
@@ -179,8 +179,8 @@ const CheckoutForm = ({ onComplete, backHref }) => {
                             message: 'Last Name is required',
                         },
                         {
-                            min: 3,
-                            message: "Last Name should be at least 3 characters"
+                            min: 1,
+                            message: "Last Name should be at least 1 characters"
                         }
                     ]}>
                         <Input placeholder="Last Name" />

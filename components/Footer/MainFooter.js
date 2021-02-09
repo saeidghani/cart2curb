@@ -26,7 +26,7 @@ const Footer = props => {
                     <Link href={routes.vendors.auth.login}>
                         <span className="col-span-2 md:col-span-1 text-base cursor-pointer">Vendor Login </span>
                     </Link>
-                    <Link href={routes.driver.auth.login}><span className="col-span-2 text-base cursor-pointer">Drive For Us</span></Link>
+                    <Link href={routes.driver.auth.login}><span className="col-span-2 text-base cursor-pointer">Driver For Us / Driver login</span></Link>
                 </div>
                 <div>
                     <ul className={'flex items-center flex-row pb-8 md:pb-4'}>

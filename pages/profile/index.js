@@ -98,32 +98,8 @@ const profile = props => {
                                 }
                             })}/>
                     </Col>
-                    <Col xs={24} sm={12} lg={6}>
-                        <DetailItem
-                            title={'Instagram'}
-                            value={getProperty(profile, 'socialMedias', '-', (data) => {
-                                let instagram = data.find(item => item.provider === 'instagram');
-                                if(instagram && instagram.username) {
-                                    return `@${instagram.username}`
-                                } else {
-                                    return '-'
-                                }
-                            })}/>
-                    </Col>
-                    <Col xs={24} sm={12} lg={6}>
-                        <DetailItem
-                            title={'Facebook'}
-                            value={getProperty(profile, 'socialMedias', '-', (data) => {
-                                let facebook = data.find(item => item.provider === 'facebook');
-                                if(facebook && facebook.username) {
-                                    return `@${facebook.username}`
-                                } else {
-                                    return '-'
-                                }
-                            })}/>
-                    </Col>
                     <Col xs={24} sm={12} lg={18} className={'flex flex-col justify-center'}>
-                        <span className="text-type mb-1">Share the link with your freind and get more score:</span>
+                        <span className="text-type mb-1">Share the link with your friend and get more score:</span>
                         <a href="#" className="text-btn underline">Card2curb/barry/wood/come</a>
                     </Col>
                 </Row>

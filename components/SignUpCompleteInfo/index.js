@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import {UserOutlined} from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
+import {streamPreferences} from "../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -215,7 +216,17 @@ const AccountInfo = props => {
                                     rules={[{
                                         required: true,
                                         message: "This Field is required"
-                                    }]}
+                                    },
+                                        ({getFieldValue}) => ({
+                                            validator(rule, value) {
+                                                const preference = getFieldValue('streamPreference');
+                                                if (!preference || (preference && value)) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(`Please enter your ${streamPreferences[preference]} ID`);
+                                            },
+                                        }),
+                                    ]}
                                 >
                                     <Input placeholder={`${stream} ID`} />
                                 </Item>
