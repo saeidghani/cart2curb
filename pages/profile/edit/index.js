@@ -20,6 +20,7 @@ import {useRouter} from "next/router";
 import {UserOutlined} from "@ant-design/icons";
 import userTypes from "../../../constants/userTypes";
 import ImgCrop from "antd-img-crop";
+import {streamPreferences} from "../../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -50,7 +51,7 @@ const AccountEdit = props => {
     const { profile } = props;
 
     useEffect(() => {
-        let streamPreference = '',
+        let streamPreference = undefined,
             streamId = '';
         const streamOnIndex = profile.socialMedias ? profile.socialMedias.findIndex(item => item.streamOn) : -1;
         if(streamOnIndex > -1) {
@@ -283,6 +284,12 @@ const AccountEdit = props => {
 
                             <Col lg={8} md={12} xs={24}>
                                 <Item
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'This Field is required'
+                                        }
+                                    ]}
                                     name={'streamPreference'}
                                     label={'LiveCart Viewing Preference'}>
                                     <Select
@@ -296,7 +303,22 @@ const AccountEdit = props => {
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
+                                <Item
+                                    name={'streamId'}
+                                    label={<span className="capitalize">{`${stream} ID`}</span>}
+                                    dependencies={['streamPreference']}
+                                    rules={[
+                                        ({getFieldValue}) => ({
+                                            validator(rule, value) {
+                                                const preference = getFieldValue('streamPreference');
+                                                if (!preference || (preference && value)) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(`Please enter your ${streamPreferences[preference]} ID`);
+                                            },
+                                        }),
+                                    ]}
+                                >
                                     <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>

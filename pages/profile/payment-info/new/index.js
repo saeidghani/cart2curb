@@ -92,8 +92,8 @@ const AddPaymentInfo = props => {
                                         message: "Please enter Card Owner First Name"
                                     },
                                     {
-                                        min: 3,
-                                        message: "First name should be at least 3 character"
+                                        min: 1,
+                                        message: "First name should be at least 1 character"
                                     }
                                 ]}>
                                     <Input placeholder="First Name" />
@@ -106,8 +106,8 @@ const AddPaymentInfo = props => {
                                         message: "Please enter Card Owner Last Name"
                                     },
                                     {
-                                        min: 3,
-                                        message: "Last name should be at least 3 character"
+                                        min: 1,
+                                        message: "Last name should be at least 1 character"
                                     }
                                 ]}>
                                     <Input placeholder="Last Name" />
