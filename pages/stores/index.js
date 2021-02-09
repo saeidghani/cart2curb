@@ -120,7 +120,7 @@ export default function Stores() {
                     <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Most Popular Stores</h2>
                     <Select
                         placeholder={'Sort by name'}
-                        style={{ minWidth: 370 }}
+                        className={'sort-field-input'}
                         onChange={sortHandler}
                     >
                         <Option value={''}>Default</Option>

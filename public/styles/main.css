@@ -189021,3 +189021,15 @@ tr.ant-table-expanded-row > td, tr.ant-table-expanded-row:hover > td {
   padding-right: 12px;
   padding-left: 12px;
 }
+
+
+.sort-field-input {
+  min-width: 370px;
+
+}
+
+@media (max-width: 640px) {
+    .sort-field-input {
+        min-width: 100%;
+    }
+}
