@@ -184,31 +184,31 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
             width={1100}
             footer={null}
         >
-            <div style={{width: '100%', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, min-max(100px, 1fr)'}}>
+            <div className={`grid grid-cols-${type === 'productCart' ? '4' : '6'}`}>
                 <DetailItem
                     title={'Order Number'}
                     labelColor={'muted'}
                     valueColor={'dark'}
-                    value={order?.orderNumber}
+                    value={order?.orderNumber || '-'}
                 />
                 <DetailItem
                     title={'CX Name'}
                     labelColor={'muted'}
                     valueColor={'dark'}
-                    value={`${order?.firstName || ''} ${order?.lastName || ''}`}
+                    value={`${order?.firstName || '-'} ${order?.lastName || '-'}`}
                 />
                 {type !== 'productCart' && <Fragment>
                     <DetailItem
                         title={'Email'}
                         labelColor={'muted'}
                         valueColor={'dark'}
-                        value={order?.email || ''}
+                        value={order?.email || '-'}
                     />
                     <DetailItem
                         title={'Address'}
                         labelColor={'muted'}
                         valueColor={'dark'}
-                        value={order?.address ? getAddress(order?.address) : ''}
+                        value={order?.address ? getAddress(order?.address) : '-'}
                     />
                 </Fragment>}
                 <DetailItem
@@ -234,7 +234,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
             />
             <div className='flex justify-end items-center p-4 mt-4'>
                 <div className="flex items-center justify-end pr-3">
-                    <span className="text-cell">{order?.deliveryCost || '_'}</span>
+                    <span className="text-cell text-xl">{order?.deliveryCost ? `${order?.deliveryCost} $` : '_'}</span>
                 </div>
             </div>
         </Modal>

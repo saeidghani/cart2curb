@@ -231,7 +231,7 @@ const Customers = () => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
+                                    <Input placeholder={'Search'} allowClear/>
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>

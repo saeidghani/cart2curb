@@ -141,16 +141,28 @@ const Deliveries = props => {
         <div className="flex mb-4">
             <div className="mr-4 w-4/12">
                 <div className="mb-2">Filter By Status</div>
-                <Select placeholder='Filter By Status' className="w-full" value={selectedStatus}
-                        onChange={statusVal => handleFilterByStatus(statusVal)}>
+                <Select
+                    allowClear
+                    placeholder='Filter By Status'
+                    className="w-full"
+                    value={selectedStatus}
+                    onChange={statusVal => handleFilterByStatus(statusVal)}
+                    onClear={() => handleFilterByStatus('')}
+                >
                     {statuses?.map(status => <Option value={status?.value}>{status?.name}</Option>)}
                 </Select>
             </div>
 
             <div className="w-4/12">
-                <div className="mb-2">Sort by Date</div>
-                <Select placeholder='Sort by Date' className="w-full" value={selectedDateOrder}
-                        onChange={dateOrderVal => handleSortByOrder(dateOrderVal)}>
+                <div className="mb-2">Sort By Date</div>
+                <Select
+                    allowClear
+                    placeholder='Sort By Date'
+                    className="w-full"
+                    value={selectedDateOrder}
+                    onChange={dateOrderVal => handleSortByOrder(dateOrderVal)}
+                    onClear={() => handleSortByOrder('')}
+                >
                     {dateOptions?.map(date => <Option value={date?.value}>{date?.name}</Option>)}
                 </Select>
             </div>
@@ -184,7 +196,11 @@ const Deliveries = props => {
                         className="w-full mr-4"
                         placeholder='Select Driver'
                         value={selectedDrivers[deliveryId]}
-                        onChange={(driverId) => setSelectedDrivers({...selectedDrivers, [deliveryId]: driverId})}
+                        onChange={(driverId) => {
+                            if (status !== 'pending' && !pendingDeliveries?.includes(deliveryId)) {
+                                setSelectedDrivers({...selectedDrivers, [deliveryId]: driverId});
+                            }
+                        }}
                     >
                         {drivers?.map(driver =>
                             <Option value={driver?._id}>{driver?.name}</Option>

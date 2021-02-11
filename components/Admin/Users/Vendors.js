@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Row, Col, Input, Form, Table, Select, Button, message, Modal} from 'antd';
+import {Row, Col, Input, Form, Table, Button, message, Modal} from 'antd';
 import {
     FileSearchOutlined,
     PlusCircleOutlined,
@@ -15,7 +15,6 @@ import Loader from "../../UI/Loader";
 import Avatar from "../../UI/Avatar";
 
 const {Item} = Form;
-const {Option} = Select;
 
 let isIntersecting = true;
 const Vendors = () => {
@@ -243,7 +242,7 @@ const Vendors = () => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
+                                    <Input placeholder={'Search'} allowClear/>
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>

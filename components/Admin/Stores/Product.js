@@ -216,12 +216,12 @@ const Products = ({vendor, ...props}) => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
+                                    <Input placeholder={'Search'} allowClear/>
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>
                                 <Item name={'category'} label={'Category'}>
-                                    <Select placeholder={'Category'} loading={categoryLoading}>
+                                    <Select placeholder={'Category'} loading={categoryLoading} allowClear>
                                         <Option value={'all'}>All</Option>
                                         {categories && categories.map(cat => {
                                             return (

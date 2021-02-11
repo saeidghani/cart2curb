@@ -1,18 +1,16 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Row, Col, Input, Form, Table, Select, Button, Space, message} from 'antd';
 import {
     FileSearchOutlined,
     PlusCircleOutlined,
     DeleteOutlined,
     EditOutlined,
-    InfoCircleOutlined
 } from '@ant-design/icons';
 import routes from "../../../constants/routes";
 import Link from "next/link";
 import deleteModal from "../../Modals/Delete";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../UI/Loader";
-import {getProperty} from "../../../helpers";
 import {useRouter} from "next/router";
 import store from '../../../states';
 
@@ -203,12 +201,12 @@ const Services = ({vendor, ...props}) => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
+                                    <Input placeholder={'Search'} allowClear/>
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>
                                 <Item name={'category'} label={'Category'}>
-                                    <Select placeholder={'Category'} loading={categoryLoading}>
+                                    <Select placeholder={'Category'} loading={categoryLoading} allowClear>
                                         <Option value={'all'}>All</Option>
                                         {(categories || [])?.map(cat => {
                                             return (

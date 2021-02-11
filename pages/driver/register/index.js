@@ -118,8 +118,6 @@ const Register = props => {
         if (imagePic) body.image = imagePic;
 
         const agreement = Boolean(form.getFieldValue('acceptAgreement'));
-        console.log(acceptAgreement);
-        console.log(agreement);
 
         if (insurancePic && licencePic && imagePic) {
             const res = await dispatch?.driverAuth?.register(body);
@@ -274,7 +272,7 @@ const Register = props => {
                                 <Col xs={24} className="">
                                     <Item name="image">
                                         <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={imagePic} text="Upload Image"
+                                            <UploadPhoto imageUrl={imagePic} text="Upload Profile Picture"
                                                          onUpload={handleImageUpload}
                                                          icon={<UserOutlined className={'text-lg'}/>}/>
                                         </div>

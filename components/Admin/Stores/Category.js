@@ -179,12 +179,16 @@ const Categories = props => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
+                                    <Input placeholder={'Search'} allowClear/>
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>
                                 <Item name={'parent_category'} label={'Parent Category'}>
-                                    <Select placeholder={'Parent Category'} loading={categoryLoading}>
+                                    <Select
+                                        allowClear
+                                        placeholder={'Parent Category'}
+                                        loading={categoryLoading}
+                                    >
                                         {parentCategory && (
                                             <>
                                                 <Option value={'all'}>All</Option>
