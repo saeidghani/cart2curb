@@ -36,7 +36,7 @@ const Arrangement = props => {
             storeId: s?.store?._id,
             vendorId: s?.vendor?._id,
             storeType: s?.store?.storeType,
-            number: '???',
+            number: s?.store?.rank + 1,
             CXName: s?.vendor?.contactName,
             store: s?.store?.name,
             img: s?.store?.image,
@@ -53,7 +53,7 @@ const Arrangement = props => {
                 storeId: el?.store?._id,
                 vendorId: el?.vendor?._id,
                 storeType: el?.store?.storeType,
-                number: '???',
+                number: el?.store?.rank + 1,
                 CXName: el?.vendor?.contactName,
                 store: el?.store?.name,
                 img: el?.store?.image,
@@ -69,8 +69,9 @@ const Arrangement = props => {
                 arrangedStores.splice(index, 0, s);
             }
         });
+        console.log(arrangedStores);
         setData(arrangedStores);
-    }, [selectedStores]);
+    }, [selectedStores, rankedStores]);
 
     const columns = [
         {
@@ -140,6 +141,7 @@ const Arrangement = props => {
             <div className="w-48 mb-8">
                 <div className="mb-2">Search</div>
                 <Select
+                    allowClear
                     showSearch
                     className="w-full"
                     placeholder='Search'

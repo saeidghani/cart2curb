@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Row, Col, Input, Button, message} from 'antd';
 import {useRouter} from "next/router";
-import Link from "next/link";
 import {useDispatch, useSelector} from "react-redux";
 
-import routes from "../../../constants/routes";
 import {EditOutlined} from '@ant-design/icons';
 
 const {Item} = Form;
@@ -70,6 +68,15 @@ const Taxes = props => {
         {name: "serviceTaxPercent", label: "Service Tax"},
         {name: "deliveryTaxPercent", label: "Delivery tax"},
     ];
+
+   /* const inputItemInfo = [
+        {name: "serviceFee", label: "Service Fee($)"},
+        {name: "deliveryFee", label: "Delivery Fee($)"},
+        {name: "serviceTaxPercent", label: "Service Tax(%)"},
+        {name: "deliveryTaxPercent", label: "Delivery tax(%)"},
+        {name: "deliveryTaxPercent", label: "First Delivery Fee($)"},
+        {name: "deliveryTaxPercent", label: "HST(%)"},
+    ];*/
 
     return (
         <Form

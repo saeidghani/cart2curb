@@ -109,6 +109,14 @@ const Orders = props => {
             render: items => <span className={`text-cell`}>{items}</span>
         },
         {
+            title: 'type',
+            dataIndex: 'type',
+            key: 'type',
+            render: type => <span className={`text-cell`}>
+                {type === 'productCart' ? 'product cart' : type === 'serviceCart' ? 'service cart' : 'custom cart'}
+            </span>
+        },
+        {
             title: 'Action',
             dataIndex: 'actions',
             key: 'action',
@@ -180,24 +188,24 @@ const Orders = props => {
             <Page title={'Orders'} breadcrumb={breadcrumb}>
                 <div style={{minHeight: 300}}>
                     <Row gutter={24} className={'flex items-center pt-2 pb-4'}>
-                    <Col lg={18} xs={24}>
-                        <Form form={form} layout={'vertical'} onFinish={searchHandler}>
-                            <Row gutter={24}>
-                                <Col lg={9} xs={24}>
-                                    <Item name={'search'} label={'Search'}>
-                                        <Input placeholder={'Search'}/>
-                                    </Item>
-                                </Col>
-                                <Col lg={6} xs={24}>
-                                    <Item className={'pt-7'}>
-                                        <Button type={'primary'} size={'lg'} className={'w-32'}
-                                                htmlType={'submit'}>Search</Button>
-                                    </Item>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Col>
-                </Row>
+                        <Col lg={18} xs={24}>
+                            <Form form={form} layout={'vertical'} onFinish={searchHandler}>
+                                <Row gutter={24}>
+                                    <Col lg={9} xs={24}>
+                                        <Item name={'search'} label={'Search'}>
+                                            <Input placeholder={'Search'} allowClear/>
+                                        </Item>
+                                    </Col>
+                                    <Col lg={6} xs={24}>
+                                        <Item className={'pt-7'}>
+                                            <Button type={'primary'} size={'lg'} className={'w-32'}
+                                                    htmlType={'submit'}>Search</Button>
+                                        </Item>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col xs={24}>
                             <Table

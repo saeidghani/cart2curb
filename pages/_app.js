@@ -12,7 +12,6 @@ import Head from "next/head";
 import NProgress from "../components/NProgress/index";
 import MessageHandler from "../components/MessageHandler";
 //import '../styles/less/index2.less';
-import '../styles/less/custom.less';
 
 class MyApp extends App {
     render() {

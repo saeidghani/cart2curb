@@ -61,12 +61,15 @@ const EditAccount = props => {
 
         const {store, vendor} = storeDetails || {};
         const markCoords = store?.address?.location?.coordinates
-        const marker = {
+        let marker;
+        if (markCoords?.length > 0) {
+        marker = {
             position: {
                 lat: markCoords[1],
                 lng: markCoords[0]
             }
         };
+        }
         setMarker(marker);
         const areaCoords = store?.area?.coordinates?.length > 0 ? store?.area?.coordinates[0] : [];
            for(let i in areaCoords){

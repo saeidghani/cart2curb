@@ -66,11 +66,11 @@ const Video = props => {
         if (!isValidVideo) {
             message.error('Please upload video with format bmp/mp4/mkv');
         }
-        const isLt30M = file.size / 1024 / 1024 < 30;
-        if (!isLt30M) {
-            message.error('Video must be smaller than 30MB!');
+        const isLt200M = file.size / 1024 / 1024 < 200;
+        if (!isLt200M) {
+            message.error('Video must be smaller than 200MB!');
         }
-        return isValidVideo && isLt30M;
+        return isValidVideo && isLt200M;
     }
 
     const handleLeftVideoUpload = info => {
@@ -123,15 +123,16 @@ const Video = props => {
 
     const UploadVideo = ({onUpload, type}) => (<Upload
         name="photo"
-        listType="picture-card"
-        className="avatar-video-uploader-wrapper border-0"
+        //listType="picture-card"
+        //className="avatar-video-uploader-wrapper border-0 flex items-center justify-center"
+        className="border-0 flex items-center justify-center"
         showUploadList={false}
         beforeUpload={beforeUpload}
         onChange={onUpload}
         {...uploadProps}
     >
         <Button
-            className={'text-overline bg-card flex items-center justify-center hover:text-button'}
+            className={'text-overline bg-card flex items-center justify-center mt-6 hover:text-button'}
             loading={(type === 'left' && leftVideoUploading) || (type === 'right' && rightVideoUploading)}
         >
             <CloudDownloadOutlined style={{fontSize: 30}}/>
@@ -157,9 +158,7 @@ const Video = props => {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-end space-x-2 mt-8"
-                //style={{position: 'relative', top: 450, left: 640}}
-            >
+            <div className="flex justify-end space-x-2 mt-12">
                 <Button
                     type="primary"
                     block

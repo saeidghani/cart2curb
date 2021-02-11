@@ -128,7 +128,8 @@ const Drivers = () => {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
-            render: email => <span className="text-cell">{email}</span>
+            render: email => <span className="text-cell">{email}</span>,
+            width: 50
         },
         {
             title: 'Phone Number',
@@ -146,7 +147,8 @@ const Drivers = () => {
             title: 'Driving Insurance',
             dataIndex: 'drivingInsurance',
             key: 'drivingInsurance',
-            render: drivingInsurance => <span className="text-cell"><img src={drivingInsurance} width={45} alt=""/></span>
+            render: drivingInsurance => <span className="text-cell"><img src={drivingInsurance} width={45} alt=""/></span>,
+            width: 150
         },
         {
             title: 'OP',
@@ -244,7 +246,7 @@ const Drivers = () => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input placeholder={'Search'}/>
+                                    <Input placeholder={'Search'} allowClear/>
                                 </Item>
                             </Col>
                             <Col lg={6} xs={24}>

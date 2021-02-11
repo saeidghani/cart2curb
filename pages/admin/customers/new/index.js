@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Button,
     Input,
@@ -148,8 +148,8 @@ const AddCustomer = props => {
                                               message: "Please enter you first name"
                                           },
                                           {
-                                              min: 3,
-                                              message: "First name should be more than 3 characters."
+                                              min: 1,
+                                              message: "First name should be 1 or more than 1 character."
                                           }
                                       ]}>
                                     <Input placeholder="First Name" />
@@ -163,8 +163,8 @@ const AddCustomer = props => {
                                               message: "Please enter you last name"
                                           },
                                           {
-                                              min: 3,
-                                              message: "Last name should be more than 3 characters."
+                                              min: 1,
+                                              message: "Last name should be 1 or more than 1 character."
                                           }
                                       ]}>
                                     <Input placeholder="Last Name" />
@@ -249,16 +249,12 @@ const AddCustomer = props => {
                                         }]}
                                     >
                                         <Option value={'sms'}>Text Message to Phone Number</Option>
-                                        <Option value={'email'}>Send a mail to Email Address</Option>
+                                        <Option value={'email'}>Send an Email</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthdate'} label={'Birthdate'}
-                                      rules={[{
-                                          required: true,
-                                          message: 'This Field is required'
-                                      }]}>
+                                <Item name={'birthdate'} label='Birthdate (Required for alcohol/tobacco deliveries)'>
                                     <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
@@ -266,41 +262,20 @@ const AddCustomer = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item
                                     name={'streamPreference'}
-                                    label={'Stream Preference'}>
+                                    label={'LiveCart Viewing Preference'}>
                                     <Select
                                         placeholder={'Select'}
                                         onChange={setStream}
                                     >
-                                        <Option value={'facebook'}>Facebook</Option>
-                                        <Option value={'instagram'}>Instagram</Option>
                                         <Option value={'zoom'}>Zoom</Option>
+                                        <Option value={'googleMeet'}>Google meet</Option>
                                         <Option value={'skype'}>Skype</Option>
-                                        <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'slack'}>Slack</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
                                     <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
-                                </Item>
-                            </Col>
-
-                            <Col xs={24}>
-                                <Divider className={'my-2'}/>
-                            </Col>
-                            <Col xs={24}>
-                                <h3 className={'font-medium text-base mb-6 mt-6'}>Social Integration</h3>
-                            </Col>
-
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'facebook'} label={'Facebook'}>
-                                    <Input placeholder="Facebook Username" />
-                                </Item>
-                            </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'instagram'} label={'Instagram'}>
-                                    <Input placeholder="Instagram Username" />
                                 </Item>
                             </Col>
 
