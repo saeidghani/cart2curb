@@ -125,7 +125,7 @@ const EditAccount = props => {
             addressLine2: fields[1]?.addressLine2,
             postalCode: fields[1]?.postalCode,
             description: fields[1]?.description,
-            needDriversToGather: fields[1]?.needDriversToGather ? ['true'] : []
+            needDriversToGather: fields[1]?.needDriversToGather
         })
     }, [storeId, storeDetails]);
 

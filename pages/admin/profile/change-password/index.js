@@ -5,6 +5,7 @@ import {Button, Col, Form, Input, message, Row} from "antd";
 import routes from "../../../../constants/routes";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
+import Link from "next/link";
 
 const { Item } = Form;
 
@@ -108,8 +109,17 @@ const ChangePassword = props => {
                                 Submit
                             </Button>
                         </Item>
+                        <Item>
+                            <Link href={routes.admin.profile.index}>
+                                <Button
+                                    block
+                                    className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
+                                >
+                                    Cancel
+                                </Button>
+                            </Link>
+                        </Item>
                     </Form>
-
                 </Col>
             </Row>
         </Page>

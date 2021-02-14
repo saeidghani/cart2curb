@@ -5,6 +5,7 @@ import {useRouter} from "next/router";
 
 import Page from '../../../../components/Page';
 import routes from "../../../../constants/routes";
+import Link from "next/link";
 
 const {Item} = Form;
 
@@ -71,10 +72,14 @@ const ChangeEmail = props => {
                             </Col>
                             <Col xs={24}>
                                 <Item>
-                                    <Button type="link" danger block loading={loading}
-                                            onClick={() => router.push(routes.admin.profile.index)}>
-                                        Cancel
-                                    </Button>
+                                    <Link href={routes.admin.profile.index}>
+                                        <Button
+                                            block
+                                            className="w-full p-3 border border-red-500 border-solid text-red-500 text-center font-medium text-sm mr-1"
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Link>
                                 </Item>
                             </Col>
                         </Row>

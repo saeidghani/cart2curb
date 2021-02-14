@@ -14,6 +14,7 @@ import {useRouter} from "next/router";
 import Submitted from "../../../../components/Submitted";
 import ImgCrop from "antd-img-crop";
 import {isPointInside} from "../../../../helpers";
+import {defaultMapLocation} from "../../../../constants";
 
 
 const {Step} = Steps;
@@ -547,10 +548,7 @@ const AddStore = props => {
                                             <div className="mb-6">
                                                 <GoogleMap
                                                     height={670}
-                                                    initialCenter={{
-                                                        lat: 40.781305,
-                                                        lng: -73.9666857
-                                                    }}
+                                                    initialCenter={defaultMapLocation}
                                                     marker={marker}
                                                     clickHandler={changeMarkerPosition}
                                                 />
