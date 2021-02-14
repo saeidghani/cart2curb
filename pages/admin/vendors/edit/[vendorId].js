@@ -13,6 +13,7 @@ import {useCities, useProvinces} from "../../../../hooks/region";
 import {useRouter} from "next/router";
 import {getProperty, isPointInside} from "../../../../helpers";
 import {PictureOutlined, UserOutlined} from "@ant-design/icons";
+import {defaultMapLocation} from "../../../../constants";
 
 const {Step} = Steps;
 const {Item} = Form;
@@ -499,10 +500,7 @@ const EditAccount = props => {
                                     <div className="mb-6">
                                         <GoogleMap
                                             height={670}
-                                            initialCenter={{
-                                                lat: 40.781305,
-                                                lng: -73.9666857
-                                            }}
+                                            initialCenter={defaultMapLocation}
                                             marker={marker}
                                             clickHandler={changeMarkerPosition}
                                         />
