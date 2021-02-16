@@ -63,20 +63,11 @@ const Taxes = props => {
     );
 
     const inputItemInfo = [
-        {name: "serviceFee", label: "Service Cost"},
-        {name: "deliveryFee", label: "Delivery Cost"},
-        {name: "serviceTaxPercent", label: "Service Tax"},
-        {name: "deliveryTaxPercent", label: "Delivery tax"},
+        {name: "serviceFee", label: "Service Fee (%)"},
+        {name: "deliveryFee", label: "Delivery Fee ($)"},
+        {name: "serviceTaxPercent", label: "First Delivery Fee ($)"},
+        {name: "deliveryTaxPercent", label: "HST (%)"},
     ];
-
-   /* const inputItemInfo = [
-        {name: "serviceFee", label: "Service Fee($)"},
-        {name: "deliveryFee", label: "Delivery Fee($)"},
-        {name: "serviceTaxPercent", label: "Service Tax(%)"},
-        {name: "deliveryTaxPercent", label: "Delivery tax(%)"},
-        {name: "deliveryTaxPercent", label: "First Delivery Fee($)"},
-        {name: "deliveryTaxPercent", label: "HST(%)"},
-    ];*/
 
     return (
         <Form
