@@ -110,7 +110,7 @@ const Stores = ({admin, ...props}) => {
             render: address => <span className="text-cell">{address}</span>
         },
         {
-            title: "OP",
+            title: "",
             dataIndex: 'action',
             key: 'action',
             render: (_, {storeId, vendorId, storeType}) => {

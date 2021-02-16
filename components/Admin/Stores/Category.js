@@ -122,7 +122,7 @@ const Categories = props => {
             render: data => <span className="text-cell">{data}</span>
         },
         {
-            title: "OP",
+            title: "",
             dataIndex: 'actions',
             key: 'actions',
             render: (actions, row) => {

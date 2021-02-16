@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from 'next/router';
 
@@ -8,30 +8,16 @@ import {convertAddress} from '../../../helpers';
 
 const CurrentOrders = () => {
     const dispatch = useDispatch();
-    const currentDeliveries = useSelector(state => state?.driverDelivery?.currentDeliveries?.data);
+    const customerOrders = useSelector(state => state?.driverDelivery?.customerOrders);
     const router = useRouter();
     const {deliveryId} = router.query;
-    const [delivery, setDelivery] = useState({});
     const token = useSelector(state => state?.driverAuth?.token);
 
     useEffect(() => {
         if (token) {
-            dispatch?.driverDelivery?.getCurrentDeliveries();
+            dispatch?.driverDelivery?.getCustomerOrders({deliveryId, token});
         }
     }, [token]);
-
-    useEffect(() => {
-        const selectedDelivery = currentDeliveries?.find(d => d?._id === deliveryId);
-        setDelivery(selectedDelivery);
-    }, [currentDeliveries]);
-
-    const getAddress = (address) => {
-        return `${address?.addressLine1 ? `${address?.addressLine1},` : ''} 
-                ${address?.addressLine2 ? `${address?.addressLine2},` : ''}
-                ${address?.city ? `${address?.city},` : ''}
-                ${address?.province ? `${address?.province},` : ''}
-                ${address?.country ? `${address?.country},` : ''}`;
-    };
 
     const DetailInfo = ({title, description, borderLess}) => (
         <div className={`grid grid-cols-5 gap-x-1 ${borderLess ? 'px-4 pt-4' : 'p-4'}`}
@@ -44,21 +30,26 @@ const CurrentOrders = () => {
     return (
         <DriverAuth>
             <DriverPage title="Customer Orders">
-                {(delivery?.products || [])?.map(p =>
-                    <div className="w-full bg-muted py-3" style={{backgroundColor: 'rgba(114, 122, 139, 0.05)'}}>
-                        <div className="flex items-center space-x-2 p-4" style={{borderBottom: '1px solid #D9D9D9'}}>
-                            <img src={p?.productExtraInfo?.images?.length > 0 ? p?.productExtraInfo?.images[0] : ''} alt=""
-                                 width={56}/>
-                            <div className="ml-3">{p?.productExtraInfo?.name}</div>
+                <div className="w-full bg-muted py-3" style={{backgroundColor: 'rgba(114, 122, 139, 0.05)'}}>
+                    {(customerOrders?.products || [])?.map(product =>
+                        <div className="flex flex-col">
+                            <div className="flex items-center space-x-2 p-4"
+                                 style={{borderBottom: '1px solid #D9D9D9'}}>
+                                <img src={product?.productExtraInfo?.images?.length > 0 ? product?.productExtraInfo?.images[0] : ''}
+                                     alt="" width={56}/>
+                                <div className="ml-3">{product?.productExtraInfo?.name || '-'}</div>
+                            </div>
+                            <DetailInfo title={"Quantity/Weight"} description={product.quantity || '-'}
+                                        borderLess/>
+                            <DetailInfo title={"Substitutions"} description={product.subtitution || '-'}/>
+                            <DetailInfo
+                                title="Store Address"
+                                description={product?.storeInfo?.address ? convertAddress(product?.storeInfo?.address) : '-'}
+                                borderLess
+                            />
                         </div>
-                        <DetailInfo title={"Quantity/Weight"} description={p?.quantity || '-'} borderLess/>
-                        <DetailInfo title={"Substitutions"} description={p?.subtitution || '-'}/>
-                        <DetailInfo
-                            title="Store Address"
-                            description={p?.storeInfo?.address ? convertAddress(p?.storeInfo?.address) : '-'}
-                            borderLess
-                        />
-                    </div>)}
+                    )}
+                </div>
             </DriverPage>
         </DriverAuth>
     )

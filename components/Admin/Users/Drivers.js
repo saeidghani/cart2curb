@@ -151,7 +151,7 @@ const Drivers = () => {
             width: 150
         },
         {
-            title: 'OP',
+            title: '',
             dataIndex: 'action',
             key: 'action',
             render: (actions, {key}) => {

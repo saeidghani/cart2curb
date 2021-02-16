@@ -137,7 +137,7 @@ const Vendors = () => {
             render: phoneNumber => <span className="text-cell">{phoneNumber}</span>
         },
         {
-            title: "OP",
+            title: "",
             dataIndex: 'action',
             key: 'action',
             render: (actions, {key, storeId}) => {

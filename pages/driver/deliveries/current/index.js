@@ -53,7 +53,7 @@ const Current = () => {
         </div>
     );
 
-    const DeliveryCard = ({_id: deliveryId, products, orderNumber, acceptedDateByDriver, deliveryTime, deliveryFee, customerAddress, sources}) => (
+    const DeliveryCard = ({_id: deliveryId, acceptedDateByDriver, deliveryTime, deliveryFee, customerAddress, sources}) => (
         <div className="w-full shadow-lg p-8">
             <div className="text-center"><SoundTwoTone className="text-6xl transform -rotate-45"/></div>
             <div className="text-xs font-normal mt-9 text-paragraph">
@@ -67,12 +67,11 @@ const Current = () => {
                     initialTime={Math.abs(moment().diff(moment(deliveryTime)))}
                     direction={moment().diff(moment(deliveryTime)) > 0 ? "forward" : "backward"}
                 >
-                    {({reset, resume, start, getTimerState}) => (
+                    {() => (
                         <div className={moment().diff(moment(deliveryTime)) > 0 ? 'text-center text-btn' : "text-center"}>
-                            <span>0<Timer.Hours/>:</span>
-                            <span><Timer.Minutes/>:</span>
-                            <span><Timer.Seconds/></span>
-                            {/*   <div>{getTimerState() === 'STOPPED' && <span></span>}</div>*/}
+                            <span><Timer.Hours formatValue={value => value > 9 ? value : `0${value}`}/>:</span>
+                            <span><Timer.Minutes formatValue={value => value > 9 ? value : `0${value}`}/>:</span>
+                            <span><Timer.Seconds formatValue={value => value > 9 ? value : `0${value}`}/></span>
                         </div>
                     )}
                 </Timer>

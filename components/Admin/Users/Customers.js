@@ -139,7 +139,7 @@ const Customers = () => {
             render: address => <span className="text-cell">{address}</span>
         },
         {
-            title: "OP",
+            title: "",
             dataIndex: 'action',
             key: 'action',
             render: (actions, {key}) => {

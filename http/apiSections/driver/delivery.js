@@ -24,4 +24,8 @@ export default class DriverStoreApi extends ApiInstance {
     editDeliveryComplete(deliveryId, body, options = {}) {
         return this.put(`driver/deliveries/${deliveryId}/complete`, body, {}, options);
     }
+
+    getCustomerOrders(deliveryId, options = {}) {
+        return this.get(`driver/deliveries/currents/${deliveryId}`, {}, options);
+    }
 }

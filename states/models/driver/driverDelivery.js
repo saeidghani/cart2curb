@@ -21,6 +21,7 @@ export const driverDelivery = {
             metaData: {},
             data: []
         },
+        customerOrders: {},
     },
     reducers: {
         setAvailableDeliveries: (state, payload) => {
@@ -48,6 +49,9 @@ export const driverDelivery = {
 
             }
             state.currentDeliveries.metaData = payload.metaData;
+        },
+        setCustomerOrders: (state, payload) => {
+            state.customerOrders = payload;
         },
     },
     effects: dispatch => ({
@@ -103,6 +107,23 @@ export const driverDelivery = {
             } catch(e) {
                 console.log(e)
                 message.error('An Error was occurred in data fetch from the Server')
+            }
+        },
+        async getCustomerOrders({deliveryId, token}) {
+            try {
+                const res = await api?.driver?.delivery?.getCustomerOrders(deliveryId, setOptions(token));
+                if(res?.data?.success) {
+                    this.setCustomerOrders(res?.data?.data);
+                    return res?.data?.data;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
             }
         },
         async editDeliveryAvailable({deliveryId, body, token}) {

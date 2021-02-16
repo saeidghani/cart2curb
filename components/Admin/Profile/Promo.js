@@ -93,7 +93,7 @@ const Promo = () => {
             render: membersUsed => <span className="text-cell">{membersUsed}</span>
         },
         {
-            title: "OP",
+            title: "",
             dataIndex: 'action',
             key: 'action',
             render: (actions, {key, promoId}) => {
