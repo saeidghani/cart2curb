@@ -19,7 +19,7 @@ import cookie from "cookie";
 import {getStore} from "../../../states";
 import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
-import {defaultMapLocation} from "../../../constants";
+import {defaultMapLocation, streamPreferences} from "../../../constants";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -30,7 +30,7 @@ const CartGuest = props => {
     const [marker, setMarker] = useState({ position: {}})
     const provinces = useProvinces();
     const cities = useCities(province);
-    const [stream, setStream] = useState("Facebook")
+    const [stream, setStream] = useState("Google Meet")
     const dispatch = useDispatch();
     const router = useRouter()
     const { cart } = props;
@@ -177,6 +177,10 @@ const CartGuest = props => {
         })
     }
 
+    const changeStream = (value, row) => {
+        setStream(row.children)
+    }
+
     return (
         <Page title={'Guest Cart'} breadcrumb={breadcrumb}>
             <Row>
@@ -263,23 +267,41 @@ const CartGuest = props => {
 
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamPreference'} label={'Messaging Platform'}>
+                                <Item name={'streamPreference'} label={'LiveCart Viewing Preference'}>
                                     <Select
                                         placeholder={'Select'}
-                                        onChange={setStream}
+                                        onChange={changeStream}
+                                        rules={[{
+                                            required: true,
+                                            message: "This Field is required"
+                                        }]}
                                     >
-                                        <Option value={'facebook'}>Facebook</Option>
-                                        <Option value={'instagram'}>Instagram</Option>
                                         <Option value={'zoom'}>Zoom</Option>
+                                        <Option value={'googleMeet'}>Google Meet</Option>
                                         <Option value={'skype'}>Skype</Option>
-                                        <Option value={'whatsapp'}>Whatsapp</Option>
-                                        <Option value={'slack'}>Slack</Option>
                                     </Select>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamId'} label={<span className="capitalize">{`${stream} ID`}</span>}>
-                                    <Input placeholder={`${stream.slice(0, 1).toUpperCase() + stream.slice(1).toLowerCase()} ID`} />
+                                <Item
+                                    name={'streamId'}
+                                    label={<span className="capitalize">{`${stream} ID`}</span>}
+                                    rules={[{
+                                        required: true,
+                                        message: "This Field is required"
+                                    },
+                                        ({getFieldValue}) => ({
+                                            validator(rule, value) {
+                                                const preference = getFieldValue('streamPreference');
+                                                if (!preference || (preference && value)) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(`Please enter your ${streamPreferences[preference]} ID`);
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <Input placeholder={`${stream} ID`} />
                                 </Item>
                             </Col>
 
