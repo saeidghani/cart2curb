@@ -29,7 +29,6 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
                     <span className="text-base text-paragraph font-medium">{name}</span>
                     <span className="text-sm text-type font-medium">{title}</span>
                 </div>
-                <span className="text-sm text-overline font-medium mb-2">{service}</span>
                 <span className="text-xs text-overline font-medium mb-4">{subType}</span>
                 {props._id && (
                     <Link href={routes.stores.single(props._id)} as={routes.stores.single(props._id)}>

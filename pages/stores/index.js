@@ -109,7 +109,7 @@ export default function Stores() {
     }
 
     return (
-        <Page title={false} headTitle={'Most Popular Stores'} breadcrumb={[{ title: 'Home' }]} breadcrumbColor={'type'}>
+        <Page title={false} headTitle={'Most Popular Stores'}>
             <div className="flex items-center justify-between bg-primary p-4 mb-16">
                 <span className="text-2xl font-bold text-white pl-6">Search Stores Near Me</span>
                 <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>
@@ -117,7 +117,7 @@ export default function Stores() {
             <div className="flex flex-col">
 
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
-                    <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Most Popular Stores</h2>
+                    <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Stores</h2>
                     <Select
                         placeholder={'Sort by name'}
                         className={'sort-field-input'}
