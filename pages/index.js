@@ -3,10 +3,8 @@ import {Button, Select, Row, Col, message} from 'antd';
 
 import Page from '../components/Page';
 import ShopOverview from '../components/UI/ShopOverview';
-import VideoSlider from '../components/UI/VideoSlider';
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../components/UI/Loader";
-import VideoPlayer from "../components/UI/VideoPlayer";
 import {InfoCircleOutlined} from "@ant-design/icons";
 
 const { Option } = Select;
@@ -15,18 +13,13 @@ let isIntersecting = true;
 export default function Home() {
     const dispatch = useDispatch();
     const [usedGps, setUsedGps] = useState(false);
-    const videoLoading = useSelector(state => state.loading.effects.app.getVideos);
-    const storesLoading = useSelector(state => state.loading.effects.app.getStores)
-    const { stores, videos } = useSelector(state => state.app);
+    const { stores } = useSelector(state => state.app);
     const [sort, setSort] = useState(undefined);
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [location, setLocation] = useState(null);
 
-    useEffect(() => {
-        dispatch.app.getVideos();
-    }, [])
 
     useEffect(async () => {
         if(hasMore || page === 1) {
@@ -123,58 +116,6 @@ export default function Home() {
                 <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>
             </div>
             <div className="flex flex-col">
-                {videoLoading ? (
-                    <div className="flex flex-row items-center justify-center py-10">
-                        <Loader/>
-                    </div>
-                ) : videos.length === 0 ? null :
-                videos.length === 1 ? (
-                    <Row gutter={[24, 24]}>
-                        {videos.map(video => {
-                            return (
-                                <Col xs={24}>
-                                    <h2 className={'text-xl font-medium mt-0 mb-4 text-label'}>{video.name}</h2>
-                                    <div className="w-full">
-                                        <VideoPlayer
-                                            key={`video`}
-                                            src={video.url}
-                                            poster={video.cover}
-                                        />
-                                    </div>
-                                </Col>
-                            )
-                        })}
-
-                    </Row>
-                ) : videos.length === 2 ? (
-                    <Row gutter={[24, 24]}>
-                        {videos.map(video => {
-                            return (
-                                <Col xs={24} md={12}>
-                                    <h2 className={'text-xl font-medium mt-0 mb-4 text-type'}>{video.name}</h2>
-                                    <div className="w-full">
-                                        <VideoPlayer
-                                            key={`video`}
-                                            src={video.url}
-                                            poster={video.cover}
-                                        />
-                                    </div>
-                                </Col>
-                            )
-                        })}
-
-                    </Row>
-                ) : (
-                    <div className="w-full">
-                        <VideoSlider videos={videos.map(item => {
-                            return {
-                                src: item.url,
-                                poster: item.cover
-                            }
-                        })}/>
-                    </div>
-                )}
-
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
                     <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Stores</h2>
                     <Select
