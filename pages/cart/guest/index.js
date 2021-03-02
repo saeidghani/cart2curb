@@ -47,11 +47,10 @@ const CartGuest = props => {
 
     useEffect(() => {
         if(cart.guest) {
-            const { firstName, lastName, birthdate, phone, email } = cart.guest;
+            const { firstName, lastName, phone, email } = cart.guest;
             form.setFieldsValue({
                 firstName,
                 lastName,
-                birthdate: moment(birthdate || ''),
                 phone,
                 email,
                 date: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
@@ -104,13 +103,12 @@ const CartGuest = props => {
             return false;
         }
 
-        const { firstName, lastName, email, phone, streamPreference, streamId, birthdate } = values;
+        const { firstName, lastName, email, phone, streamPreference, streamId } = values;
         const guestBody = {
             firstName,
             lastName,
             email,
             phone,
-            birthdate: birthdate ? birthdate.format('YYYY-MM-DD') : undefined,
         }
         if(streamPreference && streamId) {
             guestBody.socialMedias = {
@@ -164,7 +162,6 @@ const CartGuest = props => {
     }
 
     const disabledDate = (current) => {
-
         const fromTime = moment(props.deliveryTimes.from);
         const toTime = moment(props.deliveryTimes.to);
         return current && (current.diff(fromTime) < 0 || current.diff(toTime) > 0);
@@ -271,10 +268,6 @@ const CartGuest = props => {
                                     <Select
                                         placeholder={'Select'}
                                         onChange={changeStream}
-                                        rules={[{
-                                            required: true,
-                                            message: "This Field is required"
-                                        }]}
                                     >
                                         <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'googleMeet'}>Google Meet</Option>
@@ -286,10 +279,7 @@ const CartGuest = props => {
                                 <Item
                                     name={'streamId'}
                                     label={<span className="capitalize">{`${stream} ID`}</span>}
-                                    rules={[{
-                                        required: true,
-                                        message: "This Field is required"
-                                    },
+                                    rules={[
                                         ({getFieldValue}) => ({
                                             validator(rule, value) {
                                                 const preference = getFieldValue('streamPreference');
@@ -302,12 +292,6 @@ const CartGuest = props => {
                                     ]}
                                 >
                                     <Input placeholder={`${stream} ID`} />
-                                </Item>
-                            </Col>
-
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'birthdate'} label={'Birthdate'}>
-                                    <DatePicker className={'w-full'}/>
                                 </Item>
                             </Col>
 
