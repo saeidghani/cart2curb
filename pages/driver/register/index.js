@@ -201,6 +201,18 @@ const Register = props => {
                                         {
                                             required: true,
                                             message: "Please enter your phone number"
+                                        },
+                                        {
+                                            pattern: /^[1-9][0-9]*$/,
+                                            message: "Please enter valid Phone number"
+                                        },
+                                        {
+                                            min: 3,
+                                            message: "Phone Number should be more than 3 digits"
+                                        },
+                                        {
+                                            max: 14,
+                                            message: "Phone Number should be less than 14 digits"
                                         }
                                     ]}>
                                         <Input placeholder="+00 00000000"/>
@@ -211,7 +223,17 @@ const Register = props => {
                                           rules={[{
                                               required: true,
                                               message: 'This Field is required'
-                                          }]}>
+                                          },
+                                           ({getFieldValue}) => ({
+                                                  validator(rule, value) {
+                                                      const isOldEnough = moment(moment()).diff(value, 'years') >= 19;
+                                                      if (value && !isOldEnough) {
+                                                        return Promise.reject('You are not old enough');
+                                                      }
+                                                        return Promise.resolve();
+                                                  },
+                                              }),
+                                          ]}>
                                         <DatePicker className={'w-full'}/>
                                     </Item>
                                 </Col>

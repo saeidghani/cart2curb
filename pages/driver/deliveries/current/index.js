@@ -129,7 +129,7 @@ const Current = () => {
             <Link href={routes.driver.customerOrders.view(deliveryId)}>
                 <Button
                     className="w-full mt-16 p-4 text-center border border-current border-solid text-sm font-normal items-center flex justify-center">
-                    See Customer Orders
+                    View Customer Orders
                 </Button>
             </Link>
             <Button

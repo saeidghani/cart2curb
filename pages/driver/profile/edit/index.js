@@ -37,15 +37,15 @@ function beforeUpload(file) {
 
 const Edit = props => {
     const loading = useSelector(state => state?.loading?.effects?.driverProfile?.getProfile);
-    const [insurancePic, setInsurancePic] = useState('');
-    const [licencePic, setLicencePic] = useState('');
-    const [imagePic, setImagePic] = useState('');
-    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const token = useSelector(state => state?.driverAuth?.token);
     const profile = useSelector(state => state?.driverProfile?.profile);
     const router = useRouter();
+    const [insurancePic, setInsurancePic] = useState('');
+    const [licencePic, setLicencePic] = useState('');
+    const [imagePic, setImagePic] = useState('');
+    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -238,6 +238,18 @@ const Edit = props => {
                                             {
                                                 required: true,
                                                 message: "Please enter your phone number"
+                                            },
+                                            {
+                                                pattern: /^[1-9][0-9]*$/,
+                                                message: "Please enter valid Phone number"
+                                            },
+                                            {
+                                                min: 3,
+                                                message: "Phone Number should be more than 3 digits"
+                                            },
+                                            {
+                                                max: 14,
+                                                message: "Phone Number should be less than 14 digits"
                                             }
                                         ]}>
                                             <Input placeholder="+00 00000000"/>
@@ -248,13 +260,23 @@ const Edit = props => {
                                               rules={[{
                                                   required: true,
                                                   message: 'This Field is required'
-                                              }]}>
+                                              },
+                                                  ({getFieldValue}) => ({
+                                                      validator(rule, value) {
+                                                          const isOldEnough = moment(moment()).diff(value, 'years') >= 19;
+                                                          if (value && !isOldEnough) {
+                                                              return Promise.reject('You are not old enough');
+                                                          }
+                                                          return Promise.resolve();
+                                                      },
+                                                  }),
+                                              ]}>
                                             <DatePicker className={'w-full'}/>
                                         </Item>
                                     </Col>
                                     <Col xs={24} className="">
                                         <Item name="proofOfInsurance">
-                                            <div className={'flex items-center justify-start'}>
+                                            <div className={'flex items-center justify-start mt-2'}>
                                                 <UploadPhoto imageUrl={insurancePic} text="Upload Proof of Insurance"
                                                              onUpload={handleInsuranceUpload}
                                                              icon={<CloudUploadOutlined className={'text-lg'}/>}/>

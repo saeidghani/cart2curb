@@ -164,7 +164,7 @@ const Available = () => {
                 className="w-full mt-6 p-4 text-center bg-btn text-sm font-normal items-center flex justify-center text-white"
                 onClick={() => handleSubmit(deliveryId)}
             >
-                Submit
+                Accept
             </Button>
             <Button
                 className="w-full mt-3 p-4 text-center text-sm font-normal items-center flex justify-center"
