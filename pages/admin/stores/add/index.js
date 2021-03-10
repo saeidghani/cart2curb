@@ -588,7 +588,7 @@ const AddStore = props => {
                                     <Col xs={24} className={'flex flex-row-reverse md:mt-16 mt-6'}>
                                         <Button type="primary" block className={'w-32 ml-5'} onClick={submitHandler}
                                                 loading={loading}>
-                                            Account Info
+                                            Save Store
                                         </Button>
                                         <Item>
                                             <Button danger className={'w-32'} onClick={prevHandler.bind(this, 2)}>
