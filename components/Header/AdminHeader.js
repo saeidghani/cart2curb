@@ -54,7 +54,7 @@ const AdminHeader = props => {
     return (
         <div className="header__content">
             <div className="flex flex-row items-center">
-                <Link href={routes.homepage}>
+                <Link href={routes.admin.deliveries.index}>
                     <a>
                         <img src='/images/logo.png' alt='Cart2Curb' style={{height: 48, width: 60}}/>
                     </a>

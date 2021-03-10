@@ -117,9 +117,9 @@ const PendingVendors = props => {
                         />
                         <div className="flex justify-end space-x-3 mt-5">
                             <Button className="text-primary px-4" type="link"
-                                    onClick={() => handleReject(vendor._id)}>Reject</Button>
+                                    onClick={() => handleReject(vendor?._id)}>Reject</Button>
                             <Link
-                                href={{pathname: routes.admin.vendors.edit(vendor._id), query: {storeId: store?._id}}}
+                                href={{pathname: routes.admin.vendors.edit(vendor?._id), query: {storeId: store?._id}}}
                             >
                                 <Button
                                     className="text-primary bg-transparent border border-solid border-primary px-8"
@@ -129,7 +129,7 @@ const PendingVendors = props => {
                             </Link>
                             <Button
                                 className="text-white bg-primary px-4"
-                                onClick={() => handleApprove(vendor._id)}
+                                onClick={() => handleApprove(vendor?._id)}
                             >
                                 Approve
                             </Button>
