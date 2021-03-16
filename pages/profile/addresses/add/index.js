@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Input,
@@ -21,6 +21,7 @@ import {getStore} from "../../../../states";
 import withAuth from "../../../../components/hoc/withAuth";
 import {useCities, useProvinces} from "../../../../hooks/region";
 import {defaultMapLocation} from "../../../../constants";
+import {useGeocoding} from "../../../../hooks/geocoding";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -35,6 +36,12 @@ const AddAddress = props => {
     const router = useRouter();
     const provinces = useProvinces();
     const cities = useCities(province);
+    const [geoCode, getGeoCode] = useGeocoding()
+
+
+    useEffect(() => {
+        setCenter(geoCode);
+    }, [geoCode])
 
     const breadcrumb = [
         {
@@ -114,8 +121,10 @@ const AddAddress = props => {
     }
 
     const onChangePostal = (e) => {
+        const value = e.target.value.toUpperCase()
+        getGeoCode(value)
         form.setFieldsValue({
-            postalCode: e.target.value.toUpperCase(),
+            postalCode: value
         })
     }
 

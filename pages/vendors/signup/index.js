@@ -15,6 +15,7 @@ import Submitted from "../../../components/Submitted";
 import ImgCrop from "antd-img-crop";
 import {isPointInside} from "../../../helpers";
 import {defaultMapLocation} from "../../../constants";
+import {useGeocoding} from "../../../hooks/geocoding";
 
 
 const { Step } = Steps;
@@ -57,6 +58,7 @@ const Register = props => {
     const [submitted, setSubmitted] = useState(false);
     const [lastReached, setLastReached] = useState(0);
     const loading = useSelector(state => state.loading.effects.vendorAuth.register);
+    const [geoCode, getGeoCode] = useGeocoding()
 
     const breadcrumb = [
         {
@@ -190,9 +192,12 @@ const Register = props => {
         }
     }
 
+
     const onChangePostal = (e) => {
+        const value = e.target.value.toUpperCase()
+        getGeoCode(value)
         form.setFieldsValue({
-            postalCode: e.target.value.toUpperCase(),
+            postalCode: value
         })
     }
 
@@ -563,6 +568,7 @@ const Register = props => {
                                         <GoogleMap
                                             height={670}
                                             initialCenter={defaultMapLocation}
+                                            center={geoCode}
                                             marker={marker}
                                             clickHandler={changeMarkerPosition}
                                         />

@@ -23,6 +23,7 @@ import cookie from "cookie";
 import {getStore} from "../../states";
 import userTypes from "../../constants/userTypes";
 import {defaultMapLocation} from "../../constants";
+import {useGeocoding} from "../../hooks/geocoding";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -37,6 +38,7 @@ const SignUp = props => {
     const { setAuthenticated, setUserType } = useAuth();
     const provinces = useProvinces();
     const cities = useCities(province);
+    const [geoCode, getGeoCode] = useGeocoding()
 
     const breadcrumb = [
         {
@@ -106,11 +108,12 @@ const SignUp = props => {
     }
 
     const onChangePostal = (e) => {
+        const value = e.target.value.toUpperCase()
+        getGeoCode(value)
         form.setFieldsValue({
-            postalCode: e.target.value.toUpperCase(),
+            postalCode: value
         })
     }
-
     return completeStep ? (
         <AccountInfo/>
     ) : (
@@ -337,6 +340,7 @@ const SignUp = props => {
                                     <GoogleMap
                                         height={670}
                                         initialCenter={defaultMapLocation}
+                                        center={geoCode}
                                         marker={marker}
                                         clickHandler={changeMarkerPosition}
                                     />
