@@ -17,6 +17,7 @@ import {PictureOutlined, UserOutlined} from "@ant-design/icons";
 import userTypes from "../../../../constants/userTypes";
 import ImgCrop from "antd-img-crop";
 import {defaultMapLocation} from "../../../../constants";
+import {useGeocoding} from "../../../../hooks/geocoding";
 
 
 const { Step } = Steps;
@@ -52,6 +53,7 @@ const EditAccount = props => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [lastReached, setLastReached] = useState(0);
+    const [geoCode, getGeoCode] = useGeocoding()
 
     useEffect(() => {
 
@@ -200,9 +202,12 @@ const EditAccount = props => {
         }
     }
 
+
     const onChangePostal = (e) => {
+        const value = e.target.value.toUpperCase()
+        getGeoCode(value)
         form.setFieldsValue({
-            postalCode: e.target.value.toUpperCase(),
+            postalCode: value
         })
     }
 
@@ -521,6 +526,7 @@ const EditAccount = props => {
                                         <GoogleMap
                                             height={670}
                                             initialCenter={marker.position || defaultMapLocation}
+                                            center={geoCode}
                                             marker={marker}
                                             clickHandler={changeMarkerPosition}
                                         />

@@ -17,16 +17,14 @@ const { Option } = Select;
 const _expandedRowKeys = new Set();
 
 const defaultSubstitutionOptions = [
-    'I need this exact item',
     'Substitute at equal or lesser value',
-    'I need this no matter what'
+    'Substitute at any price',
 ]
 
 const substitutionOptions = [
-    'I need this exact item',
     'Substitute at equal or lesser value',
-    'I need this no matter what',
-    'I explained that in the note'
+    'Substitute at any price',
+    'Leave a note'
 ]
 
 export const CartIndex = (props) => {
@@ -55,7 +53,7 @@ export const CartIndex = (props) => {
             const transformedProducts = cart.products.map(product => {
                 return {
                     _id: product._id,
-                    subtitution: !product.subtitution ? undefined : defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : 'I explained that in the note',
+                    subtitution: !product.subtitution ? undefined : defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : 'Leave a note',
                     subtitutionDesc: !defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : null,
                     quantity: product.quantity,
                     tax: (product.tax * product.price * product.quantity / 100).toFixed(2),
@@ -95,7 +93,7 @@ export const CartIndex = (props) => {
             ...newProducts[index],
             [key]: !value ? undefined : typeof value === 'boolean' ? defaultSubstitutionOptions[0] : value,
         }
-        if(changeState) {
+        if(changeState && (value && !_expandedRowKeys.has(index) || !value && _expandedRowKeys.has(index))) {
             _expandedRowKeys.has(index)
                 ? _expandedRowKeys.delete(index)
                 : _expandedRowKeys.add(index);
@@ -128,7 +126,7 @@ export const CartIndex = (props) => {
                 const product = products[i];
                 const quantity = product.quantity;
                 const _id = product._id;
-                const subtitution = !product.subtitution ? null : defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : product.subtitutionDesc ? product.subtitutionDesc : product.subtitution || 'I need exact item'
+                const subtitution = !product.subtitution ? null : defaultSubstitutionOptions.includes(product.subtitution) ? product.subtitution : product.subtitutionDesc ? product.subtitutionDesc : product.subtitution || 'Substitute at equal or lesser value'
 
                 transformedProducts.push({
                     _id,
@@ -172,7 +170,10 @@ export const CartIndex = (props) => {
             key: 'subtitution',
             render: (data, row) => {
                 return (
-                    <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(e.target.checked, row.index, 'subtitution')} checked={products[row.index]?.subtitution}>Yes</Checkbox>
+                    <>
+                        <Checkbox className={'text-cell checkbox-info pr-8'} onChange={e => changeSubtitution(true, row.index, 'subtitution')} checked={products[row.index]?.subtitution}>Yes</Checkbox>
+                        <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(false, row.index, 'subtitution')} checked={!products[row.index]?.subtitution}>No</Checkbox>
+                    </>
                 )
             }
         },
@@ -281,11 +282,11 @@ export const CartIndex = (props) => {
 
                                return (
                                    <div className={'flex flex-col items-stretch'}>
-                                       <div className={`flex items-center justify-between cart-substitution pt-3 ${product.subtitution === 'I explained that in the note' ? 'pb-5' : 'pb-3'}`}>
+                                       <div className={`flex items-center justify-between cart-substitution pt-3 ${product.subtitution === 'Leave a note' ? 'pb-5' : 'pb-3'}`}>
                                            <span className={'text-cell text-sm'}>Item #{index + 1} Substitution</span>
                                            <Radio.Group options={substitutionOptions} onChange={e => changeSubtitution(e.target.value, index, 'subtitution', false)} value={product.subtitution} />
                                        </div>
-                                       {product.subtitution === 'I explained that in the note' && (
+                                       {product.subtitution === 'Leave a note' && (
                                            <div className="flex flex-col items-stretch">
                                                <label htmlFor={`substitution-${index}`} className={'text-label text-sm pb-2'}>Notes</label>
                                                <Input.TextArea

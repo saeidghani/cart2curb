@@ -126,6 +126,17 @@ const VendorPage = props => {
         setPage(1);
     }
 
+    const checkReset = e => {
+        const value = e.target.value;
+        if(!value || value === "") {
+            isIntersecting = false;
+            setProducts([]);
+            setHasMore(true);
+            setSearch("");
+            setPage(1);
+        }
+    }
+
     const address = [vendor.address.addressLine1];
     if(vendor.address.addressLine2) {
         address.push(vendor.address.addressLine2);
@@ -143,7 +154,7 @@ const VendorPage = props => {
                             <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
                                 <Col xs={24} lg={16}>
                                     <Item name={'search'} label={'Search'}>
-                                        <Input allowClear placeholder={'Product name'}/>
+                                        <Input allowClear placeholder={'Product name'} onChange={checkReset}/>
                                     </Item>
                                 </Col>
                                 <Col xs={24} lg={3} style={{ flexBasis: 125}}>
