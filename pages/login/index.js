@@ -8,6 +8,7 @@ import routes from "../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import { useAuth } from "../../providers/AuthProvider";
 import withoutAuth from "../../components/hoc/withoutAuth";
+import {useRouter} from "next/router";
 
 const { Item } = Form;
 
@@ -18,6 +19,18 @@ const Login = props => {
     const loading = useSelector(state => state.loading.effects.auth.login);
     const dispatch = useDispatch();
     const { setAuthenticated, setUserType } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if(router && router?.query?.error) {
+            switch(router?.query?.error) {
+                case "email_user": {
+                    message.error("Email already exists");
+                    break;
+                }
+            }
+        }
+    }, [router?.query?.error])
 
     const submitHandler = async (values) => {
         const { username, password } = values;
@@ -36,18 +49,7 @@ const Login = props => {
     }
 
     const openLoginWindow = (provider) => {
-        const height = window?.innerHeight || 900;
-        const width = window?.innerWidth || 500;
         popup = window?.open(provider === 'google' ? '/v1/customer/auth/google' : '/v1/customer/auth/facebook', '_blank', ``)
-        popup.document.addEventListener('error', (e) => {
-            console.log('error', e);
-        })
-        popup.document.addEventListener('load', (e) => {
-            console.log('load', e);
-        })
-        popup.document.addEventListener('loadeddata', (e) => {
-            console.log('loadeddata', e);
-        })
     }
 
     return (
