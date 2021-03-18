@@ -1,7 +1,7 @@
 import errors from '../constants/errors.json';
 import { emitter } from "../helpers/emitter";
 
-export const DEFAULT_HTTP_ERROR = 'An Error was occurred, Please try again'
+export const DEFAULT_HTTP_ERROR = 'An error occurred, please try again.'
 
 export default class ExceptionHandler {
     throwError(response = {} , defaultError = DEFAULT_HTTP_ERROR) {

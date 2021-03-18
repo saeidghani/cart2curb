@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Badge, Button, Drawer, Row, Col} from 'antd';
+import {Badge, Button, Drawer, Row, Col, Dropdown, Menu} from 'antd';
 import Link from 'next/link'
 import {BellTwoTone, MenuOutlined, SettingTwoTone} from '@ant-design/icons';
 
@@ -13,6 +13,9 @@ import {useDispatch, useSelector} from "react-redux";
 import userTypes from "../../constants/userTypes";
 import HeaderLink from "./HeaderLink";
 import {isCustomCartRoute} from "../../helpers";
+import {useAuth} from "../../providers/AuthProvider";
+
+const { Item } = Menu;
 
 const MainHeader = props => {
     const [visible, setVisible] = useState(false);
@@ -28,6 +31,8 @@ const MainHeader = props => {
     const cart = useSelector(state => state.cart.cart);
     const customCart = useSelector(state => state.customCart.cart)
     const cartChanges = useSelector(state => state.cart.cartChanges);
+    const { setAuthenticated, setUserType } = useAuth();
+
 
     useEffect(() => {
         const adminToken = localStorage.getItem('admin_token');
@@ -69,7 +74,24 @@ const MainHeader = props => {
         setVisible(false);
     }
 
-    const avatar = props.avatar || '';
+    const logoutHandler = async () => {
+        await dispatch.auth.logout();
+        setAuthenticated(false);
+        setUserType(null)
+    }
+
+    const UserDropdown = (
+        <Menu className="shadow-lg">
+            <Item className={'py-2 px-4'}>
+                <Link href={userTypes[userType]?.profile}>
+                    Show Profile
+                </Link>
+            </Item>
+            <Item className={'py-2 px-4'} danger onClick={logoutHandler}>
+                Logout
+            </Item>
+        </Menu>
+    )
 
     const AdminProfile = () => (
         <div className="flex items-center space-x-3">
@@ -139,11 +161,11 @@ const MainHeader = props => {
                 {isAuthenticated ? (
                     <>
                         {router.route !== routes.vendors.account.changePassword && (
-                            <Link href={userType === 'vendor' ? routes.vendors.account.index : routes.profile.index}>
+                            <Dropdown overlay={UserDropdown} placement={"bottomRight"}>
                                 <div className="ml-14 cursor-pointer">
                                     <Avatar src={avatarImage} justImage/>
                                 </div>
-                            </Link>
+                            </Dropdown>
                         )}
                     </>
                 ) : isAdmin ? <AdminProfile/> : (
@@ -243,12 +265,11 @@ const MainHeader = props => {
                             <Row>
                                 {router.route !== routes.vendors.account.changePassword && (
                                     <Col xs={24}>
-                                        <Link
-                                            href={userType === 'vendor' ? routes.vendors.account.index : routes.profile.index}>
-                                            <div className="cursor-pointer">
+                                        <div className="cursor-pointer">
+                                            <Dropdown overlay={UserDropdown} placement={"bottomRight"}>
                                                 <Avatar src={avatarImage} justImage/>
-                                            </div>
-                                        </Link>
+                                            </Dropdown>
+                                        </div>
                                     </Col>
                                 )}
                             </Row>

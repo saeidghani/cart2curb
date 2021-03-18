@@ -122,9 +122,9 @@ export default function Home() {
     }
 
     return (
-        <Page title={false}>
+        <Page title={false} breadcrumb={false}>
 
-            <div className={'p-4 mb-16 without-padding'}>
+            <div className={'mb-16 without-padding'}>
                 <Row className={'bg-card flex items-center pt-12 pb-6 layout__section'}>
                     <Col xs={24}>
                         <Form form={form} layout={'vertical'} onFinish={searchWithGps} className={'pl-4 lg:pl-0'}>
@@ -143,10 +143,6 @@ export default function Home() {
                         </Form>
                     </Col>
                 </Row>
-            </div>
-            <div className="flex items-center justify-between bg-primary p-4 mb-16">
-                <span className="text-2xl font-bold text-white pl-6">Search Stores Near Me</span>
-                <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>
             </div>
             <div className="flex flex-col">
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
