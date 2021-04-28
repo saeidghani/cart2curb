@@ -168,7 +168,7 @@ const VendorPage = props => {
             </div>
             <Row gutter={[24, 24]}>
                 <Col xs={24}>
-                    <h1 className="page__title text-2xl text-type mb-2 font-medium mt-0">Vendor Detail Page</h1>
+                    <h1 className="page__title text-2xl text-type mb-2 font-medium mt-0">Vendor Detail Page!!!</h1>
                 </Col>
                 <Col xs={24} md={8} lg={6}>
                     <div style={{ position: 'relative', paddingTop: '100%'}}>

@@ -31,12 +31,12 @@ const Taxes = props => {
     }, [systemConfig]);
 
     const submitHandler = async (values) => {
-        const {deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent} = values;
+        const {deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent, ExtraStoreDeliveryFee} = values;
         const body = {
             deliveryFee: deliveryFee * 1,
             deliveryTaxPercent: deliveryTaxPercent * 1,
             serviceFee: serviceFee * 1,
-            serviceTaxPercent: serviceTaxPercent * 1
+            serviceTaxPercent: serviceTaxPercent * 1,
         }
 
         const res = await dispatch.adminProfile.editSystemConfig({body, token});
@@ -67,6 +67,7 @@ const Taxes = props => {
         {name: "deliveryFee", label: "Delivery Fee ($)"},
         {name: "serviceTaxPercent", label: "First Delivery Fee ($)"},
         {name: "deliveryTaxPercent", label: "HST (%)"},
+        {name: "ExtraStoreDeliveryFee", label: "Extra Store Delivery Fee ($)"},
     ];
 
     return (
@@ -85,7 +86,7 @@ const Taxes = props => {
                             block
                             className={'w-full md:w-32 ml-0 md:ml-5'}
                             htmlType={'submit'}
-                            oading={loading}
+                            loading={loading}
                         >
                             Save
                         </Button>
