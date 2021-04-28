@@ -129,7 +129,7 @@ const MainHeader = props => {
                                         Orders
                                     </HeaderLink>
                                 </>
-                            ) : (router.route !== '/' && router.route !== '/stores') && (
+                            ) : (router.route === '/stores') && (
                                 <>
                                     <HeaderLink href={routes.homepage} hasPadding>
                                         Home
@@ -215,7 +215,7 @@ const MainHeader = props => {
                                                 </HeaderLink>
                                             </Col>
                                         </>
-                                    ) : (router.route !== '/' && router.route !== '/stores') && (
+                                    ) : (router.route === '/stores') && (
                                         <>
                                             <Col xs={24}>
                                                 <HeaderLink href={routes.homepage}>

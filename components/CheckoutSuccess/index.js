@@ -56,7 +56,7 @@ const CheckoutSuccess = props => {
                 </div>
 
                 <Col xs={24}>
-                    <DetailItem title={'Order Submitted'} value={`Order ${props.cart._id} was successfully submited. We have sent your order info + invoice to your email.`}/>
+                    <DetailItem title={'Order Submitted'} value={`Order ${props.cart._id} was successfully submited. We will reach out to you to confirm the details."`}/>
                 </Col>
 
                 <Col xs={24}>

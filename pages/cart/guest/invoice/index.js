@@ -144,25 +144,37 @@ const Invoices = props => {
             dataIndex: 'service',
             key: 'service',
         },
+        {
+            title: 'Tax',
+            dataIndex: 'tax',
+            key: 'tax',
+        },
+        {
+            title: 'Total Price',
+            dataIndex: 'totalPrice',
+            key: 'totalPrice',
+        },
     ];
 
     const data = [
         {
             key: 'cart',
-            items: cart.totalQuantity,
-            price: `$${cart.cartPrice}`,
-            delivery: `$${cart.deliveryCost}`,
-            service: `$${cart.serviceFee}`
+            items: cart?.totalQuantity,
+            price: `$${cart?.cartPrice}`,
+            delivery: `$${cart?.deliveryCost}`,
+            service: `$${cart?.serviceFee}`,
+            tax: `$${cart?.serviceFee}`,
+            totalPrice: `$${cart?.totalPrice}`,
         }
     ]
 
-    const transformed = [cart.address.addressLine1];
-    if(cart.address.addressLine2) {
-        transformed.push(cart.address.addressLine2);
+    const transformed = [cart?.address?.addressLine1];
+    if(cart?.address?.addressLine2) {
+        transformed.push(cart?.address?.addressLine2);
     }
-    transformed.push(cart.address.city);
-    transformed.push(cart.address.province);
-    transformed.push(cart.address.country);
+    transformed.push(cart?.address?.city);
+    transformed.push(cart?.address?.province);
+    transformed.push(cart?.address?.country);
 
     const applyPromoHandler = async (e) => {
         e.preventDefault();
@@ -244,15 +256,15 @@ const Invoices = props => {
                 </div>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Customer Name'} value={`${cart.guest.firstName} ${cart.guest.lastName}`}/>
+                    <DetailItem title={'Customer Name'} value={`${cart?.guest?.firstName} ${cart?.guest?.lastName}`}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Phone Number'} value={cart.guest.phone}/>
+                    <DetailItem title={'Phone Number'} value={cart?.guest?.phone}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Email Address'} value={cart.guest.email}/>
+                    <DetailItem title={'Email Address'} value={cart?.guest?.email}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>

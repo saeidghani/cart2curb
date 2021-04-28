@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import { Menu, message } from 'antd';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
 
 import './styles.less';
 import Loader from "../Loader";
@@ -36,7 +35,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                     } else {
                         setCategories(categories => response?.data);
                     }
-                    if (response.data.length < 30) {
+                    if (response.data?.length < 30) {
                         setHasMore(false);
                     }
                 }
@@ -82,18 +81,20 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
 
     return (
         <div className="category-card">
-            {categories.length === 0 && !hasMore && (
+            {categories?.length === 0 && !hasMore && (
                 <span className="text-paragraph py-4 block">&mdash; There is no Category</span>
             )}
+            {categories?.length !== 0 &&
             <Menu mode="inline" openKeys={openKeys} onOpenChange={onOpenChange} style={{width: '100%', paddingLeft: 0}}>
                 {categories?.map((cat, index) =>
-                <SubMenu key={cat._id} title={<div style={{borderTop: categories?.length-1 === index ? '1px solid lightGray' : '0', borderBottom: index === 0 ? '1px solid lightGray' : '0'}}>{cat?.name}</div>} style={{paddingLeft: 0}}>
-                    {cat?.children?.map((subCat, index) =>
-                    <Menu.Item key={subCat._id} style={{paddingLeft: 0}} onClick={clickHandler.bind(this, subCat._id)}><div style={{borderBottom: cat?.children?.length-1 === index ? '0' : '1px solid lightGray', lineHeight: '30px'}} className="">{subCat.name}</div></Menu.Item>
-                    )}
-                </SubMenu>
+                    <SubMenu key={cat._id} title={<div style={{borderTop: categories?.length-1 === index ? '1px solid lightGray' : '0', borderBottom: index === 0 ? '1px solid lightGray' : '0'}}>{cat?.name}</div>} style={{paddingLeft: 0}}>
+                        {cat?.children?.map((subCat, index) =>
+                            <Menu.Item key={subCat._id} style={{paddingLeft: 0}} onClick={clickHandler.bind(this, subCat?._id)}><div style={{width: '90%', lineHeight: '30px', borderBottom: cat?.children?.length-1 === index ? '0' : '1px solid lightGray'}} className="">{subCat.name}</div></Menu.Item>
+                        )}
+                    </SubMenu>
                 )}
             </Menu>
+            }
             <div ref={loader}>
                 {hasMore && (<div className="flex items-center justify-center py-6"><Loader/></div>)}
             </div>
