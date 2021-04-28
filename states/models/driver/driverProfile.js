@@ -86,41 +86,5 @@ export const driverProfile = {
                 return false;
             }
         },
-        async deletePromo({promoId, token}) {
-            try {
-                const res = await api?.driver?.profile?.deletePromo(promoId, setOptions(token));
-                if(res?.data?.success) {
-                    message.success('Deleted Successfully', 5);
-                    return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
-                }
-            } catch(e) {
-                if(e.hasOwnProperty('response')) {
-                    message.error('An Error was occurred');
-                }
-                return false;
-            }
-        },
-        async addPromo({ body, token}) {
-            try {
-                const res = await api?.driver?.profile?.addPromo(body, setOptions(token));
-
-                if(res.data.success) {
-                    message.success('New Promo added successfully!', 5);
-                    return true;
-                } else {
-                    message.error('An Error was occurred');
-                    return false;
-                }
-            } catch(e) {
-                console.log(e);
-                if(e.hasOwnProperty('response')) {
-                    message.error('An Error was occurred');
-                }
-                return false;
-            }
-        },
     })
 }

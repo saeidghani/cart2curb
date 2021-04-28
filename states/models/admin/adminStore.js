@@ -33,9 +33,10 @@ export const adminStore = {
             metaData: {},
             data: []
         },
-        product: {},
+        getStore: {},
         service: {},
         store: {},
+        pendingVendor: {}
     },
     reducers: {
         setStores: (state, payload) => {
@@ -46,6 +47,9 @@ export const adminStore = {
 
             }
             state.stores.metaData = payload.metaData;
+        },
+        setPendingVendor: (state, payload) => {
+            state.pendingVendor = payload;
         },
         setRankedStores: (state, payload) => {
             if(payload?.metaData?.pagination?.pageNumber === 1) {
@@ -96,7 +100,7 @@ export const adminStore = {
             state.order = payload;
         },
         setProduct: (state, payload) => {
-            state.product = payload;
+            state.getStore = payload;
         },
         setStore: (state, payload) => {
             state.store = payload;
@@ -218,6 +222,23 @@ export const adminStore = {
                 const res = await api?.admin?.store?.getStore(storeId, setOptions(rootState?.adminAuth?.token));
                 if(res.data.success) {
                     this.setStore(res.data.data);
+                    return res.data.data
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
+        async getPendingVendor(vendorId, rootState) {
+            try {
+                const res = await api?.admin?.store?.getPendingVendor(vendorId, setOptions(rootState?.adminAuth?.token));
+                if(res.data.success) {
+                    this.setPendingVendor(res.data.data);
                     return res.data.data
                 } else {
                     message.error('An Error was occurred');

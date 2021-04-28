@@ -162,5 +162,24 @@ export const driverDelivery = {
                 return false;
             }
         },
+        async addDeliveryGathered({deliveryId, body, token}) {
+            try {
+                const res = await api?.driver?.delivery?.addDeliveryGathered(deliveryId, body, setOptions(token));
+
+                if (res.data.success) {
+                    message.success('added successfully!', 5);
+                    return true;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch (e) {
+                console.log(e);
+                if (e.hasOwnProperty('response')) {
+                    message.error('An Error was occurred');
+                }
+                return false;
+            }
+        },
     })
 };

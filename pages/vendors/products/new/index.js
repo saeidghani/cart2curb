@@ -6,7 +6,6 @@ import Page from "../../../../components/Page";
 import routes from "../../../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
-import withAuth from "../../../../components/hoc/withAuth";
 import Link from "next/link";
 import cookie from "cookie";
 import userTypes from "../../../../constants/userTypes";
@@ -234,11 +233,7 @@ const NewProduct = props => {
                         </Item>
                     </Col>
                     <Col xs={24} md={12} lg={8}>
-                        <Item name={'costPrice'} label={'Cost Price'} rules={[
-                                {
-                                    required: true,
-                                    message: 'This Field is required'
-                                },
+                        <Item name={'costPrice'} label={'Cost Price(optional)'} rules={[
                                 {
                                     pattern: /^[0-9.]+$/,
                                     message: 'This Field should be number'
@@ -248,11 +243,7 @@ const NewProduct = props => {
                         </Item>
                     </Col>
                     <Col xs={24} md={12} lg={8}>
-                        <Item name={'stock'} label={'Stock'} rules={[
-                                {
-                                    required: true,
-                                    message: 'This Field is required'
-                                },
+                        <Item name={'stock'} label={'Stock(optional)'} rules={[
                                 {
                                     pattern: /^[0-9.]+$/,
                                     message: 'This Field should be number'
@@ -285,12 +276,7 @@ const NewProduct = props => {
                         </Item>
                     </Col>
                     <Col xs={24}>
-                        <Item name={'description'} label={'Description'} rules={[
-                                {
-                                    required: true,
-                                    message: 'This Field is required'
-                                }
-                            ]}>
+                        <Item name={'description'} label={'Description(optional)'}>
                             <Input.TextArea placeholder={'Description'} autoSize={{ minRows: 4, maxRows: 9}} style={{ resize: 'none' }}/>
                         </Item>
                     </Col>

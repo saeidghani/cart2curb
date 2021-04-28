@@ -140,7 +140,12 @@ export default {
                 return `/admin/vendors/view/${vendorId}`
             },
             add: '/admin/vendors/add',
-            pending: '/admin/vendors/pending'
+            pending: {
+                index: '/admin/vendors/pending',
+                edit(vendorId = 'vendorId') {
+                    return `/admin/vendors/pending/edit/${vendorId}`
+                }
+            }
         },
         drivers: {
             edit(driverId = '[driverId]') {

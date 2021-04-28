@@ -85,6 +85,22 @@ export const app = {
                 return false
             }
         },
+        async getCategoryTree(body) {
+            try {
+                const res = await api.app.categoryTree({ storeId: body.storeId, pageNumber: body.page, pageSize: 30 });
+                const data = res.data;
+
+                if(data.success) {
+                    return data;
+                } else {
+                    exceptionHandler.throwError();
+                    return false
+                }
+            } catch(e) {
+                exceptionHandler.throwError(e?.response);
+                return false
+            }
+        },
         async getProducts(body) {
             try {
                 const res = await api.app.products({ ...body, pageSize: 15 });

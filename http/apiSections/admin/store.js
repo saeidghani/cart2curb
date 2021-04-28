@@ -33,6 +33,10 @@ export default class AdminStoreApi extends ApiInstance {
         return this.get(`admin/stores/${storeId}`, {}, options);
     }
 
+    getPendingVendor(vendorId, options = {}) {
+        return this.get(`admin/users/vendors/${vendorId}`, {}, options);
+    }
+
     editStore(storeId, body, options = {}) {
         return this.put(`admin/stores/${storeId}`, body, {}, options);
     }

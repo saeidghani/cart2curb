@@ -47,7 +47,7 @@ const NewProduct = props => {
             if (storeId && token) {
                 dispatch.adminStore.getCategories({storeId, token})
                     .then(response => {
-                        setCategories(response.data);
+                        setCategories(response?.data);
                     })
             }
         }, [])

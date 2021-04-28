@@ -224,13 +224,13 @@ const Register = props => {
                                               required: true,
                                               message: 'This Field is required'
                                           },
-                                           ({getFieldValue}) => ({
+                                              ({getFieldValue}) => ({
                                                   validator(rule, value) {
                                                       const isOldEnough = moment(moment()).diff(value, 'years') >= 19;
                                                       if (value && !isOldEnough) {
-                                                        return Promise.reject('You are not old enough');
+                                                          return Promise.reject('You are not old enough');
                                                       }
-                                                        return Promise.resolve();
+                                                      return Promise.resolve();
                                                   },
                                               }),
                                           ]}>
@@ -251,7 +251,7 @@ const Register = props => {
                                         <Input.Password placeholder="Password"/>
                                     </Item>
                                 </Col>
-                                <Col xs={24} className="mb-6">
+                                <Col xs={24} className="">
                                     <Item name={'password-confirm'}
                                           label={'Confirm Password'}
                                           dependencies={['password']}
@@ -273,10 +273,11 @@ const Register = props => {
                                         <Input.Password placeholder="Confirm Password"/>
                                     </Item>
                                 </Col>
+                                <Col className="mb-4" xs={24}>Can you provide:</Col>
                                 <Col xs={24} className="">
                                     <Item name="proofOfInsurance">
                                         <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={insurancePic} text="Upload Proof of Insurance"
+                                            <UploadPhoto imageUrl={insurancePic} text="Proof of Insurance"
                                                          onUpload={handleInsuranceUpload}
                                                          icon={<CloudUploadOutlined className={'text-lg'}/>}/>
                                         </div>
@@ -285,7 +286,7 @@ const Register = props => {
                                 <Col xs={24} className="">
                                     <Item name="license">
                                         <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={licencePic} text="Upload Driver License Picture"
+                                            <UploadPhoto imageUrl={licencePic} text="Valid Driver's License"
                                                          onUpload={handleLicenceUpload}
                                                          icon={<CloudUploadOutlined className={'text-lg'}/>}/>
                                         </div>
@@ -294,7 +295,7 @@ const Register = props => {
                                 <Col xs={24} className="">
                                     <Item name="image">
                                         <div className={'flex items-center justify-start'}>
-                                            <UploadPhoto imageUrl={imagePic} text="Upload Profile Picture"
+                                            <UploadPhoto imageUrl={imagePic} text="Current Picture of yourself"
                                                          onUpload={handleImageUpload}
                                                          icon={<UserOutlined className={'text-lg'}/>}/>
                                         </div>
@@ -319,22 +320,21 @@ const Register = props => {
                                                 }
                                             }}
                                         >
-                                            I am willing to obtain police record
+                                            I am willing to obtain a police record
                                         </Checkbox>
                                     </Item>
                                 </Col>
                                 <Col xs={24} className="">
-                                    <Item>
-                                        <Button
+                                    <Item shouldUpdate>
+                                        {() => <Button
                                             type="primary"
                                             block
                                             htmlType={'submit'}
                                             loading={loading}
-                                            disabled={(form.getFieldsError().filter(({errors}) => errors.length).length) ||
-                                            !insurancePic || !licencePic || !imagePic || !isAcceptedAgreement}
+                                            disabled={form.getFieldsError().filter(({errors}) => errors.length).length > 0}
                                         >
                                             Submit
-                                        </Button>
+                                        </Button>}
                                     </Item>
                                 </Col>
                                 <Col xs={24}>

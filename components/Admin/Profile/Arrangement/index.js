@@ -47,7 +47,7 @@ const Arrangement = props => {
     }, [rankedStores]);
 
     useEffect(() => {
-        const stores = allStores?.filter(s => selectedStores.includes(s?.store?._id))?.map((el, index) => {
+        const stores = allStores?.filter(s => selectedStores?.includes(s?.store?._id))?.map((el, index) => {
             return {
                 key: index,
                 storeId: el?.store?._id,
@@ -69,7 +69,6 @@ const Arrangement = props => {
                 arrangedStores.splice(index, 0, s);
             }
         });
-        console.log(arrangedStores);
         setData(arrangedStores);
     }, [selectedStores, rankedStores]);
 
@@ -147,8 +146,8 @@ const Arrangement = props => {
                     placeholder='Search'
                     loading={loading}
                     onChange={(val) => {
-                        if (!selectedStores.includes(val)) {
-                            setSelectedStores(selectedStores.concat(val.split('+')[1]));
+                        if (!selectedStores?.includes(val)) {
+                            setSelectedStores(selectedStores?.concat(val?.split('+')[1]));
                         }
                     }}
                 >

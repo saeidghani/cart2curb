@@ -22,7 +22,7 @@ export default class AdminAuthApi extends ApiInstance {
     }
 
     resetPassword(body, options = {}) {
-        return this.post('admin/auth/resetPassword', body, {}, options);
+        return this.put('admin/auth/resetPassword', body, {}, options);
     }
 
     changePassword(body, options = {}) {

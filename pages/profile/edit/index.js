@@ -284,14 +284,8 @@ const AccountEdit = props => {
 
                             <Col lg={8} md={12} xs={24}>
                                 <Item
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'This Field is required'
-                                        }
-                                    ]}
                                     name={'streamPreference'}
-                                    label={'LiveCart Viewing Preference'}>
+                                    label={'LiveCart Preference(optional)'}>
                                     <Select
                                         placeholder={'Select'}
                                         onChange={changeStream}

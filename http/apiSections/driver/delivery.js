@@ -28,4 +28,8 @@ export default class DriverStoreApi extends ApiInstance {
     getCustomerOrders(deliveryId, options = {}) {
         return this.get(`driver/deliveries/currents/${deliveryId}`, {}, options);
     }
+
+    addDeliveryGathered(deliveryId, body, options = {}) {
+        return this.post(`driver/deliveries/currents/${deliveryId}/gathered`, body, {}, options);
+    }
 }

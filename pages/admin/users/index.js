@@ -33,7 +33,7 @@ const Users = props => {
   }, [tab]);
 
   const ExtraContent = (
-    <Link href={tab === 'drivers' ? routes.admin.drivers.pending : routes.admin.vendors.pending}>
+    <Link href={tab === 'drivers' ? routes.admin.drivers.pending : routes.admin.vendors.pending.index}>
       <div className="flex space-x-2 cursor-pointer">
         <span className="text-red-500">{`Pending ${tab === 'drivers' ? 'Drivers' : 'Vendors'} Requests`}</span>
         <Badge count={pendingCount}></Badge>

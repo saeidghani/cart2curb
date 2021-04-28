@@ -3,12 +3,11 @@ import {Row, Col, Form, Button, Input, Select} from 'antd';
 import Page from "../../components/Page";
 import routes from "../../constants/routes";
 import {getStore} from "../../states";
-import CategoryCard from "../../components/UI/CategoryCard";
+import CategorySubCategoryCard from "../../components/UI/CategorySubCategoryCard";
 import StoreProductCard from "../../components/UI/StoreProductCard";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../../components/UI/Loader";
 import {InfoCircleOutlined, ShopOutlined} from "@ant-design/icons";
-import { StickyContainer, Sticky } from 'react-sticky';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -186,7 +185,7 @@ const VendorPage = props => {
                 </Col>
                 <Col xs={24} md={8} lg={6} className={'flex items-stretch'} >
                     <div className="mb-8 md:mb-0 flex-grow">
-                        <CategoryCard title={'Subcategories'} storeId={vendor._id} changeHandler={selectCategoryHandler}/>
+                        <CategorySubCategoryCard storeId={vendor._id} changeHandler={selectCategoryHandler}/>
                         <span/>
                     </div>
                 </Col>
