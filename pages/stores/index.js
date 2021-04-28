@@ -138,10 +138,10 @@ export default function Stores() {
                         </Col>
                     </Row>
                 ) : (
-                    <Row gutter={[50, 50]}>
+                    <Row gutter={[32, 32]}>
                         {stores.map((item ,index) => {
                             return (
-                                <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
+                                <Col xs={12} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
                                     <ShopOverview
                                         _id={item._id}
                                         imageURL={item.image}

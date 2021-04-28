@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+const lessToJS = require('less-vars-to-js')
 const withLess = require('@zeit/next-less')
 const withSass = require('@zeit/next-sass')
 const withCSS = require('@zeit/next-css')

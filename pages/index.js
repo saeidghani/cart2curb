@@ -1,16 +1,19 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Button, Select, Row, Col, message} from 'antd';
+import {Button, Select, Row, Col, message, Form, Input} from 'antd';
 
 import Page from '../components/Page';
 import ShopOverview from '../components/UI/ShopOverview';
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../components/UI/Loader";
 import {InfoCircleOutlined} from "@ant-design/icons";
+import {api, api as GeocoderAPI} from '../hooks/geocoding';
 
 const { Option } = Select;
+const { Item } = Form;
 
 let isIntersecting = true;
 export default function Home() {
+    const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [usedGps, setUsedGps] = useState(false);
     const { stores } = useSelector(state => state.app);
@@ -72,30 +75,38 @@ export default function Home() {
     }
 
 
-    const searchWithGps = () => {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                }
-                isIntersecting = false;
-                setLocation({
-                    ...pos,
+    const searchWithGps = async (values) => {
+        const value = values.postalCode;
+        if(value === "" || !value) {
+            setLocation(null);
+            setPage(1);
+            setHasMore(true)
+            setUsedGps(false);
+            return true;
+        }
+        if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(value)) {
+            const transformedPostal = value.slice(0, 3).trim() + " " + value.slice(-3).trim();
+
+            try {
+
+                const res = await api.get("json", {
+                    params: {
+                        address: transformedPostal,
+                        key: process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY,
+                    }
                 })
-                setPage(1);
-                setHasMore(true)
-                setUsedGps(true);
-            }, (e) => {
-                if(e.code === 2) {
-                    message.error('Your device doesn\'t support this feature')
-                } else if(e.code === 1) {
-                    message.error('You not allowed this service to find your location')
+                if(res?.status === "OK") {
+                    const geoCode = res?.results?.[0]?.geometry?.location;
+                    setLocation(geoCode);
+                    setPage(1);
+                    setHasMore(true)
+                    setUsedGps(true);
+                    return true;
                 }
-                console.log(e);
-            });
-        } else {
-            message.error('Your device doesn\'t support this feature or you not allowed')
+            } catch(e) {
+                message.error("Your Postal Code isn\'t valid.")
+                return e;
+            }
         }
     }
 
@@ -109,11 +120,29 @@ export default function Home() {
             setPage(1);
         }
     }
+
     return (
-        <Page title={false}>
-            <div className="flex items-center justify-between bg-primary p-4 mb-16">
-                <span className="text-2xl font-bold text-white pl-6">Search Stores Near Me</span>
-                <Button type={'primary'} className={'bg-white hover:bg-input hover:text-primary text-primary w-32'} onClick={searchWithGps}>Search</Button>
+        <Page title={false} breadcrumb={false}>
+
+            <div className={'mb-16 without-padding'}>
+                <Row className={'bg-card flex items-center pt-12 pb-6 layout__section'}>
+                    <Col xs={24}>
+                        <Form form={form} layout={'vertical'} onFinish={searchWithGps} className={'pl-4 lg:pl-0'}>
+                            <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
+                                <Col xs={24} lg={16}>
+                                    <Item name={'postalCode'} label={'Postal Code'}>
+                                        <Input placeholder={'Postal Code'} allowClear/>
+                                    </Item>
+                                </Col>
+                                <Col xs={24} lg={3} style={{ flexBasis: 125}}>
+                                    <Item>
+                                        <Button type={'primary'} className={'w-full lg:w-32 mt-7.5'} htmlType={'submit'}>Search</Button>
+                                    </Item>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Col>
+                </Row>
             </div>
             <div className="flex flex-col">
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
@@ -138,10 +167,10 @@ export default function Home() {
                         </Col>
                     </Row>
                 ) : (
-                    <Row gutter={[50, 50]}>
+                    <Row gutter={[32, 32]}>
                         {stores.map((item ,index) => {
                             return (
-                                <Col xs={24} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
+                                <Col xs={12} sm={12} md={12} lg={8} xl={6} key={`shop-${index}`}>
                                     <ShopOverview
                                         _id={item._id}
                                         imageURL={item.image}

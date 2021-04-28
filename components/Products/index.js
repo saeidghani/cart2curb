@@ -99,6 +99,18 @@ const Products = ({vendor, ...props}) => {
         setSelectedCategory(values.category);
     }
 
+
+    const checkReset = e => {
+        const value = e.target.value;
+        if(!value || value === "") {
+            isIntersecting = false;
+            setPage(1);
+            setHasMore(true);
+            setSearch("");
+        }
+    }
+
+
     const columns = [
         {
             title: "#",
@@ -204,7 +216,7 @@ const Products = ({vendor, ...props}) => {
                         <Row gutter={24}>
                             <Col lg={9} xs={24}>
                                 <Item name={'search'} label={'Search'}>
-                                    <Input allowClear placeholder={'Search'} />
+                                    <Input allowClear placeholder={'Search'} onChange={checkReset} />
                                 </Item>
                             </Col>
                             <Col lg={9} xs={24}>

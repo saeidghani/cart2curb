@@ -23,6 +23,7 @@ import Link from "next/link";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
+import {useDebouncedCallback} from "use-debounce";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -45,36 +46,67 @@ const Invoices = props => {
     const [tip, setTip] = useState(props.cart.tip || 0);
     const [promo, setPromo] = useState(props.cart.promo);
     const [isCustom, setIsCustom] = useState(false);
+    const [totalPrice, setTotalPrice] = useState((props.cart?.totalPrice + props.cart?.cartPrice - props.cart?.priceAfterPromoTip + props.cart?.tipPrice).toFixed(2));
     const [promoPrice, setPromoPrice] = useState(props.cart.totalPrice)
     const [loading, setLoading] = useState(false);
     const [promoLoading, setPromoLoading] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
+    const customTipDebounce = useDebouncedCallback(
+        (value) => {
+            changeTipHandler(value)
+        },
+        600
+    )
 
     const { profile, stores, cart } = props;
 
-    const changeTipHandler = (value, isOption = false) => {
+    const changeTipHandler = async (value, isOption = false) => {
         if(isOption) {
             setIsCustom(false);
         }
         if(!(Number(value) <= 100 && Number(value) >= 0)) {
-            let cartPrice = Number(cart.cartPrice) + Number(cart.deliveryCost) + Number(cart.serviceFee);
-            if(promo.hasOwnProperty('off')) {
-                cartPrice -= (promo.off / 100) * cart.cartPrice;
+            const cart = await dispatch.cart.getClientCart();
+            if(cart) {
+                setPromo(cart?.promo);
+                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setPromoPrice(cart?.totalPrice);
             }
-            setPromoPrice(cartPrice.toFixedNoRounding(2));
+
             return;
         }
 
-        let cartPrice = cart.cartPrice * (1 + value / 100) + Number(cart.deliveryCost) + Number(cart.serviceFee);
-        if(promo.hasOwnProperty('off')) {
-            cartPrice -= (promo.off / 100) * cart.cartPrice;
+        const body = {
+            tip: Number(value),
         }
-        setTip(Number(value));
-        setPromoPrice(cartPrice.toFixedNoRounding(2));
-        form.setFieldsValue({
-            tip: Number(value)
-        })
+
+        const res = await dispatch.cart.promoTip(body)
+        if(res) {
+            const cart = await dispatch.cart.getClientCart();
+            if(cart) {
+                setPromo(cart?.promo);
+                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setPromoPrice(cart?.totalPrice);
+            }
+
+            setTip(Number(value));
+            form.setFieldsValue({
+                tip: Number(value)
+            })
+        }
+    }
+
+
+    const customTipHandler = (e) => {
+        const value = e.target.value;
+        if((Number(value) <= 100 && Number(value) >= 0)) {
+            form.setFieldsValue({
+                tip: Number(value)
+            })
+
+            customTipDebounce.callback(value);
+        }
+
     }
 
     const breadcrumb = [
@@ -134,35 +166,31 @@ const Invoices = props => {
 
     const applyPromoHandler = async (e) => {
         e.preventDefault();
-        setPromoLoading(true)
         const value = form.getFieldValue('promo');
         if(!value) {
             message.info('Please enter Promo code first');
             return false;
         }
+        setPromoLoading(true);
 
         const body = {
-            promoCode: value
+            promoCode: value,
+            tip
         }
 
         const res = await dispatch.cart.promoTip(body)
         if(res) {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
-                let cartPrice = cart.cartPrice * (1 + tip / 100) + Number(cart.deliveryCost) + Number(cart.serviceFee);
-                if(cart.promo.hasOwnProperty('off')) {
-                    cartPrice -= (cart.promo.off / 100) * cart.cartPrice;
-                }
-                setPromo(cart.promo);
-                console.log(cartPrice);
-                setPromoPrice(cartPrice.toFixedNoRounding(2));
+                setPromo(cart?.promo);
+                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setPromoPrice(cart?.totalPrice);
             }
 
-            setPromoLoading(false)
+            setPromoLoading(false);
             message.success('Promo Code applied!')
         } else {
-
-            setPromoLoading(false)
+            setPromoLoading(false);
         }
     }
 
@@ -285,7 +313,7 @@ const Invoices = props => {
                                         },
                                     })
                                 ]}>
-                                    <Input placeholder={`${tip}%`} onChange={e => changeTipHandler(e.target.value)} disabled={!isCustom}/>
+                                    <Input placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
                                 </Item>
                             </Col>
                             <Col lg={16} md={12} xs={24} className={'md:pt-7 mb-6'}>
@@ -298,8 +326,8 @@ const Invoices = props => {
                                 </Space>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'promo'} label={'Promo'}>
-                                    <Input placeholder={'Promo'} onPressEnter={applyPromoHandler}/>
+                                <Item name={'promo'} label={'Promo Code'}>
+                                    <Input placeholder={'Promo Code'} onPressEnter={applyPromoHandler}/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24} className={'md:pt-7'}>
@@ -307,8 +335,9 @@ const Invoices = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
-                                <div className="flex flex-col pl-4 justify-end">
-                                    <h1 className="text-right text-4.5xl text-paragraph font-medium mt-0">${promoPrice}</h1>
+                                <div className="flex items-center pl-4 justify-end">
+                                    {promo && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${promoPrice}</h1>)}
+                                    <h1 className={`text-right text-${promo ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${promo && "line-through"}`}>${totalPrice}</h1>
                                 </div>
                             </Col>
 

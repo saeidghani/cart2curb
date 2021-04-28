@@ -23,6 +23,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import moment from "moment";
 import {defaultMapLocation} from "../../../constants";
+import {useGeocoding} from "../../../hooks/geocoding";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -38,6 +39,7 @@ const Delivery = props => {
     const cities = useCities(province);
     const dispatch = useDispatch();
     const router = useRouter();
+    const [geoCode, getGeoCode] = useGeocoding()
 
     const breadcrumb = [
         {
@@ -147,8 +149,10 @@ const Delivery = props => {
 
 
     const onChangePostal = (e) => {
+        const value = e.target.value.toUpperCase()
+        getGeoCode(value)
         form.setFieldsValue({
-            postalCode: e.target.value.toUpperCase(),
+            postalCode: value
         })
     }
 
@@ -331,6 +335,7 @@ const Delivery = props => {
                                             <GoogleMap
                                                 height={670}
                                                 initialCenter={defaultMapLocation}
+                                                center={geoCode}
                                                 marker={marker}
                                                 clickHandler={changeMarkerPosition}
                                             />

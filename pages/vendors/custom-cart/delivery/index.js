@@ -19,6 +19,7 @@ import {useCities, useProvinces} from "../../../../hooks/region";
 import routes from "../../../../constants/routes";
 import withAuth from "../../../../components/hoc/withAuth";
 import {defaultMapLocation} from "../../../../constants";
+import {useGeocoding} from "../../../../hooks/geocoding";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -34,6 +35,7 @@ const CustomCartDelivery = props => {
     const router = useRouter()
     const cart = useSelector(state => state.customCart.cart);
     const cartId = useSelector(state => state.customCart.cartId);
+    const [geoCode, getGeoCode] = useGeocoding()
 
 
     useEffect(() => {
@@ -138,9 +140,12 @@ const CustomCartDelivery = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+
     const onChangePostal = (e) => {
+        const value = e.target.value.toUpperCase()
+        getGeoCode(value)
         form.setFieldsValue({
-            postalCode: e.target.value.toUpperCase(),
+            postalCode: value
         })
     }
 
@@ -371,6 +376,7 @@ const CustomCartDelivery = props => {
                                     <GoogleMap
                                         height={670}
                                         initialCenter={defaultMapLocation}
+                                        center={geoCode}
                                         marker={marker}
                                         clickHandler={changeMarkerPosition}
                                     />
