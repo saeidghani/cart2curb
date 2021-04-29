@@ -31,12 +31,13 @@ const Taxes = props => {
     }, [systemConfig]);
 
     const submitHandler = async (values) => {
-        const {deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent, ExtraStoreDeliveryFee} = values;
+        const {deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent, extraStoreDeliveryFee} = values;
         const body = {
             deliveryFee: deliveryFee * 1,
             deliveryTaxPercent: deliveryTaxPercent * 1,
             serviceFee: serviceFee * 1,
             serviceTaxPercent: serviceTaxPercent * 1,
+            extraStoreDeliveryFee: extraStoreDeliveryFee * 1
         }
 
         const res = await dispatch.adminProfile.editSystemConfig({body, token});
@@ -67,7 +68,7 @@ const Taxes = props => {
         {name: "deliveryFee", label: "Delivery Fee ($)"},
         {name: "serviceTaxPercent", label: "First Delivery Fee ($)"},
         {name: "deliveryTaxPercent", label: "HST (%)"},
-        {name: "ExtraStoreDeliveryFee", label: "Extra Store Delivery Fee ($)"},
+        {name: "extraStoreDeliveryFee", label: "Extra Store Delivery Fee ($)"},
     ];
 
     return (

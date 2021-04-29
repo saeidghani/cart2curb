@@ -163,7 +163,7 @@ const Invoices = props => {
             price: `$${cart?.cartPrice}`,
             delivery: `$${cart?.deliveryCost}`,
             service: `$${cart?.serviceFee}`,
-            tax: `$${cart?.serviceFee}`,
+            tax: `$${cart?.hst}`,
             totalPrice: `$${cart?.totalPrice}`,
         }
     ]
