@@ -146,7 +146,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col">
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
-                    <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Stores!!!</h2>
+                    <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Stores</h2>
                     <Select
                         placeholder={'Sort by name'}
                         className={'sort-field-input'}

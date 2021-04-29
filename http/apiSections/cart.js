@@ -103,7 +103,7 @@ export default class CartApi extends Instance {
     }
 
     checkout(body, options = {}) {
-        return this.post('cart/checkout', body, {}, {
+        return this.post('cart/confirm', body, {}, {
             ...options,
             withCredentials: true,
         });
