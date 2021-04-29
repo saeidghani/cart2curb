@@ -1,11 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import { Menu } from 'antd';
+import {Menu} from 'antd';
 
-import './styles.less';
 import Loader from "../Loader";
 
-const { SubMenu } = Menu;
+const {SubMenu} = Menu;
 
 // submenu keys of first level
 const rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
@@ -17,7 +16,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
     const loader = useRef(null);
     const [hasMore, setHasMore] = useState(true);
     const loading = useSelector(state => state.loading.effects.app.getCategories);
-    const [openKeys, setOpenKeys] = useState(['sub1']);
+    const [openKeys, setOpenKeys] = useState([]);
     const dispatch = useDispatch();
 
     const clickHandler = (id) => {
@@ -30,8 +29,8 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                 const response = await dispatch.app.getCategoryTree({storeId, page})
                 if (response) {
                     if (page !== 1) {
-                        setCategories(categories => response?.data);
-                        //setCategories(categories => categories.concat(response?.data));
+                        //setCategories(categories => response?.data);
+                        setCategories(categories => categories.concat(response?.data));
                     } else {
                         setCategories(categories => response?.data);
                     }
@@ -80,16 +79,42 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
     };
 
     return (
-        <div className="category-card">
+        <div className="category-card" style={{}}>
             {categories?.length === 0 && !hasMore && (
                 <span className="text-paragraph py-4 block">&mdash; There is no Category</span>
             )}
             {categories?.length !== 0 &&
-            <Menu mode="inline" openKeys={openKeys} onOpenChange={onOpenChange} style={{width: '100%', paddingLeft: 0}}>
+            <Menu mode="inline"
+                  openKeys={openKeys}
+                  onOpenChange={onOpenChange}
+                  style={{
+                      width: '100%', paddingLeft: 0, backgroundColor: '#fafafa', borderRadius: '20px',
+                      paddingTop: '20px',
+                      paddingBottom: '10px'
+                  }}
+            >
                 {categories?.map((cat, index) =>
-                    <SubMenu key={cat._id} title={<div style={{borderTop: categories?.length-1 === index ? '1px solid lightGray' : '0', borderBottom: index === 0 ? '1px solid lightGray' : '0'}}>{cat?.name}</div>} style={{paddingLeft: 0}}>
+                    <SubMenu
+                        key={cat._id}
+                        title={<div style={{
+                        borderTop: categories?.length - 1 === index ? '1px solid lightGray' : '0',
+                        color: 'black',
+                        //lineHeight: '35px'
+                    }}>
+                        {cat?.name}
+                    </div>} style={{paddingLeft: 0}}>
                         {cat?.children?.map((subCat, index) =>
-                            <Menu.Item key={subCat._id} style={{paddingLeft: 0}} onClick={clickHandler.bind(this, subCat?._id)}><div style={{width: '90%', lineHeight: '30px', borderBottom: cat?.children?.length-1 === index ? '0' : '1px solid lightGray'}} className="">{subCat.name}</div></Menu.Item>
+                            <Menu.Item key={subCat._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
+                                       onClick={clickHandler.bind(this, subCat?._id)}>
+                                <div style={{
+                                    width: '90%',
+                                    borderBottom: cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
+                                    lineHeight: cat?.children?.length - 1 === index ? '32px' : '35px',
+                                    //borderTop: index === 0 ? '1px solid lightGray' : '0',
+                                }} className="">
+                                    {subCat.name}
+                                </div>
+                            </Menu.Item>
                         )}
                     </SubMenu>
                 )}
