@@ -29,8 +29,13 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                 const response = await dispatch.app.getCategoryTree({storeId, page})
                 if (response) {
                     if (page !== 1) {
-                        //setCategories(categories => response?.data);
-                        setCategories(categories => categories.concat(response?.data));
+                        const newCats = [...categories];
+                        response?.data?.forEach(c => {
+                            if(!categories?.include(c?._id)) {
+                              newCats.push(c);
+                            }
+                        });
+                        setCategories(categories => newCats);
                     } else {
                         setCategories(categories => response?.data);
                     }

@@ -305,10 +305,6 @@ const Register = props => {
                                     <Item
                                         name="acceptAgreement"
                                         valuePropName="checked"
-                                        rules={[{
-                                            required: true,
-                                            message: "Please accept this"
-                                        }]}
                                     >
                                         <Checkbox
                                             className="text-xs mb-10"
