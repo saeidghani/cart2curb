@@ -13,6 +13,7 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
         source.onError = '';
         return true;
     }
+
     return (
         <div className="flex flex-col h-full">
             <Link href={routes.stores.single(props._id)} as={routes.stores.single(props._id)}>
@@ -29,7 +30,7 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
                     <span className="text-base text-paragraph font-medium">{name}</span>
                     <span className="text-sm text-type font-medium">{title}</span>
                 </div>
-                <span className="text-xs text-overline font-medium mb-4">{subType}</span>
+                <span className="text-xs text-overline font-medium mb-4">{subType?.length > 40 ? `${subType.substring(0, 35)} ...` : subType}</span>
                 {props._id && (
                     <Link href={routes.stores.single(props._id)} as={routes.stores.single(props._id)}>
                         <Button danger icon={<EyeOutlined style={{ fontSize: 18}} />} className={'flex items-center font-bold justify-center h-14'}>Show</Button>

@@ -194,14 +194,10 @@ const AccountInfo = props => {
                             </Col>
 
                             <Col lg={8} md={12} xs={24}>
-                                <Item name={'streamPreference'} label={'LiveCart Viewing Preference'}>
+                                <Item name={'streamPreference'} label={'LiveCart Preference(optional)'}>
                                     <Select
                                         placeholder={'Select'}
                                         onChange={changeStream}
-                                        rules={[{
-                                            required: true,
-                                            message: "This Field is required"
-                                        }]}
                                     >
                                         <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'googleMeet'}>Google Meet</Option>
@@ -213,10 +209,7 @@ const AccountInfo = props => {
                                 <Item
                                     name={'streamId'}
                                     label={<span className="capitalize">{`${stream} ID`}</span>}
-                                    rules={[{
-                                        required: true,
-                                        message: "This Field is required"
-                                    },
+                                    rules={[
                                         ({getFieldValue}) => ({
                                             validator(rule, value) {
                                                 const preference = getFieldValue('streamPreference');

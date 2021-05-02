@@ -80,6 +80,12 @@ const MainHeader = props => {
         setUserType(null)
     }
 
+    useEffect(() => {
+        console.log('isVendorPage', isVendorPage);
+        console.log('isCustomCart', isCustomCart);
+        console.log('isAdmin', isAdmin);
+    }, [isVendorPage, isCustomCart, isAdmin]);
+
     const UserDropdown = (
         <Menu className="shadow-lg">
             <Item className={'py-2 px-4'}>
@@ -145,15 +151,15 @@ const MainHeader = props => {
 
             </div>
             <div className="hidden md:flex flex-row items-center">
-                {(!isVendorPage && !isAdmin) ? (
+                {(!isVendorPage && (isAuthenticated || isAdmin)) ? (
                     <Link href={routes.cart.index}>
-                        <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer'}>
+                        <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
                             <HeaderNotificationIcon />
                         </Badge>
                     </Link>
-                ) : isCustomCart ? (
+                ) : (isCustomCart && (isAuthenticated || isAdmin)) ? (
                     <Link href={routes.vendors.customCart.index}>
-                        <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer'}>
+                        <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
                             <HeaderNotificationIcon />
                         </Badge>
                     </Link>
