@@ -117,14 +117,10 @@ const Register = props => {
         if (licencePic) body.license = licencePic;
         if (imagePic) body.image = imagePic;
 
-        const agreement = Boolean(form.getFieldValue('acceptAgreement'));
-
-        if (insurancePic && licencePic && imagePic) {
-            const res = await dispatch?.driverAuth?.register(body);
-            if (res) {
-                setSubmitted(true)
-                scrollToTop();
-            }
+        const res = await dispatch?.driverAuth?.register(body);
+        if (res) {
+            setSubmitted(true)
+            scrollToTop();
         }
     };
 

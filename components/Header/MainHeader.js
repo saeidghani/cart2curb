@@ -80,12 +80,6 @@ const MainHeader = props => {
         setUserType(null)
     }
 
-    useEffect(() => {
-        console.log('isVendorPage', isVendorPage);
-        console.log('isCustomCart', isCustomCart);
-        console.log('isAdmin', isAdmin);
-    }, [isVendorPage, isCustomCart, isAdmin]);
-
     const UserDropdown = (
         <Menu className="shadow-lg">
             <Item className={'py-2 px-4'}>
