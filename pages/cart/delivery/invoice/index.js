@@ -118,8 +118,6 @@ const Invoices = props => {
             form.setFieldsValue({
                 tip: Number(value)
             })
-
-            customTipDebounce.callback(value);
         }
 
     }
@@ -349,7 +347,7 @@ const Invoices = props => {
                                     ]}>
                                         <Input className="mb-1" placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
                                     </Item>
-                                    <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading}>Apply</Button>
+                                    <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>
                                 </Space>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -363,8 +361,8 @@ const Invoices = props => {
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex items-center pl-4 justify-end">
-                                    {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${cart.priceAfterPromoTip}</h1>)}
-                                    <h1 className={`text-right text-${(promo || tip) ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${(promo || tip) && "line-through"}`}>${totalPrice}</h1>
+                                    {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${cart?.priceAfterPromoTip}</h1>)}
+                                    <h1 className={`text-right text-${(promo || tip) ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${(promo || tip) && "line-through"}`}>${cart?.totalPrice}</h1>
                                 </div>
                             </Col>
 
