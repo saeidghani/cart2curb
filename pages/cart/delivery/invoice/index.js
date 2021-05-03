@@ -317,6 +317,9 @@ const Invoices = props => {
                         <Row gutter={24}>
                             <Col lg={24} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
+                                    <div className="">Tips</div>
+                                    <Button className={'w-16'} type={(tip === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
+                                    <Button className={'w-16'} type={(tip === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
                                     <Button className={'w-16'} type={(tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
                                     <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
                                     <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
