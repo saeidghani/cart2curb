@@ -46,8 +46,8 @@ const Invoices = props => {
     const [tip, setTip] = useState(props.cart.tip || 0);
     const [promo, setPromo] = useState(props.cart.promo);
     const [isCustom, setIsCustom] = useState(false);
-    const [totalPrice, setTotalPrice] = useState((props.cart?.totalPrice + props.cart?.cartPrice - props.cart?.priceAfterPromoTip + props.cart?.tipPrice).toFixed(2));
-    const [currentPrice, setCurrentPrice] = useState((props.cart?.totalPrice + props.cart?.cartPrice - props.cart?.priceAfterPromoTip + props.cart?.tipPrice).toFixed(2));
+    const [totalPrice, setTotalPrice] = useState(props.cart?.totalPrice);
+    const [currentPrice, setCurrentPrice] = useState(props.cart?.priceAfterPromoTip);
     const [promoPrice, setPromoPrice] = useState(props.cart.totalPrice)
     const [loading, setLoading] = useState(false);
     const [promoLoading, setPromoLoading] = useState(false);
