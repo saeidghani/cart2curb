@@ -315,29 +315,27 @@ const Invoices = props => {
                         onFinishFailed={checkValidation}
                     >
                         <Row gutter={24}>
-                            <Col lg={16} md={12} xs={24} className={'md:pt-7 mb-6'}>
+                            <Col lg={24} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
                                     <Button className={'w-16'} type={(tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
                                     <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
                                     <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
                                     <Button className={'w-16'} type={(tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
-                                    <Button className={'w-22'} type={(![10, 15, 20, 25].includes(tip) || isCustom) ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
+                                    <Button className={'w-22 ml-6'} type={isCustom ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
+                                    <Item className="" name={'tip'} label={'Value'} rules={[
+                                        ({getFieldValue}) => ({
+                                            validator(rule, value) {
+                                                const transformedValue = Number(value);
+                                                if (!value || (transformedValue >= 0 && transformedValue <= 100)) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject('Tip should be between 0 and 100');
+                                            },
+                                        })
+                                    ]}>
+                                        <Input className="mb-2" placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
+                                    </Item>
                                 </Space>
-                            </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item name={'tip'} label={'Tip'} rules={[
-                                    ({getFieldValue}) => ({
-                                        validator(rule, value) {
-                                            const transformedValue = Number(value);
-                                            if (!value || (transformedValue >= 0 && transformedValue <= 100)) {
-                                                return Promise.resolve();
-                                            }
-                                            return Promise.reject('Tip should be between 0 and 100');
-                                        },
-                                    })
-                                ]}>
-                                    <Input placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
-                                </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'promo'} label={'Promo Code'}>

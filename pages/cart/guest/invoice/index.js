@@ -323,7 +323,7 @@ const Invoices = props => {
                                     <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
                                     <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
                                     <Button className={'w-16'} type={(tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
-                                    <Button className={'w-22 ml-6'} type={([10, 15, 20, 25].includes(tip) || isCustom) ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
+                                    <Button className={'w-22 ml-6'} type={isCustom ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
                                     <Item className="" name={'tip'} label={'Value'} rules={[
                                         ({getFieldValue}) => ({
                                             validator(rule, value) {
@@ -358,7 +358,7 @@ const Invoices = props => {
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
                                     <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
-                                        Next
+                                        Checkout
                                     </Button>
                                 </Item>
                                 <Item>
