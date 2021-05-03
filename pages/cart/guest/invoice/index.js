@@ -177,12 +177,12 @@ const Invoices = props => {
     const data = [
         {
             key: 'cart',
-            items: cart?.totalQuantity,
-            price: `$${cart?.cartPrice}`,
-            delivery: `$${cart?.deliveryCost}`,
-            service: `$${cart?.serviceFee}`,
-            tax: `$${cart?.hst}`,
-            totalPrice: `$${cart?.totalPrice}`,
+            items: cart?.totalQuantity || '-',
+            price: `$${cart?.cartPrice?.toFixed(2) || '-'}`,
+            delivery: `$${cart?.deliveryCost?.toFixed(2) || '-'}`,
+            service: `$${cart?.serviceFee?.toFixed(2) || '-'}`,
+            tax: `$${cart?.hst?.toFixed(2) || '-'}`,
+            totalPrice: `$${cart?.totalPrice?.toFixed(2) || '-'}`,
         }
     ]
 

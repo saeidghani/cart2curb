@@ -99,16 +99,19 @@ const EditProduct = props => {
         }
         const images = imagesList.map(image => product.images.includes(image.url) ? image.url : `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
         const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
+        const priceList = {
+            price: Number(unitPrice)
+        };
+        if (costPrice) priceList.cost = Number(costPrice);
+        if (stock) priceList.stock = Number(stock);
+
         const body = {
             name,
             unitType,
             category,
             tax: Number(tax),
             images,
-            priceList: {
-                price: Number(unitPrice),
-                cost: Number(costPrice),
-            },
+            priceList,
             stock: Number(stock),
             description,
         }
@@ -277,10 +280,6 @@ const EditProduct = props => {
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'costPrice'} label={'Cost Price'} rules={[
                             {
-                                required: true,
-                                message: 'This Field is required'
-                            },
-                            {
                                 pattern: /^[0-9.]+$/,
                                 message: 'This Field should be number'
                             }
@@ -290,10 +289,6 @@ const EditProduct = props => {
                     </Col>
                     <Col xs={24} md={12} lg={8}>
                         <Item name={'stock'} label={'Stock'} rules={[
-                            {
-                                required: true,
-                                message: 'This Field is required'
-                            },
                             {
                                 pattern: /^[0-9.]+$/,
                                 message: 'This Field should be number'
@@ -328,12 +323,7 @@ const EditProduct = props => {
                         </Item>
                     </Col>
                     <Col xs={24}>
-                        <Item name={'description'} label={'Description'} rules={[
-                            {
-                                required: true,
-                                message: 'This Field is required'
-                            }
-                        ]}>
+                        <Item name={'description'} label={'Description'}>
                             <Input.TextArea placeholder={'Description'} autoSize={{ minRows: 4, maxRows: 9}} style={{ resize: 'none'}}/>
                         </Item>
                     </Col>

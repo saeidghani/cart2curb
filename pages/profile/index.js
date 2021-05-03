@@ -69,7 +69,7 @@ const profile = props => {
             ) : (
                 <Row gutter={[24, 32]} className={'flex flex-row flex-wrap items-center'}>
                     <Col xs={24} sm={12} lg={6}>
-                        <Avatar src={profile.image} title={'Your Score: 4200'}/>
+                        <Avatar src={profile.image} title={`Your Score: ${profile?.score}`} justImage/>
                     </Col>
                     <Col xs={24} sm={12} lg={6}>
                         <DetailItem title={'First Name'} value={getProperty(profile, 'firstName', '-')}/>
@@ -99,8 +99,8 @@ const profile = props => {
                             })}/>
                     </Col>
                     <Col xs={24} sm={12} lg={18} className={'flex flex-col justify-center'}>
-                        <span className="text-type mb-1">Share the link with your friend and get more score:</span>
-                        <a href="#" className="text-btn underline">Card2curb/barry/wood/come</a>
+                        <span className="text-type mb-1">Referral link:</span>
+                        <a href="#" className="text-btn underline">profile?.referalCode</a>
                     </Col>
                 </Row>
             )}

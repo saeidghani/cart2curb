@@ -55,12 +55,18 @@ const NewProduct = props => {
     const handleChange = ({fileList}) => setImagesList(fileList);
 
     const submitHandler = async (values) => {
-        /*if (imagesList.length === 0) {
+        if (imagesList.length === 0) {
             message.warning('Please Upload some images form your product');
             return false;
-        }*/
+        }
         const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
         const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
+        const priceList = {
+            price: Number(unitPrice)
+        };
+        if (costPrice) priceList.cost = Number(costPrice);
+        if (stock) priceList.stock = Number(stock);
+
         const body = {
             name,
             unitType,
@@ -68,11 +74,7 @@ const NewProduct = props => {
             stock,
             tax: Number(tax),
             images,
-            priceList: {
-                price: Number(unitPrice),
-                cost: Number(costPrice),
-                stock: Number(stock)
-            },
+            priceList,
             description,
         }
 

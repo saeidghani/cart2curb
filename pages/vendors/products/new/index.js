@@ -56,16 +56,19 @@ const NewProduct = props => {
         }
         const images = imagesList.map(image => `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image.response.data.path}`);
         const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
+        const priceList = {
+            price: Number(unitPrice)
+        };
+        if (costPrice) priceList.cost = Number(costPrice);
+        if (stock) priceList.stock = Number(stock);
+
         const body = {
             name,
             unitType,
             category,
             tax: Number(tax),
             images,
-            priceList: {
-                price: Number(unitPrice),
-                cost: Number(costPrice),
-            },
+            priceList,
             stock: Number(stock),
             description,
         }
