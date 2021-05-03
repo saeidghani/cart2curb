@@ -80,7 +80,7 @@ const Invoices = props => {
         const body = {
             tip: Number(value),
         }
-
+        console.log(body);
         const res = await dispatch.cart.promoTip(body)
         if(res) {
             const cart = await dispatch.cart.getClientCart();
@@ -97,8 +97,25 @@ const Invoices = props => {
         }
     }
 
+    const applyCustomTipHandler = async () => {
+        const body = {
+            tip,
+        }
+        const res = await dispatch.cart.promoTip(body)
+        if(res) {
+            const cart = await dispatch.cart.getClientCart();
+            if(cart) {
+                setPromo(cart?.promo);
+                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setPromoPrice(cart?.totalPrice);
+            }
+        }
+    }
+
     const customTipHandler = (e) => {
         const value = e.target.value;
+        setTip(value);
+        console.log(Number(value));
         if((Number(value) <= 100 && Number(value) >= 0)) {
             form.setFieldsValue({
                 tip: Number(value)
@@ -208,12 +225,7 @@ const Invoices = props => {
 
     const submitHandler = async (values) => {
         setLoading(true);
-        const {promo} = values;
-        const body = {
-            tip,
-            promoCode: promo
-        }
-        console.log(body);
+        const body = {}
 
         const res = await dispatch.cart.confirmCart(body)
         if(res) {
@@ -337,8 +349,9 @@ const Invoices = props => {
                                             },
                                         })
                                     ]}>
-                                        <Input className="mb-2" placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
+                                        <Input className="mb-1" placeholder={`${tip}%`} value={tip} onChange={customTipHandler} disabled={!isCustom}/>
                                     </Item>
+                                    <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading}>Apply</Button>
                                 </Space>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -352,8 +365,8 @@ const Invoices = props => {
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex items-center pl-4 justify-end">
-                                    {promo && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${promoPrice}</h1>)}
-                                    <h1 className={`text-right text-${promo ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${promo && "line-through"}`}>${totalPrice}</h1>
+                                    {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${cart.priceAfterPromoTip}</h1>)}
+                                    <h1 className={`text-right text-${(promo || tip) ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${(promo || tip) && "line-through"}`}>${totalPrice}</h1>
                                 </div>
                             </Col>
 

@@ -154,6 +154,7 @@ export const cart = {
             }
         },
         async promoTip(body) {
+            console.log(body);
             try {
                 const res = await api.post('cart/promotip', body);
                 if(res.data.success) {
