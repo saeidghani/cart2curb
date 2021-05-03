@@ -1,4 +1,5 @@
 import {getApi} from '../../lib/api';
+import axios from 'axios';
 
 const api = getApi();
 
@@ -191,11 +192,18 @@ export const cart = {
                 return false;
             }
         },
-        async confirmCart(body) {
+        async confirmCart(query, rootState) {
+            const token = rootState.auth.token;
+            const options = {
+                headers: {}
+            }
+            if(token) {
+                options.headers.Authorization = `Bearer ${token}`
+            }
             try {
-                const res = await api.post('cart/confirm', body);
+                const res = await api.post('cart/confirm', {}, options);
                 if(res?.data?.success) {
-                    return res?.data?.success
+                    return true
                 } else {
                     return false;
                 }

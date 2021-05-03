@@ -48,6 +48,7 @@ const Invoices = props => {
     const [promo, setPromo] = useState(props.cart.promo);
     const [isCustom, setIsCustom] = useState(false);
     const [totalPrice, setTotalPrice] = useState((props.cart?.totalPrice + props.cart?.cartPrice - props.cart?.priceAfterPromoTip + props.cart?.tipPrice).toFixed(2));
+    const [currentPrice, setCurrentPrice] = useState((props.cart?.totalPrice + props.cart?.cartPrice - props.cart?.priceAfterPromoTip + props.cart?.tipPrice).toFixed(2));
     const [promoPrice, setPromoPrice] = useState(props.cart?.totalPrice)
     const [loading, setLoading] = useState(false);
     const [promoLoading, setPromoLoading] = useState(false);
@@ -70,7 +71,8 @@ const Invoices = props => {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
                 setPromo(cart?.promo);
-                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setTotalPrice(cart?.totalPrice);
+                setCurrentPrice(cart?.priceAfterPromoTip);
                 setPromoPrice(cart?.totalPrice);
             }
 
@@ -86,7 +88,8 @@ const Invoices = props => {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
                 setPromo(cart?.promo);
-                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setTotalPrice(cart?.totalPrice);
+                setCurrentPrice(cart?.priceAfterPromoTip);
                 setPromoPrice(cart?.totalPrice);
             }
 
@@ -99,14 +102,15 @@ const Invoices = props => {
 
     const applyCustomTipHandler = async () => {
         const body = {
-            tip,
+            tip: Number(tip),
         }
         const res = await dispatch.cart.promoTip(body)
         if(res) {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
                 setPromo(cart?.promo);
-                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setTotalPrice(cart?.totalPrice);
+                setCurrentPrice(cart?.priceAfterPromoTip);
                 setPromoPrice(cart?.totalPrice);
             }
         }
@@ -209,7 +213,8 @@ const Invoices = props => {
             const cart = await dispatch.cart.getClientCart();
             if(cart) {
                 setPromo(cart?.promo);
-                setTotalPrice((cart?.totalPrice + cart?.cartPrice - cart?.priceAfterPromoTip + cart?.tipPrice).toFixed(2));
+                setTotalPrice(cart?.totalPrice);
+                setCurrentPrice(cart?.priceAfterPromoTip);
                 setPromoPrice(cart?.totalPrice);
             }
 
@@ -222,9 +227,7 @@ const Invoices = props => {
 
     const submitHandler = async (values) => {
         setLoading(true);
-        const body = {}
-
-        const res = await dispatch.cart.confirmCart(body)
+        const res = await dispatch.cart.confirmCart({})
         if(res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
@@ -362,8 +365,8 @@ const Invoices = props => {
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex items-center pl-4 justify-end">
-                                    {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${cart?.priceAfterPromoTip}</h1>)}
-                                    <h1 className={`text-right text-${(promo || tip) ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${(promo || tip) && "line-through"}`}>${cart?.totalPrice}</h1>
+                                    {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
+                                    <h1 className={`text-right text-${(promo || tip) ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${(promo || tip) && "line-through"}`}>${totalPrice}</h1>
                                 </div>
                             </Col>
 
