@@ -208,11 +208,13 @@ const Invoices = props => {
 
     const submitHandler = async (values) => {
         setLoading(true);
+        const {promo} = values;
         const body = {
             tip,
+            promoCode: promo
         }
 
-        const res = await dispatch.cart.promoTip(body)
+        const res = await dispatch.cart.confirmCart(body)
         if(res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
@@ -313,6 +315,15 @@ const Invoices = props => {
                         onFinishFailed={checkValidation}
                     >
                         <Row gutter={24}>
+                            <Col lg={16} md={12} xs={24} className={'md:pt-7 mb-6'}>
+                                <Space size={16}>
+                                    <Button className={'w-16'} type={(tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
+                                    <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
+                                    <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
+                                    <Button className={'w-16'} type={(tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
+                                    <Button className={'w-22'} type={(![10, 15, 20, 25].includes(tip) || isCustom) ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
+                                </Space>
+                            </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'tip'} label={'Tip'} rules={[
                                     ({getFieldValue}) => ({
@@ -327,15 +338,6 @@ const Invoices = props => {
                                 ]}>
                                     <Input placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
                                 </Item>
-                            </Col>
-                            <Col lg={16} md={12} xs={24} className={'md:pt-7 mb-6'}>
-                                <Space size={16}>
-                                    <Button className={'w-16'} type={(tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
-                                    <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
-                                    <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
-                                    <Button className={'w-16'} type={(tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
-                                    <Button className={'w-22'} type={(![10, 15, 20, 25].includes(tip) || isCustom) ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
-                                </Space>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'promo'} label={'Promo Code'}>
@@ -356,7 +358,7 @@ const Invoices = props => {
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
                                     <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
-                                        Next
+                                        Checkout
                                     </Button>
                                 </Item>
                                 <Item>

@@ -190,6 +190,18 @@ export const cart = {
                 return false;
             }
         },
+        async confirmCart(body) {
+            try {
+                const res = await api.post('cart/confirm', body);
+                if(res?.data?.success) {
+                    return res?.data?.success
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                return false;
+            }
+        },
         async guestInfo(body) {
             try {
                 const res = await api.post('cart/guest-info', body);
