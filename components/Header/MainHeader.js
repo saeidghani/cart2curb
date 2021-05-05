@@ -78,6 +78,7 @@ const MainHeader = props => {
         await dispatch.auth.logout();
         setAuthenticated(false);
         setUserType(null)
+        history.push(routes.auth.login);
     }
 
     const UserDropdown = (

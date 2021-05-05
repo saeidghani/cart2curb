@@ -12,7 +12,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
     const token = useSelector(state => state?.adminAuth?.token);
 
     useEffect(() => {
-        if (token && orderId) {
+        if (visible && token && orderId) {
             dispatch?.adminStore?.getOrder({orderId, token});
         }
     }, [token]);
@@ -234,7 +234,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
             />
             <div className='flex justify-end items-center p-4 mt-4'>
                 <div className="flex items-center justify-end pr-3">
-                    <span className="text-cell text-xl">{order?.deliveryCost ? `${order?.deliveryCost} $` : '_'}</span>
+                    <span className="text-cell text-xl">{order?.priceAfterPromoTip ? `${order?.priceAfterPromoTip} $` : '_'}</span>
                 </div>
             </div>
         </Modal>

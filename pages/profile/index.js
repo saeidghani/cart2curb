@@ -37,6 +37,7 @@ const profile = props => {
         await dispatch.auth.logout();
         setAuthenticated(false);
         setUserType(null)
+        history.push(routes.auth.login);
     }
 
     useEffect(() => {
@@ -104,7 +105,7 @@ const profile = props => {
                     </Col>
                     <Col xs={24} sm={12} lg={18} className={'flex flex-col justify-center'}>
                         <span className="text-type mb-1">Referral link:</span>
-                        <a href="#" className="text-btn underline">{profile?.referalCode}</a>
+                        <a href="#" className="text-btn underline">{profile?.referralCode}</a>
                     </Col>
                 </Row>
             )}

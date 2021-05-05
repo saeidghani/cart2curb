@@ -285,11 +285,12 @@ const AccountEdit = props => {
                             <Col lg={8} md={12} xs={24}>
                                 <Item
                                     name={'streamPreference'}
-                                    label={'LiveCart Preference(optional)'}>
+                                    label='LiveCart Preference(optional)'>
                                     <Select
                                         placeholder={'Select'}
                                         onChange={changeStream}
                                     >
+                                        <Option value=''>-</Option>
                                         <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'googleMeet'}>Google Meet</Option>
                                         <Option value={'skype'}>Skype</Option>
