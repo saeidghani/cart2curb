@@ -203,7 +203,7 @@ export const cart = {
             try {
                 const res = await api.post('cart/confirm', {}, options);
                 if(res?.data?.success) {
-                    return true
+                    return res?.data
                 } else {
                     return false;
                 }

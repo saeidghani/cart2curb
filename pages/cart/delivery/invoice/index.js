@@ -177,11 +177,11 @@ const Invoices = props => {
         {
             key: 'cart',
             items: cart?.totalQuantity || '-',
-            price: `$${cart?.cartPrice?.toFixed(2) || '-'}`,
-            delivery: `$${cart?.deliveryCost?.toFixed(2) || '-'}`,
-            service: `$${cart?.serviceFee?.toFixed(2) || '-'}`,
-            tax: `$${cart?.hst?.toFixed(2) || '-'}`,
-            totalPrice: `$${cart?.totalPrice?.toFixed(2) || '-'}`,
+            price: cart?.cartPrice ? `$${cart?.cartPrice?.toFixed(2)}` : '-',
+            delivery: cart?.deliveryCost ? `$${cart?.deliveryCost?.toFixed(2)}` : '-',
+            service: cart?.serviceFee ? `$${cart?.serviceFee?.toFixed(2)}` : '-',
+            tax: cart?.hst ? `$${cart?.hst?.toFixed(2)}` : '-',
+            totalPrice: cart?.totalPrice ? `$${cart?.totalPrice?.toFixed(2)}` : '-',
         }
     ]
 
@@ -232,7 +232,7 @@ const Invoices = props => {
         if(res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
-            router.push(routes.cart.checkout);
+            router.push({location: routes.cart.checkout, query: {orderId: res?.orderId}});
         } else {
             setLoading(false);
         }
