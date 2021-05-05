@@ -232,7 +232,7 @@ const Invoices = props => {
         if(res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
-            router.push({location: routes.cart.checkout, query: {orderId: res?.orderId}});
+            router.push({pathname: routes.cart.checkout, query: {orderId: res?.orderId}});
         } else {
             setLoading(false);
         }
