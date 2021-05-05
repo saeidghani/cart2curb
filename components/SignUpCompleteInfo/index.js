@@ -199,6 +199,7 @@ const AccountInfo = props => {
                                         placeholder={'Select'}
                                         onChange={changeStream}
                                     >
+                                        <Option value=''>-</Option>
                                         <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'googleMeet'}>Google Meet</Option>
                                         <Option value={'skype'}>Skype</Option>
@@ -209,6 +210,7 @@ const AccountInfo = props => {
                                 <Item
                                     name={'streamId'}
                                     label={<span className="capitalize">{`${stream} ID`}</span>}
+                                    dependencies={['streamPreference']}
                                     rules={[
                                         ({getFieldValue}) => ({
                                             validator(rule, value) {
