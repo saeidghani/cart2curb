@@ -37,7 +37,7 @@ const profile = props => {
         await dispatch.auth.logout();
         setAuthenticated(false);
         setUserType(null)
-        history.push(routes.auth.login);
+        router.push(routes.auth.login);
     }
 
     useEffect(() => {
