@@ -98,9 +98,10 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                       paddingBottom: '10px'
                   }}
             >
+                <div style={{color: 'black'}} className="ml-6 mt-2 mb-4 font-bold cursor-pointer" onClick={clickHandler.bind(this, 'all')}>Show All</div>
                 {categories?.map((cat, index) =>
                     <SubMenu
-                        key={cat._id}
+                        key={cat?._id}
                         title={<div style={{
                         color: 'black',
                     }}>

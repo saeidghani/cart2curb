@@ -202,7 +202,7 @@ export const cart = {
             }
             try {
                 const res = await api.post('cart/confirm', {}, options);
-                console.log(res?.data);
+                console.log(res?.data?.data?.orderId);
                 if(res?.data?.success) {
                     dispatch.cart.setCart({
                         cart: {totalQuantity: 0}

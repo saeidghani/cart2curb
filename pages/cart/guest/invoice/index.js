@@ -228,6 +228,7 @@ const Invoices = props => {
     const submitHandler = async (values) => {
         setLoading(true);
         const res = await dispatch.cart.confirmCart({})
+        console.log(res);
         if(res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
