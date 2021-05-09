@@ -207,7 +207,7 @@ export const cart = {
                     dispatch.cart.setCart({
                         cart: {totalQuantity: 0}
                     })
-                    return res?.data
+                    return res?.data?.data
                 } else {
                     return false;
                 }
