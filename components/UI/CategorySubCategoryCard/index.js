@@ -102,9 +102,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                     <SubMenu
                         key={cat._id}
                         title={<div style={{
-                        borderTop: categories?.length - 1 === index ? '1px solid lightGray' : '0',
                         color: 'black',
-                        //lineHeight: '35px'
                     }}>
                         {cat?.name}
                     </div>} style={{paddingLeft: 0}}>
@@ -115,7 +113,6 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                                     width: '90%',
                                     borderBottom: cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
                                     lineHeight: cat?.children?.length - 1 === index ? '32px' : '35px',
-                                    //borderTop: index === 0 ? '1px solid lightGray' : '0',
                                 }} className="">
                                     {subCat.name}
                                 </div>

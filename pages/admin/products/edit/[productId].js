@@ -135,7 +135,6 @@ const EditProduct = props => {
             body.weight = 0;
             body.weightUnit = 'kg'
         }
-        console.log({storeId, productId, body, token});
         if (storeId && productId && body && token) {
             const res = await dispatch.adminStore.editProduct({
                 storeId, productId, body, token

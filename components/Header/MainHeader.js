@@ -143,10 +143,9 @@ const MainHeader = props => {
                         </>
                     )}
                 </div>
-
             </div>
             <div className="hidden md:flex flex-row items-center">
-                {(!isVendorPage && (isAuthenticated || isAdmin)) ? (
+                {!isVendorPage ? (
                     <Link href={routes.cart.index}>
                         <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
                             <HeaderNotificationIcon />

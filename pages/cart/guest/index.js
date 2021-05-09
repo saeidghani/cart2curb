@@ -273,6 +273,7 @@ const CartGuest = props => {
                                         placeholder={'Select'}
                                         onChange={changeStream}
                                     >
+                                        <Option value=''>-</Option>
                                         <Option value={'zoom'}>Zoom</Option>
                                         <Option value={'googleMeet'}>Google Meet</Option>
                                         <Option value={'skype'}>Skype</Option>

@@ -24,9 +24,9 @@ const Taxes = props => {
     }, [token]);
 
     useEffect(() => {
-        const {deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent} = systemConfig || {};
+        const {deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent, extraStoreDeliveryFee} = systemConfig || {};
         form.setFieldsValue({
-            deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent
+            deliveryFee, deliveryTaxPercent, serviceFee, serviceTaxPercent, extraStoreDeliveryFee
         });
     }, [systemConfig]);
 

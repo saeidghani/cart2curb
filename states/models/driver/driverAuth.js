@@ -74,12 +74,15 @@ export const driverAuth = {
                     message.success('Your Request was Sent!');
                     return true;
                 } else {
-                    message.error('Something went wrong', 5);
+                    data?.errors?.map(err => {
+                       message.error(err?.message || 'Something went wrong', 5);
+                    })
                 }
                 return false;
             } catch(e) {
-                console.log(e);
-                message.error('Something went wrong', 5);
+                e?.response?.data?.errors?.map(err => {
+                    message.error(err?.message || 'Something went wrong', 5);
+                })
 
                 return false;
             }
