@@ -76,7 +76,7 @@ const EditProduct = props => {
             category,
             tax,
             description
-        } = product;
+        } = product || {};
         const transformedImageList = images.map((image, index) => {
             const name = image?.split('/').slice(-1);
             return {
