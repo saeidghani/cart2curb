@@ -136,13 +136,13 @@ const VendorPage = props => {
         }
     }
 
-    const address = [vendor.address.addressLine1];
-    if(vendor.address.addressLine2) {
-        address.push(vendor.address.addressLine2);
+    const address = [vendor?.address?.addressLine1];
+    if(vendor?.address?.addressLine2) {
+        address.push(vendor?.address?.addressLine2);
     }
-    address.push(vendor.address.city);
-    address.push(vendor.address.province);
-    address.push(vendor.address.country);
+    address.push(vendor?.address?.city);
+    address.push(vendor?.address?.province);
+    address.push(vendor?.address?.country);
 
     return (
         <Page title={false} breadcrumb={breadcrumb}>
