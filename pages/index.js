@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import {Button, Select, Row, Col, message, Form, Input} from 'antd';
 
 import Page from '../components/Page';
 import ShopOverview from '../components/UI/ShopOverview';
-import {useDispatch, useSelector} from "react-redux";
 import Loader from "../components/UI/Loader";
 import {InfoCircleOutlined} from "@ant-design/icons";
 import {api, api as GeocoderAPI} from '../hooks/geocoding';

@@ -6,7 +6,9 @@ const withSass = require('@zeit/next-sass')
 const withCSS = require('@zeit/next-css')
 const withPlugins = require('next-compose-plugins')
 
-const nextConfig = {}
+const nextConfig = {
+    basePath: '/stores',
+}
 
 const plugins = [
     withCSS,
