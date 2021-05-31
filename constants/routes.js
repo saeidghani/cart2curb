@@ -10,12 +10,12 @@ export default {
         }
     },
     stores: {
-        index: "/",
+        index: "/stores",
         single(vendor = '') {
-            return `/${vendor}`
+            return `/stores/${vendor}`
         },
         product(vendor = '[vendor]', product = '[product]') {
-            return `/${vendor}/products/${product}`
+            return `/stores/${vendor}/products/${product}`
         }
     },
     homepage: '/',
@@ -218,3 +218,4 @@ export default {
         },
     }
 }
+//

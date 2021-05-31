@@ -3,13 +3,13 @@ import { useRouter } from "next/router";
 import {Row, Col, Button, InputNumber, message} from 'antd';
 import NoSSR from 'react-no-ssr';
 
-import DetailItem from "../../../components/UI/DetailItem";
-import Page from "../../../components/Page";
-import routes from "../../../constants/routes";
-import ProductCarousel from "../../../components/UI/ProductCarousel";
+import DetailItem from "../../../../components/UI/DetailItem";
+import Page from "../../../../components/Page";
+import routes from "../../../../constants/routes";
+import ProductCarousel from "../../../../components/UI/ProductCarousel";
 import Link from "next/link";
-import ProductCard from "../../../components/UI/ProductCard";
-import {getStore} from "../../../states";
+import ProductCard from "../../../../components/UI/ProductCard";
+import {getStore} from "../../../../states";
 import {useDispatch, useSelector} from "react-redux";
 
 

@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Row, Col, Form, Button, Input, Select} from 'antd';
-import Page from "../components/Page";
-import routes from "../constants/routes";
-import {getStore} from "../states";
-import CategorySubCategoryCard from "../components/UI/CategorySubCategoryCard";
-import StoreProductCard from "../components/UI/StoreProductCard";
+import Page from "../../components/Page";
+import routes from "../../constants/routes";
+import {getStore} from "../../states";
+import CategorySubCategoryCard from "../../components/UI/CategorySubCategoryCard";
+import StoreProductCard from "../../components/UI/StoreProductCard";
 import {useDispatch, useSelector} from "react-redux";
-import Loader from "../components/UI/Loader";
+import Loader from "../../components/UI/Loader";
 import {InfoCircleOutlined, ShopOutlined} from "@ant-design/icons";
 
 const { Item } = Form;
