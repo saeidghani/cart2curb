@@ -64,7 +64,21 @@ const MainHeader = props => {
         } else {
             setIsVendorPage(false);
         }
-    }, [router, userType])
+    }, [router, userType]);
+
+    useEffect(() => {
+        let config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+        if (token) {
+            (async () => {
+                const res = await dispatch?.profile?.getProfile(config);
+                document.cookie = `avatarSrc=${res.image};domain=.cart2curb.ca`;
+            })();
+        }
+    }, [token]);
 
     const isCustomCart = useMemo(() => {
         return isCustomCartRoute(router.route);
