@@ -75,7 +75,7 @@ const MainHeader = props => {
         if (token) {
             (async () => {
                 const res = await dispatch?.profile?.getProfile(config);
-                document.cookie = `avatarSrc=${res.image};domain=.cart2curb.ca`;
+                document.cookie = `avatarSrc=${res.image}`;
             })();
         }
     }, [token]);
