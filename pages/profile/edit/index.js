@@ -105,14 +105,14 @@ const AccountEdit = props => {
         }
         const socialMedias = [];
         if(streamPreference && !wasStreamSet) {
-            if(!streamId) {
+           /* if(!streamId) {
                 message.error('Please enter your Username');
                 return false;
-            }
+            }*/
 
             if(!wasStreamSet) {
                 socialMedias.push({
-                    "username": streamId,
+                    //"username": streamId,
                     "provider": streamPreference,
                     "streamOn": true
                 })
@@ -297,27 +297,6 @@ const AccountEdit = props => {
                                     </Select>
                                 </Item>
                             </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item
-                                    name={'streamId'}
-                                    label={<span className="capitalize">{`${stream} ID`}</span>}
-                                    dependencies={['streamPreference']}
-                                    rules={[
-                                        ({getFieldValue}) => ({
-                                            validator(rule, value) {
-                                                const preference = getFieldValue('streamPreference');
-                                                if (!preference || (preference && value)) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(`Please enter your ${streamPreferences[preference]} ID`);
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input placeholder={`${stream} ID`} />
-                                </Item>
-                            </Col>
-
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-2'}>
                                 <Item>

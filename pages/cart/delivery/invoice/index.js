@@ -367,7 +367,6 @@ const Invoices = props => {
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex items-center pl-4 justify-end">
                                     {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
-                                    <h1 className={`text-right text-${(promo || tip) ? "3xl" : "4.5xl"} text-paragraph font-medium my-0 ${(promo || tip) && "line-through"}`}>${totalPrice}</h1>
                                 </div>
                             </Col>
 

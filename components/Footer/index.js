@@ -23,7 +23,7 @@ const Footer = props => {
 
     return (
         <div>
-            {platformType === 'driver' ? <DriverFooter/> : <MainFooter/>}
+            <MainFooter/>
         </div>
     )
 }
