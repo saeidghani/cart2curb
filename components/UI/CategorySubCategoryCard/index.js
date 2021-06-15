@@ -31,8 +31,8 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                     if (page !== 1) {
                         const newCats = [...categories];
                         response?.data?.forEach(c => {
-                            if(!categories?.include(c?._id)) {
-                              newCats.push(c);
+                            if (!categories?.include(c?._id)) {
+                                newCats.push(c);
                             }
                         });
                         setCategories(categories => newCats);
@@ -84,7 +84,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
     };
 
     return (
-        <div className="category-card" style={{}}>
+        <div className="category-card">
             {categories?.length === 0 && !hasMore && (
                 <span className="text-paragraph py-4 block">&mdash; There is no Category</span>
             )}
@@ -98,28 +98,42 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                       paddingBottom: '10px'
                   }}
             >
-                <div style={{color: 'black'}} className="ml-6 mt-2 mb-4 font-bold cursor-pointer" onClick={clickHandler.bind(this, 'all')}>Show All</div>
+                <div style={{color: 'black'}} className="ml-6 mt-2 mb-4 font-bold cursor-pointer"
+                     onClick={clickHandler.bind(this, 'all')}>Show All
+                </div>
                 {categories?.map((cat, index) =>
-                    <SubMenu
-                        key={cat?._id}
-                        title={<div style={{
-                        color: 'black',
-                    }}>
-                        {cat?.name}
-                    </div>} style={{paddingLeft: 0}}>
-                        {cat?.children?.map((subCat, index) =>
-                            <Menu.Item key={subCat._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
-                                       onClick={clickHandler.bind(this, subCat?._id)}>
-                                <div style={{
-                                    width: '90%',
-                                    borderBottom: cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
-                                    lineHeight: cat?.children?.length - 1 === index ? '32px' : '35px',
-                                }} className="">
-                                    {subCat.name}
-                                </div>
-                            </Menu.Item>
-                        )}
-                    </SubMenu>
+                    cat?.children?.length === 0 ?
+                        <Menu.Item key={cat._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
+                                   onClick={clickHandler.bind(this, cat?._id)}>
+                            <div style={{
+                                width: '90%',
+                                //borderBottom: categories?.length - 1 === index ? '0' : '1px solid lightGray',
+                                lineHeight: categories?.length - 1 === index ? '32px' : '35px',
+                            }} className="">
+                                {cat.name}
+                            </div>
+                        </Menu.Item> : <SubMenu
+                            key={cat?._id}
+                            title={<div style={{
+                                color: 'black',
+                            }}
+                                        onClick={clickHandler.bind(this, cat?._id)}
+                            >
+                                {cat?.name}
+                            </div>} style={{paddingLeft: 0}}>
+                            {cat?.children?.map((subCat, index) =>
+                                <Menu.Item key={subCat._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
+                                           onClick={clickHandler.bind(this, subCat?._id)}>
+                                    <div style={{
+                                        width: '90%',
+                                        borderBottom: cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
+                                        lineHeight: cat?.children?.length - 1 === index ? '32px' : '35px',
+                                    }} className="">
+                                        {subCat.name}
+                                    </div>
+                                </Menu.Item>
+                            )}
+                        </SubMenu>
                 )}
             </Menu>
             }

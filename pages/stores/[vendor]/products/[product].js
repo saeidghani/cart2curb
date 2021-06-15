@@ -90,7 +90,12 @@ const ProductView = props => {
                                     <div className="pt-11 flex flex-col lg:flex-row items-start lg:items-center justify-between">
                                         <div className="flex flex-col justify-center pb-4 lg:pb-0">
                                             <span className="text-xs text-muted pb-2">Quantity</span>
-                                            <InputNumber min={1} max={10} value={quantity} onChange={setQuantity}/>
+                                            <InputNumber
+                                                min={1}
+                                                //max={10}
+                                                value={quantity}
+                                                onChange={setQuantity}
+                                            />
                                         </div>
 
                                         <div className={'flex flex-col lg:flex-row items-start lg:items-center'}>

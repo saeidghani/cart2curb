@@ -318,7 +318,9 @@ const SignUp = props => {
                                     <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                 </Item>
                             </Col>
-
+                            <Col span={24}>
+                                <div className="flex justify-center text-info">Please click the exact location of your address on the map below</div>
+                            </Col>
                             <Col span={24}>
                                 <div className="mb-8 mt-6">
                                     <GoogleMap

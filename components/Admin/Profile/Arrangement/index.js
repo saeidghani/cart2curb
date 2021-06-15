@@ -113,11 +113,12 @@ const Arrangement = props => {
                         <Button
                             danger
                             type='link'
-                            onClick={() => {
+                            onClick={async() => {
                                 const filteredData = data?.filter(d => d?.storeId !== storeId);
                                 const filteredSelectedStores = selectedStores?.filter(el => el !== storeId);
                                 setData(filteredData);
                                 setSelectedStores(filteredSelectedStores);
+                                await dispatch?.adminStore?.deleteStoreRank(storeId);
                             }}
                         >
                             Remove
@@ -131,7 +132,6 @@ const Arrangement = props => {
 
     const handleSave = () => {
         const body = data?.map((el, index) => ({_id: el?.storeId, rank: index + 1}));
-        console.log(body);
         dispatch?.adminProfile?.addRank({body, token});
     };
 

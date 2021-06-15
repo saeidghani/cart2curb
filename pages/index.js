@@ -22,7 +22,12 @@ export default function Home() {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [location, setLocation] = useState(null);
+    const [guestPostalCode, setGuestPostalCode] = useState('');
 
+    useEffect(() => {
+    const guestPostalCode = localStorage.getItem('guestPostalCode');
+     setGuestPostalCode(guestPostalCode);
+    }, []);
 
     useEffect(async () => {
         if(hasMore || page === 1) {
@@ -76,20 +81,22 @@ export default function Home() {
 
 
     const searchWithGps = async (values) => {
-        const value = values.postalCode;
-        if(value === "" || !value) {
+        const {postalCode} = values || {};
+        if(postalCode === "" || !postalCode) {
             setLocation(null);
             setPage(1);
             setHasMore(true)
             setUsedGps(false);
             return true;
         }
-        if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(value)) {
-            const transformedPostal = value.slice(0, 3).trim() + " " + value.slice(-3).trim();
+        if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(postalCode)) {
+            setGuestPostalCode(postalCode);
+            localStorage.setItem('guestPostalCode', postalCode);
+            //const transformedPostal = postalCode.slice(0, 3).trim() + " " + postalCode.slice(-3).trim();
 
             try {
-
-                const res = await api.get("json", {
+                await dispatch?.app?.getStores({zipcode: postalCode});
+                /*const res = await api.get("json", {
                     params: {
                         address: transformedPostal,
                         key: process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY,
@@ -102,7 +109,7 @@ export default function Home() {
                     setHasMore(true)
                     setUsedGps(true);
                     return true;
-                }
+                }*/
             } catch(e) {
                 message.error("Your Postal Code isn\'t valid.")
                 return e;
@@ -110,9 +117,9 @@ export default function Home() {
         }
     }
 
-    const sortHandler = parameter => {
+    const sortHandler = async parameter => {
         if(parameter === 'address') {
-            searchWithGps();
+            await searchWithGps({postalCode: guestPostalCode});
         } else {
             isIntersecting = false;
             setHasMore(true);
@@ -123,7 +130,6 @@ export default function Home() {
 
     return (
         <Page title={false} breadcrumb={false}>
-
             <div className={'mb-16 without-padding'}>
                 <Row className={'bg-card flex items-center pt-12 pb-6 layout__section'}>
                     <Col xs={24}>
@@ -131,7 +137,7 @@ export default function Home() {
                             <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
                                 <Col xs={24} lg={16}>
                                     <Item name={'postalCode'} label={'Postal Code'}>
-                                        <Input placeholder={'Postal Code'} allowClear/>
+                                        <Input placeholder='Postal Code' allowClear/>
                                     </Item>
                                 </Col>
                                 <Col xs={24} lg={3} style={{ flexBasis: 125}}>
@@ -147,16 +153,15 @@ export default function Home() {
             <div className="flex flex-col">
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
                     <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Stores</h2>
-                    <Select
+                    {guestPostalCode && <Select
                         placeholder={'Sort by name'}
                         className={'sort-field-input'}
                         onChange={sortHandler}
                     >
                         <Option value={''}>Default</Option>
                         <Option value={'name'}>Name</Option>
-                        <Option value={'storeType'}>Store Type</Option>
                         <Option value={'address'}>Address</Option>
-                    </Select>
+                    </Select>}
                 </div>
 
                 {!hasMore && stores.length === 0 ? (
@@ -166,7 +171,7 @@ export default function Home() {
                             <span className="text-paragraph mb-4">{usedGps ? 'There is no Store near your location' : 'There is no store'}</span>
                         </Col>
                     </Row>
-                ) : (
+                ) : guestPostalCode ? (
                     <Row gutter={[32, 32]}>
                         {stores.map((item ,index) => {
                             return (
@@ -183,7 +188,7 @@ export default function Home() {
                             )
                         })}
                     </Row>
-                )}
+                ) : <div className="flex justify-center items-center my-20">Please Enter Your Postal Code To See The Stores Near You</div>}
                 <div ref={loader}>
                     {hasMore && (
                         <div className="flex flex-row items-center justify-center py-10">

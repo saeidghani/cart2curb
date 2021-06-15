@@ -30,6 +30,7 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
                     <span className="text-base text-paragraph font-medium">{name}</span>
                     <span className="text-sm text-type font-medium">{title}</span>
                 </div>
+                {!subType && <span className="text-transparent text-xs font-medium">ddd</span>}
                 <span className="text-xs text-overline font-medium mb-4">{subType?.length > 40 ? `${subType.substring(0, 35)} ...` : subType}</span>
                 {props._id && (
                     <Link href={routes.stores.single(props._id)} as={routes.stores.single(props._id)}>

@@ -257,10 +257,10 @@ const Invoices = props => {
                     <DetailItem title={'Company'} value={'Cart2Curb'}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Phone Number'} value={'+1 234 (567) 7342'}/>
+                    <DetailItem title={'Phone Number'} value={'+548-883-2278'}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Email Address'} value={'info@Cart2curb.com'}/>
+                    <DetailItem title={'Email Address'} value={'orders@cart2curb.ca'}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
@@ -369,7 +369,6 @@ const Invoices = props => {
                                     {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
                                 </div>
                             </Col>
-
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
                                     <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={loading}>
@@ -383,6 +382,9 @@ const Invoices = props => {
                                         </Button>
                                     </Link>
                                 </Item>
+                            </Col>
+                            <Col span={24}>
+                                <div className="flex justify-end text-xs">All prices are estimates. You will always only be charged the actual store price after we purchase the goods.</div>
                             </Col>
                         </Row>
 

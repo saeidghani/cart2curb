@@ -33,7 +33,11 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
         }
         setLoading(false);
     }
-
+    let newPrice = price;
+    const decimalPart = (price+"").split(".")[1];
+    if (decimalPart.length===1) {
+        newPrice = `${price}0`
+    }
     return (
         <div className="flex flex-col">
             <div style={{ position: 'relative', paddingTop: '100%'}}>
@@ -48,19 +52,21 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
                 </div>
             </div>
 
-            <div className="flex flex-col mt-3">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex flex-col">
-                        <span className="text-base text-paragraph font-medium">{name}</span>
-                        <span className="text-sm text-overline font-medium">{vendor}</span>
+            <div style={{height: 160}}>
+                <div className="flex flex-col mt-3 h-full justify-between">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex flex-col">
+                            <span className="text-base text-paragraph font-medium">{name}</span>
+                            <span className="text-sm text-overline font-medium">{vendor}</span>
+                        </div>
+                        <span className="text-2xl text-type font-medium">${newPrice}</span>
                     </div>
-                    <span className="text-2xl text-type font-medium">${price}</span>
-                </div>
-                <div className={'flex flex-row justify-between items-center'}>
-                    <Link href={routes.stores.product()} as={routes.stores.product(vendorId, productId)}>
-                    <Button danger icon={<EyeOutlined style={{ fontSize: 18}} />} className={'flex items-center font-bold justify-center mr-2 rounded-sm'} style={{ width: 50, height: 50}}/>
-                    </Link>
-                    <Button type={'primary'} style={{ height: 50}} className={'flex-grow flex items-center justify-center font-medium rounded-sm'} onClick={addToCartHandler} loading={loading}>Add to Cart</Button>
+                    <div className={'flex flex-row justify-between items-center'}>
+                        <Link href={routes.stores.product()} as={routes.stores.product(vendorId, productId)}>
+                            <Button danger icon={<EyeOutlined style={{ fontSize: 18}} />} className={'flex items-center font-bold justify-center mr-2 rounded-sm'} style={{ width: 50, height: 50}}/>
+                        </Link>
+                        <Button type={'primary'} style={{ height: 50}} className={'flex-grow flex items-center justify-center font-medium rounded-sm'} onClick={addToCartHandler} loading={loading}>Add to Cart</Button>
+                    </div>
                 </div>
             </div>
         </div>

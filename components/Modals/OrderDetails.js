@@ -54,7 +54,7 @@ const OrderDetailsModal = ({ visible, onHide, id, isCustomer }) => { // , data, 
 
     if(isCustomer) {
         columns.push({
-            title: 'Store Address',
+            title: 'Store Name',
             dataIndex: 'store',
             key: 'store',
             render: data => (<span className="text-cell">{data}</span>)
@@ -93,6 +93,9 @@ const OrderDetailsModal = ({ visible, onHide, id, isCustomer }) => { // , data, 
                 number: order.orderNumber || order._id,
                 date: moment(order.date).format('MM.DD.YYYY'),
                 totalPrice: order.totalPrice,
+                deliveryFee: order.deliveryFee,
+                serviceFee: order.serviceFee,
+                tipPrice: order.tipPrice,
                 status: order.status,
                 name: `${order?.firstName} ${order?.lastName}`,
                 data: order.products?.map((item, i) => {
@@ -106,8 +109,9 @@ const OrderDetailsModal = ({ visible, onHide, id, isCustomer }) => { // , data, 
                         quantity: item.quantity,
                         total: `$${item.totalPrice}`
                     }
+                    console.log(item);
                     if(isCustomer) {
-                        row.store = convertAddress(item.store.address)
+                        row.store = item?.store?.name
                     }
                     return row;
                 }),
@@ -178,13 +182,27 @@ const OrderDetailsModal = ({ visible, onHide, id, isCustomer }) => { // , data, 
                     <Col xs={24}>
                         <Table dataSource={transformedOrder.data} columns={columns} pagination={false} className={'pt-4'} scroll={{ x: 950 }}/>
                     </Col>
+                    <Col span={24}>
+                        <div className="flex">
+                            <div className="mr-2">Delivery Fee:</div>
+                            <div className="">{transformedOrder.deliveryFee}</div>
+                        </div>
+                        <div className="flex">
+                            <div className="mr-2">Service Fee:</div>
+                            <div className="">{transformedOrder.serviceFee}</div>
+                        </div>
+                        <div className="flex">
+                            <div className="mr-2">Tip:</div>
+                            <div className="">{transformedOrder.tipPrice}</div>
+                        </div>
+                    </Col>
                     <Col xs={24}>
                         <div className={'flex flex-row-reverse items-center'}>
                             <div className="flex flex-col" style={{ width: 210, paddingLeft: 7}}>
                                 <h1 className="text-left text-4.5xl text-cell font-medium mb-2 mt-0">${transformedOrder.totalPrice}</h1>
                             </div>
                             <div className="flex items-center justify-end pr-3">
-                                <span className="text-cell">Delivery Cost + Extra</span>
+                                <span className="text-cell">Total Cost</span>
                             </div>
                         </div>
                     </Col>
