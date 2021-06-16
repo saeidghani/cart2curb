@@ -26,7 +26,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
     useEffect(async () => {
         if (hasMore || page === 1) {
             try {
-                const response = await dispatch.app.getCategoryTree({storeId, page})
+                const response = await dispatch?.app?.getCategoryTree({storeId, page})
                 if (response) {
                     if (page !== 1) {
                         const newCats = [...categories];
@@ -103,14 +103,14 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                 </div>
                 {categories?.map((cat, index) =>
                     cat?.children?.length === 0 ?
-                        <Menu.Item key={cat._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
+                        <Menu.Item key={cat?._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
                                    onClick={clickHandler.bind(this, cat?._id)}>
                             <div style={{
                                 width: '90%',
                                 //borderBottom: categories?.length - 1 === index ? '0' : '1px solid lightGray',
                                 lineHeight: categories?.length - 1 === index ? '32px' : '35px',
                             }} className="">
-                                {cat.name}
+                                {cat?.name}
                             </div>
                         </Menu.Item> : <SubMenu
                             key={cat?._id}
@@ -122,14 +122,15 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                                 {cat?.name}
                             </div>} style={{paddingLeft: 0}}>
                             {cat?.children?.map((subCat, index) =>
-                                <Menu.Item key={subCat._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
+                                <Menu.Item key={subCat?._id} style={{paddingLeft: 0, backgroundColor: '#fafafa', margin: 0}}
                                            onClick={clickHandler.bind(this, subCat?._id)}>
                                     <div style={{
                                         width: '90%',
                                         borderBottom: cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
                                         lineHeight: cat?.children?.length - 1 === index ? '32px' : '35px',
+                                        //whiteSpace: 'nowrap'
                                     }} className="">
-                                        {subCat.name}
+                                        {subCat?.name}
                                     </div>
                                 </Menu.Item>
                             )}

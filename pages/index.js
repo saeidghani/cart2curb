@@ -95,7 +95,10 @@ export default function Home() {
             //const transformedPostal = postalCode.slice(0, 3).trim() + " " + postalCode.slice(-3).trim();
 
             try {
-                await dispatch?.app?.getStores({zipcode: postalCode});
+                let body = {
+                    zipcode: postalCode
+                }
+                await dispatch?.app?.getStores(body);
                 /*const res = await api.get("json", {
                     params: {
                         address: transformedPostal,

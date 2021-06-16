@@ -105,16 +105,15 @@ const CartGuest = props => {
             return false;
         }
 
-        const { firstName, lastName, email, phone, streamPreference, streamId } = values;
+        const { firstName, lastName, email, phone, streamPreference } = values;
         const guestBody = {
             firstName,
             lastName,
             email,
             phone,
         }
-        if(streamPreference && streamId) {
+        if(streamPreference) {
             guestBody.socialMedias = {
-                username: streamId,
                 provider: streamPreference,
                 streamOn: true,
             }
@@ -280,26 +279,6 @@ const CartGuest = props => {
                                     </Select>
                                 </Item>
                             </Col>
-                            <Col lg={8} md={12} xs={24}>
-                                <Item
-                                    name={'streamId'}
-                                    label={<span className="capitalize">{`${stream} ID`}</span>}
-                                    rules={[
-                                        ({getFieldValue}) => ({
-                                            validator(rule, value) {
-                                                const preference = getFieldValue('streamPreference');
-                                                if (!preference || (preference && value)) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(`Please enter your ${streamPreferences[preference]} ID`);
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input placeholder={`${stream} ID`} />
-                                </Item>
-                            </Col>
-
                             <div className="w-full px-3">
                                 <Divider className={'mt-6 mb-8'}/>
                             </div>
@@ -430,7 +409,9 @@ const CartGuest = props => {
                                     <Input placeholder={'Postal Code'} onChange={onChangePostal}/>
                                 </Item>
                             </Col>
-
+                            <Col span={24}>
+                                <div className="flex justify-center text-info">Please click the exact location of your address on the map below</div>
+                            </Col>
                             <Col span={24}>
                                 <div className="mb-8 mt-6">
                                     <GoogleMap

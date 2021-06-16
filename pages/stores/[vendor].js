@@ -190,17 +190,17 @@ const VendorPage = props => {
                 </Col>
             </Row>
 
-            <Row gutter={24}>
+            <Row gutter={[24, 24]}>
                 <Col xs={24}>
                     <h2 className="text-2xl text-type font-medium mt-6 mb-12">Results</h2>
                 </Col>
-                <Col xs={24} md={8} lg={6} className={'flex items-stretch'} >
+                <Col xs={24} md={24} lg={24} xl={8} className={'flex items-stretch'} >
                     <div className="mb-8 md:mb-0 flex-grow">
                         <CategorySubCategoryCard storeId={vendor._id} changeHandler={selectCategoryHandler}/>
                         <span/>
                     </div>
                 </Col>
-                <Col xs={24} md={16} lg={18}>
+                <Col xs={24} md={16} lg={24} xl={16}>
                     <Row gutter={[24, 42]}>
 
                         {products.length === 0 && !hasMore && (

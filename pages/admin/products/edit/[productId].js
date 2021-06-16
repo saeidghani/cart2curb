@@ -77,7 +77,7 @@ const EditProduct = props => {
             tax,
             description
         } = product || {};
-        const transformedImageList = images.map((image, index) => {
+        const transformedImageList = images?.map((image, index) => {
             const name = image?.split('/').slice(-1);
             return {
                 url: image,
@@ -110,7 +110,7 @@ const EditProduct = props => {
             message.warning('Please Upload some images form your product');
             return false;
         }
-        const images = imagesList.map(image => product.images.includes(image.url) ? image.url : `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image?.response?.data?.path}`);
+        const images = imagesList?.map(image => product.images.includes(image.url) ? image.url : `${process.env.NEXT_PUBLIC_API_BASE_URL}v1/files/photos${image?.response?.data?.path}`);
         const {name, unitType, category, tax, costPrice, stock, description, unitPrice} = values;
         const priceList = {
             price: Number(unitPrice)
@@ -259,7 +259,7 @@ const EditProduct = props => {
                             }
                         ]}>
                             <Select placeholder={'Category'}>
-                                {categories && categories.map((item, index) => {
+                                {categories && categories?.map((item, index) => {
                                     return (
                                         <Option value={item._id} key={item._id}>{item.name}</Option>
                                     )
