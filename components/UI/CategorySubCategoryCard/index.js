@@ -108,7 +108,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                             <div style={{
                                 width: '90%',
                                 //borderBottom: categories?.length - 1 === index ? '0' : '1px solid lightGray',
-                                lineHeight: categories?.length - 1 === index ? '32px' : '35px',
+                                //lineHeight: categories?.length - 1 === index ? '32px' : '35px',
                             }} className="">
                                 {cat?.name}
                             </div>
