@@ -35,11 +35,11 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
     }
     let newPrice = price;
     const decimalPart = (price+"").split(".")[1];
-    if (decimalPart.length===1) {
+    if (decimalPart?.length===1) {
         newPrice = `${price}0`
     }
     return (
-        <div className="flex flex-col justify-between" style={{height: 420}}>
+        <div className="flex flex-col justify-between" style={{height: 460}}>
             <div className="">
                 <div style={{ position: 'relative', paddingTop: '100%'}}>
                     <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>

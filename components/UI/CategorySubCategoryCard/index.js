@@ -82,6 +82,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
             setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
         }
     };
+    const name = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
     return (
         <div className="category-card">
@@ -107,8 +108,8 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                                    onClick={clickHandler.bind(this, cat?._id)}>
                             <div style={{
                                 width: '90%',
-                            }} className="">
-                                {cat?.name}
+                            }} className="overflow-hidden">
+                                {cat?.name?.length > 50 ? `${cat?.name?.substring(0, 50)}...` : cat?.name}
                             </div>
                         </Menu.Item> : <SubMenu
                             key={cat?._id}

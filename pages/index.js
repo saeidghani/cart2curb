@@ -81,7 +81,7 @@ export default function Home() {
 
 
     const searchWithGps = async (values) => {
-        const {postalCode} = values || {};
+        const {postalCode, sort} = values || {};
         if(postalCode === "" || !postalCode) {
             setLocation(null);
             setPage(1);
@@ -90,13 +90,19 @@ export default function Home() {
             return true;
         }
         if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(postalCode)) {
-            setGuestPostalCode(postalCode);
-            localStorage.setItem('guestPostalCode', postalCode);
-            //const transformedPostal = postalCode.slice(0, 3).trim() + " " + postalCode.slice(-3).trim();
+            const newPostalCode = postalCode.split(' ').join('');
+            console.log(newPostalCode);
+            setGuestPostalCode(newPostalCode);
+            localStorage.setItem('guestPostalCode', newPostalCode);
 
             try {
                 let body = {
-                    zipcode: postalCode
+                    page_number: 1,
+                    page_size: 16,
+                    zipcode: newPostalCode
+                }
+                if(sort) {
+                    body.sort='address.distance'
                 }
                 await dispatch?.app?.getStores(body);
                 /*const res = await api.get("json", {
@@ -122,7 +128,7 @@ export default function Home() {
 
     const sortHandler = async parameter => {
         if(parameter === 'address') {
-            await searchWithGps({postalCode: guestPostalCode});
+            await searchWithGps({postalCode: guestPostalCode, sort:true});
         } else {
             isIntersecting = false;
             setHasMore(true);
