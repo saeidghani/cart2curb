@@ -124,8 +124,8 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                                            onClick={clickHandler.bind(this, subCat?._id)}>
                                     <div style={{
                                         width: '90%',
-                                        borderBottom: cat?.children && cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
-                                        lineHeight: cat?.children && cat?.children?.length - 1 === index ? '32px' : '35px',
+                                        //borderBottom: cat?.children && cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
+                                        //lineHeight: cat?.children && cat?.children?.length - 1 === index ? '32px' : '35px',
                                     }} className="">
                                         {subCat?.name}
                                     </div>
