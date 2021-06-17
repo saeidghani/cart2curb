@@ -376,9 +376,9 @@ export const adminStore = {
         async getProduct({storeId, productId, token}) {
             try {
                 const res = await api?.admin?.store?.getProduct(storeId, productId, setOptions(token));
-                if (res.data.success) {
-                    this.setProduct(res.data.data);
-                    return res.data.data
+                if (res?.data?.success) {
+                    this.setProduct(res?.data?.data);
+                    return res?.data?.data
                 } else {
                     message.error('An Error was occurred');
                     return false;

@@ -18,16 +18,20 @@ const EditProduct = props => {
     const token = useSelector(state => state?.adminAuth?.token);
     const dispatch = useDispatch();
     const loading = useSelector(state => state.loading?.effects?.adminStore?.addProduct);
-    const product = useSelector(state => state?.adminStore?.product);
+    //const product = useSelector(state => state?.adminStore?.product);
     const [imagesList, setImagesList] = useState([]);
     const [categories, setCategories] = useState([]);
     const [unitType, setUnitType] = useState('quantity');
+    const [product, setProduct] = useState({});
     const {productId, storeId, storeType} = router.query;
 
     useEffect(() => {
-        if (storeId && productId && token) {
-            dispatch?.adminStore?.getProduct({storeId, productId, token});
-        }
+        (async () => {
+            if (storeId && productId && token) {
+                const product = await dispatch?.adminStore?.getProduct({storeId, productId, token});
+                setProduct(product);
+            }
+        })();
     }, [storeId, productId, token]);
 
     const onChangeUnitType = (e) => {
@@ -350,7 +354,10 @@ const EditProduct = props => {
                             </Button>
                         </Item>
                         <Item>
-                            <Link href={{pathname: routes.admin.stores.storeDetails, query: {tab: 'product', storeId, storeType}}}>
+                            <Link href={{
+                                pathname: routes.admin.stores.storeDetails,
+                                query: {tab: 'product', storeId, storeType}
+                            }}>
                                 <Button danger className={'w-full md:w-32'}>Cancel</Button>
                             </Link>
                         </Item>

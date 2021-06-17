@@ -39,7 +39,7 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                     } else {
                         setCategories(categories => response?.data);
                     }
-                    if (response.data?.length < 30) {
+                    if (response?.data?.length < 30) {
                         setHasMore(false);
                     }
                 }
@@ -107,8 +107,6 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                                    onClick={clickHandler.bind(this, cat?._id)}>
                             <div style={{
                                 width: '90%',
-                                //borderBottom: categories?.length - 1 === index ? '0' : '1px solid lightGray',
-                                //lineHeight: categories?.length - 1 === index ? '32px' : '35px',
                             }} className="">
                                 {cat?.name}
                             </div>
@@ -126,9 +124,8 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
                                            onClick={clickHandler.bind(this, subCat?._id)}>
                                     <div style={{
                                         width: '90%',
-                                        borderBottom: cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
-                                        lineHeight: cat?.children?.length - 1 === index ? '32px' : '35px',
-                                        //whiteSpace: 'nowrap'
+                                        borderBottom: cat?.children && cat?.children?.length - 1 === index ? '0' : '1px solid lightGray',
+                                        lineHeight: cat?.children && cat?.children?.length - 1 === index ? '32px' : '35px',
                                     }} className="">
                                         {subCat?.name}
                                     </div>
