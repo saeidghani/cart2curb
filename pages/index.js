@@ -22,6 +22,7 @@ export default function Home() {
     const [location, setLocation] = useState(null);
     const [guestPostalCode, setGuestPostalCode] = useState('');
     const [sort, setSort] = useState(undefined);
+    const [postalCodeErrMsg, setPostalCodeErrMsg] = useState(false);
 
     useEffect(() => {
     const guestPostalCode = localStorage.getItem('guestPostalCode');
@@ -94,6 +95,7 @@ export default function Home() {
             return true;
         }
         if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(postalCode)) {
+            setPostalCodeErrMsg(false);
             const newPostalCode = postalCode.split(' ').join('');
             setGuestPostalCode(newPostalCode);
             localStorage.setItem('guestPostalCode', newPostalCode);
@@ -126,6 +128,8 @@ export default function Home() {
                 message.error("Your Postal Code isn\'t valid.")
                 return e;
             }
+        } else {
+            setPostalCodeErrMsg(true);
         }
     }
 
@@ -152,6 +156,7 @@ export default function Home() {
                                     <Item name={'postalCode'} label={'Postal Code'}>
                                         <Input placeholder='Postal Code' allowClear/>
                                     </Item>
+                                    {postalCodeErrMsg && <div className="text-btn">Please Enter Valid Postal Code</div>}
                                 </Col>
                                 <Col xs={24} lg={3} style={{ flexBasis: 125}}>
                                     <Item>

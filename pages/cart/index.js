@@ -162,7 +162,7 @@ export const CartIndex = (props) => {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
-            render: data => <span className="text-cell">{data}</span>
+            render: data => <span className="text-cell">{data?.length > 90 ? `${data.substring(0, 90)}...` : data}</span>
         },
         {
             title: 'Substitution',
