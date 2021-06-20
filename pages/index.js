@@ -6,7 +6,6 @@ import Page from '../components/Page';
 import ShopOverview from '../components/UI/ShopOverview';
 import Loader from "../components/UI/Loader";
 import {InfoCircleOutlined} from "@ant-design/icons";
-import {api, api as GeocoderAPI} from '../hooks/geocoding';
 
 const { Option } = Select;
 const { Item } = Form;
@@ -17,12 +16,12 @@ export default function Home() {
     const dispatch = useDispatch();
     const [usedGps, setUsedGps] = useState(false);
     const { stores } = useSelector(state => state.app);
-    const [sort, setSort] = useState(undefined);
     const loader = useRef(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [location, setLocation] = useState(null);
     const [guestPostalCode, setGuestPostalCode] = useState('');
+    const [sort, setSort] = useState(undefined);
 
     useEffect(() => {
     const guestPostalCode = localStorage.getItem('guestPostalCode');
@@ -30,30 +29,35 @@ export default function Home() {
     }, []);
 
     useEffect(async () => {
-        if(hasMore || page === 1) {
-            let body = {
-                page_number: page,
-                page_size: 16,
-            }
-            if(sort) {
-                body.sort = sort;
-            }
-            if(location) {
-                body.lat = location.lat;
-                body.lng = location.lng;
-            }
-            try {
-                const response = await dispatch.app.getStores(body)
-                if(response.data.length < 16) {
-                    setHasMore(false);
+        if (sort !== 'address') {
+            if(hasMore || page === 1) {
+                let body = {
+                    page_number: page,
+                    page_size: 16,
                 }
-            } catch(e) {
-                setHasMore(false);
-                message.error('An Error was occurred while fetching data')
+                if(sort) {
+                    body.sort = sort;
+                }
+                if (guestPostalCode) {
+                    body.zipcode = guestPostalCode;
+                }
+                if(location) {
+                    body.lat = location.lat;
+                    body.lng = location.lng;
+                }
+                try {
+                    const response = await dispatch.app.getStores(body);
+                    if(response.data.length < 16) {
+                        setHasMore(false);
+                    }
+                } catch(e) {
+                    setHasMore(false);
+                    message.error('An Error was occurred while fetching data')
+                }
             }
         }
         isIntersecting = true;
-    }, [page, sort, location])
+    }, [page, sort, location]);
 
 
     useEffect(() => {
@@ -91,7 +95,6 @@ export default function Home() {
         }
         if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(postalCode)) {
             const newPostalCode = postalCode.split(' ').join('');
-            console.log(newPostalCode);
             setGuestPostalCode(newPostalCode);
             localStorage.setItem('guestPostalCode', newPostalCode);
 
@@ -128,11 +131,12 @@ export default function Home() {
 
     const sortHandler = async parameter => {
         if(parameter === 'address') {
+            setSort('address');
             await searchWithGps({postalCode: guestPostalCode, sort:true});
         } else {
             isIntersecting = false;
             setHasMore(true);
-            setSort(parameter)
+            setSort(parameter);
             setPage(1);
         }
     }
