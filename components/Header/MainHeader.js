@@ -124,8 +124,23 @@ const MainHeader = props => {
         </div>
     );
 
+    const ExtraInfo = () => (
+        <div className="flex flex-col items-center space-y-2">
+            <div className="text-sm">Questions? Call or text</div>
+            <div className="text-btn text-xl font-bold">548-883-2278</div>
+            <div className="text-sm">Or</div>
+            <Link
+                href="https://cart2curb.ca/#c-form"
+            >
+                <button className="bg-btn text-white py-2 px-4 rounded focus:outline-none">
+                    Create a custom order
+                </button>
+            </Link>
+        </div>
+    );
+
     return (
-        <div className="header__content">
+        <div className="flex justify-between items-start h-full pt-10">
             <div className="flex flex-row items-center">
                 <Link href={routes.homepage}>
                     <a>
@@ -158,41 +173,43 @@ const MainHeader = props => {
                     )}
                 </div>
             </div>
-            <div className="hidden md:flex flex-row items-center">
-                {!isVendorPage ? (
-                    <Link href={routes.cart.index}>
-                        <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
-                            <HeaderNotificationIcon />
-                        </Badge>
-                    </Link>
-                ) : (isCustomCart && (isAuthenticated || isAdmin)) ? (
-                    <Link href={routes.vendors.customCart.index}>
-                        <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
-                            <HeaderNotificationIcon />
-                        </Badge>
-                    </Link>
-                ) : null}
-                {isAuthenticated ? (
-                    <>
-                        {router.route !== routes.vendors.account.changePassword && (
-                            <Dropdown overlay={UserDropdown} placement={"bottomRight"}>
-                                <div className="ml-14 cursor-pointer">
-                                    <Avatar src={avatarImage} justImage/>
-                                </div>
-                            </Dropdown>
-                        )}
-                    </>
-                ) : isAdmin ? <AdminProfile/> : (
-                    <>
-                        <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
-                            <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
+            <div className="hidden md:flex flex-col space-y-4 items-center">
+                <div className="flex items-center">
+                    {!isVendorPage ? (
+                        <Link href={routes.cart.index}>
+                            <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
+                                <HeaderNotificationIcon />
+                            </Badge>
                         </Link>
-                        <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
-                            <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
+                    ) : (isCustomCart && (isAuthenticated || isAdmin)) ? (
+                        <Link href={routes.vendors.customCart.index}>
+                            <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
+                                <HeaderNotificationIcon />
+                            </Badge>
                         </Link>
-                    </>
-                )}
-
+                    ) : null}
+                    {isAuthenticated ? (
+                        <>
+                            {router.route !== routes.vendors.account.changePassword && (
+                                <Dropdown overlay={UserDropdown} placement={"bottomRight"}>
+                                    <div className="ml-14 cursor-pointer">
+                                        <Avatar src={avatarImage} justImage/>
+                                    </div>
+                                </Dropdown>
+                            )}
+                        </>
+                    ) : isAdmin ? <AdminProfile/> : (
+                        <>
+                            <Link href={isVendorPage ? userTypes['vendor'].login : userTypes['customer'].login}>
+                                <Button type={'link'} className={'w-30 text-type ml-1 md:ml-6 lg:ml-8'}>Login</Button>
+                            </Link>
+                            <Link href={isVendorPage ? userTypes['vendor'].register : userTypes['customer'].register}>
+                                <Button className={'w-30 text-type text-base ml-1 md:ml-3'}>Register</Button>
+                            </Link>
+                        </>
+                    )}
+                </div>
+            <ExtraInfo/>
             </div>
             <div className="flex md:hidden">
                 <Button style={{width: 50, height: 50}} className={'text-type text-xl'} type={'link'}
@@ -273,6 +290,9 @@ const MainHeader = props => {
                                 ) : null}
                             </Col>
                         </Row>
+                        <div className="flex justify-end">
+                            <ExtraInfo/>
+                        </div>
                     </div>
                     <div className={'w-full'}>
                         {isAuthenticated ? (
