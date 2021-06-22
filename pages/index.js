@@ -94,9 +94,10 @@ export default function Home() {
             setUsedGps(false);
             return true;
         }
-        if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(postalCode)) {
+        const upperPostalCode = postalCode.toUpperCase();
+        if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(upperPostalCode)) {
             setPostalCodeErrMsg(false);
-            const newPostalCode = postalCode.split(' ').join('');
+            const newPostalCode = upperPostalCode.split(' ').join('');
             setGuestPostalCode(newPostalCode);
             localStorage.setItem('guestPostalCode', newPostalCode);
 
@@ -154,7 +155,10 @@ export default function Home() {
                             <Row gutter={24} className={'flex flex-col lg:flex-row justify-center lg:items-center'}>
                                 <Col xs={24} lg={16}>
                                     <Item name={'postalCode'} label={'Postal Code'}>
-                                        <Input placeholder='Postal Code' allowClear/>
+                                        <Input
+                                            placeholder='Postal Code'
+                                            allowClear
+                                        />
                                     </Item>
                                     {postalCodeErrMsg && <div className="text-btn">Please Enter Valid Postal Code</div>}
                                 </Col>
