@@ -32,13 +32,13 @@ const CurrentOrders = () => {
 
     const handleIncreaseGathered = (productId) => {
         setCurrentQuantity({...currentQuantity, [productId]: currentQuantity[productId] + 1})
-        dispatch?.driverDelivery?.addDeliveryGathered({deliveryId, body: [{_id: productId, gathered: 1}], token})
+        dispatch?.driverDelivery?.addDeliveryGathered({deliveryId, body: [{_id: productId, gathered: currentQuantity[productId]+1}], token})
     }
 
     const handleDecreaseGathered = (productId) => {
         if (currentQuantity[productId] > 1) {
             setCurrentQuantity({...currentQuantity, [productId]: currentQuantity[productId] - 1})
-            dispatch?.driverDelivery?.addDeliveryGathered({deliveryId, body: [{_id: productId, gathered: -1}], token})
+            dispatch?.driverDelivery?.addDeliveryGathered({deliveryId, body: [{_id: productId, gathered: currentQuantity[productId]-1}], token})
         }
     }
 
