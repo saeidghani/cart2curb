@@ -79,7 +79,7 @@ const Current = () => {
             <div className="flex mt-7">
                 <div className="w-6/12">
                     <div className="text-xs font-normal text-overline">
-                        Sources
+                        Stores
                     </div>
                     <div className="flex flex-col">
                         {sources?.length > 0 ? sources.map(s => <div className="font-normal text-sm">

@@ -21,7 +21,7 @@ export const driverDelivery = {
             metaData: {},
             data: []
         },
-        customerOrders: {},
+        customerOrders: [],
     },
     reducers: {
         setAvailableDeliveries: (state, payload) => {
