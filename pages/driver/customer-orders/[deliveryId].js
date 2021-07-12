@@ -8,15 +8,16 @@ import {convertAddress} from '../../../helpers';
 
 const CurrentOrders = () => {
     const dispatch = useDispatch();
-    const customerOrders = useSelector(state => state?.driverDelivery?.customerOrders);
     const router = useRouter();
     const {deliveryId} = router.query;
     const token = useSelector(state => state?.driverAuth?.token);
     const [totalGathered, setTotalGathered] = useState({});
+    const [customerOrders, setCustomerOrders] = useState([]);
 
-    useEffect(() => {
+    useEffect(async () => {
         if (token) {
-            dispatch?.driverDelivery?.getCustomerOrders({deliveryId, token});
+            const res = await dispatch?.driverDelivery?.getCustomerOrders({deliveryId, token});
+            setCustomerOrders(res);
         }
     }, [token]);
 
@@ -131,12 +132,13 @@ const CurrentOrders = () => {
                     {customerOrders?.map(order => (
                         <>
                             <DetailInfo
+                                key={order?._id}
                                 title="Store Address"
                                 description={order?.store?.address ? convertAddress(order?.store?.address) : '-'}
                                 borderLess
                             />
                             {order?.products?.map(product =>
-                                <ProductDetails product={product}/>
+                                <ProductDetails key={product?._id} product={product}/>
                             )}
                         </>
                     ))}
@@ -147,9 +149,3 @@ const CurrentOrders = () => {
 };
 
 export default CurrentOrders;
-/*
-order?.products?.map(product =>
-    <>
-        <ProductDetails product={product}/>
-    </>
-)*/

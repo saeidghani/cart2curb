@@ -41,10 +41,10 @@ const CheckoutSuccess = props => {
                     <DetailItem title={'Company'} value={'Cart2Curb'}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Phone Number'} value={'+1 234 (567) 7342'}/>
+                    <DetailItem title={'Phone Number'} value={'548-883-2278'}/>
                 </Col>
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Email Address'} value={'info@Cart2curb.com'}/>
+                    <DetailItem title={'Email Address'} value={'orders@cart2curb.ca'}/>
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>

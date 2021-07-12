@@ -82,7 +82,7 @@ const Current = () => {
                         Stores
                     </div>
                     <div className="flex flex-col">
-                        {sources?.length > 0 ? sources.map(s => <div className="font-normal text-sm">
+                        {sources?.length > 0 ? sources.map((s, index) => <div key={index} className="font-normal text-sm">
                             {s?.name}
                         </div>) : '-'}
                     </div>
@@ -150,7 +150,7 @@ const Current = () => {
     );
 
     const DeliveryNav = () => (
-        <div className="grid grid-cols-2 shadow-lg mb-10 w-full h-full">
+        <div className="grid grid-cols-2 shadow-lg mb-10 w-full h-full cursor-pointer">
             <Link href={routes.driver.deliveries.available}>
                 <div className="text-secondarey text-center p-4 bg-white">
                     Available Deliveries
@@ -171,7 +171,7 @@ const Current = () => {
                 <div className="min-h-full flex flex-col items-center px-4">
                     {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.length > 0 ? <>
                         {deliveries?.filter(d => !clickedDeliveries.includes(d?._id))?.map(delivery =>
-                            <DeliveryCard {...delivery}/>)}
+                            <DeliveryCard key={delivery?._id} {...delivery}/>)}
                     </> : currentDeliveriesLoading ? <span></span> : <EmptyDelivery/>}
                 </div>
                 <div className="flex justify-center" style={{position: 'sticky', bottom: 0, width: '100vw', height: 54}}>
