@@ -12,7 +12,7 @@ const CurrentOrders = () => {
     const router = useRouter();
     const {deliveryId} = router.query;
     const token = useSelector(state => state?.driverAuth?.token);
-    const [currentQuantity, setCurrentQuantity] = useState({});
+    const [totalGathered, setTotalGathered] = useState({});
 
     useEffect(() => {
         if (token) {
@@ -24,21 +24,29 @@ const CurrentOrders = () => {
         let newCurrentQuantities = {};
         customerOrders?.forEach(order => {
             order?.products?.forEach(p => {
-                newCurrentQuantities = {...newCurrentQuantities, [p._id]: p?.quantity};
+                newCurrentQuantities = {...newCurrentQuantities, [p._id]: 1};
             });
         });
-        setCurrentQuantity(newCurrentQuantities);
+        setTotalGathered(newCurrentQuantities);
     }, [customerOrders]);
 
     const handleIncreaseGathered = (productId) => {
-        setCurrentQuantity({...currentQuantity, [productId]: currentQuantity[productId] + 1})
-        dispatch?.driverDelivery?.addDeliveryGathered({deliveryId, body: [{_id: productId, gathered: currentQuantity[productId]+1}], token})
+        setTotalGathered({...totalGathered, [productId]: totalGathered[productId] + 1})
+        dispatch?.driverDelivery?.addDeliveryGathered({
+            deliveryId,
+            body: [{_id: productId, gathered: totalGathered[productId] + 1}],
+            token
+        })
     }
 
     const handleDecreaseGathered = (productId) => {
-        if (currentQuantity[productId] > 1) {
-            setCurrentQuantity({...currentQuantity, [productId]: currentQuantity[productId] - 1})
-            dispatch?.driverDelivery?.addDeliveryGathered({deliveryId, body: [{_id: productId, gathered: currentQuantity[productId]-1}], token})
+        if (totalGathered[productId] > 1) {
+            setTotalGathered({...totalGathered, [productId]: totalGathered[productId] - 1})
+            dispatch?.driverDelivery?.addDeliveryGathered({
+                deliveryId,
+                body: [{_id: productId, gathered: totalGathered[productId] - 1}],
+                token
+            })
         }
     }
 
@@ -57,22 +65,26 @@ const CurrentOrders = () => {
                 <div className="flex items-center space-x-2 p-4"
                      style={{borderBottom: '1px solid #D9D9D9'}}>
                     {product?.images?.length > 0 &&
-                        <img
-                            src={product?.images[0]}
-                            alt="" width={56}/>
+                    <img
+                        src={product?.images[0]}
+                        alt="" width={56}/>
                     }
                     <div className="ml-3">{product?.name || '-'}</div>
                 </div>
                 <div className="flex items-center w-full">
                     <DetailInfo
                         title={"Quantity/Weight"}
-                        description={currentQuantity[product?._id] || '-'}
+                        description={product?.quantity || '-'}
                         borderLess
                     />
                     <div className="flex items-center space-x-4 pt-4 pr-4">
                         <div
                             className="w-6 h-4 bg-white relative cursor-pointer"
-                            onClick={() => handleDecreaseGathered(product?._id)}
+                            onClick={() => {
+                                if (totalGathered[product?._id] > 0) {
+                                    handleDecreaseGathered(product?._id)
+                                }
+                            }}
                         >
                         <span className="text-lg absolute top-0 left-0"
                               style={{paddingTop: 8, paddingLeft: 7}}>
@@ -84,10 +96,14 @@ const CurrentOrders = () => {
                         </svg>
                         </span>
                         </div>
-                        <div className="">{currentQuantity[product?._id]}</div>
+                        <div className="">{totalGathered[product?._id]}</div>
                         <div
                             className="w-6 h-4 bg-white relative cursor-pointer"
-                            onClick={() => handleIncreaseGathered(product?._id)}
+                            onClick={() => {
+                                if (product?.quantity > totalGathered[product?._id]) {
+                                    handleIncreaseGathered(product?._id);
+                                }
+                            }}
                         >
                         <span className="text-lg absolute top-0 left-0"
                               style={{paddingTop: 4, paddingLeft: 7}}>
