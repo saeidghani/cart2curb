@@ -85,7 +85,7 @@ const Available = () => {
     );
 
     const DeliveryNav = () => (
-        <div className="grid grid-cols-2 shadow-lg w-full h-full">
+        <div className="grid grid-cols-2 shadow-lg w-full h-full cursor-pointer">
             <Link href={routes.driver.deliveries.available}>
                 <div className="text-secondarey text-center p-4" style={{backgroundColor: '#E6F7FF'}}>Available
                     Deliveries
@@ -113,7 +113,7 @@ const Available = () => {
             <div className="flex">
                 <div className="w-6/12">
                     <div className="text-xs font-normal text-overline">
-                        Sources
+                        Stores
                     </div>
                     <div className="flex flex-col">
                         {sources?.length > 0 ? sources.map(s => <div className="font-normal text-sm">
