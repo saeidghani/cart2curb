@@ -82,9 +82,8 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
             setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
         }
     };
-    const name = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
-    return (
+       return (
         <div className="category-card">
             {categories?.length === 0 && !hasMore && (
                 <span className="text-paragraph py-4 block">&mdash; There is no Category</span>
@@ -144,5 +143,4 @@ const CategorySubCategoryCard = ({title, changeHandler, storeId, ...props}) => {
 }
 
 export default CategorySubCategoryCard;
-//
 

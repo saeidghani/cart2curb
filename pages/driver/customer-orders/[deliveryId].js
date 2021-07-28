@@ -41,7 +41,7 @@ const CurrentOrders = () => {
     }
 
     const handleDecreaseGathered = (productId) => {
-        if (totalGathered[productId] > 1) {
+        if (totalGathered[productId] >= 1) {
             setTotalGathered({...totalGathered, [productId]: totalGathered[productId] - 1})
             dispatch?.driverDelivery?.addDeliveryGathered({
                 deliveryId,

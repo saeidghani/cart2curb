@@ -56,33 +56,29 @@ const SignUp = props => {
     }
 
     const submitRegistration = async (values) => {
-        if(marker.position.hasOwnProperty('lat')) {
-            const { firstName, lastName, email, phone, password, province, city, addressLine1, addressLine2, postalCode} = values;
-            const body = {
-                firstName, lastName, email, phone, password,
-                address: {
-                    country: 'Canada',
-                    province: provinces[province],
-                    city,
-                    addressLine1,
-                    addressLine2,
-                    postalCode,
-                    location: {
-                        type: 'Point',
-                        coordinates: [marker.position.lng, marker.position.lat]
-                    }
+        const { firstName, lastName, email, phone, password, province, city, addressLine1, addressLine2, postalCode} = values;
+        const body = {
+            firstName, lastName, email, phone, password,
+            address: {
+                country: 'Canada',
+                province: provinces[province],
+                city,
+                addressLine1,
+                addressLine2,
+                postalCode,
+                location: {
+                    type: 'Point',
+                    coordinates: [marker.position.lng, marker.position.lat]
                 }
-
             }
 
-            const result = await dispatch.auth.register(body)
-            if(result) {
-                setAuthenticated(true);
-                setUserType('customer')
-                setCompleteStep(true);
-            }
-        } else {
-            message.error('Please Select you Position on Map', 5)
+        }
+
+        const result = await dispatch.auth.register(body)
+        if(result) {
+            setAuthenticated(true);
+            setUserType('customer')
+            setCompleteStep(true);
         }
     }
 

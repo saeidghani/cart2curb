@@ -22,7 +22,7 @@ const ShopOverview = ({imageURL, name, title, service, subType, ...props}) => {
                         <ShopOutlined />
                     </div>
                 ) : (
-                    <img src={imageURL} alt={name} style={{ maxHeight: 288, minHeight: 288, objectFit: 'cover', width: '100%', borderRadius: 2, cursor: 'pointer' }} onError={changeToPlaceholder}/>
+                    <img src={imageURL} alt={name} style={{ maxHeight: 288, minHeight: 288, objectFit: 'contain', width: '100%', borderRadius: 2, cursor: 'pointer' }} onError={changeToPlaceholder}/>
                 )}
             </Link>
             <div className="flex flex-col mt-4">

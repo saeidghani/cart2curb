@@ -28,9 +28,9 @@ const MainHeader = props => {
     const userType = useAuthenticatedUserType()
     const dispatch = useDispatch();
     const token = useSelector(state => state.auth.token);
-    const cart = useSelector(state => state.cart.cart);
-    const customCart = useSelector(state => state.customCart.cart)
-    const cartChanges = useSelector(state => state.cart.cartChanges);
+    const cart = useSelector(state => state?.cart?.cart);
+    const customCart = useSelector(state => state?.customCart?.cart)
+    const cartChanges = useSelector(state => state?.cart?.cartChanges);
     const { setAuthenticated, setUserType } = useAuth();
 
 
@@ -44,7 +44,7 @@ const MainHeader = props => {
     }, []);
 
     useEffect(() => {
-        dispatch.cart.getClientCart();
+        dispatch?.cart?.getClientCart();
     }, [token, cartChanges]);
 
     useEffect(() => {
@@ -132,9 +132,16 @@ const MainHeader = props => {
             <Link
                 href="https://cart2curb.ca/#c-form"
             >
-                <button className="bg-btn text-white py-2 px-4 rounded focus:outline-none">
+                <div className="bg-btn text-white text-center py-2 rounded focus:outline-none cursor-pointer" style={{width: 179}}>
                     Create a custom order
-                </button>
+                </div>
+            </Link>
+            <Link
+                href={routes.homepage}
+            >
+                <div className="bg-btn text-white text-center py-2 rounded focus:outline-none cursor-pointer" style={{width: 179}}>
+                    View stores near me
+                </div>
             </Link>
         </div>
     );
