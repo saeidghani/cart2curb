@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useEffect} from 'react';
 import {Button, Input, Radio, Table, Checkbox, InputNumber, Row, Col, Form, Select, message} from 'antd';
-import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
+import {DeleteOutlined, LoadingOutlined} from '@ant-design/icons';
 
 import Page from "../../components/Page";
 import cookie from "cookie";
@@ -10,8 +10,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import {useAuth} from "../../providers/AuthProvider";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
 
 const _expandedRowKeys = new Set();
@@ -28,7 +28,7 @@ const substitutionOptions = [
 ]
 
 export const CartIndex = (props) => {
-    const { cart, stores } = props;
+    const {cart, stores} = props;
     const [form] = Form.useForm()
     const [products, setProducts] = useState([])
     const [deleted, setDeleted] = useState([]);
@@ -42,14 +42,14 @@ export const CartIndex = (props) => {
 
 
     useEffect(() => {
-        if(cart.hasOwnProperty('totalPrice')) {
+        if (cart.hasOwnProperty('totalPrice')) {
             const total = products.reduce((total, item) => total += Number(item.totalPrice), 0);
             setTotal(total.toFixed(2));
         }
     }, [cart, products])
 
     useEffect(() => {
-        if(cart.hasOwnProperty('products')) {
+        if (cart.hasOwnProperty('products')) {
             const transformedProducts = cart.products.map(product => {
                 return {
                     _id: product._id,
@@ -72,7 +72,7 @@ export const CartIndex = (props) => {
 
     }, [cart])
 
-    const changeQuantity = (value, index) => {
+    const changeQuantity = async (value, index, productId) => {
         const newProducts = [...products];
         const price = value * newProducts[index].price
         const tax = (cart.products[index].tax * price / 100).toFixed(2)
@@ -82,6 +82,14 @@ export const CartIndex = (props) => {
             tax,
             totalPrice,
             quantity: value
+        }
+        const body = {
+            productId,
+            quantity: value,
+        }
+        const res = await dispatch.cart.addToCart(body)
+        if(res) {
+            message.success('Product added to your cart');
         }
 
         setProducts(newProducts);
@@ -93,7 +101,7 @@ export const CartIndex = (props) => {
             ...newProducts[index],
             [key]: !value ? undefined : typeof value === 'boolean' ? defaultSubstitutionOptions[0] : value,
         }
-        if(changeState && (value && !_expandedRowKeys.has(index) || !value && _expandedRowKeys.has(index))) {
+        if (changeState && (value && !_expandedRowKeys.has(index) || !value && _expandedRowKeys.has(index))) {
             _expandedRowKeys.has(index)
                 ? _expandedRowKeys.delete(index)
                 : _expandedRowKeys.add(index);
@@ -105,12 +113,12 @@ export const CartIndex = (props) => {
     }
 
     const deleteItem = (id, index) => {
-        setDeleted(deleted =>[...deleted, id])
+        setDeleted(deleted => [...deleted, id])
         setProducts(oldProducts => {
             return oldProducts.filter((_, i) => i !== index);
         })
 
-        if(_expandedRowKeys.has(index)) {
+        if (_expandedRowKeys.has(index)) {
             _expandedRowKeys.delete(index)
             setExpandedRows(Array.from(_expandedRowKeys.values()));
         }
@@ -121,8 +129,8 @@ export const CartIndex = (props) => {
         const body = {
             note: values.notes || '',
         }
-        for(let i in products) {
-            if(!deleted.includes(products[i])) {
+        for (let i in products) {
+            if (!deleted.includes(products[i])) {
                 const product = products[i];
                 const quantity = product.quantity;
                 const _id = product._id;
@@ -138,14 +146,14 @@ export const CartIndex = (props) => {
         body.products = transformedProducts;
         try {
             const result = await dispatch.cart.updateCart(body);
-            if(result) {
-                if(auth.isAuthenticated && auth.userType === 'customer') {
+            if (result) {
+                if (auth.isAuthenticated && auth.userType === 'customer') {
                     router.push(routes.cart.delivery)
                 } else {
                     router.push(routes.cart.guest.index);
                 }
             }
-        } catch(e) {
+        } catch (e) {
             return false;
         }
 
@@ -162,7 +170,8 @@ export const CartIndex = (props) => {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
-            render: data => <span className="text-cell">{data?.length > 90 ? `${data.substring(0, 90)}...` : data}</span>
+            render: data => <span
+                className="text-cell">{data?.length > 90 ? `${data.substring(0, 90)}...` : data}</span>
         },
         {
             title: 'Substitution',
@@ -171,8 +180,12 @@ export const CartIndex = (props) => {
             render: (data, row) => {
                 return (
                     <>
-                        <Checkbox className={'text-cell checkbox-info pr-8'} onChange={e => changeSubtitution(true, row.index, 'subtitution')} checked={products[row.index]?.subtitution}>Yes</Checkbox>
-                        <Checkbox className={'text-cell checkbox-info'} onChange={e => changeSubtitution(false, row.index, 'subtitution')} checked={!products[row.index]?.subtitution}>No</Checkbox>
+                        <Checkbox className={'text-cell checkbox-info pr-8'}
+                                  onChange={e => changeSubtitution(true, row.index, 'subtitution')}
+                                  checked={products[row.index]?.subtitution}>Yes</Checkbox>
+                        <Checkbox className={'text-cell checkbox-info'}
+                                  onChange={e => changeSubtitution(false, row.index, 'subtitution')}
+                                  checked={!products[row.index]?.subtitution}>No</Checkbox>
                     </>
                 )
             }
@@ -202,7 +215,8 @@ export const CartIndex = (props) => {
             width: 160,
             render: (data, row) => {
                 return (
-                    <InputNumber min={1} defaultValue={data} size={'sm'} className={'cart-number-input'} onChange={e => changeQuantity(e, row.index)}/>
+                    <InputNumber min={1} defaultValue={data} size={'sm'} className={'cart-number-input'}
+                                 onChange={(e) => changeQuantity(e, row.index, row.key)}/>
                 )
             }
         },
@@ -215,11 +229,13 @@ export const CartIndex = (props) => {
                 return (
                     <div className="flex items-center justify-between">
                         <span className="text-cell">{data}</span>
-                        <Button type='link' shape={'circle'} className="flex items-center justify-center btn-icon-small text-cell hover:text-cell" onClick={row.deleteHandler}>
+                        <Button type='link' shape={'circle'}
+                                className="flex items-center justify-center btn-icon-small text-cell hover:text-cell"
+                                onClick={row.deleteHandler}>
                             {row.key === deleteLoading ? (
-                                <LoadingOutlined />
+                                <LoadingOutlined/>
                             ) : (
-                                <DeleteOutlined />
+                                <DeleteOutlined/>
                             )}
                         </Button>
                     </div>
@@ -229,13 +245,13 @@ export const CartIndex = (props) => {
     ];
 
     const data = useMemo(() => {
-        if(cart.hasOwnProperty('products')) {
+        if (cart.hasOwnProperty('products')) {
             return cart.products.filter(product => !deleted.includes(product._id)).map((product, index) => {
                 console.log(product);
                 let totalPrice = product.totalPrice;
                 let tax = product.tax * product.price * product.quantity / 100
 
-                if(products[index]) {
+                if (products[index]) {
                     tax = products[index].tax;
                     totalPrice = products[index].totalPrice;
                 }
@@ -252,7 +268,7 @@ export const CartIndex = (props) => {
                     deleteHandler: async () => {
                         setDeleteLoading(product._id);
                         const res = await dispatch.cart.deleteFromCart(product._id);
-                        if(res) {
+                        if (res) {
                             changeQuantity(0, index);
                             message.success('Products deleted successfully!')
                             deleteItem(product._id, index);
@@ -266,12 +282,12 @@ export const CartIndex = (props) => {
     }, [cart, products, stores, deleted]);
 
     return (
-        <Page title="Cart" breadcrumb={[{ title: 'Cart'}]}>
+        <Page title="Cart" breadcrumb={[{title: 'Cart'}]}>
             <div className="mt-2">
                 <Table columns={columns}
                        dataSource={data}
                        pagination={false}
-                       scroll={{ x: 1100 }}
+                       scroll={{x: 1100}}
                        rowKey={'index'}
                        expandable={{
                            expandIcon: () => null,
@@ -282,20 +298,24 @@ export const CartIndex = (props) => {
 
                                return (
                                    <div className={'flex flex-col items-stretch'}>
-                                       <div className={`flex items-center justify-between cart-substitution pt-3 ${product.subtitution === 'Leave a note' ? 'pb-5' : 'pb-3'}`}>
+                                       <div
+                                           className={`flex items-center justify-between cart-substitution pt-3 ${product.subtitution === 'Leave a note' ? 'pb-5' : 'pb-3'}`}>
                                            <span className={'text-cell text-sm'}>Item #{index + 1} Substitution</span>
-                                           <Radio.Group options={substitutionOptions} onChange={e => changeSubtitution(e.target.value, index, 'subtitution', false)} value={product.subtitution} />
+                                           <Radio.Group options={substitutionOptions}
+                                                        onChange={e => changeSubtitution(e.target.value, index, 'subtitution', false)}
+                                                        value={product.subtitution}/>
                                        </div>
                                        {product.subtitution === 'Leave a note' && (
                                            <div className="flex flex-col items-stretch">
-                                               <label htmlFor={`substitution-${index}`} className={'text-label text-sm pb-2'}>Notes</label>
+                                               <label htmlFor={`substitution-${index}`}
+                                                      className={'text-label text-sm pb-2'}>Notes</label>
                                                <Input.TextArea
                                                    value={product.subtitutionDesc}
                                                    onChange={e => changeSubtitution(e.target.value, index, 'subtitutionDesc', false)}
                                                    placeholder={'Notes'}
                                                    id={`substitution-${index}`}
-                                                   autoSize={{ minRows: 5, maxRows: 8 }}
-                                                   style={{ resize: 'none' }} />
+                                                   autoSize={{minRows: 5, maxRows: 8}}
+                                                   style={{resize: 'none'}}/>
                                            </div>
                                        )}
                                    </div>
@@ -307,7 +327,9 @@ export const CartIndex = (props) => {
             <Row gutter={24}>
                 <Col xs={24} className={'flex flex-col md:flex-row-reverse'}>
                     <Item>
-                        <Button type={'primary'} onClick={submitHandler} className="w-full md:w-32 mt-4 md:mt-8" htmlType={'submit'} loading={loading} disabled={!cart.products || cart.products?.length === 0 || cart.products?.length === deleted.length}>Next</Button>
+                        <Button type={'primary'} onClick={submitHandler} className="w-full md:w-32 mt-4 md:mt-8"
+                                htmlType={'submit'} loading={loading}
+                                disabled={!cart.products || cart.products?.length === 0 || cart.products?.length === deleted.length}>Next</Button>
                     </Item>
                 </Col>
             </Row>
@@ -315,7 +337,7 @@ export const CartIndex = (props) => {
     );
 };
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({req, res}) {
 
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
@@ -325,7 +347,7 @@ export async function getServerSideProps({ req, res }) {
     let cart = {}
     let stores = [];
     if (userType && !['customer', 'vendor'].includes(userType)) {
-        res.writeHead(307, { Location: routes.auth.login });
+        res.writeHead(307, {Location: routes.auth.login});
         res.end();
         return {
             props: {
@@ -338,7 +360,7 @@ export async function getServerSideProps({ req, res }) {
     const store = getStore();
     try {
         let response;
-        if(token && userType === 'customer') {
+        if (token && userType === 'customer') {
             response = await store.dispatch.cart.getCart({
                 headers: {
                     ...req.headers,
@@ -353,20 +375,20 @@ export async function getServerSideProps({ req, res }) {
             });
         }
 
-        if(response) {
+        if (response) {
             cart = response;
 
-            if(cart.hasOwnProperty('stores')) {
-                for(let i in cart.stores) {
+            if (cart.hasOwnProperty('stores')) {
+                for (let i in cart.stores) {
                     const storeId = cart.stores[i];
                     const storeResponse = await store.dispatch.app.getStore(storeId);
-                    if(storeResponse) {
+                    if (storeResponse) {
                         stores.push(storeResponse);
                     }
                 }
             }
         }
-    } catch(e) {
+    } catch (e) {
         return {
             props: {
                 authenticated,

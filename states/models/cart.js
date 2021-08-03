@@ -155,7 +155,6 @@ export const cart = {
             }
         },
         async promoTip(body) {
-            console.log(body);
             try {
                 const res = await api.post('cart/promotip', body);
                 if(res.data.success) {
@@ -202,7 +201,6 @@ export const cart = {
             }
             try {
                 const res = await api.post('cart/confirm', {}, options);
-                console.log(res?.data?.data?.orderId);
                 if(res?.data?.success) {
                     dispatch.cart.setCart({
                         cart: {totalQuantity: 0}

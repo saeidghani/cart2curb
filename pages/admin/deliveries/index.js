@@ -215,6 +215,20 @@ const Deliveries = props => {
                     >
                         {(status === 'pending' || pendingDeliveries?.includes(deliveryId)) ? 'Pending' : 'Assign'}
                     </Button>
+                    {(status === 'pending' || pendingDeliveries?.includes(deliveryId)) && <Button type="link" className='px-8 mt-2' onClick={async () => {
+                        await dispatch.adminDelivery.cancelAssign({deliveryId, body: {}, token});
+                        const query = {};
+                        if (selectedStatus) query.status = selectedStatus;
+                        if (selectedDateOrder) query.sort = selectedDateOrder;
+                        await dispatch?.adminDelivery?.getDeliveries(query);
+                        const newDeliveries = pendingDeliveries.filter(d => d !== deliveryId);
+                        setPendingDeliveries(newDeliveries);
+                        const newSelectedDrivers = {...selectedDrivers};
+                        delete newSelectedDrivers[deliveryId];
+                        setSelectedDrivers(newSelectedDrivers);
+                    }}>
+                        Cancel
+                    </Button>}
                 </div>
             </div>
         </div>

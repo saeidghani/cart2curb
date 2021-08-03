@@ -180,7 +180,7 @@ const MainHeader = props => {
                     )}
                 </div>
             </div>
-            <div className="hidden md:flex space-x-8 items-center">
+            <div className="hidden md:flex space-x-8 items-start">
                 <div className="flex items-center">
                     {!isVendorPage ? (
                         <Link href={routes.cart.index}>

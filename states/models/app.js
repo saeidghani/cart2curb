@@ -57,9 +57,8 @@ export const app = {
         },
         async getStore(storeId) {
             try {
-                const res = await api.app.store(storeId);
-                const data = res.data;
-
+                const res = await api?.app?.store(storeId);
+                const data = res?.data;
                 if(data.success) {
                     return data.data;
                 } else {

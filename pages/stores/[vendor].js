@@ -27,6 +27,8 @@ const VendorPage = props => {
     const [search, setSearch] = useState('');
     const [type, setType] = useState('');
 
+    const productsRef = useRef(null)
+
     const changeToPlaceholder = (source) => {
         setHasError(true);
         return true;
@@ -106,7 +108,6 @@ const VendorPage = props => {
         }
     }
 
-
     const selectCategoryHandler = (catId) => {
         if(catId !== selectedCategory) {
             isIntersecting = false;
@@ -123,6 +124,7 @@ const VendorPage = props => {
         setHasMore(true);
         setSearch(values.search);
         setPage(1);
+        window.scrollTo(0, productsRef.current.offsetTop);
     }
 
     const checkReset = e => {
@@ -190,7 +192,7 @@ const VendorPage = props => {
                 </Col>
             </Row>
 
-            <Row gutter={[24, 24]}>
+            <Row gutter={[24, 24]} ref={productsRef}>
                 <Col xs={24}>
                     <h2 className="text-2xl text-type font-medium mt-6 mb-12">Results</h2>
                 </Col>
@@ -207,7 +209,6 @@ const VendorPage = props => {
                             <Col xs={24} className={'flex flex-col items-center justify-center py-8'}>
                                 <InfoCircleOutlined className={'text-paragraph mb-6 text-4xl'} />
                                 <span className="text-paragraph mb-4">There is no Products.</span>
-
                             </Col>
                         )}
                         {products.map(p => {
@@ -233,6 +234,17 @@ const VendorPage = props => {
         </Page>
     )
 }
+
+/*export async function getServerSideProps(params) {
+    const res = await fetch(`http://workshow.ir/60eb1d69eef4fac93d755137.json`)
+    const vendor = await res.json()
+
+    console.log("🚀 ~ file: [vendor].js ~ line 242 ~ getServerSideProps ~ vendor", vendor)
+
+    return {
+        props: { vendor }, // will be passed to the page component as props
+    }
+}*/
 
 
 export async function getServerSideProps({ req, res, params }) {

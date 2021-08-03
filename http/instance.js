@@ -10,6 +10,7 @@ export default class ApiInstance {
     constructor(baseURL) {
         this.instance = axios.create({
             baseURL: baseURL || `${process.env.NEXT_PUBLIC_LOCAL_BASE_URL}v1/`,
+            //baseURL: 'http://back.cart2curb.ca/api',
             timeout: 30000
         })
     }

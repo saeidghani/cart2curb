@@ -37,7 +37,12 @@ const SignUp = props => {
     const { setAuthenticated, setUserType } = useAuth();
     const provinces = useProvinces();
     const cities = useCities(province);
-    const [geoCode, getGeoCode] = useGeocoding()
+    const [geoCode, getGeoCode] = useGeocoding();
+
+    useEffect(() => {
+       document.getElementById('province').setAttribute('autoComplete', 'new-password');
+       document.getElementById('city').setAttribute('autoComplete', 'new-password');
+    }, []);
 
     const breadcrumb = [
         {
@@ -101,6 +106,7 @@ const SignUp = props => {
             <Row>
                 <Col span={24}>
                     <Form
+                        autocomplete="off"
                         form={form}
                         onFinish={submitRegistration}
                         onFinishFailed={checkRegistration}
@@ -140,7 +146,7 @@ const SignUp = props => {
                                         }
                                     ]}
                                 >
-                                    <Input placeholder="Last Name"/>
+                                    <Input autocomplete="new-password" placeholder="Last Name"/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
@@ -235,6 +241,7 @@ const SignUp = props => {
                                     }]}
                                 >
                                     <Select
+
                                         showSearch
                                         optionFilterProp="children"
                                         filterOption={(input, option) =>
@@ -260,6 +267,7 @@ const SignUp = props => {
                                           }
                                       ]}>
                                     <Select
+                                        autocomplete="new-password"
                                         showSearch
                                         optionFilterProp="children"
                                         filterOption={(input, option) =>

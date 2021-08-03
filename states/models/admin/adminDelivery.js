@@ -44,6 +44,24 @@ export const adminDelivery = {
                 message.error('An Error was occurred in data fetch from the Server')
             }
         },
+        async cancelAssign({deliveryId, body, token}) {
+            try {
+                const res = await api?.admin?.delivery?.cancelAssign(deliveryId, body, setOptions(token))
+                if(res.data.success) {
+                    message.success(' Updated successfully!', 5);
+                    return res;
+                } else {
+                    message.error('An Error was occurred');
+                    return false;
+                }
+            } catch(e) {
+                if(e.hasOwnProperty('response')) {
+                    console.log(e.response);
+                }
+                message.error('An Error was occurred');
+                return false;
+            }
+        },
         async editDelivery({deliveryId, body, token}) {
             try {
                 const res = await api?.admin?.delivery?.editDelivery(deliveryId, body, setOptions(token))

@@ -25,9 +25,8 @@ const StoreProductCard = ({imageURL, name, price, vendor, vendorId, productId, .
             productId,
             quantity: 1,
         }
-        setLoading(true)
-
-        const res = await dispatch.cart.addToCart(body)
+        setLoading(true);
+        const res = await dispatch.cart.addToCart(body);
         if(res) {
             message.success('Product added to your cart');
         }

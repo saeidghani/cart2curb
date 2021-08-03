@@ -101,7 +101,6 @@ export const adminUser = {
         async getDrivers(query, rootState) {
             try {
                 const res = await api?.admin?.user?.getDrivers(query, setOptions(rootState?.adminAuth?.token));
-                console.log(res);
                 const data = res?.data;
                 if(data?.success) {
                     dispatch?.adminUser?.setDrivers({
