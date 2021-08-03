@@ -167,7 +167,7 @@ export const driverDelivery = {
                 const res = await api?.driver?.delivery?.addDeliveryGathered(deliveryId, body, setOptions(token));
 
                 if (res.data.success) {
-                    message.success('added successfully!', 5);
+                    message.success('Updated successfully!', 5);
                     return true;
                 } else {
                     message.error('An Error was occurred');

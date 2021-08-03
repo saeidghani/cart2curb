@@ -79,7 +79,10 @@ const Invoices = props => {
         }
 
         const body = {
-            tip: Number(value),
+            tip: {
+                t: 'percent',
+                val: Number(value)
+            },
         }
 
         const res = await dispatch.cart.promoTip(body)
@@ -92,7 +95,10 @@ const Invoices = props => {
                 setPromoPrice(cart?.totalPrice);
             }
 
-            setTip(Number(value));
+            setTip({
+                t: 'percent',
+                val: Number(value)
+            });
             form.setFieldsValue({
                 tip: Number(value)
             })
@@ -101,7 +107,7 @@ const Invoices = props => {
 
     const applyCustomTipHandler = async () => {
         const body = {
-            tip: Number(tip),
+            tip: {t: 'fixed', val: Number(tip?.val)},
         }
         const res = await dispatch.cart.promoTip(body)
         if(res) {
@@ -117,7 +123,7 @@ const Invoices = props => {
 
     const customTipHandler = (e) => {
         const value = e.target.value;
-        setTip(value);
+        setTip({t: 'fixed', val: value});
         if((Number(value) <= 100 && Number(value) >= 0)) {
             form.setFieldsValue({
                 tip: Number(value)
@@ -204,7 +210,7 @@ const Invoices = props => {
 
         const body = {
             promoCode: value,
-            tip
+            tip: tip?.val
         }
 
         const res = await dispatch.cart.promoTip(body)
@@ -323,7 +329,7 @@ const Invoices = props => {
                         layout="vertical"
                         className="flex flex-col"
                         initialValues={{
-                            tip,
+                            tip: tip?.val,
                         }}
                         onFinish={submitHandler}
                         onFinishFailed={checkValidation}
@@ -332,25 +338,31 @@ const Invoices = props => {
                             <Col lg={24} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
                                     <div className="">Tips</div>
-                                    <Button className={'w-16'} type={(tip === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
-                                    <Button className={'w-16'} type={(tip === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
-                                    <Button className={'w-16'} type={(tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
-                                    <Button className={'w-16'} type={(tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
-                                    <Button className={'w-16'} type={(tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
-                                    <Button className={'w-16'} type={(tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
                                     <Button className={'w-22 ml-6'} type={isCustom ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
                                     <Item className="" name={'tip'} label={'Value'} rules={[
                                         ({getFieldValue}) => ({
                                             validator(rule, value) {
                                                 const transformedValue = Number(value);
-                                                if (!value || (transformedValue >= 0 && transformedValue <= 100)) {
+                                                if (!value || (transformedValue >= 0)) {
                                                     return Promise.resolve();
                                                 }
-                                                return Promise.reject('Tip should be between 0 and 100');
+                                                return Promise.reject('Tip should be larger than 0');
                                             },
                                         })
                                     ]}>
-                                        <Input className="mb-1" placeholder={`${tip}%`} onChange={customTipHandler} disabled={!isCustom}/>
+                                        <Input
+                                            className="mb-1"
+                                            placeholder={tip?.t === 'fixed' ? `${tip?.val}$` : 0}
+                                            value={tip?.t === 'fixed' ? tip?.val : 0}
+                                            onChange={customTipHandler}
+                                            disabled={!isCustom}
+                                        />
                                     </Item>
                                     <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>
                                 </Space>
@@ -366,7 +378,7 @@ const Invoices = props => {
 
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex items-center pl-4 justify-end">
-                                    {(promo || tip) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
+                                    {(promo || tip?.val) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
                                 </div>
                             </Col>
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>

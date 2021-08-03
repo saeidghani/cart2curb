@@ -92,10 +92,6 @@ const CartGuest = props => {
 
 
     const submitHandler = async (values) => {
-        if(!marker.position.hasOwnProperty('lat')) {
-            message.error('Please select your location in map');
-            return false;
-        }
         const {date, time} = values;
         const deliveryTime = date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
         const fromTime = moment(props.deliveryTimes.from);
@@ -134,10 +130,13 @@ const CartGuest = props => {
             addressLine1,
             addressLine2,
             postalCode,
-            location: {
-                type: 'Point',
-                coordinates: [marker.position.lng, marker.position.lat]
-            }
+        }
+
+        if(marker.position.hasOwnProperty('lat')) {
+           transformedAddress.location = {
+               type: 'Point',
+               coordinates: [marker.position.lng, marker.position.lat]
+           };
         }
 
         const res = await dispatch.cart.checkAddress({
