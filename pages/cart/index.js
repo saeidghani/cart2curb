@@ -37,8 +37,8 @@ export const CartIndex = (props) => {
     const [deleteLoading, setDeleteLoading] = useState(-1);
     const loading = useSelector(state => state.loading.effects.cart.updateCart);
     const dispatch = useDispatch();
-    const router = useRouter()
-    const auth = useAuth()
+    const router = useRouter();
+    const auth = useAuth();
 
 
     useEffect(() => {
@@ -73,26 +73,31 @@ export const CartIndex = (props) => {
     }, [cart])
 
     const changeQuantity = async (value, index, productId) => {
-        const newProducts = [...products];
-        const price = value * newProducts[index].price
-        const tax = (cart.products[index].tax * price / 100).toFixed(2)
-        const totalPrice = (Number(price) + Number(tax)).toFixed(2)
-        newProducts[index] = {
-            ...newProducts[index],
-            tax,
-            totalPrice,
-            quantity: value
-        }
-        const body = {
-            productId,
-            quantity: value,
-        }
-        const res = await dispatch.cart.addToCart(body)
-        if(res) {
-            message.success('Product added to your cart');
-        }
+        console.log('q:', value);
+        if (value) {
+            const newProducts = [...products];
+            const price = value * newProducts[index].price
+            const tax = (cart.products[index].tax * price / 100).toFixed(2)
+            const totalPrice = (Number(price) + Number(tax)).toFixed(2)
+            newProducts[index] = {
+                ...newProducts[index],
+                tax,
+                totalPrice,
+                quantity: value
+            }
+            const currentProduct = products?.find(p => p._id === productId);
 
-        setProducts(newProducts);
+            const body = {
+                productId,
+                quantity: value - currentProduct?.quantity,
+            }
+            const res = await dispatch.cart.addToCart(body);
+            if(res) {
+                message.success('Product added to your cart');
+            }
+
+            setProducts(newProducts);
+        }
     }
 
     const changeSubtitution = (value, index, key, changeState = true) => {

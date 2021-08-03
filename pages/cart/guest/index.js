@@ -35,7 +35,12 @@ const CartGuest = props => {
     const dispatch = useDispatch();
     const router = useRouter()
     const { cart } = props;
-    const [geoCode, getGeoCode] = useGeocoding()
+    const [geoCode, getGeoCode] = useGeocoding();
+
+    useEffect(() => {
+        document.getElementById('province').setAttribute('autoComplete', 'new-password');
+        document.getElementById('city').setAttribute('autoComplete', 'new-password');
+    }, []);
 
     const breadcrumb = [
         {
@@ -92,6 +97,10 @@ const CartGuest = props => {
 
 
     const submitHandler = async (values) => {
+        if(!marker.position.hasOwnProperty('lat')) {
+            message.error('Please select your location in map');
+            return false;
+        }
         const {date, time} = values;
         const deliveryTime = date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
         const fromTime = moment(props.deliveryTimes.from);
@@ -130,13 +139,10 @@ const CartGuest = props => {
             addressLine1,
             addressLine2,
             postalCode,
-        }
-
-        if(marker.position.hasOwnProperty('lat')) {
-           transformedAddress.location = {
-               type: 'Point',
-               coordinates: [marker.position.lng, marker.position.lat]
-           };
+            location: {
+                type: 'Point',
+                coordinates: [marker.position.lng, marker.position.lat]
+            }
         }
 
         const res = await dispatch.cart.checkAddress({
@@ -186,6 +192,7 @@ const CartGuest = props => {
                 <Col span={24}>
                     <Form
                         form={form}
+                        autocomplete="off"
                         layout="vertical"
                         className="flex flex-col"
                         onFinishFailed={checkValidation}
@@ -224,7 +231,7 @@ const CartGuest = props => {
                                         }
                                     ]}
                                 >
-                                    <Input placeholder="Last Name"/>
+                                    <Input autocomplete="new-password" placeholder="Last Name"/>
                                 </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>

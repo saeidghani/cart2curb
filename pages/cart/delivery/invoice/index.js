@@ -99,9 +99,6 @@ const Invoices = props => {
                 t: 'percent',
                 val: Number(value)
             });
-            form.setFieldsValue({
-                tip: Number(value)
-            })
         }
     }
 
@@ -233,7 +230,6 @@ const Invoices = props => {
     const submitHandler = async (values) => {
         setLoading(true);
         const body = {}
-
         const res = await dispatch.cart.confirmCart(body)
         if(res) {
             message.success('Cart Information updated successfully!')
@@ -329,7 +325,7 @@ const Invoices = props => {
                         layout="vertical"
                         className="flex flex-col"
                         initialValues={{
-                            tip: tip?.val,
+                            tip: tip?.t === 'fixed' ? tip?.val : 0,
                         }}
                         onFinish={submitHandler}
                         onFinishFailed={checkValidation}

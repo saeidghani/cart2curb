@@ -100,9 +100,6 @@ const Invoices = props => {
                 t: 'percent',
                 val: Number(value)
             });
-            form.setFieldsValue({
-                tip: Number(value)
-            })
         }
     }
 
@@ -328,7 +325,7 @@ const Invoices = props => {
                         layout="vertical"
                         className="flex flex-col"
                         initialValues={{
-                            tip: tip?.val,
+                            tip: tip?.t === 'fixed' ? tip?.val : 0,
                         }}
                         onFinish={submitHandler}
                         onFinishFailed={checkValidation}
