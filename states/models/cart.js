@@ -76,6 +76,19 @@ export const cart = {
                 return false;
             }
         },
+        async updateCartItems(body) {
+            try {
+                const res = await api.put('cart', body);
+                if(res.data.success) {
+                    dispatch.cart.changeCart();
+                    return res;
+                }
+
+                return false;
+            } catch(e) {
+                return false;
+            }
+        },
         async deleteFromCart(id) {
             try{
                 const res = await api.post('cart/delete', {

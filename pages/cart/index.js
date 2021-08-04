@@ -85,15 +85,23 @@ export const CartIndex = (props) => {
                 totalPrice,
                 quantity: value
             }
-            const currentProduct = products?.find(p => p._id === productId);
 
+            const productsSummary = cart.products.map(p => ({
+                _id: p._id,
+                subtitution: p?.subtitution,
+                quantity: p?.quantity
+            }));
+            console.log({productsSummary});
+            const index = productsSummary.findIndex(p => p._id === productId);
+            console.log({index});
+            productsSummary[index].quantity = value;
             const body = {
-                productId,
-                quantity: value - currentProduct?.quantity,
+                products: productsSummary
             }
-            const res = await dispatch.cart.addToCart(body);
-            if(res) {
-                message.success('Product added to your cart');
+            console.log({body});
+            const res = await dispatch.cart.updateCartItems(body);
+            if (res) {
+                message.success('Cart updated successfully');
             }
 
             setProducts(newProducts);
