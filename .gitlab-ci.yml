@@ -33,6 +33,6 @@ deploy-dev:
     - pm2 delete $DEVELOP_NAME || true
     - pm2 start npm --name $DEVELOP_NAME -- run start
   only:
-    - develop
+    - QA2
   tags:
     - shared
