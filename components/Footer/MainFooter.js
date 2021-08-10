@@ -1,12 +1,16 @@
 import React from 'react';
 import routes from "../../constants/routes";
 import Link from "next/link";
+import {ArrowUpOutlined} from '@ant-design/icons';
 
 const Footer = props => {
     return (
         <footer className="bg-secondary w-full px-6 md:px-30 pt-15 text-white relative">
-            <div className="flex items-stretch md:items-start flex-col md:flex-row">
-
+            <a className='flex items-center' href='#header'>
+                <span className='mr-2'>Back To Top</span>
+                <ArrowUpOutlined style={{fontSize: 20}}/>
+            </a>
+            <div className="flex items-stretch md:items-start flex-col md:flex-row mt-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-y-4 pb-4 flex-grow">
                     <Link href={routes.contact}>
                         <span className="col-span-2 md:col-span-1 cursor-pointer text-base">Contact Us</span>
@@ -45,7 +49,8 @@ const Footer = props => {
             </div>
             <div className="pt-8 pb-12 border-t border-paragraph flex flex-row justify-between items-center">
                 <span className="col-span-1  text-xs"> 2021 Cart2Curb Copyright</span>
-                <img src="/images/logo-footer.png" alt="logo" className="cursor-pointer" style={{ width: 60, height: 48 }} />
+                <img src="/images/logo-footer.png" alt="logo" className="cursor-pointer"
+                     style={{width: 60, height: 48}}/>
             </div>
         </footer>
     )

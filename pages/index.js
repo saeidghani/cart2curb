@@ -6,6 +6,8 @@ import Page from '../components/Page';
 import ShopOverview from '../components/UI/ShopOverview';
 import Loader from "../components/UI/Loader";
 import {InfoCircleOutlined} from "@ant-design/icons";
+import { Fab, Action } from 'react-tiny-fab';
+
 
 const { Option } = Select;
 const { Item } = Form;
@@ -27,6 +29,22 @@ export default function Home() {
     useEffect(() => {
     const guestPostalCode = localStorage.getItem('guestPostalCode');
      setGuestPostalCode(guestPostalCode);
+    }, []);
+
+    useEffect(async() => {
+        const productId = '610a983f25ab5ab42140f01a';
+        const productsSummary = [{
+            _id: productId,
+            subtitution: null,
+            quantity: 1
+        }];
+        const body = {
+            products: productsSummary
+        }
+        const res = await dispatch.cart.updateCartItems(body);
+        if(res) {
+            message.success('Product added to your cart');
+        }
     }, []);
 
     useEffect(async () => {
@@ -148,7 +166,7 @@ export default function Home() {
 
     return (
         <Page title={false} breadcrumb={false}>
-            <div className={'mb-16 without-padding'}>
+            <div className={'mb-16 without-padding'} >
                 <Row className={'bg-card flex items-center pt-12 pb-6 layout__section'}>
                     <Col xs={24}>
                         <Form form={form} layout={'vertical'} onFinish={searchWithGps} className={'pl-4 lg:pl-0'}>
@@ -172,7 +190,7 @@ export default function Home() {
                     </Col>
                 </Row>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col" id='header'>
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
                     <h2 className={'text-xl font-medium m-0 mb-2 text-label'}>Stores</h2>
                     {guestPostalCode && <Select

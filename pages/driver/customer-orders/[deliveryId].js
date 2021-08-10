@@ -25,7 +25,7 @@ const CurrentOrders = () => {
         let newCurrentQuantities = {};
         customerOrders?.forEach(order => {
             order?.products?.forEach(p => {
-                newCurrentQuantities = {...newCurrentQuantities, [p._id]: 1};
+                newCurrentQuantities = {...newCurrentQuantities, [p._id]: p?.gathered};
             });
         });
         setTotalGathered(newCurrentQuantities);

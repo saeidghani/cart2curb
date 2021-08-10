@@ -215,7 +215,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                     title={'Date'}
                     labelColor={'muted'}
                     valueColor={'dark'}
-                    value={moment(order?.date)?.format('MM.DD.YYYY')}
+                    value={moment(order?.date)?.format('MM.DD.YYYY HH:mm A')}
                 />
                 <DetailItem
                     title={'Status'}

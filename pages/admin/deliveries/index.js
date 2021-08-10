@@ -36,7 +36,7 @@ const Deliveries = props => {
     const [drivers, setDrivers] = useState([]);
     const [selectedDrivers, setSelectedDrivers] = useState({});
     const [selectedStatus, setSelectedStatus] = useState();
-    const [selectedDateOrder, setSelectedDateOrder] = useState();
+    const [selectedDateOrder, setSelectedDateOrder] = useState('-createdAt');
     const [pendingDeliveries, setPendingDeliveries] = useState([]);
 
     useEffect(() => {
@@ -47,7 +47,8 @@ const Deliveries = props => {
                 if (selectedDateOrder) query.sort = selectedDateOrder;
                 await dispatch?.adminDelivery?.getDeliveries(query);
                 const res = await api?.admin?.user?.getDrivers({}, setOptions(token));
-                setDrivers(res?.data?.data || []);
+                const approvedDrivers = res?.data?.data?.filter(d => d?.isApproved);
+                setDrivers(approvedDrivers || []);
             })();
         };
     }, [isLoggedIn]);
@@ -63,7 +64,8 @@ const Deliveries = props => {
                     await dispatch?.adminDelivery?.getDeliveries(query);
                 }, 60000);
                 const res = await api?.admin?.user?.getDrivers({}, setOptions(token));
-                setDrivers(res?.data?.data || []);
+                const approvedDrivers = res?.data?.data?.filter(d => d?.isApproved);
+                setDrivers(approvedDrivers || []);
             })();
         };
         return () => clearInterval(interval);

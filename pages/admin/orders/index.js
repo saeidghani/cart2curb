@@ -1,8 +1,8 @@
 import React, {useState, useMemo, useRef, useEffect} from 'react';
 import {Button, Col, Form, Input, message, Row, Table} from "antd";
-import moment from "moment";
 import {FileSearchOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
+import moment from "moment";
 
 import Page from "../../../components/Page";
 import AdminAuth from "../../../components/Admin/AdminAuth";
@@ -148,7 +148,7 @@ const Orders = props => {
                 key: order?._id,
                 number: order?.orderNumber || order?._id,
                 index: order?._id,
-                date: moment(order?.date)?.format('MM.DD.YYYY'),
+                date: moment(order?.date)?.format('MM.DD.YYYY HH:mm A'),
                 type: order?.type,
                 totalPrice: order?.products?.reduce((total, item) => total += item?.totalPrice, 0)?.toFixed(2),
                 items: order?.items || order?.products?.reduce((initial, item) => initial += item?.quantity, 0) || order?.products?.length,
