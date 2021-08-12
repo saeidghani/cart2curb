@@ -14,6 +14,9 @@ import {
 } from 'antd';
 import { useDebouncedCallback } from 'use-debounce';
 
+import { DollarOutlined } from '@ant-design/icons';
+
+
 import Page from '../../../../components/Page';
 import {HeaderLogoIcon} from "../../../../components/icons";
 import DetailItem from "../../../../components/UI/DetailItem";
@@ -358,6 +361,7 @@ const Invoices = props => {
                                             value={tip?.t === 'fixed' ? tip?.val : 0}
                                             onChange={customTipHandler}
                                             disabled={!isCustom}
+                                            addonAfter={<DollarOutlined />} 
                                         />
                                     </Item>
                                     <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>
