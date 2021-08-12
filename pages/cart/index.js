@@ -103,7 +103,6 @@ export const CartIndex = (props) => {
             if (res) {
                 message.success('Cart updated successfully');
             }
-
             setProducts(newProducts);
         }
     }

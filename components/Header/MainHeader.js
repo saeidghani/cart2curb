@@ -15,7 +15,7 @@ import HeaderLink from "./HeaderLink";
 import {isCustomCartRoute} from "../../helpers";
 import {useAuth} from "../../providers/AuthProvider";
 
-const { Item } = Menu;
+const {Item} = Menu;
 
 const MainHeader = props => {
     const [visible, setVisible] = useState(false);
@@ -31,7 +31,7 @@ const MainHeader = props => {
     const cart = useSelector(state => state?.cart?.cart);
     const customCart = useSelector(state => state?.customCart?.cart)
     const cartChanges = useSelector(state => state?.cart?.cartChanges);
-    const { setAuthenticated, setUserType } = useAuth();
+    const {setAuthenticated, setUserType} = useAuth();
 
 
     useEffect(() => {
@@ -129,20 +129,26 @@ const MainHeader = props => {
             <div className="text-sm">Questions? Call or text</div>
             <div className="text-btn text-xl font-bold">548-883-2278</div>
             <div className="text-sm">Or</div>
-            <Link
-                href="https://cart2curb.ca/#c-form"
+            <button
+                className="bg-btn text-white text-center py-2 rounded focus:outline-none cursor-pointer"
+                style={{width: 179}}
+                onClick={() => {
+                    setVisible(false);
+                    router.push("https://cart2curb.ca/#c-form");
+                }}
             >
-                <div className="bg-btn text-white text-center py-2 rounded focus:outline-none cursor-pointer" style={{width: 179}}>
-                    Create a custom order
-                </div>
-            </Link>
-            <Link
-                href={routes.homepage}
+                Create a custom order
+            </button>
+            <button
+                className="bg-btn text-white text-center py-2 rounded focus:outline-none cursor-pointer"
+                style={{width: 179}}
+                onClick={() => {
+                    setVisible(false);
+                    router.push(routes.homepage);
+                }}
             >
-                <div className="bg-btn text-white text-center py-2 rounded focus:outline-none cursor-pointer" style={{width: 179}}>
-                    View stores near me
-                </div>
-            </Link>
+                View stores near me
+            </button>
         </div>
     );
 
@@ -185,13 +191,13 @@ const MainHeader = props => {
                     {!isVendorPage ? (
                         <Link href={routes.cart.index}>
                             <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
-                                <HeaderNotificationIcon />
+                                <HeaderNotificationIcon/>
                             </Badge>
                         </Link>
                     ) : (isCustomCart && (isAuthenticated || isAdmin)) ? (
                         <Link href={routes.vendors.customCart.index}>
                             <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer mr-4'}>
-                                <HeaderNotificationIcon />
+                                <HeaderNotificationIcon/>
                             </Badge>
                         </Link>
                     ) : null}
@@ -216,7 +222,7 @@ const MainHeader = props => {
                         </>
                     )}
                 </div>
-            <ExtraInfo/>
+                <ExtraInfo/>
             </div>
             <div className="flex md:hidden">
                 <Button style={{width: 50, height: 50}} className={'text-type text-xl'} type={'link'}
@@ -278,7 +284,7 @@ const MainHeader = props => {
                                                 Cart
                                             </a>
                                             <Badge count={cart?.totalQuantity || 0} className={'cursor-pointer'}>
-                                                <HeaderNotificationIcon />
+                                                <HeaderNotificationIcon/>
                                             </Badge>
                                         </div>
                                     </Link>
@@ -290,7 +296,7 @@ const MainHeader = props => {
                                             </a>
 
                                             <Badge count={customCart?.totalQuantity || 0} className={'cursor-pointer'}>
-                                                <HeaderNotificationIcon />
+                                                <HeaderNotificationIcon/>
                                             </Badge>
                                         </div>
                                     </Link>
