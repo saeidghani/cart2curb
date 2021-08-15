@@ -62,6 +62,7 @@ export const auth = {
         async logout() {
             dispatch.auth.logoutSync();
             await api.post('auth/logout', {})
+            localStorage.removeItem('guestPostalCode');
             return true;
         },
         async register(body) {
