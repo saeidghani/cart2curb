@@ -23,7 +23,7 @@ cache:
   #tags:
     #- shared
 
-deploy-dev:
+deploy-dev: 
   stage: deploy
   variables:
     PORT: $DEVELOP_PORT
