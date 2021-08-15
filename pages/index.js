@@ -58,7 +58,7 @@ export default function Home() {
             }
         }
         isIntersecting = true;
-    }, [page, sort, location]);
+    }, [page, sort, location, guestPostalCode]);
 
 
     useEffect(() => {
