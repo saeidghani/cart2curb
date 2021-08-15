@@ -52,11 +52,13 @@ const CheckAddressModal = ({visible, onHide, address}) => {
 
     const data = useMemo(() => {
         return (address || [])?.map((i, index) => {
+            
+            // product: i?._id -> product: i?.name , store: i?.store -> store: i?.storeName Sepand
             return {
                 key: i?._id,
                 index: index + 1,
-                product: i?._id,
-                store: i?.store,
+                product: i?.name,
+                store: i?.storeName,
                 accepted: i?.accepted,
             }
         })
