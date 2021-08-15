@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Button,
     Input,
@@ -24,24 +24,28 @@ import {getStore} from "../../states";
 import {defaultMapLocation} from "../../constants";
 import {useGeocoding} from "../../hooks/geocoding";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
 const SignUp = props => {
-    const [marker, setMarker] = useState({ position: {}})
+    const [marker, setMarker] = useState({position: {}})
     const [province, setProvince] = useState('');
     const [completeStep, setCompleteStep] = useState(false);
     const loading = useSelector(state => state.loading.effects.auth.register);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const { setAuthenticated, setUserType } = useAuth();
+    const {setAuthenticated, setUserType} = useAuth();
     const provinces = useProvinces();
     const cities = useCities(province);
     const [geoCode, getGeoCode] = useGeocoding();
 
     useEffect(() => {
-       document.getElementById('province').setAttribute('autoComplete', 'new-password');
-       document.getElementById('city').setAttribute('autoComplete', 'new-password');
+        document.getElementById('province').setAttribute('autoComplete', 'new-password');
+        document.getElementById('city').setAttribute('autoComplete', 'new-password');
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
     }, []);
 
     const breadcrumb = [
@@ -61,7 +65,7 @@ const SignUp = props => {
     }
 
     const submitRegistration = async (values) => {
-        const { firstName, lastName, email, phone, password, province, city, addressLine1, addressLine2, postalCode} = values;
+        const {firstName, lastName, email, phone, password, province, city, addressLine1, addressLine2, postalCode} = values;
         const body = {
             firstName, lastName, email, phone, password,
             address: {
@@ -71,16 +75,18 @@ const SignUp = props => {
                 addressLine1,
                 addressLine2,
                 postalCode,
-                location: {
-                    type: 'Point',
-                    coordinates: [marker.position.lng, marker.position.lat]
-                }
             }
 
         }
+        if (marker.position.lng && marker.position.lat) {
+            body.address.location = {
+                type: 'Point',
+                coordinates: [marker.position.lng, marker.position.lat]
+            };
+        }
 
         const result = await dispatch.auth.register(body)
-        if(result) {
+        if (result) {
             setAuthenticated(true);
             setUserType('customer')
             setCompleteStep(true);
@@ -248,7 +254,6 @@ const SignUp = props => {
                                         }
                                         placeholder={'Select'}
                                         onChange={setProvince}
-                                        defaultValue='ON'
                                     >
                                         {Object.keys(provinces).map(abbr => {
                                             return (
@@ -294,12 +299,14 @@ const SignUp = props => {
                                         }
                                     ]}
                                 >
-                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{minRows: 1, maxRows: 6}} style={{ resize: 'none'}}/>
+                                    <Input.TextArea placeholder={'Address Line 1'} autoSize={{minRows: 1, maxRows: 6}}
+                                                    style={{resize: 'none'}}/>
                                 </Item>
                             </Col>
                             <Col span={24}>
                                 <Item name={'addressLine2'} label={'Address Line 2'}>
-                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{minRows: 1, maxRows: 6}} style={{ resize: 'none'}}/>
+                                    <Input.TextArea placeholder={'Address Line 2'} autoSize={{minRows: 1, maxRows: 6}}
+                                                    style={{resize: 'none'}}/>
                                 </Item>
                             </Col>
 
@@ -310,7 +317,7 @@ const SignUp = props => {
                                               required: true,
                                               message: "Please enter Postal Code."
                                           },
-                                          ({ getFieldValue }) => ({
+                                          ({getFieldValue}) => ({
                                               validator(_, value) {
                                                   if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(value)) {
                                                       return Promise.resolve();
@@ -323,7 +330,9 @@ const SignUp = props => {
                                 </Item>
                             </Col>
                             <Col span={24}>
-                                <div className="flex justify-center text-info">Please click the exact location of your address on the map below</div>
+                                <div className="flex justify-center text-info">Please click the exact location of your
+                                    address on the map below
+                                </div>
                             </Col>
                             <Col span={24}>
                                 <div className="mb-8 mt-6">
@@ -339,7 +348,8 @@ const SignUp = props => {
 
                             <Col xs={24} className={'flex items-center justify-end'}>
                                 <Item className={'w-full md:w-32'}>
-                                    <Button type="primary" htmlType={'submit'} block className={'w-full md:w-32'} loading={loading}>
+                                    <Button type="primary" htmlType={'submit'} block className={'w-full md:w-32'}
+                                            loading={loading}>
                                         Register
                                     </Button>
                                 </Item>
