@@ -7,7 +7,8 @@ export const cart = {
     state: {
         cart: {},
         cartChanges: 0,
-        guestId: null
+        guestId: null,
+        checkedAddress: []
     },
     reducers: {
         setCart: (state, payload) => {
@@ -18,6 +19,9 @@ export const cart = {
         },
         setGuestId: (state, payload) => {
             state.guestId = payload.guestId;
+        },
+        setCheckedAddress: (state, payload) => {
+            state.checkedAddress = payload.checkedAddress;
         }
     },
     effects: dispatch => ({
@@ -79,11 +83,11 @@ export const cart = {
         async updateCartItems(body) {
             try {
                 const res = await api.put('cart', body);
-                if(res.data.success) {
+
+                if(res?.data?.success) {
                     dispatch.cart.changeCart();
                     return res;
                 }
-
                 return false;
             } catch(e) {
                 return false;
@@ -127,8 +131,9 @@ export const cart = {
         async checkAddress(body) {
             try {
                 const res = await api.post('cart/check-address', body);
+                dispatch.cart.setCheckedAddress({checkedAddress: res?.data?.data});
                 if(res.data.success) {
-                    return true;
+                    return res?.data?.data;
                 } else {
                     return false;
                 }

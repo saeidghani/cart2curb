@@ -24,6 +24,7 @@ import {useRouter} from "next/router";
 import moment from "moment";
 import {defaultMapLocation} from "../../../constants";
 import {useGeocoding} from "../../../hooks/geocoding";
+import CheckAddressModal from "../../../components/Modals/CheckAddressModal";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -33,6 +34,8 @@ const Delivery = props => {
     const [newAddress, setNewAddress] = useState(false);
     const [province, setProvince] = useState('');
     const [marker, setMarker] = useState({ position: {}})
+    const [checkAddressOpen, setCheckAddressOpen] = useState(false);
+    const [checkedAddress, setCheckedAddress] = useState([]);
     const checkAddressLoading = useSelector(state => state.loading.effects.cart.checkAddress);
     const updateLoading = useSelector(state => state.loading.effects.cart.updateDelivery)
     const provinces = useProvinces();
@@ -124,15 +127,21 @@ const Delivery = props => {
         if(!res) {
             return false;
         }
-        const body = {
-            time: deliveryTime,
-            address: transformedAddress
+        setCheckedAddress(res);
+        const rejectedItem = res?.find(i => !i.accepted);
+        if (rejectedItem) {
+          setCheckAddressOpen(true);
+          return;
         }
-        const finalRes = await dispatch.cart.updateDelivery(body);
-        if(finalRes) {
-            message.success('Cart Address and Delivery time updated!')
-            router.push(routes.cart.invoice.index);
-        }
+         const body = {
+             time: deliveryTime,
+             address: transformedAddress
+         }
+         const finalRes = await dispatch.cart.updateDelivery(body);
+         if(finalRes) {
+             message.success('Cart Address and Delivery time updated!')
+             router.push(routes.cart.invoice.index);
+         }
     }
 
     const checkValidation = errorInfo => {
@@ -159,6 +168,11 @@ const Delivery = props => {
 
     return (
         <Page title={'Delivery Time & Checkout'} breadcrumb={breadcrumb}>
+            <CheckAddressModal
+                visible={checkAddressOpen}
+                onHide={() => setCheckAddressOpen(false)}
+                address={checkedAddress}
+            />
             <Row>
                 <Col span={24}>
                     <Form

@@ -358,6 +358,7 @@ const Invoices = props => {
                                             value={tip?.t === 'fixed' ? tip?.val : 0}
                                             onChange={customTipHandler}
                                             disabled={!isCustom}
+                                            addonBefore='$'
                                         />
                                     </Item>
                                     <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>

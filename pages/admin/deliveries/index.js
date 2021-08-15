@@ -236,7 +236,7 @@ const Deliveries = props => {
         </div>
     );
 
-    const AcceptedDeliveryInfo = ({status, driver, deliveryCost, updatedAt}) => (
+    const AcceptedDeliveryInfo = ({status, driver, deliveryCost, updatedAt, _id: deliveryId}) => (
         <div className="col-span-2 flex flex-col justify-between">
             <div className="flex justify-between mb-10">
                 <DetailItem labelColor='overline' title='Driver' value={driver?.name}
@@ -249,7 +249,25 @@ const Deliveries = props => {
             <div className="flex justify-end items-end">
                 {status === 'delivered' ?
                     <span className="text-white py-1 px-2 mt-10" style={{backgroundColor: '#14C67B'}}>Completed</span> :
-                    <span className="text-white py-1 px-2 mt-10" style={{backgroundColor: '#ECA234'}}>In progress</span>
+                    <div className="flex items-center">
+                        <div
+                            className='bg-primary text-white py-1 px-2 mr-2 cursor-pointer'
+                            onClick={ async () => {
+                            await dispatch.adminDelivery.cancelAssign({deliveryId, body: {}, token});
+                            const query = {};
+                            if (selectedStatus) query.status = selectedStatus;
+                            if (selectedDateOrder) query.sort = selectedDateOrder;
+                            await dispatch?.adminDelivery?.getDeliveries(query);
+                            const newDeliveries = pendingDeliveries.filter(d => d !== deliveryId);
+                            setPendingDeliveries(newDeliveries);
+                            const newSelectedDrivers = {...selectedDrivers};
+                            delete newSelectedDrivers[deliveryId];
+                            setSelectedDrivers(newSelectedDrivers);
+                        }}>
+                            Unassign Driver
+                        </div>
+                        <span className="text-white py-1 px-2" style={{backgroundColor: '#eca234'}}>In progress</span>
+                    </div>
                 }
             </div>
         </div>

@@ -31,24 +31,8 @@ export default function Home() {
      setGuestPostalCode(guestPostalCode);
     }, []);
 
-    useEffect(async() => {
-        const productId = '610a983f25ab5ab42140f01a';
-        const productsSummary = [{
-            _id: productId,
-            subtitution: null,
-            quantity: 1
-        }];
-        const body = {
-            products: productsSummary
-        }
-        const res = await dispatch.cart.updateCartItems(body);
-        if(res) {
-            message.success('Product added to your cart');
-        }
-    }, []);
-
     useEffect(async () => {
-        if (sort !== 'address') {
+        if (sort !== 'address' && guestPostalCode) {
             if(hasMore || page === 1) {
                 let body = {
                     page_number: page,
@@ -57,9 +41,7 @@ export default function Home() {
                 if(sort) {
                     body.sort = sort;
                 }
-                if (guestPostalCode) {
-                    body.zipcode = guestPostalCode;
-                }
+                body.zipcode = guestPostalCode;
                 if(location) {
                     body.lat = location.lat;
                     body.lng = location.lng;

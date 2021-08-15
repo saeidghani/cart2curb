@@ -241,7 +241,6 @@ const SignUp = props => {
                                     }]}
                                 >
                                     <Select
-
                                         showSearch
                                         optionFilterProp="children"
                                         filterOption={(input, option) =>
@@ -249,6 +248,7 @@ const SignUp = props => {
                                         }
                                         placeholder={'Select'}
                                         onChange={setProvince}
+                                        defaultValue='ON'
                                     >
                                         {Object.keys(provinces).map(abbr => {
                                             return (

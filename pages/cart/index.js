@@ -72,15 +72,15 @@ export const CartIndex = (props) => {
 
     }, [cart])
 
-    const changeQuantity = async (value, index, productId) => {
-        console.log('q:', value);
+    const changeQuantity = async (value, row) => {
+        const {index: indx, key: productId} = row || {};
         if (value) {
             const newProducts = [...products];
-            const price = value * newProducts[index].price
-            const tax = (cart.products[index].tax * price / 100).toFixed(2)
-            const totalPrice = (Number(price) + Number(tax)).toFixed(2)
-            newProducts[index] = {
-                ...newProducts[index],
+            const price = value * newProducts[indx]?.price
+            const tax = (cart?.products[indx]?.tax * price / 100)?.toFixed(2)
+            const totalPrice = (Number(price) + Number(tax))?.toFixed(2)
+            newProducts[indx] = {
+                ...newProducts[indx],
                 tax,
                 totalPrice,
                 quantity: value
@@ -91,14 +91,11 @@ export const CartIndex = (props) => {
                 subtitution: p?.subtitution,
                 quantity: p?.quantity
             }));
-            console.log({productsSummary});
-            const index = productsSummary.findIndex(p => p._id === productId);
-            console.log({index});
-            productsSummary[index].quantity = value;
+            const productIndex = productsSummary.findIndex(p => p._id === productId);
+            productsSummary[productIndex].quantity = value;
             const body = {
                 products: productsSummary
             }
-            console.log({body});
             const res = await dispatch.cart.updateCartItems(body);
             if (res) {
                 message.success('Cart updated successfully');
@@ -228,7 +225,7 @@ export const CartIndex = (props) => {
             render: (data, row) => {
                 return (
                     <InputNumber min={1} defaultValue={data} size={'sm'} className={'cart-number-input'}
-                                 onChange={(e) => changeQuantity(e, row.index, row.key)}/>
+                                 onChange={(e) => changeQuantity(e, row)}/>
                 )
             }
         },
@@ -259,7 +256,6 @@ export const CartIndex = (props) => {
     const data = useMemo(() => {
         if (cart.hasOwnProperty('products')) {
             return cart.products.filter(product => !deleted.includes(product._id)).map((product, index) => {
-                console.log(product);
                 let totalPrice = product.totalPrice;
                 let tax = product.tax * product.price * product.quantity / 100
 
