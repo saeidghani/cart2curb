@@ -46,7 +46,10 @@ const Deliveries = props => {
                 if (selectedStatus) query.status = selectedStatus;
                 if (selectedDateOrder) query.sort = selectedDateOrder;
                 await dispatch?.adminDelivery?.getDeliveries(query);
-                const res = await api?.admin?.user?.getDrivers({}, setOptions(token));
+                let body = {
+                    page_size: 100,
+                }
+                const res = await api?.admin?.user?.getDrivers(body, setOptions(token));
                 const approvedDrivers = res?.data?.data?.filter(d => d?.isApproved);
                 setDrivers(approvedDrivers || []);
             })();
@@ -63,7 +66,10 @@ const Deliveries = props => {
                 interval = setInterval(async () => {
                     await dispatch?.adminDelivery?.getDeliveries(query);
                 }, 60000);
-                const res = await api?.admin?.user?.getDrivers({}, setOptions(token));
+                let body = {
+                    page_size: 100,
+                }
+                const res = await api?.admin?.user?.getDrivers(body, setOptions(token));
                 const approvedDrivers = res?.data?.data?.filter(d => d?.isApproved);
                 setDrivers(approvedDrivers || []);
             })();
