@@ -22,7 +22,7 @@ export default class DriverAuthApi extends ApiInstance {
     }
 
     resetPassword(body, options = {}) {
-        return this.post('driver/auth/resetPassword', body, {}, options);
+        return this.put('driver/auth/resetPassword', body, {}, options);
     }
 
     changePassword(body, options = {}) {
