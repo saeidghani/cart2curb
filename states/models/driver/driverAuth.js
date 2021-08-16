@@ -47,19 +47,23 @@ export const driverAuth = {
             try {
                 const res = await api?.driver?.auth?.login(body);
 
-                if(res?.data?.success) {
+                if (res?.data?.success) {
                     this.authenticate({
                         token: res?.data?.data?.token
                     });
                     message.success('You Logged in successfully!');
                     return res?.data;
                 } else {
-                    message.error('Username Or Password is wrong', 5);
+                    res?.data?.errors ? res?.data?.errors?.map(err =>
+                        message.error(err?.message, 5)
+                    ) : message.error('Username Or Password is wrong', 5);
                 }
 
                 return false;
-            } catch(e) {
-                message.error('Username Or Password is wrong', 5);
+            } catch (e) {
+                e?.response?.data?.errors ? e?.response?.data?.errors?.map(err =>
+                    message.error(err?.message, 5)
+                ) : message.error('Username Or Password is wrong', 5);
                 return false;
             }
         },
@@ -70,16 +74,16 @@ export const driverAuth = {
             try {
                 const res = await api.driver.auth.register(body);
                 const data = res?.data;
-                if(data?.success) {
+                if (data?.success) {
                     message.success('Your Request was Sent!');
                     return true;
                 } else {
                     data?.errors?.map(err => {
-                       message.error(err?.message || 'Something went wrong', 5);
+                        message.error(err?.message || 'Something went wrong', 5);
                     })
                 }
                 return false;
-            } catch(e) {
+            } catch (e) {
                 e?.response?.data?.errors?.map(err => {
                     message.error(err?.message || 'Something went wrong', 5);
                 })
@@ -90,13 +94,13 @@ export const driverAuth = {
         async forgetPassword(body) {
             try {
                 const res = await api.driver.auth.forgetPassword(body);
-                if(res?.data?.success) {
+                if (res?.data?.success) {
                     const msg = 'Forgot Your Password?\n' +
                         'If a view is associated with the email you have entered, you will receive an email containing instructions and a link to reset your password.'
                     message.success(msg);
                 }
                 this.destroyResetToken();
-            } catch(e) {
+            } catch (e) {
                 console.log(e);
                 message.error('Something went wrong', 5);
             }
@@ -104,8 +108,8 @@ export const driverAuth = {
         async resetPassword(body) {
             try {
                 const res = await api.driver.auth.resetPassword(body);
-                if(res?.data?.success) {
-                    this.setResetToken({ token: body?.token });
+                if (res?.data?.success) {
+                    this.setResetToken({token: body?.token});
                     message.success('Your Password was changed!');
                     return true;
                 } else {
@@ -113,7 +117,7 @@ export const driverAuth = {
                     return false;
                 }
 
-            } catch(e) {
+            } catch (e) {
                 message.error('Your Token is not valid or expired', 5);
                 return false;
             }
@@ -121,14 +125,14 @@ export const driverAuth = {
         async changePassword({body, token}) {
             try {
                 const res = await api.driver.auth.changePassword(body, setOptions(token));
-                if(res?.data?.success) {
+                if (res?.data?.success) {
                     message.success('Password changed successfully')
                     emitter.emit('change-route', {
                         path: routes?.driver?.auth.profile
                     })
                     return true;
                 }
-            } catch(e) {
+            } catch (e) {
                 if (e?.response?.data?.errors) {
                     e?.response?.data?.errors?.map(err => message.error(err?.message || 'An Error was occurred'));
                     return false;

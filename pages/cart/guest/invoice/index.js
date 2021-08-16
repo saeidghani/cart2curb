@@ -335,12 +335,12 @@ const Invoices = props => {
                             <Col lg={24} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
                                     <div className="">Tips</div>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
                                     <Button className={'w-22 ml-6'} type={isCustom ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
                                     <Item className="" name={'tip'} label={'Value'} rules={[
                                         ({getFieldValue}) => ({
