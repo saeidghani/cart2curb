@@ -6,8 +6,6 @@ import Page from '../components/Page';
 import ShopOverview from '../components/UI/ShopOverview';
 import Loader from "../components/UI/Loader";
 import {InfoCircleOutlined} from "@ant-design/icons";
-import { Fab, Action } from 'react-tiny-fab';
-
 
 const { Option } = Select;
 const { Item } = Form;
@@ -18,13 +16,14 @@ export default function Home() {
     const dispatch = useDispatch();
     const [usedGps, setUsedGps] = useState(false);
     const { stores } = useSelector(state => state.app);
+    const storesLoading = useSelector(state => state.loading.effects.app.getStores);
     const loader = useRef(null);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
     const [location, setLocation] = useState(null);
     const [guestPostalCode, setGuestPostalCode] = useState('');
     const [sort, setSort] = useState(undefined);
     const [postalCodeErrMsg, setPostalCodeErrMsg] = useState(false);
+    const [hasMore, setHasMore] = useState(false);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
     const guestPostalCode = localStorage.getItem('guestPostalCode');
@@ -50,6 +49,8 @@ export default function Home() {
                     const response = await dispatch.app.getStores(body);
                     if(response.data.length < 16) {
                         setHasMore(false);
+                    } else {
+                        setHasMore(true);
                     }
                 } catch(e) {
                     setHasMore(false);
@@ -79,8 +80,8 @@ export default function Home() {
     const handleObserver = (entities) => {
         const target = entities[0];
         if (target.isIntersecting && isIntersecting) {
-            isIntersecting = false
-            setPage((page) => page + 1)
+            isIntersecting = false;
+            setPage((page) => page + 1);
         }
     }
 
@@ -212,7 +213,7 @@ export default function Home() {
                     </Row>
                 ) : <div className="flex justify-center items-center my-20">Please Enter Your Postal Code To See The Stores Near You</div>}
                 <div ref={loader}>
-                    {hasMore && (
+                    {(hasMore || storesLoading) && (
                         <div className="flex flex-row items-center justify-center py-10">
                             <Loader/>
                         </div>
