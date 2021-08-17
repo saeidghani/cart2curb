@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Row, Col, Steps, Form, Input, Select, TimePicker, Upload, Checkbox, Divider, Grid, Button, message} from "antd";
 import {PictureOutlined, UserOutlined} from '@ant-design/icons';
 
@@ -67,6 +67,13 @@ const AddStore = props => {
             title: `Add Store`,
         }
     ]
+
+    useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
 
     const changeMarkerPosition = (e, map, position) => {
         const newPosition = {
