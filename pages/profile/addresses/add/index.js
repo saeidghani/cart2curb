@@ -41,7 +41,14 @@ const AddAddress = props => {
 
     useEffect(() => {
         setCenter(geoCode);
-    }, [geoCode])
+    }, [geoCode]);
+
+    useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
 
     const breadcrumb = [
         {

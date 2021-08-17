@@ -35,8 +35,14 @@ const CustomCartDelivery = props => {
     const router = useRouter()
     const cart = useSelector(state => state.customCart.cart);
     const cartId = useSelector(state => state.customCart.cartId);
-    const [geoCode, getGeoCode] = useGeocoding()
+    const [geoCode, getGeoCode] = useGeocoding();
 
+    useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
 
     useEffect(() => {
         if(!isValid) {

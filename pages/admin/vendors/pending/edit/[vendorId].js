@@ -57,6 +57,13 @@ const EditPendingVendor = props => {
     }, [vendorId]);
 
     useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
+
+    useEffect(() => {
         let area = [];
         let fields = [];
 

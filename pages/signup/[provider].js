@@ -48,6 +48,13 @@ const SignUp = props => {
     const {profile, token} = props;
 
     useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
+
+    useEffect(() => {
 
         form.setFieldsValue({
             firstName: profile.firstName || undefined,

@@ -74,7 +74,14 @@ const EditAccount = props => {
             description: props.fields[1].description,
             needDriversToGather: props.fields[1].needDriversToGather ? 'true' : 'false'
         })
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
 
     const breadcrumb = [
         {

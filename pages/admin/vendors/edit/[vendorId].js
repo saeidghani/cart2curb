@@ -57,6 +57,13 @@ const EditAccount = props => {
     }, [storeId]);
 
     useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
+
+    useEffect(() => {
         let area = [];
         let fields = [];
 

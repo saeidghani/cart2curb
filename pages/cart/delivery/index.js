@@ -62,7 +62,14 @@ const Delivery = props => {
             time: cart.deliveryTime ? moment(cart.deliveryTime || '') : undefined,
             address: cart.address?._id || undefined
         })
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        form.setFieldsValue({
+            province: 'ON'
+        });
+        setProvince('ON');
+    }, []);
 
     const changeMarkerPosition = (e, map, position) => {
         const newPosition = {

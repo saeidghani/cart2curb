@@ -230,9 +230,13 @@ const Invoices = props => {
 
     const submitHandler = async (values) => {
         setLoading(true);
+        const  {paymentType} = values;
+        const checkoutBody = {
+            paymentMethod: paymentType
+        };
+        const checkoutRes = await dispatch.cart.checkout(checkoutBody);
         const res = await dispatch.cart.confirmCart({})
-        console.log(res);
-        if(res) {
+        if(checkoutRes && res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
             router.push({pathname: routes.cart.checkout, query: {orderId: res?.orderId}});
@@ -245,6 +249,12 @@ const Invoices = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+    const paymentTypes = [
+        {name: 'Debit at the door', val: 'Debit at the door'},
+        {name: 'Interac e-transfer', val: 'Interac e-transfer'},
+        {name: 'Secure Credit Card', val: 'Secure Credit Card'},
+        {name: 'Exact Cash', val: 'Exact Cash'},
+    ];
 
     return (
         <Page title={'Checkout'} breadcrumb={breadcrumb}>
@@ -335,12 +345,12 @@ const Invoices = props => {
                             <Col lg={24} md={12} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
                                     <div className="">Tips</div>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
-                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip.val === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 5 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 5, true)}>5%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 10 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 10, true)}>10%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 15 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 15, true)}>15%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 20 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 20, true)}>20%</Button>
+                                    <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 25 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 25, true)}>25%</Button>
                                     <Button className={'w-22 ml-6'} type={isCustom ? 'primary' : 'normal'} danger onClick={setIsCustom.bind(this, true)}>Custom</Button>
                                     <Item className="" name={'tip'} label={'Value'} rules={[
                                         ({getFieldValue}) => ({
@@ -363,6 +373,29 @@ const Invoices = props => {
                                     </Item>
                                     <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>
                                 </Space>
+                            </Col>
+                            <Col lg={8} md={12} xs={24}>
+                                <Item
+                                    name={'paymentType'}
+                                    label={'Payment Type'}
+                                    rules={[{
+                                        required: true,
+                                        message: 'Please select payment type'
+                                    }]}
+                                >
+                                    <Select
+                                        showSearch
+                                        optionFilterProp="children"
+                                        placeholder={'Select'}
+                                        onChange={() => {}}
+                                    >
+                                        {paymentTypes.map(type => {
+                                            return (
+                                                <Option value={type.val}>{type.name}</Option>
+                                            )
+                                        })}
+                                    </Select>
+                                </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'promo'} label={'Promo Code'}>
