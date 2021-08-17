@@ -230,9 +230,13 @@ const Invoices = props => {
 
     const submitHandler = async (values) => {
         setLoading(true);
+        const  {paymentType} = values;
+        const checkoutBody = {
+            paymentMethod: paymentType
+        };
+        const checkoutRes = await dispatch.cart.checkout(checkoutBody);
         const res = await dispatch.cart.confirmCart({})
-        console.log(res);
-        if(res) {
+        if(checkoutRes && res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
             router.push({pathname: routes.cart.checkout, query: {orderId: res?.orderId}});
@@ -245,6 +249,12 @@ const Invoices = props => {
         message.error(errorInfo.errorFields[0].errors[0], 5);
     }
 
+    const paymentTypes = [
+        {name: 'Debit at the door', val: 'Debit at the door'},
+        {name: 'Interac e-transfer', val: 'Interac e-transfer'},
+        {name: 'Secure Credit Card', val: 'Secure Credit Card'},
+        {name: 'Exact Cash', val: 'Exact Cash'},
+    ];
 
     return (
         <Page title={'Checkout'} breadcrumb={breadcrumb}>
@@ -363,6 +373,29 @@ const Invoices = props => {
                                     </Item>
                                     <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>
                                 </Space>
+                            </Col>
+                            <Col lg={8} md={12} xs={24}>
+                                <Item
+                                    name={'paymentType'}
+                                    label={'Payment Type'}
+                                    rules={[{
+                                        required: true,
+                                        message: 'Please select payment type'
+                                    }]}
+                                >
+                                    <Select
+                                        showSearch
+                                        optionFilterProp="children"
+                                        placeholder={'Select'}
+                                        onChange={() => {}}
+                                    >
+                                        {paymentTypes.map(type => {
+                                            return (
+                                                <Option value={type.val}>{type.name}</Option>
+                                            )
+                                        })}
+                                    </Select>
+                                </Item>
                             </Col>
                             <Col lg={8} md={12} xs={24}>
                                 <Item name={'promo'} label={'Promo Code'}>
