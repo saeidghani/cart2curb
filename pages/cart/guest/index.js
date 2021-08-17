@@ -146,10 +146,6 @@ const CartGuest = props => {
             addressLine1,
             addressLine2,
             postalCode,
-            location: {
-                type: 'Point',
-                coordinates: [marker.position.lng, marker.position.lat]
-            }
         }
 
         if (marker.position.lng && marker.position.lat) {
