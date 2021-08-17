@@ -278,7 +278,7 @@ const Invoices = props => {
                 </Col>
 
                 <Col xs={24} md={12} lg={6}>
-                    <DetailItem title={'Order Number'} value={cart._id}/>
+                    <DetailItem title={'Order Number'} value={cart.orderNumber ?? cart._id}/>
                 </Col>
 
                 <div className="w-full px-3">
