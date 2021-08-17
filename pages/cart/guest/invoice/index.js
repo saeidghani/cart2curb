@@ -234,9 +234,9 @@ const Invoices = props => {
         const checkoutBody = {
             paymentMethod: paymentType
         };
-        const checkoutRes = await dispatch.cart.checkout(checkoutBody);
-        const res = await dispatch.cart.confirmCart({})
-        if(checkoutRes && res) {
+        // const checkoutRes = await dispatch.cart.checkout(checkoutBody);
+        const res = await dispatch.cart.confirmCart(checkoutBody)
+        if(/* checkoutRes && */ res) {
             message.success('Cart Information updated successfully!')
             setLoading(false);
             router.push({pathname: routes.cart.checkout, query: {orderId: res?.orderId}});
