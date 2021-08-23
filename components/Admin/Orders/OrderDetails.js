@@ -142,7 +142,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                 index: index + 1,
                 product: p?.name,
                 store: getAddress(p?.store?.address),
-                subtitution: p?.subtitution ? 'Yes' : 'No',
+                subtitution: p?.subtitution ? p?.subtitution : 'No',
                 quantity: p?.quantity,
                 total: p?.totalPrice,
             }
