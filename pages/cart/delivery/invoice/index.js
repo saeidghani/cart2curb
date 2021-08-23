@@ -241,7 +241,7 @@ const Invoices = props => {
         if(/* checkoutRes &&  */res) {
             message.success('Cart Information updated successfully!');
             setLoading(false);
-            router.push({pathname: routes.cart.checkout, query: {orderId: res?.orderId}});
+            router.push({pathname: routes.cart.checkout, query: {orderId: cart.orderNumber ?? res?.orderId}});
         } else {
             setLoading(false);
         }

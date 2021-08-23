@@ -168,7 +168,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                 index: index + 1,
                 product: p?.name,
                 description: p?.description || '',
-                subtitution: p?.subtitution ? 'Yes' : 'No',
+                subtitution: p?.subtitution ? p?.subtitution : 'No',
                 quantity: p?.quantity,
                 total: p?.totalPrice,
             }
@@ -216,6 +216,12 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                     labelColor={'muted'}
                     valueColor={'dark'}
                     value={moment(order?.date)?.format('MM.DD.YYYY HH:mm A')}
+                />
+                <DetailItem
+                    title={'Expected Delivery Time'}
+                    labelColor={'muted'}
+                    valueColor={'dark'}
+                    value={moment(order?.deliveryTime)?.format('MM.DD.YYYY HH:mm A')}
                 />
                 <DetailItem
                     title={'Status'}
