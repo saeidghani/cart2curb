@@ -225,7 +225,7 @@ export const cart = {
                 options.headers.Authorization = `Bearer ${token}`
             }
             try {
-                const res = await api.post('cart/confirm', {}, options);
+                const res = await api.post('cart/confirm', query, options);
                 if(res?.data?.success) {
                     dispatch.cart.setCart({
                         cart: {totalQuantity: 0}
