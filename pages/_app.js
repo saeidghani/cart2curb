@@ -19,6 +19,7 @@ class MyApp extends App {
         const { Component, pageProps, authenticated, userType, avatar } = this.props;
         const forceLayout = pageProps.hasOwnProperty('forceLayout') ? pageProps.forceLayout : false;
         return (
+            <div id="top">
             <AppProvider authenticated={authenticated} userType={userType}>
                 <Head>
                     <link rel="stylesheet" type="text/css" charSet="UTF-8"
@@ -31,6 +32,7 @@ class MyApp extends App {
                     <Component {...pageProps} />
                 </Layout>
             </AppProvider>
+            </div>
         )
     }
 }
