@@ -10,7 +10,7 @@ export default {
         }
     },
     stores: {
-        index: "/stores",
+        index: "/",
         single(vendor = '') {
             return `/stores/${vendor}`
         },

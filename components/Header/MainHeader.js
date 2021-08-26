@@ -33,6 +33,12 @@ const MainHeader = props => {
     const cartChanges = useSelector(state => state?.cart?.cartChanges);
     const {setAuthenticated, setUserType} = useAuth();
 
+    useEffect(() => {
+        if (visible) {
+         setVisible(false);
+        }
+    }, [router.pathname]);
+
 
     useEffect(() => {
         const adminToken = localStorage.getItem('admin_token');

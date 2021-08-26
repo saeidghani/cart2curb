@@ -80,9 +80,16 @@ export const cart = {
                 return false;
             }
         },
-        async updateCartItems(body) {
+        async updateCartItems(body, rootState) {
             try {
-                const res = await api.put('cart', body);
+                const token = rootState.auth.token;
+                const options = {
+                    headers: {}
+                }
+                if(token) {
+                    options.headers.Authorization = `Bearer ${token}`
+                }
+                const res = await api.put('cart', body, options);
 
                 if(res?.data?.success) {
                     dispatch.cart.changeCart();
