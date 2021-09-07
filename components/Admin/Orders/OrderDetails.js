@@ -1,5 +1,7 @@
 import React, {Fragment, useEffect, useMemo} from 'react';
 import {Table, Modal, Row, Col} from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+
 import {useDispatch, useSelector} from "react-redux";
 
 import DetailItem from "../../UI/DetailItem";
@@ -31,13 +33,13 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
-            render: data => (<span className="text-cell">{data}</span>)
+            render: (product, data ) => (<span className="text-cell"> <img height="50" sec={data.image} /> {product}</span>)
         },
         {
-            title: 'Store Address',
+            title: 'Store',
             dataIndex: 'store',
             key: 'store',
-            render: data => (<span className="text-cell">{data}</span>)
+            render: (store, data) => (<span className="text-cell"> {data.storeName} <br /> {store}</span>)
         },
         {
             title: 'Substitutions',
@@ -141,6 +143,8 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                 key: p?._id,
                 index: index + 1,
                 product: p?.name,
+                image: p?.image,
+                storeName: p?.store?.name,
                 store: getAddress(p?.store?.address),
                 subtitution: p?.subtitution ? p?.subtitution : 'No',
                 quantity: p?.quantity,
@@ -184,7 +188,7 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
             width={1100}
             footer={null}
         >
-            <div className={`grid grid-cols-${type === 'productCart' ? '4' : '6'}`}>
+            <div className={`grid grid-cols-${type === 'productCart' ? '4' : '6'} gap-y-2 mb-2`}>
                 <DetailItem
                     title={'Order Number'}
                     labelColor={'muted'}
@@ -197,6 +201,38 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                     valueColor={'dark'}
                     value={`${order?.firstName || '-'} ${order?.lastName || '-'}`}
                 />
+                {order?.guest !== null ?  
+                    
+                    <>
+                        <DetailItem
+                            title={'Phone'}
+                            labelColor={'muted'}
+                            valueColor={'dark'}
+                            value={`${order?.guest?.phone}`}
+                        />
+                        <DetailItem
+                            title={'Email'}
+                            labelColor={'muted'}
+                            valueColor={'dark'}
+                            value={`${order?.guest?.email}`}
+                        />
+                    </>
+                    :
+                    <>
+                        <DetailItem
+                            title={'Phone'}
+                            labelColor={'muted'}
+                            valueColor={'dark'}
+                            value={`${order?.customer?.phone}`}
+                        />
+                        <DetailItem
+                            title={'Email'}
+                            labelColor={'muted'}
+                            valueColor={'dark'}
+                            value={`${order?.customer?.email}`}
+                        />
+                    </>
+                }
                 {type !== 'productCart' && <Fragment>
                     <DetailItem
                         title={'Email'}
@@ -230,7 +266,25 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                     capitalize={true}
                     value={order?.status}
                 />
+                <DetailItem
+                    title={'Live cart'}
+                    labelColor={'muted'}
+                    valueColor={'dark'}
+                    capitalize={true}
+                    value={order?.liveCart ? <CheckCircleOutlined className="text-2xl" /> :  <CloseCircleOutlined className="text-2xl" /> }
+                />
+                <div className="col-span-4">
+                    <DetailItem
+                        title={'Address'}
+                        labelColor={'muted'}
+                        valueColor={'dark'}
+                        capitalize={true}
+                        value={`${order?.address?.postalCode},  - ${order?.address?.addressLine2}, ${order?.address?.addressLine1}, ${order?.address?.city}, ${order?.address?.province}, ${order?.address?.country}`}
+                    />
+                </div>
             </div>
+            
+
             <Table
                 columns={type === 'productCart' ? productColumns : type === 'serviceCart' ? serviceColumns : customColumns}
                 dataSource={type === 'productCart' ? productData : type === 'serviceCart' ? serviceData : customData}
@@ -238,8 +292,35 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                 className={'pt-4'}
                 scroll={{x: 950}}
             />
-            <div className='flex justify-end items-center p-4 mt-4'>
-                <div className="flex items-center justify-end pr-3">
+
+            <div className="border rounded h-16 p-3 overflow-auto my-4" style={{borderColor : "#00000030"}}>
+                Delivery notes: {order?.note}
+            </div>
+
+            <div className={`grid grid-cols-6`}>
+
+                <div className="">
+                    <div class="text-muted font-medium mb-1">Payment Type:</div>
+                    <span className="text-cell text-lg">{order?.paymentMethod}</span>
+                </div>
+                <div className="">
+                    <div class="text-muted font-medium mb-1">Total product cost:</div>
+                    <span className="text-cell text-lg">{order?.cartPrice ? `${order?.cartPrice} $` : '_'}</span>
+                </div>
+                <div className="">
+                    <div class="text-muted font-medium mb-1">Service fee:</div>
+                    <span className="text-cell text-lg">{order?.serviceFee ? `${order?.serviceFee} $` : '_'}</span>
+                </div>
+                <div className="">
+                    <div class="text-muted font-medium mb-1">Tax:</div>
+                    <span className="text-cell text-lg">{order?.hst ? `${order?.hst} $` : '_'}</span>
+                </div>
+                <div className="">
+                    <div class="text-muted font-medium mb-1">Tip:</div>
+                    <span className="text-cell text-lg">{order?.tipPrice ? `${order?.tipPrice} $` : '_'}</span>
+                </div>
+                <div className="">
+                    <div class="text-muted font-medium mb-1">Delivery fee:</div>
                     <span className="text-cell text-xl">{order?.priceAfterPromoTip ? `${order?.priceAfterPromoTip} $` : '_'}</span>
                 </div>
             </div>
