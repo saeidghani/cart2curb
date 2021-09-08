@@ -9,6 +9,8 @@ import {
     EnvironmentOutlined,
     FolderOpenOutlined,
     DollarCircleOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
     HistoryOutlined
 } from '@ant-design/icons';
 
@@ -177,7 +179,7 @@ const Deliveries = props => {
         </div>
     );
 
-    const BasicInfo = ({customer, deliveryTime, destination, order}) => (
+    const BasicInfo = ({customer, deliveryTime, destination, order, stores, tip, deliveryFee, liveCart}) => (
         <div className="border-r-2 col-span-3 border-solid border-gray pr-14">
             <div className="flex items-center justify-between mb-10">
                 <DetailItem labelColor='overline' title='User'
@@ -188,6 +190,14 @@ const Deliveries = props => {
                 <DetailItem labelColor='overline' title='Scheduled Delivery Time'
                             value={`${moment(deliveryTime?.from).format('YYYY-MM-DD')} | ${moment(deliveryTime?.from).format('hh:mm')} - ${moment(deliveryTime?.to).format('hh:mm')}`}
                             icon={<HourglassOutlined className="text-lg text-secondarey"/>}/>
+            </div>
+            <div className="flex items-center justify-between mb-10">
+                <DetailItem labelColor='overline' title='Store Name' value={
+                    stores.map(store=>(<span className="storeName">{store.name}</span>))
+                } />
+                <DetailItem labelColor='overline' title='Tip' value={tip ? `${tip} $` : '_'} />
+                <DetailItem labelColor='overline' title='Delivery Fee' value={deliveryFee ? `${deliveryFee} $` : '_'} />
+                <DetailItem labelColor='overline' title='Live Cart' value={liveCart ? <CheckCircleOutlined className="text-2xl" /> :  <CloseCircleOutlined className="text-2xl" /> } />
             </div>
             <DetailItem labelColor='overline' title='Destination'
                         value={convertAddress(destination)}
