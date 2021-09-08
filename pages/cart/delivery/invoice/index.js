@@ -10,6 +10,7 @@ import {
     Space,
     TimePicker,
     Radio,
+    Checkbox,
     Table, message
 } from 'antd';
 
@@ -229,9 +230,11 @@ const Invoices = props => {
 
     const submitHandler = async (values) => {
         setLoading(true);
-        const  { paymentType } = values;
+        const  { paymentType, note, liveCart } = values;
         const checkoutBody = {
-            paymentMethod: paymentType
+            paymentMethod: paymentType,
+            note: note,
+            liveCart: Boolean(liveCart)
         };
 
         // const checkoutRes = await dispatch.cart.checkout(checkoutBody);
@@ -345,7 +348,7 @@ const Invoices = props => {
                         onFinishFailed={checkValidation}
                     >
                         <Row gutter={24}>
-                            <Col lg={24} md={12} xs={24} className={'md:pt-7 mb-6'}>
+                            <Col lg={24} md={24} xs={24} className={'md:pt-7 mb-6'}>
                                 <Space size={16}>
                                     <div className="">Tips</div>
                                     <Button className={'w-16'} type={(tip?.t === 'percent' && tip?.val === 0 && !isCustom) ? 'primary' : 'normal'} danger onClick={changeTipHandler.bind(this, 0, true)}>0%</Button>
@@ -378,7 +381,7 @@ const Invoices = props => {
                                     <Button className={'w-32'} danger size={'lg'} onClick={applyCustomTipHandler} loading={promoLoading} disabled={!isCustom}>Apply</Button>
                                 </Space>
                             </Col>
-                            <Col lg={8} md={12} xs={24}>
+                            <Col lg={8} md={9} xs={24}>
                                 <Item
                                     name={'paymentType'}
                                     label={'Payment Type'}
@@ -401,15 +404,24 @@ const Invoices = props => {
                                     </Select>
                                 </Item>
                             </Col>
-                            <Col lg={8} md={12} xs={24}>
+                            <Col lg={8} md={9} xs={24}>
                                 <Item name={'promo'} label={'Promo Code'}>
                                     <Input placeholder={'Promo Code'} onPressEnter={applyPromoHandler}/>
                                 </Item>
                             </Col>
-                            <Col lg={8} md={12} xs={24} className={'md:pt-7'}>
+                            <Col lg={8} md={6} xs={24} className={'md:pt-7'}>
                                 <Button className={'w-32'} danger size={'lg'} onClick={applyPromoHandler} loading={promoLoading}>Apply</Button>
                             </Col>
-
+                            <Col lg={20} md={20} xs={24} className={'flex flex-row-reverse items-center'}>
+                                <Item name={'note'} label={'Note'} style={{ width: '100%'}}>
+                                    <Input.TextArea placeholder={'Note'} onPressEnter={applyPromoHandler}/>
+                                </Item>
+                            </Col>
+                            <Col lg={4} md={4} xs={24} className={'flex flex-row-reverse items-center'}>
+                                <Item name={'liveCart'} valuePropName="checked" label={'live Cart'}>
+                                    <Checkbox>live Cart</Checkbox>
+                                </Item>
+                            </Col>
                             <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
                                 <div className="flex items-center pl-4 justify-end">
                                     {(promo || tip?.val) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
