@@ -321,9 +321,12 @@ const OrderDetails = ({visible, onHide, orderId, status, total, type}) => {
                 </div>
                 <div className="">
                     <div class="text-muted font-medium mb-1">Delivery fee:</div>
-                    <span className="text-cell text-xl">{order?.priceAfterPromoTip ? `${order?.priceAfterPromoTip} $` : '_'}</span>
+                    <span className="text-cell text-xl">{order?.deliveryFee ? `${order?.deliveryFee} $` : '_'}</span>
                 </div>
             </div>
+                <div className="text-right">
+                    <span className="text-cell text-xl">{order?.priceAfterPromoTip ? `${order?.priceAfterPromoTip} $` : '_'}</span>
+                </div>
         </Modal>
     )
 }
