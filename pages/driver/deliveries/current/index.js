@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from 'antd';
-import {SoundTwoTone, SoundOutlined, EnvironmentOutlined, CloseOutlined} from '@ant-design/icons';
+import {SoundTwoTone, SoundOutlined, EnvironmentOutlined, CloseOutlined, CheckCircleOutlined, CloseCircleOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import Timer from 'react-compound-timer';
 import Link from "next/link";
 import moment from "moment";
+
 
 import DriverAuth from '../../../../components/Driver/DriverAuth';
 import DriverPage from '../../../../components/Driver/DriverPage';
@@ -53,7 +54,11 @@ const Current = () => {
         </div>
     );
 
-    const DeliveryCard = ({_id: deliveryId, acceptedDateByDriver, deliveryTime, deliveryFee, customerAddress, sources}) => (
+    const DeliveryCard = ({_id: deliveryId, acceptedDateByDriver, deliveryTime, deliveryFee, customerAddress, sources, customer,
+        orderNumber,
+        note,
+        paymentMethod,
+        liveCart}) => (
         <div className="w-full shadow-lg p-8">
             <div className="text-center"><SoundTwoTone className="text-6xl transform -rotate-45"/></div>
             <div className="text-xs font-normal mt-9 text-paragraph">
@@ -124,6 +129,54 @@ const Current = () => {
                 </div>
                 <div className="font-normal text-sm">
                     {convertAddress(customerAddress)}
+                </div>
+            </div>
+            <div className="mt-7">
+                <div className="text-xs font-normal text-overline">
+                    Customer Name
+                </div>
+                <div className="font-normal text-sm">
+                    {customer.firstName} {customer.lastName}
+                </div>
+            </div>
+            <div className="mt-7">
+                <div className="text-xs font-normal text-overline">
+                    Customer phone
+                </div>
+                <div className="font-normal text-sm">
+                    {customer.phone}
+                </div>
+            </div>
+            <div className="mt-7">
+                <div className="text-xs font-normal text-overline">
+                    Order Number
+                </div>
+                <div className="font-normal text-sm">
+                    {orderNumber}
+                </div>
+            </div>
+            <div className="mt-7">
+                <div className="text-xs font-normal text-overline">
+                    Delivery Note
+                </div>
+                <div className="font-normal text-sm">
+                    {note}
+                </div>
+            </div>
+            <div className="mt-7">
+                <div className="text-xs font-normal text-overline">
+                    Payment type
+                </div>
+                <div className="font-normal text-sm">
+                    {paymentMethod}
+                </div>
+            </div>
+            <div className="mt-7">
+                <div className="text-xs font-normal text-overline">
+                    Live Cart
+                </div>
+                <div className="font-normal text-sm">
+                    {liveCart ? <CheckCircleOutlined className="text-2xl" /> :  <CloseCircleOutlined className="text-2xl" /> }
                 </div>
             </div>
             <Link href={routes.driver.customerOrders.view(deliveryId)}>
