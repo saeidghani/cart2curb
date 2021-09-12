@@ -207,8 +207,8 @@ const Invoices = props => {
         setPromoLoading(true);
 
         const body = {
-            promoCode: value,
-            tip: tip?.val
+            promoCode: value //,
+            //tip: tip?.val
         }
 
         const res = await dispatch.cart.promoTip(body)
