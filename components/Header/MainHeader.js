@@ -256,11 +256,11 @@ const MainHeader = props => {
                                         <>
                                             <Col xs={24}>
                                                 <HeaderLink href={routes.vendors.index}>
-                                                    Store
+                                                    My account
                                                 </HeaderLink>
                                             </Col>
                                             <Col xs={24}>
-                                                <HeaderLink href={routes.vendors.orders.index}>
+                                                <HeaderLink href={routes.profile.orders}>
                                                     Orders
                                                 </HeaderLink>
                                             </Col>

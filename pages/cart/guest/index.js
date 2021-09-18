@@ -178,6 +178,7 @@ const CartGuest = props => {
     }
 
     const disabledDate = (current) => {
+        console.log(props.deliveryTimes.from);
         const fromTime = moment(props.deliveryTimes.from);
         const toTime = moment(props.deliveryTimes.to);
         return current && (current.diff(fromTime) < 0 || current.diff(toTime) > 0);

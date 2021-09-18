@@ -136,7 +136,7 @@ const Current = () => {
                     Customer Name
                 </div>
                 <div className="font-normal text-sm">
-                    {customer.firstName} {customer.lastName}
+                    {customer?.firstName || '-'} {customer?.lastName}
                 </div>
             </div>
             <div className="mt-7">
@@ -144,7 +144,7 @@ const Current = () => {
                     Customer phone
                 </div>
                 <div className="font-normal text-sm">
-                    {customer.phone}
+                    {customer?.phone || '-'}
                 </div>
             </div>
             <div className="mt-7">
@@ -152,7 +152,7 @@ const Current = () => {
                     Order Number
                 </div>
                 <div className="font-normal text-sm">
-                    {orderNumber}
+                    {orderNumber || '-'}
                 </div>
             </div>
             <div className="mt-7">
@@ -160,7 +160,7 @@ const Current = () => {
                     Delivery Note
                 </div>
                 <div className="font-normal text-sm">
-                    {note}
+                    {note || '-'}
                 </div>
             </div>
             <div className="mt-7">
@@ -168,7 +168,7 @@ const Current = () => {
                     Payment type
                 </div>
                 <div className="font-normal text-sm">
-                    {paymentMethod}
+                    {paymentMethod || '-'}
                 </div>
             </div>
             <div className="mt-7">

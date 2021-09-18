@@ -26,16 +26,17 @@ import {defaultMapLocation} from "../../../constants";
 import {useGeocoding} from "../../../hooks/geocoding";
 import CheckAddressModal from "../../../components/Modals/CheckAddressModal";
 
-const { Item } = Form;
-const { Option } = Select;
+const {Item} = Form;
+const {Option} = Select;
 
 const Delivery = props => {
     const [form] = Form.useForm();
     const [newAddress, setNewAddress] = useState(false);
     const [province, setProvince] = useState('');
-    const [marker, setMarker] = useState({ position: {}})
+    const [marker, setMarker] = useState({position: {}})
     const [checkAddressOpen, setCheckAddressOpen] = useState(false);
     const [checkedAddress, setCheckedAddress] = useState([]);
+    const [selectedDate, setSelectedDate] = useState('');
     const checkAddressLoading = useSelector(state => state.loading.effects.cart.checkAddress);
     const updateLoading = useSelector(state => state.loading.effects.cart.updateDelivery)
     const provinces = useProvinces();
@@ -54,7 +55,7 @@ const Delivery = props => {
         }
     ]
 
-    const { addresses, cart } = props;
+    const {addresses, cart} = props;
 
     useEffect(() => {
         form.setFieldsValue({
@@ -82,7 +83,7 @@ const Delivery = props => {
     }
 
     const changeAddressHandler = (e) => {
-        if(e.target.value === 'new') {
+        if (e.target.value === 'new') {
             setNewAddress(true)
         } else {
             setNewAddress(false)
@@ -90,7 +91,7 @@ const Delivery = props => {
     }
 
     const submitHandler = async (values) => {
-        if(values.address === 'new' && !marker.position.hasOwnProperty('lat')) {
+        if (values.address === 'new' && !marker.position.hasOwnProperty('lat')) {
             message.error('Please select your location in map');
             return false;
         }
@@ -98,15 +99,15 @@ const Delivery = props => {
         const deliveryTime = date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
         const fromTime = moment(props.deliveryTimes.from);
         const toTime = moment(props.deliveryTimes.to);
-        if(deliveryTime.diff(fromTime) < 0 || deliveryTime.diff(toTime) > 0) {
+        if (deliveryTime.diff(fromTime) < 0 || deliveryTime.diff(toTime) > 0) {
             message.error(`Delivery time should be between ${fromTime.format('MM.DD.YYYY - HH:mm')} and ${toTime.format('MM.DD.YYYY - HH:mm')}`)
             return false;
         }
 
 
         let transformedAddress;
-        if(address === 'new') {
-            const { province, city, addressLine1, addressLine2, postalCode} = values;
+        if (address === 'new') {
+            const {province, city, addressLine1, addressLine2, postalCode} = values;
 
             transformedAddress = {
                 country: 'Canada',
@@ -121,7 +122,7 @@ const Delivery = props => {
                 }
             }
         } else {
-            const { country, province, city, addressLine1, addressLine2, postalCode, location, _id} = addresses.find(item => item._id === address)
+            const {country, province, city, addressLine1, addressLine2, postalCode, location, _id} = addresses.find(item => item._id === address)
             transformedAddress = {
                 country, province, city, addressLine1, addressLine2, postalCode, location, _id
             };
@@ -131,24 +132,24 @@ const Delivery = props => {
         const res = await dispatch.cart.checkAddress({
             ...transformedAddress
         })
-        if(!res) {
+        if (!res) {
             return false;
         }
         setCheckedAddress(res);
         const rejectedItem = res?.find(i => !i.accepted);
         if (rejectedItem) {
-          setCheckAddressOpen(true);
-          return;
+            setCheckAddressOpen(true);
+            return;
         }
-         const body = {
-             time: deliveryTime,
-             address: transformedAddress
-         }
-         const finalRes = await dispatch.cart.updateDelivery(body);
-         if(finalRes) {
-             message.success('Cart Address and Delivery time updated!')
-             router.push(routes.cart.invoice.index);
-         }
+        const body = {
+            time: deliveryTime,
+            address: transformedAddress
+        }
+        const finalRes = await dispatch.cart.updateDelivery(body);
+        if (finalRes) {
+            message.success('Cart Address and Delivery time updated!')
+            router.push(routes.cart.invoice.index);
+        }
     }
 
     const checkValidation = errorInfo => {
@@ -157,11 +158,29 @@ const Delivery = props => {
 
 
     const disabledDate = (current) => {
-
-        const fromTime = moment(props.deliveryTimes.from);
+        const fromTime = moment(props.deliveryTimes.from).subtract(1, 'days');
         const toTime = moment(props.deliveryTimes.to);
         return current && (current.diff(fromTime) < 0 || current.diff(toTime) > 0);
     }
+
+    const disabledHours = (current) => {
+        let hours = [];
+        if (moment(selectedDate).isSame(new Date(), "day")) {
+            for (let i = 0; i < moment(props.deliveryTimes.from).hour(); i++) {
+                hours.push(i);
+            }
+        }
+        return hours;
+    };
+
+    const disabledMinutes = () => {
+        let minutes = [];
+        for (let i = 0; i < moment().minute(); i++) {
+            minutes.push(i);
+        }
+        console.log(minutes);
+        return minutes;
+    };
 
 
     const onChangePostal = (e) => {
@@ -201,7 +220,12 @@ const Delivery = props => {
                                         }
                                     ]}
                                 >
-                                    <DatePicker className={'w-full'} disabledDate={disabledDate}/>
+                                    <DatePicker
+                                        className={'w-full'} disabledDate={disabledDate}
+                                        onChange={(val) => {
+                                            setSelectedDate(val);
+                                        }}
+                                    />
                                 </Item>
                             </Col>
 
@@ -216,7 +240,11 @@ const Delivery = props => {
                                         }
                                     ]}
                                 >
-                                    <TimePicker className={'w-full'} format={'HH:mm'}/>
+                                    <TimePicker
+                                        className={'w-full'}
+                                        format={'HH:mm'}
+                                        disabledHours={disabledHours}
+                                    />
                                 </Item>
                             </Col>
 
@@ -236,7 +264,7 @@ const Delivery = props => {
                                         {addresses.map(address => {
 
                                             const transformed = [address.addressLine1];
-                                            if(address.addressLine2) {
+                                            if (address.addressLine2) {
                                                 transformed.push(address.addressLine2);
                                             }
                                             transformed.push(address.city);
@@ -244,7 +272,8 @@ const Delivery = props => {
                                             transformed.push(address.country);
 
                                             return (
-                                                <Radio value={address._id} className={'py-2'}>{transformed.join(", ")}</Radio>
+                                                <Radio value={address._id}
+                                                       className={'py-2'}>{transformed.join(", ")}</Radio>
                                             )
                                         })}
                                         <div className="w-full">
@@ -321,12 +350,16 @@ const Delivery = props => {
                                                 }
                                             ]}
                                         >
-                                            <Input.TextArea placeholder={'Address Line 1'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
+                                            <Input.TextArea placeholder={'Address Line 1'}
+                                                            autoSize={{minRows: 1, maxRows: 6}}
+                                                            style={{resize: 'none'}}/>
                                         </Item>
                                     </Col>
                                     <Col span={24}>
                                         <Item name={'addressLine2'} label={'Address Line 2'}>
-                                            <Input.TextArea placeholder={'Address Line 2'} autoSize={{ minRows: 1, maxRows: 6 }} style={{ resize: 'none' }}/>
+                                            <Input.TextArea placeholder={'Address Line 2'}
+                                                            autoSize={{minRows: 1, maxRows: 6}}
+                                                            style={{resize: 'none'}}/>
                                         </Item>
                                     </Col>
 
@@ -337,7 +370,7 @@ const Delivery = props => {
                                                       required: true,
                                                       message: "Please enter Postal Code."
                                                   },
-                                                  ({ getFieldValue }) => ({
+                                                  ({getFieldValue}) => ({
                                                       validator(_, value) {
                                                           if (/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/.test(value)) {
                                                               return Promise.resolve();
@@ -367,7 +400,8 @@ const Delivery = props => {
 
                             <Col xs={24} className={'flex items-center flex-row-reverse pt-8'}>
                                 <Item>
-                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'} loading={checkAddressLoading || updateLoading}>
+                                    <Button type="primary" className={'w-32 ml-5'} htmlType={'submit'}
+                                            loading={checkAddressLoading || updateLoading}>
                                         Next
                                     </Button>
                                 </Item>
@@ -388,7 +422,7 @@ const Delivery = props => {
     )
 }
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({req, res}) {
 
     let cookies = cookie.parse(req.headers.cookie || '');
     let token = cookies.token
@@ -397,8 +431,8 @@ export async function getServerSideProps({ req, res }) {
     let cart = {}
     let addresses = [];
     let deliveryTimes = {}
-    if(!userType || !token) {
-        res.writeHead(307, { Location: routes.cart.guest.index });
+    if (!userType || !token) {
+        res.writeHead(307, {Location: routes.cart.guest.index});
         res.end();
         return {
             props: {
@@ -409,10 +443,10 @@ export async function getServerSideProps({ req, res }) {
         };
     }
     if (userType !== 'customer') {
-        if(userType === 'vendor') {
-            res.writeHead(307, { Location: routes.cart.guest.index })
+        if (userType === 'vendor') {
+            res.writeHead(307, {Location: routes.cart.guest.index})
         } else {
-            res.writeHead(307, { Location: routes.auth.login });
+            res.writeHead(307, {Location: routes.auth.login});
         }
         res.end();
         return {
@@ -437,10 +471,10 @@ export async function getServerSideProps({ req, res }) {
         const addressesRes = await store.dispatch.profile.getAddresses(config)
         const deliveryTimesRes = await store.dispatch.cart.getDeliveryTime(config);
 
-        if(response) {
+        if (response) {
             cart = response;
-            if(!cart.products || cart.products?.length === 0) {
-                res.writeHead(307, { Location: routes.cart.index });
+            if (!cart.products || cart.products?.length === 0) {
+                res.writeHead(307, {Location: routes.cart.index});
                 res.end();
                 return {
                     props: {
@@ -451,13 +485,13 @@ export async function getServerSideProps({ req, res }) {
                 };
             } else {
 
-                if(addressesRes) {
+                if (addressesRes) {
                     addresses = addressesRes;
                 }
-                if(deliveryTimesRes){
+                if (deliveryTimesRes) {
                     deliveryTimes = deliveryTimesRes;
-                }else {
-                    res.writeHead(307, { Location: routes.cart.index });
+                } else {
+                    res.writeHead(307, {Location: routes.cart.index});
                     res.end();
                     return {
                         props: {
@@ -475,10 +509,10 @@ export async function getServerSideProps({ req, res }) {
                 };
             }
         }
-    } catch(e) {
+    } catch (e) {
         console.log(e);
 
-        res.writeHead(307, { Location: routes.cart.index });
+        res.writeHead(307, {Location: routes.cart.index});
         res.end();
         return {
             props: {

@@ -44,6 +44,7 @@ const AddAddress = props => {
     }, [geoCode]);
 
     useEffect(() => {
+        document.getElementById('city').setAttribute('autoComplete', 'new-password');
         form.setFieldsValue({
             province: 'ON'
         });
@@ -75,27 +76,26 @@ const AddAddress = props => {
     }
 
     const submitHandler = async (values) => {
-        if(marker.position.hasOwnProperty('lat')) {
-            const { province, city, addressLine1, addressLine2, postalCode} = values;
-            const body = {
-                country: 'Canada',
-                province: provinces[province],
-                city,
-                addressLine1,
-                addressLine2,
-                postalCode,
-                location: {
-                    type: 'Point',
-                    coordinates: [marker.position.lng, marker.position.lat]
-                }
-            }
+        const { province, city, addressLine1, addressLine2, postalCode} = values;
+        const body = {
+            country: 'Canada',
+            province: provinces[province],
+            city,
+            addressLine1,
+            addressLine2,
+            postalCode,
+        }
 
-            const result = await dispatch.profile.addAddress(body)
-            if(result) {
-                router.push(routes.profile.addresses.index);
-            }
-        } else {
-            message.error('Please Select you Position on Map', 5)
+        if (marker.position.lng && marker.position.lat) {
+            body.location = {
+                type: 'Point',
+                coordinates: [marker.position.lng, marker.position.lat]
+            };
+        }
+
+        const result = await dispatch.profile.addAddress(body)
+        if(result) {
+            router.push(routes.profile.addresses.index);
         }
     }
 

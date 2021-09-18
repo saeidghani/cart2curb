@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Input,
@@ -62,6 +62,10 @@ const Invoices = props => {
     )
 
     const { profile, stores, cart } = props;
+
+    useEffect(() => {
+        form.setFieldsValue({liveCart: 'no'});
+    }, []);
 
     const changeTipHandler = async (value, isOption = false) => {
         if(isOption) {
@@ -234,7 +238,7 @@ const Invoices = props => {
         const checkoutBody = {
             paymentMethod: paymentType,
             note: note,
-            liveCart: Boolean(liveCart)
+            liveCart
         };
 
         // const checkoutRes = await dispatch.cart.checkout(checkoutBody);
@@ -261,6 +265,12 @@ const Invoices = props => {
         {name: 'Exact Cash', val: 'Exact Cash'},
     ];
 
+    const liveCartOptions = [
+        {key: 1, title: 'No Thanks', value: 'no'},
+        {key: 2, title: 'Yes, Google Meets', value: 'googleMeets'},
+        {key: 3, title: 'Yes, Skype', value: 'skype'},
+        {key: 4, title: 'Yes, Zoom', value: 'zoom'},
+    ];
 
     return (
         <Page title={'Checkout'} breadcrumb={breadcrumb}>
@@ -417,12 +427,26 @@ const Invoices = props => {
                                     <Input.TextArea placeholder={'Note'} onPressEnter={applyPromoHandler}/>
                                 </Item>
                             </Col>
-                            <Col lg={4} md={4} xs={24} className={'flex flex-row-reverse items-center'}>
-                                <Item name={'liveCart'} valuePropName="checked" label={'live Cart'}>
-                                    <Checkbox>live Cart</Checkbox>
+                            <Col lg={24} md={20} xs={24} className='mt-4'>
+                                Would You Like To Watch The Shopping With Livecart?
+                            </Col>
+                            <Col lg={8} md={20} xs={24} className='mt-2'>
+                                <Item name={'liveCart'} label={'live Cart'}>
+                                <Select
+                                    showSearch
+                                    optionFilterProp="children"
+                                    placeholder={'Select'}
+                                    onChange={() => {}}
+                                >
+                                    {liveCartOptions.map(option => {
+                                        return (
+                                            <Option key={option.key} value={option.value}>{option.title}</Option>
+                                        )
+                                    })}
+                                </Select>
                                 </Item>
                             </Col>
-                            <Col lg={8} md={12} xs={24} className={'flex flex-row-reverse items-center'}>
+                            <Col lg={24} md={12} xs={24} className={'flex flex-row-reverse items-center -mt-4'}>
                                 <div className="flex items-center pl-4 justify-end">
                                     {(promo || tip?.val) && (<h1 className="text-right text-4.5xl text-paragraph font-medium my-0 mr-6">${currentPrice}</h1>)}
                                 </div>
