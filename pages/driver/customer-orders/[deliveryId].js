@@ -17,7 +17,7 @@ const CurrentOrders = () => {
     useEffect(async () => {
         if (token) {
             const res = await dispatch?.driverDelivery?.getCustomerOrders({deliveryId, token});
-            setCustomerOrders(res);
+            setCustomerOrders(res || []);
         }
     }, [token]);
 
