@@ -1,0 +1,31 @@
+.category-card {
+    .ant-menu {
+    background-color: #fafafa;
+    border-radius: 20px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+        .ant-menu-submenu > .ant-menu-submenu-title {
+            color: black;
+            margin: 0 !important;
+            i.ant-menu-submenu-arrow {
+                &::before{
+                  background-image: linear-gradient(to right, #ababab, #ababab);
+                }
+                &::after{
+                  background-image: linear-gradient(to right, #ababab, #ababab);
+                }
+            }
+        }
+        .ant-menu-sub.ant-menu-inline > .ant-menu-item, .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+            color: #7b7b7b;
+            margin-right: 20px !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            &.ant-menu-item-selected {
+                color: #ff4b45;
+                background: transparent;
+            }
+        }
+    }
+}
+

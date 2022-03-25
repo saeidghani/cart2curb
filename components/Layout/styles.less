@@ -1,0 +1,47 @@
+.layout {
+    background-color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    &__section {
+        padding-right: 16px;
+        padding-left: 16px;
+
+        @media (min-width: 768px) {
+            padding-right: 60px;
+            padding-left: 60px;
+        }
+
+        @media (min-width: 992px) {
+            padding-right: 90px;
+            padding-left: 90px;
+        }
+
+        @media (min-width: 1200px) {
+            padding-left: 120px;
+            padding-right: 120px;
+        }
+
+        .without-padding {
+
+            margin-right: -32px;
+            margin-left: -32px;
+
+            @media (min-width: 768px) {
+                margin-right: -60px;
+                margin-left: -60px;
+            }
+
+            @media (min-width: 992px) {
+                margin-right: -90px;
+                margin-left: -90px;
+            }
+
+            @media (min-width: 1200px) {
+                margin-left: -120px;
+                margin-right: -120px;
+            }
+        }
+    }
+}
